@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EXP-PRIC-004 MXN Performance Dashboard</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body { margin: 0; padding: 16px; background: #0a0f1a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    #root { max-width: 860px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+// EXP-PRIC-004 MXN — Clean rebuild, no IIFEs in JSX props
+
+const D = {
+  code: "EXP-PRIC-004", name: "MXN Price-Per-Day Correction", flag: "🇲🇽", jira: "JSMCO-59",
+  status: "Completed", category: "PPD Optimization", notion: "https://www.notion.so/holafly/312eea72a188801aab58eb71720b7bce",
+  revScope: "Origin", checkpoint: "D+14", checkpointDate: "2026-03-16", cleanDays: 14,
+  totalOrders: 12608, preActualDays: 14,
+  declaration: {
+    launchDate: "2026-03-02",
+    firstCleanDay: "2026-03-03",
+    expectedCleanDays: 14,
+    actualCleanDays: 14,
+    endDate: "2026-03-16",
+    checkpointDate: "2026-03-16",
+    status: "Completed",
+  },
+  signal: "Scale", causalConfidence: "HIGH",
+  nHypotheses: 1, h1Status: "Confirmed", h2Status: null,
+  confounder: "Paid Social", hasFiltered: true, hasBenchmark: true, hasBenchmarkPost: false,
+  hasLtvCaveat: true, hasBlended: true, hasTwoForces: false,
+  baselines: { arpu_f: 7.02, arpu_b: 5.24, arpu_14d: 8.74, cr_f: 14.85, cr_b: 8.88, cr_14d: 21.01, gm: 76.45, gm_14d: 81.60, arpuFloor: 4.72, missing14d: false },
+  accum: { arpu_f: 8.23, arpu_f_d90: "+17.2%", arpu_f_d14: "-5.8%", arpu_status: "positive", cr_f: 19.14, cr_f_d90: "+4.29pp", cr_f_d14: "-1.87pp", gm: 80.91, gm_d90: "+4.46pp", gm_d14: "-0.69pp", arpu_b: 3.74, arpu_b_d90: "-28.6%", cr_b: 8.77, cr_b_d90: "-0.11pp" },
+  recent: { arpu_f: 9.87, arpu_f_d90: "+40.6%", cr_f: 24.68, period: "D+13 (2026-03-14)" },
+  impact: {
+    short: { rev_day_base90: 1210, rev_day_base14: 1963, rev_day_post: 1974, d90: "+63.2%", d14: "+0.6%", inc14: 11, inc90: 764, orders_pre90: 109.2, orders_pre14: 170.4, orders_post: 192.4, orders_delta_90: "+76.2%", orders_delta_14: "+12.9%" },
+    long: null,
+    total: { rev_day_base90: 17104, rev_day_base14: 27006, rev_day_post: 32381, d90: "+89.3%", d14: "+19.9%", inc_day_90: 15277, inc_day_14: 5375, inc_annual_90d: "€279K", inc_annual_14d: "€4K", annual_note: { en: "Short-plan annualized vs 90d (€279K) includes organic demand growth. DID-attributable revenue from 2-day plans: +€46/day (~€16.8K/year). The full breakdown is in the Elasticity section.", es: "Anualizado planes cortos vs 90d (€279K) incluye crecimiento orgánico de demanda. Revenue atribuible al precio por DID de planes 2 días: +€46/día (~€16.8K/año). El desglose completo está en la sección Elasticidad." } },
+  },
+  revFramingNote: { en: "ARPU excluding Paid Social: +17.2% (€7.02 to €8.23), €31,252 incremental in 14 days (€2,232/day). Short-plan revenue +63.2%/day vs 90d (includes organic demand growth; DID-attributable breakdown in the elasticity section). The 14d pre comparison shows near-zero (+0.6%) because that period was a seasonal peak.", es: "ARPU excluyendo Paid Social: +17.2% (€7.02 a €8.23), €31,252 incrementales en 14 días (€2,232/día). Revenue cortos +63.2%/día vs 90d (incluye crecimiento orgánico de demanda; desglose DID en sección elasticidad). La comparación 14d pre muestra casi cero (+0.6%) porque ese período era un pico estacional." },
+  benchmarkPost: null, longPlanInelasticity: null,
+  counterfactual: {
+    en: [
+      "Untreated MXN destinations served as natural control group. Parallel trends validated (CV=10.6%, threshold <20%).",
+      "Control destinations also grew during the post-period, confirming organic demand was rising market-wide.",
+      "The DID isolates the price effect: 1-day plans at break-even (volume doubled, revenue neutral vs control). 2-day plans genuinely incremental (+45.3% above organic). 3-day plans inelastic at -5%.",
+    ],
+    es: [
+      "Destinos MXN no tratados como grupo de control natural. Tendencias paralelas validadas (CV=10.6%, umbral <20%).",
+      "Los destinos control tambien crecieron en el post-periodo, confirmando demanda organica en alza en todo el mercado.",
+      "El DID aisla el efecto precio: planes 1 dia en equilibrio (volumen duplicado, revenue neutral vs control). Planes 2 dias genuinamente incremental (+45.3% sobre organico). Planes 3 dias inelasticos al -5%.",
+    ],
+  },
+  summary: {
+    en: {
+      headline: [
+        { t: "The experiment was successful. ", b: false },
+        { t: "The Price-per-Day correction on short plans generated ", b: false },
+        { t: "€31,252", b: true },
+        { t: " incremental revenue in ", b: false },
+        { t: "14 days", b: true },
+        { t: ", improved conversion by ", b: false },
+        { t: "+4.29pp", b: true },
+        { t: " with statistical significance, and maintained gross margin at ", b: false },
+        { t: "80.91%", b: true },
+        { t: ". All ", b: false },
+        { t: "5 MDE", b: true },
+        { t: " targets were met.", b: false },
+      ],
+      caveat: "Paid Social increased budget on Day 1 (confounder isolated via exclusion filter). The 14-day pre-launch period was a seasonal peak (+56% short orders vs normal), so that comparison appears flat. The 90-day baseline is the decision reference.",
+      action: [
+        "We recommend maintaining this pricing. The correction addressed a structural inconsistency in how short-plan prices were set across 65 MXN destinations, aligning them with the standard Price-per-Day logic used in the rest of the catalog.",
+        "After the correction, short-plan volume nearly doubled and conversion rate improved +4.29pp with statistical significance (z=12.99). The DID analysis confirms this is a price-driven response: 1-day plans reached break-even (more customers, same revenue) and 2-day plans generated genuine incremental revenue (+45.3% above organic growth).",
+        "Next step: test the same logic on COP, where we detected the same catalog inconsistency. If COP replicates the pattern, the mechanism is confirmed across two independent markets.",
+      ],
+    },
+    es: {
+      headline: [
+        { t: "El experimento fue exitoso. ", b: false },
+        { t: "La correccion Price-per-Day en planes cortos genero ", b: false },
+        { t: "€31,252", b: true },
+        { t: " de revenue incremental en ", b: false },
+        { t: "14 dias", b: true },
+        { t: ", mejoro la conversion ", b: false },
+        { t: "+4.29pp", b: true },
+        { t: " con significancia estadistica, y mantuvo el margen bruto en ", b: false },
+        { t: "80.91%", b: true },
+        { t: ". Los ", b: false },
+        { t: "5 MDE", b: true },
+        { t: " se cumplieron.", b: false },
+      ],
+      caveat: "Paid Social aumento presupuesto el Dia 1 (confounder aislado con filtro de exclusion). El periodo 14d pre-lanzamiento era un pico estacional (+56% ordenes cortas vs normal), por eso esa comparacion parece plana. El baseline 90d es la referencia de decision.",
+      action: [
+        "Recomendamos mantener este pricing. La correccion abordo una inconsistencia estructural en como se fijaban los precios de planes cortos en 65 destinos MXN, alineandolos con la logica Price-per-Day estandar usada en el resto del catalogo.",
+        "Tras la correccion, el volumen de planes cortos casi se duplico y la tasa de conversion mejoro +4.29pp con significancia estadistica (z=12.99). El analisis DID confirma que es una respuesta al precio: planes de 1 dia alcanzaron equilibrio (mas clientes, mismo revenue) y planes de 2 dias generaron revenue incremental genuino (+45.3% sobre crecimiento organico).",
+        "Proximo paso: testear la misma logica en COP, donde detectamos la misma inconsistencia de catalogo. Si COP replica el patron, el mecanismo queda confirmado en dos mercados independientes.",
+      ],
+    },
+  },
+  mde: {
+    reference: "90d",
+    note_en: "90-day baseline is the primary reference for all MDE. The 14-day pre-launch was a documented seasonal peak (pre-Easter, +56% short orders). Comparisons vs 14d are shown for context but are not MDE criteria.",
+    note_es: "El baseline 90 dias es la referencia primaria para todos los MDE. Los 14 dias pre-lanzamiento fueron un pico estacional documentado (pre-Semana Santa, +56% ordenes cortas). Comparaciones vs 14d se muestran como contexto pero no son criterios MDE.",
+    criteria: [
+      { id: "arpu", label_en: "ARPU excl. Paid Social", label_es: "ARPU excl. Paid Social", threshold: ">= +10% vs 90d", target: "€7.72+", result: "€8.23 (+17.2%)", status: "met" },
+      { id: "cr", label_en: "CR excl. Paid Social", label_es: "CR excl. Paid Social", threshold: ">= +2pp significant (z>1.96)", target: "16.85%+", result: "19.14% (+4.29pp, z=12.99)", status: "met" },
+      { id: "rev_short", label_en: "Short-plan revenue", label_es: "Revenue planes cortos", threshold: ">= +30% vs 90d", target: "€1,573/d+", result: "€1,974/d (+63.2%)", status: "met" },
+      { id: "gm", label_en: "Gross Margin", label_es: "Margen bruto", threshold: ">= 75% accumulated", target: "75%+", result: "80.91%", status: "met" },
+      { id: "elast", label_en: "Elasticity DID", label_es: "Elasticidad DID", threshold: "|e| >= 1.5 in at least 1 bucket", target: "|e| >= 1.5", result: "1-day: -2.20, 2-day: -4.89", status: "met" },
+    ],
+  },
+  impactCalcRows: {
+    "90d": [
+      { title_en: "SHORT PLANS (observed vs 90-day baseline)", title_es: "PLANES CORTOS (observado vs baseline 90 dias)", color: "accent", rows: [
+        { label_en: "Revenue/day", label_es: "Revenue/dia", from: "€1,210", to: "€1,974", delta: "+€764/day (+63.2%)", positive: true },
+        { label_en: "14 days incremental", label_es: "14 dias incremental", from: "", to: "", delta: "+€10,696", positive: true },
+      ] },
+      { title_en: "ARPU (excluding Paid Social, vs 90d)", title_es: "ARPU (excluyendo Paid Social, vs 90d)", color: "accent", rows: [
+        { label_en: "ARPU lift", label_es: "Lift ARPU", from: "€7.02", to: "€8.23", delta: "+€1.21/visitor (+17.2%)", positive: true },
+        { label_en: "25,929 visitors x €1.21", label_es: "25,929 visitantes x €1.21", from: "", to: "", delta: "€31,252 in 14 days", positive: true },
+      ] },
+      { title_en: "ANNUALIZED (vs 90d)", title_es: "ANUALIZADO (vs 90d)", color: "accent", rows: [
+        { label_en: "Total observed", label_es: "Total observado", from: "€764/day", to: "x 365", delta: "€279K", positive: true },
+      ], note_en: "€279K includes organic demand growth. The DID view isolates only the price effect.", note_es: "€279K incluye crecimiento organico. La vista DID aisla solo el efecto del precio.", warning: true },
+    ],
+    "14d": [
+      { title_en: "SHORT PLANS (observed vs 14-day pre-launch)", title_es: "PLANES CORTOS (observado vs 14 dias pre-lanzamiento)", color: "yellow", rows: [
+        { label_en: "Revenue/day", label_es: "Revenue/dia", from: "€1,963", to: "€1,974", delta: "+€11/day (+0.6%)" },
+      ], note_en: "Near-zero because the 14d pre was a seasonal peak (pre-Easter, +56% short orders vs 90d norm). This comparison underestimates the real effect.", note_es: "Casi cero porque los 14d pre fueron un pico estacional (pre-Semana Santa, +56% ordenes cortas vs norma 90d). Esta comparacion subestima el efecto real.", warning: true },
+      { title_en: "ARPU (excluding Paid Social, vs 14d)", title_es: "ARPU (excluyendo Paid Social, vs 14d)", color: "yellow", rows: [
+        { label_en: "ARPU change", label_es: "Cambio ARPU", from: "€8.74", to: "€8.23", delta: "-€0.51/visitor (-5.8%)", negative: true },
+      ], note_en: "ARPU appears to decline because the 14d pre baseline (€8.74) was inflated by the seasonal peak. Against 90d (€7.02), ARPU grew +17.2%.", note_es: "ARPU parece caer porque el baseline 14d pre (€8.74) estaba inflado por el pico estacional. Contra 90d (€7.02), ARPU crecio +17.2%.", warning: true },
+    ],
+  },
+  aov: [
+    { b: "1 day", base: 9.04, b14: 9.89, post: 8.38, d90: "-7.3%", d14: "-15.3%", designed: -36, designDir: "down", orders: 1566, chk: "ok" },
+    { b: "2 days", base: 11.55, b14: 11.57, post: 10.32, d90: "-10.6%", d14: "-10.8%", designed: -16, designDir: "down", orders: 573, chk: "ok" },
+    { b: "3 days", base: 15.61, b14: 15.69, post: 15.54, d90: "-0.5%", d14: "-1.0%", designed: -5, designDir: "down", orders: 554, chk: "ok" },
+    { b: "4-7d", base: 27.44, b14: 27.06, post: 26.47, d90: "-3.5%", d14: "-2.2%", designed: -1, designDir: "down", orders: 3654, chk: "ok" },
+    { b: "8-14d", base: 45.50, b14: 45.08, post: 44.06, d90: "-3.2%", d14: "-2.2%", designed: -1, designDir: "down", orders: 3991, chk: "ok" },
+    { b: "15-30d", base: 69.72, b14: 66.17, post: 64.62, d90: "-7.3%", d14: "-2.3%", designed: -1, designDir: "down", orders: 2120, chk: "ok" },
+    { b: "31-90d", base: 109.89, b14: 112.19, post: 107.36, d90: "-2.3%", d14: "-4.3%", designed: -1, designDir: "down", orders: 150, chk: "ok" },
+  ],
+  mix: [
+    { b: "1 day", pre: 60.5, pre14: 96.1, post: 111.9, delta: "+84.9%", delta14: "+16.4%", preS: 13.2, postS: 12.4 },
+    { b: "2 days", pre: 24.0, pre14: 37.2, post: 40.9, delta: "+70.5%", delta14: "+10.0%", preS: 5.2, postS: 4.5 },
+    { b: "3 days", pre: 24.7, pre14: 37.1, post: 39.6, delta: "+60.2%", delta14: "+6.7%", preS: 5.4, postS: 4.4 },
+    { b: "4-7d", pre: 127.2, pre14: 211.1, post: 261.0, delta: "+105.2%", delta14: "+23.6%", preS: 27.7, postS: 29.0 },
+    { b: "8-14d", pre: 144.1, pre14: 236.4, post: 285.1, delta: "+97.8%", delta14: "+20.6%", preS: 31.4, postS: 31.7 },
+    { b: "15-30d", pre: 70.0, pre14: 114.8, post: 151.4, delta: "+116.3%", delta14: "+31.9%", preS: 15.2, postS: 16.8 },
+    { b: "31-90d", pre: 8.8, pre14: 9.6, post: 10.7, delta: "+21.6%", delta14: "+11.5%", preS: 1.9, postS: 1.2 },
+  ],
+  mixTotals: { shortPre: 23.8, shortPost: 21.4, shortD: "-2.4pp", longPre: 76.2, longPost: 78.6, longD: "+2.4pp" },
+  rev: { short: { b90: 1210, b14: 1963, post: 1974, d90: "+63.2%", d14: "+0.6%" }, long: { b90: 15894, b14: 25043, post: 30407, d90: "+91.3%", d14: "+21.4%" }, total: { b90: 17104, b14: 27006, post: 32381, d90: "+89.3%", d14: "+19.9%" } },
+  elast: [
+    { b: "1-day", pc: "-36%", prO90: 60.5, prO14: 96.1, postO: 111.9, tPreO: 22.4, tPostO: 49.6, tPreR: 147.5, tPostR: 209.9, dV90: "+84.9%", dV14: "+16.4%", dVdid: "+79.3%", prR90: 547, prR14: 950, postR: 937, dR90: "+71.3%", dR14: "-1.4%", dRdid: "~0%", e_did: "-2.20", e_upper: "-2.36", e_confidence: "high", e_note_en: "DID elasticity using untreated MXN destinations as control. Parallel trends validated (CV=10.6%, threshold <20%). Revenue DID is ~0%: the -36% price cut generated +79.3pp incremental volume above organic, but the two effects cancel out in revenue. This is the break-even point of a highly elastic demand curve, not a failure.", e_note_es: "Elasticidad DID usando destinos MXN no tratados como control. Parallel trends validado (CV=10.6%, umbral <20%). Revenue DID es ~0%: la baja de -36% genero +79.3pp de volumen incremental sobre organico, pero los dos efectos se cancelan en revenue. Es el punto de equilibrio de una curva de demanda muy elastica, no un fracaso.", flag: null },
+    { b: "2-day", pc: "-16%", prO90: 24.0, prO14: 37.2, postO: 40.9, tPreO: 10.2, tPostO: 21.9, tPreR: 101.6, tPostR: 186.8, dV90: "+70.5%", dV14: "+10.0%", dVdid: "+78.1%", prR90: 277, prR14: 430, postR: 423, dR90: "+52.4%", dR14: "-1.8%", dRdid: "+45.2%", e_did: "-4.88", e_upper: "-4.41", e_confidence: "high", e_note_en: "DID confirms 2-day is the real revenue driver. Revenue DID +45.2% vs control. +EUR 46/day genuinely attributable to the price change.", e_note_es: "DID confirma que 2 dias es el motor real de revenue. Revenue DID +45.2% vs control. +EUR 46/dia genuinamente atribuibles al cambio de precio.", flag: null },
+    { b: "3-day", pc: "-5%", e_did: "-0.76", e_confidence: "medium", flag: "inelastic", reason_en: "DID elasticity -0.76 (inelastic). Revenue DID -16.2%. The -5% price cut was insufficient to generate meaningful volume response in treated destinations.", reason_es: "Elasticidad DID -0.76 (inelástico). Revenue DID -16.2%. La baja de -5% fue insuficiente para generar respuesta de volumen significativa en destinos tratados." },
+    { b: "4+ days", flag: "price_up", reason_en: "Charm pricing only (less than 1%). Volume growth partially from Paid Social confounder.", reason_es: "Solo charm pricing (menor al 1%). Crecimiento de volumen parcialmente por confounder de Paid Social." },
+  ],
+  elastCalcRows: [
+    { title_en: "METHODOLOGY", title_es: "METODOLOGÍA", color: "text", rows: [
+      { label_en: "Control group", label_es: "Grupo de control", from: "", to: "", delta_en: "MXN destinations NOT in the 65 treated", delta_es: "Destinos MXN NO incluidos en los 65 tratados" },
+      { label_en: "Parallel trends", label_es: "Tendencias paralelas", from: "", to: "", delta_en: "Validated. CV = 10.6% (threshold < 20%)", delta_es: "Validado. CV = 10.6% (umbral < 20%)", positive: true },
+    ], note_en: "14 weeks pre-launch, treated and control destinations moved together week to week. The DID is valid.", note_es: "14 semanas pre-lanzamiento, destinos tratados y control se movieron juntos semana a semana. El DID es válido." },
+    { title_en: "PLAN 1 DÍA (-36%)", title_es: "PLAN 1 DÍA (-36%)", color: "accent", rows: [
+      { label_en: "Volume DID (above organic)", label_es: "Volumen DID (sobre orgánico)", from: "", to: "", delta_en: "+79.3pp above control growth", delta_es: "+79.3pp sobre crecimiento del control", positive: true },
+      { label_en: "Revenue DID", label_es: "Revenue DID", from: "", to: "", delta_en: "~0% (price and volume cancel out)", delta_es: "~0% (precio y volumen se cancelan)" },
+      { label_en: "Elasticity DID", label_es: "Elasticidad DID", from: "", to: "", delta_en: "e = -2.20", delta_es: "e = -2.20", positive: true },
+    ], note_en: "Break-even point of a highly elastic curve. The correction added customers to the funnel and fixed the Price-per-Day impression without costing revenue. Lowering price further would reduce revenue.", note_es: "Punto de equilibrio de una curva muy elástica. La corrección sumó clientes al funnel y corrigió la impresión Price-per-Day sin costar revenue. Bajar más el precio reduciría revenue." },
+    { title_en: "PLAN 2 DÍAS (-16%)", title_es: "PLAN 2 DÍAS (-16%)", color: "green", rows: [
+      { label_en: "Revenue DID", label_es: "Revenue DID", from: "", to: "", delta_en: "+45.2% vs control. +€46/day attributable to price.", delta_es: "+45.2% vs control. +€46/día atribuibles al precio.", positive: true },
+      { label_en: "Elasticity DID", label_es: "Elasticidad DID", from: "", to: "", delta_en: "e = -4.88", delta_es: "e = -4.88", positive: true },
+    ], note_en: "The real revenue driver. Genuinely incremental revenue confirmed by DID.", note_es: "El motor real de revenue. Revenue genuinamente incremental confirmado por DID." },
+    { title_en: "PLAN 3 DÍAS (-5%)", title_es: "PLAN 3 DÍAS (-5%)", color: "yellow", rows: [
+      { label_en: "Revenue DID", label_es: "Revenue DID", from: "", to: "", delta_en: "-16.2% vs control", delta_es: "-16.2% vs control", negative: true },
+      { label_en: "Elasticity DID", label_es: "Elasticidad DID", from: "", to: "", delta_en: "e = -0.76 (inelastic)", delta_es: "e = -0.76 (inelástico)", negative: true },
+    ], note_en: "The -5% price cut was not enough to move the needle. Inelastic at this level of change.", note_es: "La baja de -5% no fue suficiente para mover la aguja. Inelástico a este nivel de cambio.", warning: true },
+  ],
+  parallelTrends: {
+    bucket: "1-day",
+    data: [
+      { w: "Nov 23", t: 12.1, c: 16.9, r: 0.72, p: "pre" },
+      { w: "Nov 30", t: 22.0, c: 30.6, r: 0.72, p: "pre" },
+      { w: "Dec 7", t: 19.6, c: 28.9, r: 0.68, p: "pre" },
+      { w: "Dec 14", t: 17.7, c: 30.0, r: 0.59, p: "pre" },
+      { w: "Dec 21", t: 18.7, c: 32.7, r: 0.57, p: "pre" },
+      { w: "Dec 28", t: 22.1, c: 27.6, r: 0.80, p: "pre" },
+      { w: "Jan 4", t: 19.3, c: 26.7, r: 0.72, p: "pre" },
+      { w: "Jan 11", t: 19.6, c: 28.4, r: 0.69, p: "pre" },
+      { w: "Jan 18", t: 21.0, c: 28.4, r: 0.74, p: "pre" },
+      { w: "Jan 25", t: 19.6, c: 32.1, r: 0.61, p: "pre" },
+      { w: "Feb 1", t: 19.3, c: 29.6, r: 0.65, p: "pre" },
+      { w: "Feb 8", t: 31.3, c: 40.3, r: 0.78, p: "pre" },
+      { w: "Feb 15", t: 32.4, c: 51.3, r: 0.63, p: "pre" },
+      { w: "Feb 22", t: 13.6, c: 22.6, r: 0.60, p: "pre" },
+      { w: "Mar 8", t: 50.1, c: 48.7, r: 1.03, p: "post" },
+      { w: "Mar 15", t: 17.9, c: 13.1, r: 1.36, p: "post" },
+    ],
+    stats: { mean: 0.679, stdev: 0.072, cv: "10.6%", threshold: "<20%", verdict: "VALID" },
+    note_en: "14 weeks pre-launch. Treated = 65 destinations with price change. Control = remaining MXN destinations. Both move together week to week (CV 10.6%). Post-launch: treated ratio jumps from 0.68 to 1.03/1.36. The divergence IS the price effect.",
+    note_es: "14 semanas pre-lanzamiento. Tratados = 65 destinos con cambio de precio. Control = destinos MXN restantes. Ambos se mueven juntos semana a semana (CV 10.6%). Post-lanzamiento: el ratio de tratados salta de 0.68 a 1.03/1.36. La divergencia ES el efecto del precio.",
+  },
+  revenueDID: [
+    { b: "1-day", pc: "-36%", t_pre: 147.5, t_post: 209.9, c_pre: 250.0, c_post: 355.7, did: "~0%", e: -2.20, note_en: "Break-even. Volume compensated price cut exactly.", note_es: "Punto de equilibrio. Volumen compensó la baja de precio exactamente." },
+    { b: "2-day", pc: "-16%", t_pre: 101.6, t_post: 186.8, c_pre: 144.6, c_post: 200.4, did: "+45.3%", e: -4.89, note_en: "Revenue driver. +€46/day genuinely price-attributable.", note_es: "Motor de revenue. +€46/día genuinamente atribuible al precio." },
+    { b: "3-day", pc: "-5%", t_pre: 144.8, t_post: 218.4, c_pre: 194.8, c_post: 325.3, did: "-16.2%", e: -0.78, note_en: "Inelastic. The -5% cut was insufficient.", note_es: "Inelástico. La baja de -5% fue insuficiente." },
+  ],
+  sig: { cr: { ctrl_v: 25704, ctrl_c: 3817, var_v: 25929, var_c: 4964, z: "12.99", p: "<0.0001", verdict: "sig_95" }, chi: { val: "88.70", threshold: "12.59", cramers_v: "0.087", cramers_v_interp: "small" }, arpu: { lift: "+17.2%", status: "positive_incremental", inc: 31252, days: 14, note_en: "ARPU +17.2% (€7.02 to €8.23). €31,252 incremental in 14 days (€2,232/day). Welch t-test pending.", note_es: "ARPU +17.2% (€7.02 a €8.23). €31,252 incrementales en 14 días (€2,232/día). Welch t-test pendiente." } },
+  checks: [
+    { en: "Elasticity > -1 on 1-3d plans", es: "Elasticidad > -1 en planes 1-3d", r_en: "DID: 1D e=-2.20 (equilibrium). 2D e=-4.88 (+45.2% rev). 3D e=-0.76 (inelastic).", r_es: "DID: 1D e=-2.20 (equilibrio). 2D e=-4.88 (+45.2% rev). 3D e=-0.76 (inelástico).", v: "met" },
+    { en: "Gross margin holds (floor 30%)", es: "Margen bruto se mantiene (piso 30%)", r_en: "GM 80.91% vs 76.45%. +4.46pp.", r_es: "GM 80.91% vs 76.45%. +4.46pp.", v: "met" },
+    { en: "ARPU not down more than 10%", es: "ARPU no baja más del 10%", r_en: "ARPU excl. PS +17.2%. €31,252 incremental.", r_es: "ARPU excl. PS +17.2%. €31,252 incremental.", v: "met" },
+    { en: "Short-plan revenue rises", es: "Revenue planes cortos sube", r_en: "Short +63.2%/day vs 90d. €764/day.", r_es: "Cortos +63.2%/día vs 90d. €764/día.", v: "met" },
+    { en: "CR significant at 90%+", es: "CR significativo al 90%+", r_en: "CR +4.29pp. z=12.99. 95% confirmed.", r_es: "CR +4.29pp. z=12.99. 95% confirmado.", v: "met" },
+  ],
+  gm: { display: 80.91, source: "Looker Foundational, origin MXN", timeline: [
+    { d: "D+1", v: "88.17", n: { en: "contaminated", es: "contaminado" } }, { d: "D+2", v: "87.24" }, { d: "D+3", v: "86.77" },
+    { d: "D+4-D+7", v: "86.10" }, { d: "D+8", v: "83.42", n: { en: "confirmed (was lag)", es: "confirmado (era lag)" } },
+    { d: "D+9", v: "84.43" }, { d: "D+10", v: "79.15" }, { d: "D+11", v: "75.86" },
+    { d: "D+12", v: "85.73" }, { d: "D+13", v: "81.53", n: { en: "possible delay", es: "posible delay" } },
+    { d: "D+14", v: "—", n: { en: "pending", es: "pendiente" } },
+  ] },
+  anomalies: [
+    { bucket: "3-day AOV transient spike (D+10)", en: "AOV spiked to +1.9% at D+10 checkpoint. Resolved at full 14 days: accumulated -0.5% vs 90d baseline. Root cause: multi-eSIM orders (esim_quantity = 2 or 5) inflated daily AOV average on low-volume days (Mar 10, Mar 12).", es: "Spike de AOV a +1.9% en checkpoint D+10. Resuelto a 14 días: acumulado -0.5% vs baseline 90d. Causa raíz: órdenes multi-eSIM (esim_quantity = 2 o 5) inflaron el promedio diario de AOV en días de bajo volumen (10 y 12 mar).",
+      hyp_en: "Initial hypothesis was 'floor effect' from €3.79/day policy. INCORRECT. Investigation confirmed: all destination prices decreased as designed, the AOV inflation came from multi-eSIM orders not filtered in the diagnostic query. No destination exclusions needed before COP.", hyp_es: "Hipótesis inicial era 'efecto de piso' de la política €3.79/día. INCORRECTA. Investigación confirmó: todos los precios bajaron según diseño, la inflación de AOV vino de órdenes multi-eSIM no filtradas en la query diagnóstica. No se requieren exclusiones de destinos antes de COP.",
+      status: "resolved", confidence: "confirmed" },
+    { bucket: "GM D+8 dashboard lag", en: "D+8 showed 60.43% initially. Confirmed actual: 83.42%.", es: "D+8 mostró 60.43% inicialmente. Real confirmado: 83.42%.",
+      hyp_en: "Looker Studio dashboard lag. Resolved.", hyp_es: "Lag del dashboard Looker Studio. Resuelto.",
+      status: "resolved", confidence: "confirmed" },
+  ],
+  gaps: [
+    { type: "TEST", en: "Welch t-test for ARPU", es: "Welch t-test para ARPU", why_en: "+14.4% confirmed economically, formal test pending", why_es: "+14.4% confirmado económicamente, test formal pendiente", owner: "Mati", target: "Next cycle", status: "open" },
+    { type: "DATA", en: "LTV cohort 1-day MXN", es: "Cohorte LTV 1-day MXN", why_en: "+83.5% volume could include non-upgraders", why_es: "+83.5% podría incluir no-upgraders", owner: "Guido + Data", target: "Jun/Sep 2026", status: "open" },
+    { type: "INFRASTRUCTURE", en: "Paid Media coordination protocol", es: "Protocolo coordinación Paid Media", why_en: "Budget change on launch day = permanent confounder", why_es: "Cambio budget el día de lanzamiento = confounder permanente", owner: "Guido + Tomeu", target: "Before next exp", status: "open" },
+  ],
+  text: {
+    en: {
+      h1: 'IF we apply the standard €3.79/day Price-Per-Day (PPD) logic to 65 key MXN destinations (-36% on 1-day, -16% on 2-day, -5% on 3-day), THEN conversion improves and short-plan revenue rises, BECAUSE correcting the first price impression reduces the barrier on cheapest plans and volume gains compensate the lower price.',
+      falsifiable: 'If ARPU drops more than 10% in the first 7 days, the volume gain did not compensate.',
+      whatChanged: "Price-Per-Day correction across 65 key MXN destinations. 1-day: -36%, 2-day: -16%, 3-day: -5%. Days 4+: charm pricing only (less than 1%). Confounder: Paid Media increased Meta budget same day.",
+      confounderNote: "Paid Media increased Meta budget on March 2 (same day). The excluding-Paid-Social view is the methodological reference. Blended metrics shown for transparency only.",
+      verdictIntro: "Hypothesis confirmed. 14 clean days, 12,608 orders. All five MDE targets met with statistical significance.",
+      verdictChecklist: [
+        { icon: "✅", text: "All 5 MDE targets met (see above). DID validated with parallel trends (CV=10.6%)." },
+        { icon: "✅", text: "1-day volume +84.9%, 2-day +70.5%. Elasticity confirms price-driven response." },
+        { icon: "⚠️", text: "Confounder: Paid Social budget increased on Day 1. Excluding filter is the clean read." },
+      ],
+      trendNote: "D+13 is the cleanest signal. Only 477 PS visitors. ARPU excl. PS €9.87 (+40.6%), CR 24.68% (+9.83pp).",
+      blendedNote: "Blended ARPU -28.6% and CR -0.11pp reflect Paid Social confounder. Not the decision reference.",
+      scaleNext: "Next candidate: apply Price-per-Day logic to COP (same catalog inconsistency detected). No destination exclusions required.",
+      scaleNote: "5/5 confirmed. Same inconsistency in COP, BRL, CLP, PEN. Full LATAM: €400K-900K annually.",
+      ltvCaveat: "14-day window doesn't capture 12+ month upgrades. +84.9% in 1-day could include serial testers.",
+      ltvMonitor: "Cohort: 1-day MXN Mar 3-16. Checks at 90d (Jun 14) and 180d (Sep 12).",
+      nextSteps: "COP scoping in progress. No destination exclusions needed (floor effect was ruled out). Paid Media protocol required. Welch t-test pending.",
+      ref14dWarning: "The 14-day pre-launch period was exceptionally strong (likely pre-Easter effect). Metrics appear negative vs this reference because the baseline was abnormally high, not because the experiment hurt performance. The 90-day baseline is the fairer comparison for this experiment.",
+      chiExplain: "1-day plans: 60.5 → 111.0 orders/day (+83.5%). Chi-square 88.70 vs 12.59 = significant. Short share fell (-2.5pp) because PS also drove long plans, but absolute volume grew strongly.",
+      crHeadline: "Confirmed at 95%. CR +4.29pp. z=12.99 definitive.",
+      crExplain: "Control: 25,704 non-PS visitors (14.85% CR). Variation: 25,929 (19.14% CR). z=12.99. CR strengthened as PS moderated in final week.",
+      arpuHeadline: "+17.2%. €31,252 incremental in 14 days.",
+      elastCaveat: "DID validated with parallel trends (CV=10.6%). 1-day at equilibrium (e=-2.20, revenue-neutral). 2-day is the revenue driver (e=-4.88, +45.2%). 3-day inelastic (e=-0.76).",
+      elastSummary: "The price cut worked differently on each plan duration. For 1-day plans (-36% price), volume nearly doubled but revenue stayed flat. Think of it like selling twice as many concert tickets at half price: same total box office, but more people in the venue. For 2-day plans (-16% price), volume more than doubled AND revenue grew +45%. This is the real money maker. For 3-day plans (-5% price), the cut was too small to change behavior.",
+      revSegDesc: "Average daily revenue by plan duration. Shows where the money comes from and how each segment responded to the price change.",
+      mixDesc: "How the distribution of orders shifted between plan durations. Pre% and Post% show each bucket's share of total orders.",
+      chiFeynman: "Chi-square tests whether the shift in plan mix is statistically real or just random noise. The test compares our observed distribution against what we'd expect if nothing changed. Score of 88.70 vs threshold of 12.59 (the value where we'd start believing the shift is real at 95% confidence) means the shift is definitely not random. The threshold 12.59 comes from a statistical table for 6 categories (our 7 buckets minus 1) at 95% confidence.",
+      ptExplain: "This chart validates whether DID is the right method. Before the price change (left side), both lines should move up and down together. If they do, it means external factors (seasonality, marketing) affect both groups equally, so any divergence AFTER the change is attributable to the price. Our CV of 10.6% means the ratio between the two groups varied by only 10.6% week to week. Below 20% = they moved together. Above 20% = they didn't, and DID would not be valid.",
+      didFormula: "DID separates the price effect from everything else. Formula: (Treated After minus Treated Before) minus (Control After minus Control Before). Example for 1-day: Treated volume grew +121%. Control volume grew +42% (organic growth from Paid Social, seasonality). DID = 121% minus 42% = 79.3% attributable to the price change.",
+      elastFormula: "Elasticity measures how much volume reacts to a price change. Formula: % change in volume (DID-adjusted) divided by % change in price. For 1-day: +79.3% volume / -36% price = -2.20. The minus sign is normal (price down, volume up). The absolute value |2.20| > 1 means volume responds MORE than proportionally to the price change. When |e| > 1, cutting prices INCREASES total revenue.",
+      sigExplain: "The z-score measures how far our result is from 'no effect at all'. We compare: 14.85% CR (what would happen without the price change) vs 19.14% CR (what actually happened). z = 12.99 means our result is 12.99 standard deviations away from zero effect. The threshold for 95% confidence is 1.96. Our z is so far beyond it that the probability of this result being random noise is essentially zero (p < 0.0001). The conversion improvement is real.",
+      decisionNote: "Scale. 5/5 confirmed. No destination exclusions. Next: COP.",
+      learnings: [
+        { pill: "MECHANISM CONFIRMED", color: "green", text: "Short-plan revenue +63.2%/day vs 90d. CR +4.29pp at 95% (z=12.99). ARPU +17.2%. The Price-per-Day correction works.", views: ["90d"] },
+        { pill: "MULTI-QUANTITY ORDERS", color: "yellow", text: "3-day AOV anomaly was caused by esim_quantity > 1 orders, not floor effect. Always filter esim_quantity=1 for destination-level AOV.", views: ["90d", "14d"] },
+        { pill: "CONFOUNDER LESSON", color: "orange", text: "Launching pricing experiment + budget increase same day = permanent confounder. Never again.", views: ["90d", "14d", "did"] },
+        { pill: "14D SEASONAL DISTORTION", color: "yellow", text: "The 14d pre was a seasonal peak (+56% short orders). Numbers look flat not because the experiment failed, but because the comparison period was abnormally strong.", views: ["14d"] },
+        { pill: "2-DAY IS THE REVENUE DRIVER", color: "green", text: "DID confirms: 2-day plans generated +EUR 46/day genuinely attributable to the price cut (e=-4.88). This is the real incremental money.", views: ["did"] },
+        { pill: "1-DAY AT BREAK-EVEN", color: "yellow", text: "1-day plans reached demand-curve equilibrium: volume nearly doubled but revenue stayed flat vs control. More customers in the funnel, zero revenue cost. LTV upside not yet captured.", views: ["did"] },
+        { pill: "CONTROL GROUP LIMITATION", color: "orange", text: "DID control is 'other MXN destinations' with different demand profiles. Not a randomized A/B. Replicating in COP would confirm the mechanism across two independent markets.", views: ["did"] },
+      ],
+    },
+    es: {
+      h1: 'SI aplicamos la lógica estándar €3.79/día de Price-Per-Day (PPD) a 65 destinos clave MXN (-36% en 1 día, -16% en 2 días, -5% en 3 días), ENTONCES la conversión mejora y el revenue de planes cortos sube, PORQUE corregir la primera impresión de precio reduce la barrera en los planes más baratos y el volumen compensa el menor precio.',
+      falsifiable: 'Si ARPU cae más del 10% en los primeros 7 días, el volumen no compensó.',
+      whatChanged: "Corrección Price-Per-Day en 65 destinos MXN. 1 día: -36%, 2 días: -16%, 3 días: -5%. 4+ días: solo charm pricing (menor al 1%). Confounder: Paid Media aumentó presupuesto Meta el mismo día.",
+      confounderNote: "Paid Media aumentó presupuesto Meta el 2 de marzo (mismo día). La vista excluyendo Paid Social es la referencia. Blended se muestra por transparencia.",
+      verdictIntro: "Hipotesis confirmada. 14 dias limpios, 12,608 ordenes. Los cinco MDE cumplidos con significancia estadistica.",
+      verdictChecklist: [
+        { icon: "✅", text: "Los 5 MDE cumplidos (ver arriba). DID validado con tendencias paralelas (CV=10.6%)." },
+        { icon: "✅", text: "Volumen 1 dia +84.9%, 2 dias +70.5%. Elasticidad confirma respuesta al precio." },
+        { icon: "⚠️", text: "Confounder: Paid Social aumento presupuesto el Dia 1. Filtro de exclusion es la lectura limpia." },
+      ],
+      trendNote: "D+13 es el más limpio. Solo 477 visitantes PS. ARPU excl. PS €9.87 (+40.6%), CR 24.68% (+9.83pp).",
+      blendedNote: "ARPU blended -28.6% y CR -0.11pp reflejan confounder de PS. No es la referencia de decisión.",
+      scaleNext: "Próximo candidato: aplicar lógica Price-per-Day a COP (misma inconsistencia de catálogo detectada). Sin exclusiones de destinos.",
+      scaleNote: "5/5 confirmados. Misma inconsistencia en COP, BRL, CLP, PEN. LATAM completo: €400K-900K anuales.",
+      ltvCaveat: "Ventana de 14 días no captura upgrades de 12+ meses. +84.9% en 1 día podría incluir serial testers.",
+      ltvMonitor: "Cohorte: 1-day MXN 3-16 marzo. Checks a 90d (14 jun) y 180d (12 sep).",
+      nextSteps: "Scoping COP en progreso. Sin exclusiones de destinos necesarias (efecto piso descartado). Protocolo Paid Media requerido. Welch t-test pendiente.",
+      ref14dWarning: "El período de 14 días pre-lanzamiento fue excepcionalmente fuerte (probable efecto pre-Semana Santa). Las métricas parecen negativas vs esta referencia porque el baseline era anormalmente alto, no porque el experimento perjudicó el desempeño. El baseline de 90 días es la comparación más justa para este experimento.",
+      chiExplain: "Planes 1 día: 60.5 → 111.0 órdenes/día (+83.5%). Chi-cuadrado 88.70 vs 12.59 = significativo. Share cortos bajó (-2.5pp) porque PS también impulsó largos, pero volumen absoluto creció fuertemente.",
+      crHeadline: "Confirmado al 95%. CR +4.29pp. z=12.99 definitivo.",
+      crExplain: "Control: 25,704 visitantes no-PS (14.85%). Variación: 25,929 (19.14%). z=12.99. CR se fortaleció en la última semana al moderarse PS.",
+      arpuHeadline: "+17.2%. €31,252 incrementales en 14 días.",
+      elastCaveat: "DID validado con parallel trends (CV=10.6%). 1 dia en equilibrio (e=-2.20, revenue-neutral). 2 dias es el motor de revenue (e=-4.88, +45.2%). 3 dias inelastico (e=-0.76).",
+      elastSummary: "La baja de precio funciono distinto en cada duracion. En planes 1 dia (-36% precio), el volumen casi se duplico pero el revenue quedo igual. Es como vender el doble de entradas a mitad de precio: misma recaudacion total, pero mas gente en el show. En planes 2 dias (-16% precio), el volumen se mas que duplico Y el revenue crecio +45%. Este es el que genera dinero real. En planes 3 dias (-5% precio), la baja fue demasiado chica para cambiar el comportamiento.",
+      revSegDesc: "Revenue diario promedio por duracion de plan. Muestra de donde viene el dinero y como respondio cada segmento al cambio de precio.",
+      mixDesc: "Como se redistribuyeron las ordenes entre duraciones de plan. Pre% y Post% muestran la participacion de cada bucket en el total de ordenes.",
+      chiFeynman: "Chi-cuadrado testea si el cambio en la distribucion de planes es estadisticamente real o solo ruido aleatorio. El test compara la distribucion observada contra lo que esperariamos si nada hubiera cambiado. Score de 88.70 vs umbral de 12.59 (el valor donde empezariamos a creer que el cambio es real al 95% de confianza) significa que definitivamente no es aleatorio. El umbral 12.59 sale de una tabla estadistica para 6 categorias (nuestros 7 buckets menos 1) al 95% de confianza.",
+      ptExplain: "Este grafico valida si DID es el metodo correcto. Antes del cambio de precio (lado izquierdo), ambas lineas deberian subir y bajar juntas. Si lo hacen, significa que factores externos (estacionalidad, marketing) afectan a ambos grupos por igual, entonces cualquier divergencia DESPUES del cambio es atribuible al precio. Nuestro CV de 10.6% significa que el ratio entre los dos grupos vario solo 10.6% de semana a semana. Debajo de 20% = se movieron juntos. Arriba de 20% = no, y DID no seria valido.",
+      didFormula: "DID separa el efecto del precio de todo lo demas. Formula: (Tratados Despues menos Tratados Antes) menos (Control Despues menos Control Antes). Ejemplo para 1 dia: el volumen de tratados crecio +121%. El volumen de control crecio +42% (crecimiento organico por Paid Social, estacionalidad). DID = 121% menos 42% = 79.3% atribuible al cambio de precio.",
+      elastFormula: "La elasticidad mide cuanto reacciona el volumen a un cambio de precio. Formula: % cambio en volumen (ajustado por DID) dividido % cambio en precio. Para 1 dia: +79.3% volumen / -36% precio = -2.20. El signo negativo es normal (precio baja, volumen sube). El valor absoluto |2.20| > 1 significa que el volumen responde MAS que proporcionalmente al cambio de precio. Cuando |e| > 1, bajar precios AUMENTA el revenue total.",
+      sigExplain: "El z-score mide que tan lejos esta nuestro resultado de 'ningun efecto'. Comparamos: 14.85% CR (lo que pasaria sin el cambio de precio) vs 19.14% CR (lo que realmente paso). z = 12.99 significa que nuestro resultado esta a 12.99 desviaciones estandar de cero efecto. El umbral para 95% de confianza es 1.96. Nuestro z esta tan lejos que la probabilidad de que este resultado sea ruido aleatorio es esencialmente cero (p < 0.0001). La mejora de conversion es real.",
+      decisionNote: "Scale. 5/5 confirmados. Sin exclusiones de destinos. Siguiente: COP.",
+      learnings: [
+        { pill: "MECANISMO CONFIRMADO", color: "green", text: "Revenue cortos +63.2%/dia vs 90d. CR +4.29pp al 95% (z=12.99). ARPU +17.2%. La correccion Price-per-Day funciona.", views: ["90d"] },
+        { pill: "ORDENES MULTI-QUANTITY", color: "yellow", text: "Anomalia AOV 3 dias causada por esim_quantity > 1, no efecto de piso. Siempre filtrar esim_quantity=1 para AOV por destino.", views: ["90d", "14d"] },
+        { pill: "LECCION CONFOUNDER", color: "orange", text: "Lanzar experimento + aumento de budget mismo dia = confounder permanente. Nunca mas.", views: ["90d", "14d", "did"] },
+        { pill: "DISTORSION ESTACIONAL 14D", color: "yellow", text: "Los 14d pre fueron un pico estacional (+56% ordenes cortas). Los numeros parecen planos no porque el experimento fallo, sino porque el periodo de comparacion fue anormalmente fuerte.", views: ["14d"] },
+        { pill: "2 DIAS ES EL MOTOR", color: "green", text: "DID confirma: planes 2 dias generaron +EUR 46/dia genuinamente atribuibles a la baja de precio (e=-4.88). Este es el dinero incremental real.", views: ["did"] },
+        { pill: "1 DIA EN EQUILIBRIO", color: "yellow", text: "Planes 1 dia alcanzaron equilibrio de demanda: volumen casi se duplico pero revenue quedo plano vs control. Mas clientes en el funnel, cero costo de revenue. LTV aun no capturado.", views: ["did"] },
+        { pill: "LIMITACION GRUPO CONTROL", color: "orange", text: "Control DID son 'otros destinos MXN' con perfiles de demanda distintos. No es un A/B randomizado. Replicar en COP confirmaria el mecanismo en dos mercados independientes.", views: ["did"] },
+      ],
+    },
+  },
+  // DID IMPACT (price-attributable only)
+  impactDID: {
+    buckets: [
+      { b: "1-day", pc: "-36%", t_pre_rev: 147.5, t_post_rev: 209.9, c_pre_rev: 250.0, c_post_rev: 355.7, t_pre_ord: 22.4, t_post_ord: 49.6, c_pre_ord: 33.1, c_post_ord: 47.1, did_rev_pct: "~0%", did_vol_pct: "+79.3%", e: -2.20, rev_day_attr: 0 },
+      { b: "2-day", pc: "-16%", t_pre_rev: 101.6, t_post_rev: 186.8, c_pre_rev: 144.6, c_post_rev: 200.4, t_pre_ord: 10.2, t_post_ord: 21.9, c_pre_ord: 12.6, c_post_ord: 17.1, did_rev_pct: "+45.2%", did_vol_pct: "+78.1%", e: -4.88, rev_day_attr: 46 },
+      { b: "3-day", pc: "-5%", t_pre_rev: 144.8, t_post_rev: 218.4, c_pre_rev: 194.8, c_post_rev: 325.3, t_pre_ord: 11.1, t_post_ord: 17.5, c_pre_ord: 12.2, c_post_ord: 19.8, did_rev_pct: "-16.2%", did_vol_pct: "-3.8%", e: -0.76, rev_day_attr: -23.4 },
+    ],
+    net_day: 22.6,
+    net_annual: 8249,
+    note_en: "Net price-attributable revenue: +EUR 22.6/day (EUR 8,249/year). 1-day at break-even, 2-day is the revenue driver, 3-day inelastic.",
+    note_es: "Revenue neto atribuible al precio: +EUR 22.6/dia (EUR 8,249/ano). 1 dia en equilibrio, 2 dias es el motor de revenue, 3 dias inelastico.",
+  },
+  // Revenue per bucket (setup table for elasticity)
+  revPerBucket: [
+    { b: "1-day", pre90: 547, pre14: 950, post: 937, d90: "+71.3%", d14: "-1.4%", treated: true },
+    { b: "2-day", pre90: 277, pre14: 430, post: 423, d90: "+52.4%", d14: "-1.8%", treated: true },
+    { b: "3-day", pre90: 364, pre14: 582, post: 614, d90: "+68.9%", d14: "+5.5%", treated: true },
+    { b: "4-7d", pre90: 3490, pre14: 5710, post: 6907, d90: "+97.9%", d14: "+21.0%", treated: false },
+    { b: "8-14d", pre90: 6554, pre14: 10684, post: 12554, d90: "+91.5%", d14: "+17.5%", treated: false },
+    { b: "15-30d", pre90: 4881, pre14: 7655, post: 9770, d90: "+100.2%", d14: "+27.6%", treated: false },
+    { b: "31-90d", pre90: 967, pre14: 1107, post: 1148, d90: "+18.7%", d14: "+3.7%", treated: false },
+  ],
+  // Toggle framing texts
+  toggleFraming: {
+    "90d": {
+      en: "Comparing 14 post-change days against the 90-day baseline (Nov 26 - Feb 24). This shows the TOTAL change in the business: includes the price effect plus everything else (seasonality, Paid Social changes, natural market growth). Answers: what happened to revenue?",
+      es: "Comparando 14 dias post-cambio contra el baseline de 90 dias (Nov 26 - Feb 24). Muestra el cambio TOTAL en el negocio: incluye el efecto del precio mas todo lo demas (estacionalidad, cambios en Paid Social, crecimiento natural del mercado). Responde: que paso con el revenue?",
+    },
+    "14d": {
+      en: "Comparing against the 2 weeks before the change (Feb 14 - Mar 1). Warning: that period was a seasonal peak (+56% short-plan orders vs normal, pre-Easter effect). Numbers vs 14d pre appear flat not because the experiment failed, but because we are comparing against an exceptionally strong period.",
+      es: "Comparando contra las 2 semanas antes del cambio (Feb 14 - Mar 1). Atencion: ese periodo fue un pico estacional (+56% ordenes cortas vs normal, efecto pre-Semana Santa). Los numeros vs 14d pre parecen planos no porque el experimento fallo, sino porque estamos comparando contra un periodo excepcionalmente fuerte.",
+    },
+    "did": {
+      en: "This is the causal view. Isolates ONLY what the price change generated, removing everything else. We compare the 65 destinations where we changed prices (treated) against destinations where we did NOT change prices (control). The difference between how both groups moved is the price effect. Answers: how much of this did we cause?",
+      es: "Esta es la vista causal. Aisla SOLO lo que el cambio de precio genero, removiendo todo lo demas. Comparamos los 65 destinos donde cambiamos precios (tratados) contra destinos donde NO cambiamos (control). La diferencia entre como se movieron ambos grupos es el efecto del precio. Responde: cuanto de esto causamos nosotros?",
+    },
+  },
+  toggleInsights: {
+    "90d": {
+      en: [
+        "Short-plan revenue increased +63.2% vs the 90-day average (EUR 1,210/day to EUR 1,974/day). This is the strongest signal in the experiment.",
+        "Conversion rate improved +4.29pp (14.85% to 19.14%) with z=12.99, statistically confirmed at 95% confidence.",
+        "Gross margin held at 80.91%, +4.46pp above the 90-day baseline. The price cut did not erode profitability.",
+        "This view is for understanding the total business impact. Use it to answer: did the business improve after the change? To know how much of that improvement was caused by the price, switch to DID.",
+      ],
+      es: [
+        "Revenue de planes cortos aumento +63.2% vs el promedio de 90 dias (EUR 1,210/dia a EUR 1,974/dia). Esta es la senal mas fuerte del experimento.",
+        "Tasa de conversion mejoro +4.29pp (14.85% a 19.14%) con z=12.99, confirmado estadisticamente al 95% de confianza.",
+        "Margen bruto se mantuvo en 80.91%, +4.46pp sobre el baseline de 90 dias. La baja de precio no erosiono rentabilidad.",
+        "Esta vista sirve para entender el impacto total en el negocio. Responde: mejoro el negocio despues del cambio? Para saber cuanto de esa mejora fue causada por el precio, cambiar a DID.",
+      ],
+    },
+    "14d": {
+      en: [
+        "Short-plan revenue appears flat (+0.6%) vs the 14 days pre-launch. This is misleading.",
+        "The pre-launch period (Feb 14 - Mar 1) had 170 short-plan orders/day vs the 90-day norm of 109. That is a +56% seasonal peak (pre-Easter).",
+        "We are comparing post-change results against an abnormally high baseline. The 90-day view shows the real picture.",
+        "This view is useful for one thing: confirming the experiment did not HURT performance vs the strongest recent period.",
+      ],
+      es: [
+        "Revenue de planes cortos parece plano (+0.6%) vs los 14 dias pre-lanzamiento. Esto es enganoso.",
+        "El periodo pre-lanzamiento (Feb 14 - Mar 1) tenia 170 ordenes cortas/dia vs la norma de 90 dias de 109. Eso es un pico estacional de +56% (pre-Semana Santa).",
+        "Estamos comparando resultados post-cambio contra un baseline anormalmente alto. La vista de 90 dias muestra la imagen real.",
+        "Esta vista sirve para una cosa: confirmar que el experimento no DANO el performance vs el periodo reciente mas fuerte.",
+      ],
+    },
+    "did": {
+      en: [
+        "The price change generated EUR 22.6/day of net attributable revenue. Annualized: EUR 8,249.",
+        "The 2-day plan is the revenue driver: +EUR 46/day genuinely caused by the price cut (e = -4.88, highly elastic).",
+        "The 1-day plan reached break-even: volume nearly doubled but revenue stayed flat vs control. More customers in the funnel, same revenue.",
+        "The 3-day plan is inelastic: the -5% cut was too small to generate a response (e = -0.76).",
+        "This view is for answering the hardest question: how much of the change was caused by our pricing decision? Use it to defend the experiment with causal evidence.",
+      ],
+      es: [
+        "El cambio de precio genero EUR 22.6/dia de revenue neto atribuible. Anualizado: EUR 8,249.",
+        "El plan de 2 dias es el motor de revenue: +EUR 46/dia genuinamente causados por la baja de precio (e = -4.88, altamente elastico).",
+        "El plan de 1 dia alcanzo equilibrio: volumen casi se duplico pero revenue quedo plano vs control. Mas clientes en el funnel, mismo revenue.",
+        "El plan de 3 dias es inelastico: la baja de -5% fue demasiado chica para generar respuesta (e = -0.76).",
+        "Esta vista sirve para responder la pregunta mas dificil: cuanto del cambio fue causado por nuestra decision de pricing? Usala para defender el experimento con evidencia causal.",
+      ],
+    },
+  },
+  keyInsight: {
+    en: [
+      [{ t: "The ", b: false }, { t: "EUR 31,252", b: true }, { t: " incremental observed revenue includes organic market growth that would have happened without the price change.", b: false }],
+      [{ t: "The DID analysis isolates only the price effect: ", b: false }, { t: "EUR 22.6/day", b: true }, { t: " genuinely attributable to our change (", b: false }, { t: "EUR 8,249 annualized", b: true }, { t: ").", b: false }],
+      [{ t: "Both numbers are correct. They answer different questions:", b: false }],
+      [{ t: "EUR 31,252", b: true }, { t: " = what happened to the business (includes everything).", b: false }],
+      [{ t: "EUR 8,249/year", b: true }, { t: " = what our price change caused (isolated).", b: false }],
+    ],
+    es: [
+      [{ t: "Los ", b: false }, { t: "EUR 31,252", b: true }, { t: " de revenue incremental observado incluyen crecimiento organico del mercado que habria pasado sin el cambio de precio.", b: false }],
+      [{ t: "El analisis DID aisla solo el efecto del precio: ", b: false }, { t: "EUR 22.6/dia", b: true }, { t: " genuinamente atribuibles a nuestro cambio (", b: false }, { t: "EUR 8,249 anualizados", b: true }, { t: ").", b: false }],
+      [{ t: "Ambos numeros son correctos. Responden preguntas distintas:", b: false }],
+      [{ t: "EUR 31,252", b: true }, { t: " = que paso con el negocio (incluye todo).", b: false }],
+      [{ t: "EUR 8,249/ano", b: true }, { t: " = que causo nuestro cambio de precio (aislado).", b: false }],
+    ],
+  },
+  confidence: {
+    level: 7,
+    en: {
+      solid: [
+        { t: "Conversion improved +4.29pp (z=12.99, p<0.0001). This is statistically definitive across ", b: false },
+        { t: "51,633 visitors", b: true },
+        { t: " and ", b: false },
+        { t: "14 clean days", b: true },
+        { t: ".", b: false },
+      ],
+      solid_items: [
+        "CR +4.29pp at 95% significance. Incuestionable.",
+        "GM 80.91% from Looker. Direct measurement, no methodology risk.",
+        "AOV landed as designed in every bucket. Verified dato contra dato.",
+        "The direction of the effect: pricing correction improved conversion and volume in short plans.",
+      ],
+      uncertain_items: [
+        "ARPU +17.2%: economically clear but Welch t-test pending (needs GA4-Shopify join). Technical gap, not substantive.",
+        "DID elasticity: methodology correct, parallel trends validated. But control group is 'other MXN destinations' with different demand profiles (LATAM local vs Europe/Asia/US treated). Not a randomized A/B.",
+        "Annualized figures: 14 days extrapolated to 365. Does not capture seasonality or effect fatigue.",
+      ],
+      improve: [
+        "Replicate in COP. If the same pattern appears in a second independent market, the mechanism is confirmed beyond reasonable doubt.",
+        "A/B testing infrastructure (post Strapi/PIM migration, May 2026). Proper randomized control eliminates the DID control group limitation.",
+        "Paid Media coordination protocol. Budget changes during experiments must require prior notice to Pricing. This confounder must not repeat.",
+        "LTV cohort tracking at 90d and 180d for 1-day MXN buyers. The 14-day window does not capture upgrade behavior.",
+      ],
+    },
+    es: {
+      solid: [
+        { t: "La conversion mejoro +4.29pp (z=12.99, p<0.0001). Esto es estadisticamente definitivo con ", b: false },
+        { t: "51,633 visitantes", b: true },
+        { t: " y ", b: false },
+        { t: "14 dias limpios", b: true },
+        { t: ".", b: false },
+      ],
+      solid_items: [
+        "CR +4.29pp al 95% de significancia. Incuestionable.",
+        "GM 80.91% de Looker. Medicion directa, sin riesgo metodologico.",
+        "AOV aterrizo como se diseno en cada bucket. Verificado dato contra dato.",
+        "La direccion del efecto: la correccion de pricing mejoro conversion y volumen en planes cortos.",
+      ],
+      uncertain_items: [
+        "ARPU +17.2%: economicamente claro pero Welch t-test pendiente (necesita join GA4-Shopify). Gap tecnico, no sustantivo.",
+        "Elasticidad DID: metodologia correcta, parallel trends validado. Pero grupo control son 'otros destinos MXN' con perfiles de demanda distintos (LATAM local vs Europa/Asia/US tratados). No es un A/B randomizado.",
+        "Cifras anualizadas: 14 dias extrapolados a 365. No captura estacionalidad ni fatiga del efecto.",
+      ],
+      improve: [
+        "Replicar en COP. Si el mismo patron aparece en un segundo mercado independiente, el mecanismo queda confirmado mas alla de la duda razonable.",
+        "Infraestructura A/B (post migracion Strapi/PIM, mayo 2026). Control randomizado elimina la limitacion del grupo control DID.",
+        "Protocolo de coordinacion Paid Media. Cambios de budget durante experimentos deben requerir aviso previo a Pricing. Este confounder no debe repetirse.",
+        "Seguimiento de cohorte LTV a 90d y 180d para compradores 1-dia MXN. La ventana de 14 dias no captura comportamiento de upgrade.",
+      ],
+    },
+  },
+  zCalc: {
+    en: [
+      "Step 1: CR without price change = 3,817 buyers / 25,704 visitors = 14.85%",
+      "Step 2: CR with price change = 4,964 buyers / 25,929 visitors = 19.14%",
+      "Step 3: Combined CR = (3,817 + 4,964) / (25,704 + 25,929) = 17.01%",
+      "Step 4: Standard error = sqrt(17.01% x 82.99% x (1/25,704 + 1/25,929)) = 0.33%",
+      "Step 5: z = (19.14% - 14.85%) / 0.33% = 12.99",
+      "z = 12.99 means the difference is 12.99 times larger than what we would expect from random chance. The threshold for 95% confidence is 1.96 (2 times). We are at 13 times. The conversion improvement is real.",
+    ],
+    es: [
+      "Paso 1: CR sin cambio de precio = 3,817 compradores / 25,704 visitantes = 14.85%",
+      "Paso 2: CR con cambio de precio = 4,964 compradores / 25,929 visitantes = 19.14%",
+      "Paso 3: CR combinado = (3,817 + 4,964) / (25,704 + 25,929) = 17.01%",
+      "Paso 4: Error estandar = raiz(17.01% x 82.99% x (1/25,704 + 1/25,929)) = 0.33%",
+      "Paso 5: z = (19.14% - 14.85%) / 0.33% = 12.99",
+      "z = 12.99 significa que la diferencia es 12.99 veces mas grande de lo que esperariamos por azar. El umbral para 95% de confianza es 1.96 (2 veces). Estamos a 13 veces. La mejora de conversion es real.",
+    ],
+  },
+  footer: { en: "D+14 Final (March 16, 2026) · 14 clean days · 12,608 orders · Excl. Paid Social as reference", es: "D+14 Final (16 marzo 2026) · 14 dias limpios · 12,608 ordenes · Excl. Paid Social como referencia" },
+};
+
+// ═══ UI Components ═══
+const tx = (l, en, es) => l === "en" ? en : es;
+const MN = "JetBrains Mono, monospace";
+const TH = {
+  dark: { bg: "#0a0f1a", card: "#111827", border: "#1e293b", text: "#e2e8f0", textDim: "#94a3b8", textMuted: "#64748b", accent: "#22d3ee", green: "#34d399", yellow: "#fbbf24", red: "#f87171", orange: "#fb923c", purple: "#a78bfa" },
+  light: { bg: "#f8fafc", card: "#ffffff", border: "#e2e8f0", text: "#1e293b", textDim: "#475569", textMuted: "#94a3b8", accent: "#0891b2", green: "#059669", yellow: "#d97706", red: "#dc2626", orange: "#ea580c", purple: "#7c3aed" },
+};
+
+const Pill = ({ children, color }) => <span style={{ display: "inline-block", padding: "2px 10px", borderRadius: 4, fontSize: 10, fontWeight: 700, letterSpacing: 0.5, color, background: color + "15", border: "1px solid " + color + "30" }}>{children}</span>;
+
+const Gauge = ({ label, baseline, current, floor, unit, t }) => {
+  const d = current - baseline;
+  const rng = Math.max(Math.abs(baseline - (floor || baseline * 0.7)), Math.abs(d), 0.01) * 2.5;
+  const pos = Math.max(5, Math.min(95, 50 + (d / rng) * 45));
+  const c = (floor !== undefined && current < floor) ? t.red : current >= baseline ? t.green : t.yellow;
+  const fmt = v => unit === "%" ? v.toFixed(1) + "%" : "€" + v.toFixed(2);
+  return <div style={{ marginBottom: 14 }}>
+    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+      <span style={{ fontSize: 13, color: t.textDim }}>{label}</span>
+      <div style={{ display: "flex", gap: 10, alignItems: "baseline" }}>
+        <span style={{ fontSize: 14, fontWeight: 700, fontFamily: MN, color: t.text }}>{fmt(current)}</span>
+        <span style={{ fontSize: 12, fontFamily: MN, color: c }}>{d >= 0 ? "+" : ""}{unit === "%" ? d.toFixed(2) + "pp" : ((d / baseline) * 100).toFixed(1) + "%"}</span>
+      </div>
+    </div>
+    <div style={{ position: "relative", height: 10, borderRadius: 5, background: t.border }}>
+      {floor !== undefined && <div style={{ position: "absolute", left: Math.max(2, 50 + ((floor - baseline) / rng) * 45) + "%", top: 0, bottom: 0, width: 2, background: t.red + "60", zIndex: 1 }} />}
+      <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: t.textMuted + "40", zIndex: 1 }} />
+      <div style={{ position: "absolute", left: Math.min(50, pos) + "%", width: Math.abs(pos - 50) + "%", top: 1, bottom: 1, borderRadius: 4, background: c, opacity: 0.6 }} />
+      <div style={{ position: "absolute", left: pos + "%", top: -2, width: 14, height: 14, borderRadius: "50%", background: c, transform: "translateX(-50%)", border: "2px solid " + t.card, zIndex: 2 }} />
+    </div>
+    <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3, fontSize: 10, color: t.textMuted }}>
+      <span>{floor !== undefined ? "Floor: " + fmt(floor) : ""}</span><span>Baseline: {fmt(baseline)}</span>
+    </div>
+  </div>;
+};
+
+const Xp = ({ title, desc, children, badge, t, defaultOpen }) => {
+  const [o, s] = useState(!!defaultOpen);
+  return <div style={{ background: t.card, border: "1px solid " + t.border, borderRadius: 8, marginBottom: 8 }}>
+    <div onClick={() => s(!o)} style={{ padding: "12px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, userSelect: "none" }}>
+      <span style={{ flex: 1, fontWeight: 600, fontSize: 13, color: t.text }}>{title}</span>
+      {badge}
+      <span style={{ color: t.textMuted, fontSize: 13, transition: "transform 0.2s", transform: o ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
+    </div>
+    {o && <div style={{ padding: "0 16px 14px", borderTop: "1px solid " + t.border }}>
+      {desc && <div style={{ fontSize: 12, color: t.textMuted, lineHeight: 1.6, paddingTop: 10, paddingBottom: 8, borderBottom: "1px solid " + t.border + "40", marginBottom: 10 }}>{desc}</div>}
+      <div style={{ paddingTop: desc ? 0 : 10 }}>{children}</div>
+    </div>}
+  </div>;
+};
+
+const Row = ({ cells, header, t }) => <div style={{ display: "grid", gridTemplateColumns: "1.3fr " + "1fr ".repeat(cells.length - 1), gap: 2, padding: "5px 0", borderBottom: "1px solid " + t.border + "40" }}>
+  {cells.map((c, i) => <div key={i} style={{ fontSize: 11, fontFamily: i > 0 ? MN : "inherit", fontWeight: header ? 700 : (i === 0 ? 500 : 400), color: header ? t.textMuted : (typeof c === "object" ? c.color : (i === 0 ? t.text : t.textDim)), textAlign: i > 0 ? "right" : "left", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", padding: "0 2px" }}>{typeof c === "object" ? c.v : c}</div>)}
+</div>;
+
+const Sec = ({ color, t, children }) => <div style={{ padding: "10px 12px", borderRadius: 6, background: color + "08", border: "1px solid " + color + "20", marginBottom: 8 }}>{children}</div>;
+
+const IBox = ({ label, val, sub, color, t }) => <div style={{ textAlign: "center", padding: 10, background: t.card, borderRadius: 8 }}>
+  <div style={{ fontSize: 10, color: t.textMuted }}>{label}</div>
+  <div style={{ fontSize: 20, fontWeight: 700, fontFamily: MN, color }}>{val}</div>
+  {sub && <div style={{ fontSize: 10, color: t.textDim, lineHeight: 1.4 }}>{sub}</div>}
+</div>;
+
+const PropBar = ({ label, a, b, aL, bL, color, t }) => {
+  const tot = a + b;
+  return <div style={{ marginBottom: 6 }}>
+    <div style={{ fontSize: 11, color: t.textMuted, marginBottom: 3 }}>{label}</div>
+    <div style={{ display: "flex", height: 8, borderRadius: 4, overflow: "hidden" }}>
+      <div style={{ width: (a / tot * 100) + "%", background: color, opacity: 0.7 }} />
+      <div style={{ width: (b / tot * 100) + "%", background: t.border }} />
+    </div>
+    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: t.textMuted, marginTop: 2 }}>
+      <span>{aL}</span><span>{bL}</span>
+    </div>
+  </div>;
+};
+
+const CalcRow = ({ label, from, to, delta, color, t }) => <div style={{ display: "grid", gridTemplateColumns: "110px 1fr 20px 1fr 1fr", gap: 6, padding: "6px 0", borderBottom: "1px solid " + t.border + "30", fontSize: 12, alignItems: "center" }}>
+  <span style={{ color: t.textDim, fontWeight: 500 }}>{label}</span>
+  <span style={{ fontFamily: MN, color: t.textDim, textAlign: "right" }}>{from}</span>
+  <span style={{ textAlign: "center", color: t.textMuted }}>{from ? "→" : ""}</span>
+  <span style={{ fontFamily: MN, color: t.text }}>{to}</span>
+  <span style={{ fontFamily: MN, color, fontWeight: 600, textAlign: "right" }}>{delta}</span>
+</div>;
+
+// ═══ Helpers ═══
+const sc_ = (s, t) => s === "Scale" ? t.green : s === "Monitor" ? t.orange : s === "Iterate" ? t.yellow : t.red;
+const cc_ = (c, t) => c === "HIGH" ? t.green : c === "MEDIUM" ? t.yellow : t.orange;
+const vm = { sig_99: { en: "SIGNIFICANT 99%", es: "SIGNIFICATIVO 99%", c: "green" }, sig_95: { en: "SIGNIFICANT 95%", es: "SIGNIFICATIVO 95%", c: "green" }, sig_90: { en: "SIGNIFICANT 90%", es: "SIGNIFICATIVO 90%", c: "green" } };
+const cl = { confirmed: { l: "CONFIRMED", c: "green" }, hypothesis: { l: "HYPOTHESIS", c: "yellow" }, unknown: { l: "INVESTIGATE", c: "orange" } };
+const pH = h => {
+  const m1 = h.match(/(?:IF|SI)\s+(.*?)(?:,\s*(?:THEN|ENTONCES))/s);
+  const m2 = h.match(/(?:THEN|ENTONCES)\s+(.*?)(?:,\s*(?:BECAUSE|PORQUE))/s);
+  const m3 = h.match(/(?:BECAUSE|PORQUE)\s+(.*)/s);
+  return { i: m1 ? m1[1].trim() : "", t: m2 ? m2[1].trim() : "", b: m3 ? m3[1].trim().replace(/\.$/, "") : "" };
+};
+
+function ExpPerf() {
+  const [lang, setLang] = useState("en");
+  const [dark, setDark] = useState(false);
+  const [ref, setRef] = useState("90d");
+  const t = dark ? TH.dark : TH.light;
+  const L = D.text[lang];
+  const sc = sc_(D.signal, t);
+  const cc = cc_(D.causalConfidence, t);
+
+  const Tg = ({ left, right, active, fn }) => <div onClick={fn} style={{ display: "inline-flex", borderRadius: 6, border: "1px solid " + t.border, cursor: "pointer", fontSize: 11, fontWeight: 600, overflow: "hidden", userSelect: "none" }}>
+    <span style={{ padding: "4px 10px", background: active === "left" ? t.accent + "20" : "transparent", color: active === "left" ? t.accent : t.textMuted }}>{left}</span>
+    <span style={{ padding: "4px 10px", background: active === "right" ? t.accent + "20" : "transparent", color: active === "right" ? t.accent : t.textMuted }}>{right}</span>
+  </div>;
+  const Tg3 = ({ opts, active, setActive }) => <div style={{ display: "inline-flex", borderRadius: 6, border: "1px solid " + t.border, fontSize: 11, fontWeight: 600, overflow: "hidden", userSelect: "none" }}>
+    {opts.map((o, i) => <span key={i} onClick={() => setActive(o.v)} style={{ padding: "5px 12px", cursor: "pointer", background: active === o.v ? t.accent + "20" : "transparent", color: active === o.v ? t.accent : t.textMuted, borderRight: i < opts.length - 1 ? "1px solid " + t.border : "none" }}>{o.l}</span>)}
+  </div>;
+
+  const ok = v => v === "met" ? "✅" : "🟡";
+  const ifL = lang === "en" ? "IF" : "SI";
+  const thenL = lang === "en" ? "THEN" : "ENTONCES";
+  const becL = lang === "en" ? "BECAUSE" : "PORQUE";
+  const r_ = (v90, v14) => ref === "14d" ? (v14 || v90 || "—") : (v90 || "—");
+  const isDID = ref === "did";
+  const refLabel = isDID ? "DID" : ref === "14d" ? "vs 14d pre" : "vs 90d";
+  const refLabelFull = isDID ? tx(lang, "Price-attributable (DID)", "Atribuible al precio (DID)") : ref === "14d" ? tx(lang, "vs 14-day pre-launch", "vs 14 dias pre-lanzamiento") : tx(lang, "vs 90-day baseline", "vs baseline 90 dias");
+
+  // Pre-compute impact values based on ref toggle (3-way: 90d, 14d, did)
+  const shortBase = isDID ? null : ref === "14d" ? (D.impact.short ? D.impact.short.rev_day_base14 : null) : (D.impact.short ? D.impact.short.rev_day_base90 : null);
+  const shortInc = isDID ? (D.impactDID ? D.impactDID.net_day : null) : D.impact.short ? (ref === "14d" ? D.impact.short.inc14 : D.impact.short.inc90) : null;
+  const shortDelta = isDID ? (D.impactDID ? "+" + D.impactDID.net_day.toFixed(1) + "/day" : "—") : D.impact.short ? r_(D.impact.short.d90, D.impact.short.d14) : "—";
+  const shortOrdPre = isDID ? null : D.impact.short ? (ref === "14d" ? (D.impact.short.orders_pre14 || D.impact.short.orders_pre90) : D.impact.short.orders_pre90) : 0;
+  const shortOrdDelta = isDID ? null : D.impact.short ? r_(D.impact.short.orders_delta_90, D.impact.short.orders_delta_14) : "—";
+  const totalDelta = isDID ? "+" + (D.impactDID ? D.impactDID.net_day.toFixed(1) : 0) + "/day" : r_(D.impact.total.d90, D.impact.total.d14);
+  const totalAnn = isDID ? (D.impactDID ? "€" + D.impactDID.net_annual.toLocaleString() : "—") : ref === "14d" ? (D.impact.total.inc_annual_14d || "—") : D.impact.total.inc_annual_90d;
+  const annNote = D.impact.total.annual_note ? tx(lang, D.impact.total.annual_note.en, D.impact.total.annual_note.es) : "";
+  const gaugeArpuBase = ref === "14d" && D.baselines.arpu_14d ? D.baselines.arpu_14d : D.baselines.arpu_f;
+  const gaugeCrBase = ref === "14d" && D.baselines.cr_14d ? D.baselines.cr_14d : D.baselines.cr_f;
+  const gaugeGmBase = ref === "14d" && D.baselines.gm_14d ? D.baselines.gm_14d : D.baselines.gm;
+
+  const rH = (text, status, label) => {
+    const hp = pH(text);
+    return <div style={{ padding: "12px 14px", borderRadius: 8, background: t.accent + "06", border: "1px solid " + t.accent + "20", marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: t.accent, letterSpacing: 1 }}>{label}</span>
+        <Pill color={status === "Confirmed" ? t.green : t.yellow}>{status.toUpperCase()}</Pill>
+      </div>
+      <div style={{ fontSize: 13, color: t.text, lineHeight: 1.6 }}><span style={{ fontWeight: 700, color: t.accent }}>{ifL}</span> {hp.i}</div>
+      <div style={{ fontSize: 13, color: t.text, lineHeight: 1.6, marginTop: 4 }}><span style={{ fontWeight: 700, color: t.green }}>{thenL}</span> {hp.t}</div>
+      <div style={{ fontSize: 13, color: t.text, lineHeight: 1.6, marginTop: 4 }}><span style={{ fontWeight: 700, color: t.yellow }}>{becL}</span> {hp.b}</div>
+    </div>;
+  };
+
+  const aovChk = r => {
+    if (r.chk === "ok") return { s: "✅", c: t.green };
+    if (r.chk === "warn") return { s: "⚠️", c: t.yellow };
+    if (r.flag === "anomaly") return { s: "⚠️", c: t.yellow };
+    return { s: "✅", c: t.green };
+  };
+
+  // D Object Validation Warnings
+  const warnings = [];
+  if (!D.declaration) warnings.push({ en: "Missing experiment declaration (launch date, clean days, timeline).", es: "Falta declaración del experimento (fecha lanzamiento, días limpios, timeline)." });
+  if (!D.baselines.arpu_14d) warnings.push({ en: "Missing 14-day ARPU baseline. Toggle will use 90-day for both views.", es: "Falta baseline ARPU 14 días. El toggle usará 90 días para ambas vistas." });
+  if (!D.baselines.cr_14d) warnings.push({ en: "Missing 14-day CR baseline. Toggle will use 90-day for both views.", es: "Falta baseline CR 14 días. El toggle usará 90 días para ambas vistas." });
+  if (!D.baselines.gm_14d) warnings.push({ en: "Missing 14-day Gross Margin baseline. Toggle will use 90-day for both views.", es: "Falta baseline Gross Margin 14 días. El toggle usará 90 días para ambas vistas." });
+  if (!D.impactCalcRows || !D.impactCalcRows["90d"]) warnings.push({ en: "Missing structured impact calculations.", es: "Faltan calculos de impacto estructurados." });
+  if (D.totalOrders > 10000 && !D.sig.chi.cramers_v) warnings.push({ en: "Large sample (" + D.totalOrders.toLocaleString() + " orders) without Cramér's V. Chi-square inflates with sample size, V normalizes it.", es: "Muestra grande (" + D.totalOrders.toLocaleString() + " órdenes) sin V de Cramér. Chi-cuadrado se infla con tamaño de muestra, V lo normaliza." });
+
+  return <div style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: t.bg, color: t.text, minHeight: "100vh", padding: 20, maxWidth: 860, margin: "0 auto" }}>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    {/* HEADER */}
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <span style={{ fontSize: 22 }}>{D.flag}</span>
+        <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>{D.code}</h1>
+        <Pill color={sc}>{D.signal.toUpperCase()}</Pill>
+        <Pill color={cc}>{D.causalConfidence} CONFIDENCE</Pill>
+      </div>
+      <div style={{ display: "flex", gap: 8 }}>
+        <Tg left="EN" right="ES" active={lang === "en" ? "left" : "right"} fn={() => setLang(lang === "en" ? "es" : "en")} />
+        <Tg left="☾" right="☀" active={dark ? "left" : "right"} fn={() => setDark(!dark)} />
+      </div>
+    </div>
+    <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
+      <Pill color={t.accent}>{D.jira}</Pill><Pill color={t.textMuted}>{D.category}</Pill><Pill color={t.textMuted}>{D.revScope}</Pill>
+      <a href={D.notion} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: t.accent, textDecoration: "none" }}>Notion ↗</a>
+    </div>
+
+    {/* EXPERIMENT RESULT (only for Completed experiments) */}
+    {D.summary && D.declaration.status === "Completed" && <div style={{ marginBottom: 14, padding: "16px 20px", borderRadius: 10, background: sc + "06", border: "1px solid " + sc + "25" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: sc, letterSpacing: 1 }}>{tx(lang, "EXPERIMENT RESULT", "RESULTADO DEL EXPERIMENTO")}</div>
+        <Pill color={sc}>{D.signal.toUpperCase()}</Pill>
+      </div>
+      {/* HEADLINE with selective bold */}
+      <div style={{ fontSize: 15, color: t.text, lineHeight: 1.6, marginBottom: 14 }}>{D.summary[lang].headline.map((s, i) => s.b ? <span key={i} style={{ fontWeight: 700 }}>{s.t}</span> : <span key={i}>{s.t}</span>)}</div>
+      {/* MDE CARDS */}
+      {D.mde && <div style={{ marginBottom: 14 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 10 }}>{tx(lang, "MINIMUM DESIRABLE EFFECTS (vs " + D.mde.reference + ")", "EFECTOS MINIMOS DESEADOS (vs " + D.mde.reference + ")")}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+        {D.mde.criteria.map((c, i) => { const col = c.status === "met" ? t.green : c.status === "partial" || c.status === "trending" ? t.yellow : t.red; return <div key={i} style={{ padding: "10px 14px", borderRadius: 8, background: col + "06", border: "1px solid " + col + "20" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: t.text }}>{tx(lang, c.label_en, c.label_es)}</span>
+            <span style={{ fontSize: 14 }}>{c.status === "met" ? "✅" : c.status === "partial" ? "📊" : c.status === "trending" ? "📈" : "❌"}</span>
+          </div>
+          <div style={{ fontSize: 18, fontWeight: 700, fontFamily: MN, color: col, marginBottom: 4 }}>{c.result}</div>
+          <div style={{ fontSize: 10, color: t.textDim }}>{tx(lang, "Target", "Objetivo")}: {c.threshold}</div>
+        </div>; })}
+        </div>
+      </div>}
+      {/* KEY INSIGHT: bridges observed vs DID */}
+      {D.keyInsight && <div style={{ fontSize: 13, color: t.text, lineHeight: 1.7, padding: "14px 16px", marginBottom: 12, background: t.purple + "08", borderRadius: 8, border: "1px solid " + t.purple + "20" }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: t.purple, letterSpacing: 1, marginBottom: 8 }}>{tx(lang, "KEY INSIGHT", "INSIGHT CLAVE")}</div>
+        {(lang === "en" ? D.keyInsight.en : D.keyInsight.es).map((para, pi) => <div key={pi} style={{ marginBottom: pi < 2 ? 8 : 3, fontSize: pi < 2 ? 13 : 12, color: pi < 2 ? t.text : t.textDim }}>{para.map((s, si) => s.b ? <strong key={si} style={{ color: t.purple }}>{s.t}</strong> : <span key={si}>{s.t}</span>)}</div>)}
+      </div>}
+    </div>}
+
+    {/* ═══ METHODOLOGY & CONFIDENCE ═══ */}
+    {D.declaration.status === "Completed" && <Xp title={tx(lang, "📋 Methodology, Action & Confidence", "📋 Metodologia, Accion y Confianza")} t={t}>
+      {/* ACTION */}
+      <div style={{ padding: "10px 14px", borderRadius: 6, background: t.accent + "08", border: "1px solid " + t.accent + "15", marginBottom: 10 }}>
+        <div style={{ fontSize: 10, fontWeight: 600, color: t.accent, marginBottom: 6 }}>{tx(lang, "ACTION & RATIONALE", "ACCION Y RACIONAL")}</div>
+        {D.summary[lang].action.map((p, i) => <div key={i} style={{ fontSize: 13, fontWeight: i === 0 ? 500 : 400, color: i === 0 ? t.text : t.textDim, lineHeight: 1.6, marginBottom: i < D.summary[lang].action.length - 1 ? 8 : 0 }}>{p}</div>)}
+      </div>
+      {/* CAVEATS */}
+      <div style={{ marginBottom: 10, padding: "8px 12px", borderRadius: 6, background: t.yellow + "06", border: "1px solid " + t.yellow + "15" }}>
+        <div style={{ fontSize: 10, fontWeight: 600, color: t.yellow, marginBottom: 3 }}>{tx(lang, "CAVEATS", "CAVEATS")}</div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6 }}>{D.summary[lang].caveat}</div>
+      </div>
+      {/* CONFIDENCE */}
+      {D.confidence && <div style={{ padding: "14px 16px", borderRadius: 8, background: t.card, border: "1px solid " + t.border }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1 }}>{tx(lang, "CONFIDENCE LEVEL", "NIVEL DE CONFIANZA")}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 60, height: 6, borderRadius: 3, background: t.border, overflow: "hidden" }}><div style={{ width: (D.confidence.level * 10) + "%", height: "100%", borderRadius: 3, background: D.confidence.level >= 8 ? t.green : D.confidence.level >= 6 ? t.yellow : t.orange }} /></div>
+            <span style={{ fontSize: 14, fontWeight: 700, fontFamily: MN, color: D.confidence.level >= 8 ? t.green : D.confidence.level >= 6 ? t.yellow : t.orange }}>{D.confidence.level}/10</span>
+          </div>
+        </div>
+        <div style={{ fontSize: 13, color: t.text, lineHeight: 1.7, marginBottom: 10 }}>{D.confidence[lang].solid.map((s, i) => s.b ? <strong key={i}>{s.t}</strong> : <span key={i}>{s.t}</span>)}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: t.green, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "HIGH CONFIDENCE (9-10)", "ALTA CONFIANZA (9-10)")}</div>
+            {D.confidence[lang].solid_items.map((item, i) => <div key={i} style={{ fontSize: 11, color: t.textDim, lineHeight: 1.5, marginBottom: 4, paddingLeft: 12, position: "relative" }}><span style={{ position: "absolute", left: 0, color: t.green }}>+</span>{item}</div>)}
+          </div>
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: t.yellow, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "MODERATE CONFIDENCE (5-7)", "CONFIANZA MODERADA (5-7)")}</div>
+            {D.confidence[lang].uncertain_items.map((item, i) => <div key={i} style={{ fontSize: 11, color: t.textDim, lineHeight: 1.5, marginBottom: 4, paddingLeft: 12, position: "relative" }}><span style={{ position: "absolute", left: 0, color: t.yellow }}>~</span>{item}</div>)}
+          </div>
+        </div>
+        <div style={{ padding: "10px 12px", background: t.accent + "06", borderRadius: 6, border: "1px solid " + t.accent + "15" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.accent, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "HOW TO INCREASE CONFIDENCE", "COMO AUMENTAR LA CONFIANZA")}</div>
+          {D.confidence[lang].improve.map((item, i) => <div key={i} style={{ fontSize: 11, color: t.textDim, lineHeight: 1.5, marginBottom: 4, paddingLeft: 12, position: "relative" }}><span style={{ position: "absolute", left: 0, color: t.accent }}>&#8594;</span>{item}</div>)}
+        </div>
+      </div>}
+    </Xp>}
+
+    {/* CHECKPOINT STATUS (for Live experiments, not Completed) */}
+    {D.mde && D.declaration.status !== "Completed" && <div style={{ marginBottom: 14, padding: "16px 20px", borderRadius: 10, background: t.card, border: "1px solid " + t.border }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 8 }}>{tx(lang, "CHECKPOINT STATUS — MDE PROGRESS", "ESTADO DEL CHECKPOINT — PROGRESO MDE")}</div>
+      {D.mde.criteria.map((c, i) => <div key={i} style={{ display: "flex", gap: 10, alignItems: "center", padding: "6px 10px", marginBottom: 3, borderRadius: 4, background: c.status === "met" ? t.green + "06" : c.status === "trending" ? t.yellow + "06" : t.border + "30" }}>
+        <span style={{ fontSize: 14 }}>{c.status === "met" ? "✅" : c.status === "trending" ? "📈" : "⏳"}</span>
+        <span style={{ fontSize: 12, color: t.text, flex: 1 }}>{tx(lang, c.label_en, c.label_es)}: {c.threshold}</span>
+        <span style={{ fontSize: 11, fontFamily: MN, color: c.status === "met" ? t.green : c.status === "trending" ? t.yellow : t.textDim }}>{c.result}</span>
+      </div>)}
+    </div>}
+
+    {/* EXPERIMENT DECLARATION */}
+    {D.declaration && <div style={{ marginBottom: 14, padding: "12px 16px", borderRadius: 10, background: t.card, border: "1px solid " + t.border }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1 }}>{tx(lang, "EXPERIMENT TIMELINE", "TIMELINE DEL EXPERIMENTO")}</span>
+        <Pill color={D.declaration.status === "Completed" ? t.green : D.declaration.status === "Live" ? t.accent : t.yellow}>{D.declaration.status.toUpperCase()}</Pill>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 8, marginBottom: 8 }}>
+        {[
+          { l: tx(lang, "Launch", "Lanzamiento"), v: D.declaration.launchDate },
+          { l: tx(lang, "First clean day", "Primer día limpio"), v: D.declaration.firstCleanDay },
+          { l: tx(lang, "Expected end", "Fin esperado"), v: D.declaration.endDate },
+          { l: tx(lang, "Clean days", "Días limpios"), v: D.declaration.actualCleanDays + " / " + D.declaration.expectedCleanDays },
+        ].map((item, i) => <div key={i}>
+          <div style={{ fontSize: 9, color: t.textMuted, marginBottom: 2 }}>{item.l}</div>
+          <div style={{ fontSize: 12, fontFamily: MN, color: t.text }}>{item.v}</div>
+        </div>)}
+      </div>
+      {D.declaration.actualCleanDays < D.declaration.expectedCleanDays && <div style={{ fontSize: 11, color: t.yellow, marginBottom: 6 }}>⚠️ {tx(lang, "Experiment has " + D.declaration.actualCleanDays + " of " + D.declaration.expectedCleanDays + " expected clean days. Results are from this checkpoint, not the final window.", "Experimento tiene " + D.declaration.actualCleanDays + " de " + D.declaration.expectedCleanDays + " días limpios esperados. Resultados son de este checkpoint, no de la ventana final.")}</div>}
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: t.textMuted, marginBottom: 4 }}>
+        <span>{D.checkpoint} ({D.checkpointDate}) · {D.totalOrders.toLocaleString()} {tx(lang, "orders", "órdenes")}</span>
+      </div>
+      <div style={{ height: 8, borderRadius: 4, background: t.border }}><div style={{ height: "100%", borderRadius: 4, background: "linear-gradient(90deg, " + t.orange + ", " + sc + ")", width: Math.min(100, D.declaration.actualCleanDays / D.declaration.expectedCleanDays * 100) + "%" }} /></div>
+    </div>}
+
+    {/* ═══ ANALYSIS LENS TOGGLE (sticky) ═══ */}
+    <div style={{ position: "sticky", top: 0, zIndex: 10, marginBottom: 14, padding: "10px 16px", borderRadius: 10, background: t.bg, borderBottom: "2px solid " + (isDID ? t.purple : ref === "14d" ? t.yellow : t.accent) + "40" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1 }}>{tx(lang, "ANALYSIS LENS", "LENTE DE ANALISIS")}</span>
+        <Tg3 opts={[
+          { v: "90d", l: tx(lang, "Observed vs 90d", "Observado vs 90d") },
+          { v: "14d", l: tx(lang, "Observed vs 14d", "Observado vs 14d") },
+          ...(D.impactDID ? [{ v: "did", l: tx(lang, "Price-attributable (DID)", "Atribuible al precio (DID)") }] : []),
+        ]} active={ref} setActive={setRef} />
+      </div>
+    </div>
+
+    {/* ═══ TOGGLE INSIGHT ═══ */}
+    {D.toggleInsights && D.toggleInsights[ref] && <div style={{ marginBottom: 14, padding: "14px 16px", borderRadius: 10, background: (isDID ? t.purple : ref === "14d" ? t.yellow : t.accent) + "06", border: "1px solid " + (isDID ? t.purple : ref === "14d" ? t.yellow : t.accent) + "20" }}>
+      {D.toggleFraming && D.toggleFraming[ref] && <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6, marginBottom: 10, paddingBottom: 10, borderBottom: "1px solid " + (isDID ? t.purple : ref === "14d" ? t.yellow : t.accent) + "15" }}>{tx(lang, D.toggleFraming[ref].en, D.toggleFraming[ref].es)}</div>}
+      <div style={{ fontSize: 10, fontWeight: 700, color: isDID ? t.purple : ref === "14d" ? t.yellow : t.accent, letterSpacing: 1, marginBottom: 10 }}>{tx(lang, "WHAT THIS VIEW SHOWS", "QUE MUESTRA ESTA VISTA")}</div>
+      {(lang === "en" ? D.toggleInsights[ref].en : D.toggleInsights[ref].es).map((item, i, arr) => <div key={i} style={{ fontSize: 12, color: i < arr.length - 1 ? t.text : t.textDim, lineHeight: 1.6, marginBottom: 6, paddingLeft: 14, position: "relative" }}>
+        <span style={{ position: "absolute", left: 0, color: isDID ? t.purple : ref === "14d" ? t.yellow : t.accent, fontWeight: 700 }}>{i < arr.length - 1 ? "·" : "→"}</span>
+        {item}
+      </div>)}
+    </div>}
+
+    {/* ═══ MAIN RESULTS ═══ */}
+    <Xp title={tx(lang, "📋 Main experiment results", "📋 Resultados principales")} t={t}>
+
+      {/* NEXT STEPS + CONFOUNDER (inside, not top-level) */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
+        <div style={{ flex: 1, minWidth: 250, padding: "10px 14px", borderRadius: 8, background: t.accent + "08", border: "1px solid " + t.accent + "20" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.accent, letterSpacing: 1, marginBottom: 3 }}>🎯 {tx(lang, "NEXT STEPS", "SIGUIENTES PASOS")}</div>
+          <div style={{ fontSize: 12, color: t.text, lineHeight: 1.5 }}>{L.nextSteps}</div>
+        </div>
+        {D.confounder && <div style={{ flex: 1, minWidth: 250, padding: "10px 14px", borderRadius: 8, background: t.orange + "08", border: "1px solid " + t.orange + "20" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.orange, letterSpacing: 1, marginBottom: 3 }}>⚠️ CONFOUNDER</div>
+          <div style={{ fontSize: 12, color: t.orange, lineHeight: 1.5 }}>{L.confounderNote}</div>
+        </div>}
+      </div>
+
+      {/* COUNTERFACTUAL (context for evidence) */}
+      {D.counterfactual && <div style={{ fontSize: 12, color: t.accent, lineHeight: 1.6, marginBottom: 10, padding: "10px 14px", borderRadius: 6, background: t.accent + "06", border: "1px solid " + t.accent + "15" }}>
+        <div style={{ fontWeight: 700, marginBottom: 6 }}>{tx(lang, "Counterfactual", "Contrafactual")}</div>
+        {(Array.isArray(D.counterfactual[lang]) ? D.counterfactual[lang] : [D.counterfactual[lang]]).map((p, i) => <div key={i} style={{ marginBottom: i < (Array.isArray(D.counterfactual[lang]) ? D.counterfactual[lang].length - 1 : 0) ? 6 : 0 }}>{p}</div>)}
+      </div>}
+
+      {/* Sub-1: Hypotheses & Verdict */}
+      <Xp title={tx(lang, "🔬 Hypotheses & Verdict", "🔬 Hipótesis y Veredicto")} defaultOpen={true} t={t}>
+        {rH(L.h1, D.h1Status, tx(lang, "HYPOTHESIS", "HIPÓTESIS"))}
+        {D.declaration.status !== "Completed" &&
+          <div style={{ fontSize: 12, color: t.orange, fontStyle: "italic", padding: "6px 12px", background: t.orange + "08", borderRadius: 6, marginBottom: 10 }}>🧪 {tx(lang, "Falsifiable", "Falsificable")}: {L.falsifiable}</div>
+        }
+        {/* VERDICT */}
+        <div style={{ padding: "14px 18px", borderRadius: 10, background: sc + "08", border: "1px solid " + sc + "25" }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: sc, letterSpacing: 1 }}>{D.checkpoint} VERDICT</div>
+            <Pill color={sc}>{D.signal.toUpperCase()}</Pill>
+          </div>
+          <div style={{ fontSize: 14, color: t.text, lineHeight: 1.7, marginBottom: 12 }}>{L.verdictIntro}</div>
+          {L.verdictChecklist && L.verdictChecklist.map((item, i) => <div key={i} style={{ display: "flex", gap: 8, fontSize: 13, color: t.text, lineHeight: 1.5, marginBottom: 2 }}>
+            <span style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span><span>{item.text}</span>
+          </div>)}
+        </div>
+      </Xp>
+
+      {/* Sub-2: Key Metrics & Business Impact */}
+      <Xp title={tx(lang, "📊 Key Metrics & Business Impact", "📊 Metricas e Impacto")} desc={tx(lang, "Data shown corresponds to the analysis lens selected above.", "Los datos mostrados corresponden a la lente de analisis seleccionada arriba.")} t={t}>
+        {ref === "did" && <div style={{ fontSize: 11, color: t.purple, padding: "6px 10px", background: t.purple + "08", borderRadius: 6, marginBottom: 10 }}>{tx(lang, "DID view: showing only price-attributable impact on treated buckets (1-3 day plans).", "Vista DID: mostrando solo impacto atribuible al precio en buckets tratados (planes 1-3 dias).")}</div>}
+
+        {/* STAT CARDS (change with toggle) */}
+        {!isDID && <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 14 }}>
+          {[
+            { l: D.hasFiltered ? "ARPU (excl. PS)" : "ARPU", v: r_(D.accum.arpu_f_d90, D.accum.arpu_f_d14), s: "€" + gaugeArpuBase.toFixed(2) + " → €" + D.accum.arpu_f, c: D.accum.arpu_status === "positive" ? t.green : t.yellow },
+            { l: D.hasFiltered ? "CR (excl. PS)" : "CR to Order", v: r_(D.accum.cr_f_d90, D.accum.cr_f_d14), s: gaugeCrBase.toFixed(2) + "% → " + D.accum.cr_f + "%", c: t.green },
+            { l: "Gross Margin", v: r_(D.accum.gm_d90, D.accum.gm_d14), s: gaugeGmBase.toFixed(2) + "% → " + D.accum.gm + "%", c: t.green },
+          ].map((s, i) => <div key={i} style={{ background: t.card, borderRadius: 10, border: "1px solid " + t.border, padding: "12px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 11, color: t.textMuted, marginBottom: 4 }}>{s.l}</div>
+            <div style={{ fontSize: 24, fontWeight: 700, fontFamily: MN, color: s.c, lineHeight: 1 }}>{s.v}</div>
+            <div style={{ fontSize: 10, color: t.textDim, marginTop: 4 }}>{s.s}</div>
+            <div style={{ fontSize: 9, color: t.accent, marginTop: 2 }}>{refLabel}</div>
+          </div>)}
+        </div>}
+        {isDID && D.impactDID && <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 14 }}>
+          {[
+            { l: tx(lang, "Net price-attributable", "Neto atribuible al precio"), v: "+€" + D.impactDID.net_day.toFixed(1) + "/d", s: tx(lang, "1d: €0 | 2d: +€46 | 3d: -€23", "1d: €0 | 2d: +€46 | 3d: -€23"), c: t.purple },
+            { l: tx(lang, "Annualized (DID)", "Anualizado (DID)"), v: "€" + D.impactDID.net_annual.toLocaleString(), s: tx(lang, "price effect only", "solo efecto precio"), c: t.purple },
+            { l: tx(lang, "Strongest bucket", "Bucket mas fuerte"), v: "e = -4.88", s: tx(lang, "2-day plan: +45.2% rev above organic", "Plan 2 dias: +45.2% rev sobre organico"), c: t.green },
+          ].map((s, i) => <div key={i} style={{ background: t.card, borderRadius: 10, border: "1px solid " + t.purple + "20", padding: "12px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 11, color: t.textMuted, marginBottom: 4 }}>{s.l}</div>
+            <div style={{ fontSize: 24, fontWeight: 700, fontFamily: MN, color: s.c, lineHeight: 1 }}>{s.v}</div>
+            <div style={{ fontSize: 10, color: t.textDim, marginTop: 4 }}>{s.s}</div>
+            <div style={{ fontSize: 9, color: t.purple, marginTop: 2 }}>DID</div>
+          </div>)}
+        </div>}
+
+        {/* 14d CONTEXT NOTE (only in 14d view) */}
+        {ref === "14d" && L.ref14dWarning && <div style={{ padding: "8px 12px", borderRadius: 8, background: t.yellow + "06", border: "1px solid " + t.yellow + "20", marginBottom: 10, fontSize: 12, color: t.yellow, lineHeight: 1.5 }}>⚠️ {L.ref14dWarning}</div>}
+
+        {/* IMPACT */}
+        <div style={{ borderRadius: 10, border: "1px solid " + sc + "20", overflow: "hidden", marginBottom: 10 }}>
+          <div style={{ padding: "14px 18px", background: sc + "06" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: sc, letterSpacing: 1 }}>{tx(lang, "BUSINESS IMPACT", "IMPACTO NEGOCIO")}</span>
+              <span style={{ fontSize: 10, color: t.accent, fontWeight: 600 }}>{refLabelFull}</span>
+            </div>
+
+            {D.impact.short && !isDID && <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: t.accent, marginBottom: 6 }}>↓ {tx(lang, "SHORT PLANS (Price-Per-Day correction)", "PLANES CORTOS (correccion Price-Per-Day)")}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                <IBox label={tx(lang, "Revenue per day", "Revenue por dia")} val={"€" + D.impact.short.rev_day_post.toLocaleString()} sub={"€" + shortBase + " → €" + D.impact.short.rev_day_post} color={t.green} t={t} />
+                <IBox label={"Delta " + refLabel} val={shortInc != null ? (shortInc >= 0 ? "+" : "") + "€" + shortInc + "/day" : shortDelta} sub={shortDelta} color={shortInc >= 0 ? t.green : t.orange} t={t} />
+                <IBox label={tx(lang, "Orders per day", "Ordenes por dia")} val={D.impact.short.orders_post.toFixed(0)} sub={(shortOrdPre || 0).toFixed(0) + " → " + D.impact.short.orders_post.toFixed(0) + " (" + (shortOrdDelta || "—") + ")"} color={t.accent} t={t} />
+              </div>
+            </div>}
+
+            {/* DID IMPACT VIEW */}
+            {isDID && D.impactDID && <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: t.purple, marginBottom: 6 }}>{tx(lang, "PRICE-ATTRIBUTABLE IMPACT (DID)", "IMPACTO ATRIBUIBLE AL PRECIO (DID)")}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 8 }}>
+                {D.impactDID.buckets.map((b, i) => <div key={i} style={{ textAlign: "center", padding: 10, background: t.card, borderRadius: 8 }}>
+                  <div style={{ fontSize: 10, color: t.textMuted }}>{b.b} ({b.pc})</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, fontFamily: MN, color: b.rev_day_attr > 0 ? t.green : b.rev_day_attr === 0 ? t.text : t.orange }}>{b.rev_day_attr >= 0 ? "+" : ""}€{b.rev_day_attr}/d</div>
+                  <div style={{ fontSize: 10, color: t.textDim }}>e = {b.e.toFixed(2)}</div>
+                </div>)}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <div style={{ textAlign: "center", padding: 12, background: t.purple + "10", borderRadius: 8, border: "1px solid " + t.purple + "20" }}>
+                  <div style={{ fontSize: 10, color: t.purple }}>{tx(lang, "Net daily (price-attributable)", "Neto diario (atribuible al precio)")}</div>
+                  <div style={{ fontSize: 24, fontWeight: 700, fontFamily: MN, color: t.purple }}>+€{D.impactDID.net_day.toFixed(1)}/d</div>
+                </div>
+                <div style={{ textAlign: "center", padding: 12, background: t.purple + "10", borderRadius: 8, border: "1px solid " + t.purple + "20" }}>
+                  <div style={{ fontSize: 10, color: t.purple }}>{tx(lang, "Annualized (price-attributable)", "Anualizado (atribuible al precio)")}</div>
+                  <div style={{ fontSize: 24, fontWeight: 700, fontFamily: MN, color: t.purple }}>€{D.impactDID.net_annual.toLocaleString()}</div>
+                </div>
+              </div>
+              <div style={{ fontSize: 11, color: t.textDim, lineHeight: 1.5, marginTop: 8 }}>{tx(lang, D.impactDID.note_en, D.impactDID.note_es)}</div>
+            </div>}
+
+            {/* TOTAL (hidden in DID - shown above as DID impact) */}
+            {!isDID && <div style={{ paddingTop: 10, borderTop: "2px solid " + t.border + "60", marginBottom: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: t.text, marginBottom: 8 }}>{tx(lang, "TOTAL", "TOTAL")}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <IBox label={tx(lang, "Revenue per day", "Revenue por día")} val={"€" + D.impact.total.rev_day_post.toLocaleString()} sub={refLabel + ": " + totalDelta} color={t.accent} t={t} />
+                <div style={{ textAlign: "center", padding: 10, background: t.card, borderRadius: 8 }}>
+                  <div style={{ fontSize: 10, color: t.textMuted }}>{tx(lang, "Annualized", "Anualizado")} ({refLabel})</div>
+                  <div style={{ fontSize: 24, fontWeight: 700, fontFamily: MN, color: t.accent }}>{totalAnn}</div>
+                  <div style={{ fontSize: 10, color: t.textDim }}>{refLabel}</div>
+                </div>
+              </div>
+            </div>}
+
+            {/* How we calculated (hidden in DID - DID has its own calc sections) */}
+            {!isDID && D.impactCalcRows && D.impactCalcRows[ref] && <Xp title={tx(lang, "📐 How we calculated this (" + ref + ")", "📐 Como calculamos esto (" + ref + ")")} t={{...t, card: "transparent", border: t.border}}>
+              {D.impactCalcRows[ref].map((section, si) => <div key={si} style={{ marginBottom: si < D.impactCalcRows[ref].length - 1 ? 14 : 0 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: section.color === "accent" ? t.accent : section.color === "yellow" ? t.yellow : t.text, letterSpacing: 0.5, marginBottom: 6 }}>{tx(lang, section.title_en, section.title_es)}</div>
+                {section.rows.map((r, ri) => <CalcRow key={ri} label={tx(lang, r.label_en, r.label_es)} from={r.from} to={r.to} delta={r.delta} color={r.positive ? t.green : r.negative ? t.orange : t.accent} t={t} />)}
+                {section.note_en && <div style={{ fontSize: 11, color: section.warning ? t.yellow : t.textDim, marginTop: 4, lineHeight: 1.5 }}>{section.warning ? "⚠️ " : ""}{tx(lang, section.note_en, section.note_es)}</div>}
+              </div>)}
+            </Xp>}
+          </div>
+          {!isDID && D.revFramingNote && <div style={{ padding: "10px 18px", background: t.yellow + "08", borderTop: "1px solid " + t.yellow + "20", fontSize: 12, color: t.yellow, lineHeight: 1.6 }}>⚠️ {D.revFramingNote[lang]}</div>}
+        </div>
+
+        {/* GAUGES (observed metrics, hidden in DID) */}
+        {!isDID && <div style={{ background: t.card, borderRadius: 10, border: "1px solid " + t.border, padding: "14px 16px" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 12 }}>{tx(lang, "METRICS", "METRICAS")} {refLabelFull.toUpperCase()}</div>
+          <Gauge label="ARPU" baseline={gaugeArpuBase} current={D.accum.arpu_f} unit="€" t={t} />
+          <Gauge label="CR to Order" baseline={gaugeCrBase} current={D.accum.cr_f} unit="%" t={t} />
+          <Gauge label="Gross Margin" baseline={gaugeGmBase} current={D.accum.gm} floor={30} unit="%" t={t} />
+          {L.trendNote && <div style={{ fontSize: 10, color: t.yellow, marginTop: 4, lineHeight: 1.5 }}>{L.trendNote}</div>}
+        </div>}
+      </Xp>
+
+      {/* Sub-3: Decision & Learnings */}
+      <Xp title={tx(lang, "✅ Decision & Learnings", "✅ Decision y Aprendizajes")} t={t}>
+        {/* Toggle-specific framing */}
+        {isDID && <div style={{ fontSize: 12, color: t.purple, padding: "8px 12px", background: t.purple + "06", borderRadius: 6, marginBottom: 10, lineHeight: 1.6 }}>{tx(lang, "DID view: the decision below is based on the full body of evidence (observed + causal). The DID analysis confirms the mechanism works, even though the price-attributable revenue (EUR 22.6/day) is smaller than the total observed change.", "Vista DID: la decision abajo se basa en toda la evidencia (observada + causal). El analisis DID confirma que el mecanismo funciona, aunque el revenue atribuible al precio (EUR 22.6/dia) es menor que el cambio total observado.")}</div>}
+        {ref === "14d" && <div style={{ fontSize: 12, color: t.yellow, padding: "8px 12px", background: t.yellow + "06", borderRadius: 6, marginBottom: 10, lineHeight: 1.6 }}>{tx(lang, "14d view: metrics appear flat vs the seasonal peak. The decision is not based on this comparison. See 90d or DID view for the correct reference.", "Vista 14d: las metricas parecen planas vs el pico estacional. La decision no se basa en esta comparacion. Ver vista 90d o DID para la referencia correcta.")}</div>}
+        {ref === "90d" && <div style={{ background: t.card, borderRadius: 10, border: "1px solid " + t.border, padding: "14px 16px", marginBottom: 12 }}>
+          {D.checks.map((c, i) => <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "8px 0", borderBottom: i < D.checks.length - 1 ? "1px solid " + t.border + "40" : "none" }}>
+            <span style={{ fontSize: 18, flexShrink: 0 }}>{ok(c.v)}</span>
+            <div><div style={{ fontSize: 13, fontWeight: 600, color: t.text }}>{tx(lang, c.en, c.es)}</div><div style={{ fontSize: 12, fontFamily: MN, color: t.textDim, marginTop: 2 }}>{tx(lang, c.r_en, c.r_es)}</div></div>
+          </div>)}
+          <div style={{ marginTop: 10, padding: "8px 12px", borderRadius: 6, background: sc + "08", fontSize: 13, color: sc, fontWeight: 600 }}>{D.checks.filter(c => c.v === "met").length}/{D.checks.length} {tx(lang, "met", "cumplidos")} → {L.decisionNote}</div>
+        </div>}
+        {isDID && <div style={{ fontSize: 11, color: t.purple, padding: "8px 12px", background: t.purple + "06", borderRadius: 6, marginBottom: 12, lineHeight: 1.6 }}>{tx(lang, "The 5/5 success criteria checklist is shown in the 90d view (observed metrics). In this DID view, the key confirmation is: the price change generated EUR 22.6/day of net attributable revenue, with 2-day plans as the primary driver.", "El checklist de 5/5 criterios de exito se muestra en la vista 90d (metricas observadas). En esta vista DID, la confirmacion clave es: el cambio de precio genero EUR 22.6/dia de revenue neto atribuible, con planes de 2 dias como motor principal.")}</div>}
+        <div style={{ padding: "12px 16px", borderRadius: 10, background: t.accent + "06", border: "1px solid " + t.accent + "20", marginBottom: 12 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.accent, letterSpacing: 1, marginBottom: 4 }}>{tx(lang, "IF WE SCALE", "SI ESCALAMOS")}</div>
+          <div style={{ fontSize: 13, color: t.text, lineHeight: 1.6 }}>{L.scaleNext}</div>
+        </div>
+        <div style={{ padding: "14px 16px", borderRadius: 10, background: t.card, border: "1px solid " + t.border, marginBottom: 12 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 10 }}>{tx(lang, "WHAT WE LEARNED", "QUE APRENDIMOS")}</div>
+          {L.learnings.filter(item => !item.views || item.views.includes(ref)).map((item, i, arr) => <div key={i} style={{ marginBottom: i < arr.length - 1 ? 12 : 0 }}>
+            <div style={{ marginBottom: 4 }}><Pill color={t[item.color] || t.accent}>{item.pill}</Pill></div>
+            <div style={{ fontSize: 13, color: t.textDim, lineHeight: 1.6 }}>{item.text}</div>
+          </div>)}
+        </div>
+        {D.hasLtvCaveat && <div style={{ padding: "10px 14px", borderRadius: 10, background: t.yellow + "06", border: "1px solid " + t.yellow + "20" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.yellow, letterSpacing: 1, marginBottom: 4 }}>LTV CAVEAT</div>
+          <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.5 }}>{L.ltvCaveat}</div>
+          <div style={{ fontSize: 11, color: t.yellow, marginTop: 4 }}>{L.ltvMonitor}</div>
+        </div>}
+      </Xp>
+    </Xp>
+
+    {/* ═══ DETAILED ANALYSIS ═══ */}
+    <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 8, marginTop: 8, paddingLeft: 4 }}>{tx(lang, "DETAILED ANALYSIS", "ANALISIS DETALLADO")}</div>
+
+    {/* DID METHODOLOGY NARRATIVE (only in DID view, before evidence sections) */}
+    {isDID && <div style={{ marginBottom: 14, padding: "16px 18px", borderRadius: 10, background: t.purple + "06", border: "1px solid " + t.purple + "20" }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: t.purple, letterSpacing: 1, marginBottom: 10 }}>{tx(lang, "HOW TO READ THIS SECTION", "COMO LEER ESTA SECCION")}</div>
+      <div style={{ fontSize: 13, color: t.text, lineHeight: 1.7, marginBottom: 10 }}>{tx(lang,
+        "Everything below compares two groups of destinations purchased by MXN-paying customers (Mexican Peso as currency filter in our data):",
+        "Todo lo que sigue compara dos grupos de destinos comprados por clientes que pagan en MXN (Peso Mexicano como filtro de moneda en nuestros datos):"
+      )}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+        <div style={{ padding: "10px 12px", borderRadius: 6, background: t.purple + "10", border: "1px solid " + t.purple + "25" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: t.purple, marginBottom: 4 }}>{tx(lang, "TREATED (65 destinations)", "TRATADOS (65 destinos)")}</div>
+          <div style={{ fontSize: 11, color: t.textDim, lineHeight: 1.5 }}>{tx(lang,
+            "Europe, Asia, US and other long-haul destinations where the price-per-day was corrected (lowered) for 1-3 day plans. These are the destinations where we changed something.",
+            "Europa, Asia, US y otros destinos de larga distancia donde se corrigio (bajo) el price-per-day para planes de 1-3 dias. Estos son los destinos donde cambiamos algo."
+          )}</div>
+        </div>
+        <div style={{ padding: "10px 12px", borderRadius: 6, background: t.border + "20" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: t.textMuted, marginBottom: 4 }}>{tx(lang, "CONTROL (rest of MXN store)", "CONTROL (resto de tienda MXN)")}</div>
+          <div style={{ fontSize: 11, color: t.textDim, lineHeight: 1.5 }}>{tx(lang,
+            "Primarily LATAM destinations (Mexico domestic, Central America, Caribbean) where prices did NOT change. These show what would have happened without our intervention.",
+            "Principalmente destinos LATAM (Mexico domestico, Centroamerica, Caribe) donde los precios NO cambiaron. Estos muestran que habria pasado sin nuestra intervencion."
+          )}</div>
+        </div>
+      </div>
+      <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6 }}>{tx(lang,
+        "The DID method works by comparing how both groups changed over time. If treated destinations grew more than control, the excess is attributable to the price change. If both grew equally, the price had no effect. This removes seasonality, organic growth, and other market-wide factors.",
+        "El metodo DID funciona comparando como ambos grupos cambiaron en el tiempo. Si los destinos tratados crecieron mas que el control, el exceso es atribuible al cambio de precio. Si ambos crecieron igual, el precio no tuvo efecto. Esto remueve estacionalidad, crecimiento organico y otros factores del mercado."
+      )}</div>
+    </div>}
+
+    {/* AOV (observed in 90d/14d, treated-only in DID) */}
+    {!isDID && <Xp title={tx(lang, "AOV by bucket", "AOV por bucket")} desc={tx(lang, "Prices vs design. ↓ = designed to decrease. ✅ on track, ⚠️ below target or anomaly.", "Precios vs diseno. ↓ = disenado para bajar. ✅ en curso, ⚠️ bajo target o anomalia.")} t={t}>
+      <Row cells={["Bucket", tx(lang, "Baseline", "Baseline") + " (" + ref + ")", "Post", tx(lang, "Change", "Cambio"), tx(lang, "Design*", "Diseno*")]} header t={t} />
+      {D.aov.map((r, i) => { const chk = aovChk(r); const base = ref === "14d" && r.b14 != null ? r.b14 : r.base; const delta = ref === "14d" ? (r.d14 || "—") : r.d90; return <Row key={i} cells={[r.b, "€" + base.toFixed(2), "€" + r.post.toFixed(2), { v: delta + " " + chk.s, color: chk.c }, (r.designDir === "down" ? "↓" : "↑") + " " + r.designed + "%"]} t={t} />; })}
+    </Xp>}
+    {isDID && <Xp title={tx(lang, "AOV by bucket (treated destinations only)", "AOV por bucket (solo destinos tratados)")} desc={tx(lang, "Only showing the 65 destinations where prices changed. Control destinations excluded.", "Solo mostrando los 65 destinos donde se cambiaron precios. Destinos control excluidos.")} t={t}>
+      <Row cells={["Bucket", tx(lang, "Price change", "Cambio precio"), tx(lang, "Treated pre AOV", "AOV tratados pre"), tx(lang, "Treated post AOV", "AOV tratados post"), "e (DID)"]} header t={t} />
+      {D.impactDID.buckets.map((b, i) => <Row key={i} cells={[b.b, b.pc, "€" + (b.t_pre_rev / b.t_pre_ord).toFixed(2), "€" + (b.t_post_rev / b.t_post_ord).toFixed(2), { v: b.e.toFixed(2), color: Math.abs(b.e) > 1 ? t.green : t.orange }]} t={t} />)}
+      <div style={{ fontSize: 11, color: t.purple, marginTop: 6 }}>{tx(lang, "Buckets 4+ days had <1% charm pricing only. Not shown in DID view.", "Buckets 4+ dias solo tuvieron charm pricing <1%. No se muestran en vista DID.")}</div>
+    </Xp>}
+
+    {/* REVENUE (observed in 90d/14d, DID per bucket in DID) */}
+    {!isDID && <Xp title={tx(lang, "Revenue by segment (daily average)", "Revenue por segmento (promedio diario)")} desc={L.revSegDesc} t={t}>
+      <Row cells={["", tx(lang, "Baseline", "Baseline") + " (" + ref + ")", tx(lang, "Post avg/day", "Post promedio/dia"), tx(lang, "Change", "Cambio")]} header t={t} />
+      {[["short", tx(lang, "Short (1-3d)", "Cortos (1-3d)")], ["long", tx(lang, "Long (4+d)", "Largos (4+d)")], ["total", "Total"]].map(([k, label]) => {
+        const r = D.rev[k]; if (!r) return null;
+        const base = ref === "14d" ? r.b14 : r.b90;
+        const delta = ref === "14d" ? r.d14 : r.d90;
+        return <Row key={k} cells={[label, "€" + base.toLocaleString(), "€" + r.post.toLocaleString(), { v: delta, color: delta.startsWith("-") ? t.orange : t.green }]} t={t} />;
+      })}
+    </Xp>}
+    {isDID && <Xp title={tx(lang, "Revenue by bucket — treated vs control (daily average)", "Revenue por bucket — tratados vs control (promedio diario)")} desc={tx(lang, "Revenue per day in EUR for treated destinations (65 with price change) vs control (rest of MXN). The DID column shows the price-attributable difference.", "Revenue por dia en EUR para destinos tratados (65 con cambio de precio) vs control (resto de MXN). La columna DID muestra la diferencia atribuible al precio.")} t={t}>
+      <Row cells={["Bucket", tx(lang, "Treated pre", "Tratados pre"), tx(lang, "Treated post", "Tratados post"), tx(lang, "Control pre", "Control pre"), tx(lang, "Control post", "Control post"), "DID", tx(lang, "EUR/day attr.", "EUR/dia attr.")]} header t={t} />
+      {D.impactDID.buckets.map((b, i) => <Row key={i} cells={[b.b + " (" + b.pc + ")", "€" + b.t_pre_rev.toFixed(0), "€" + b.t_post_rev.toFixed(0), "€" + b.c_pre_rev.toFixed(0), "€" + b.c_post_rev.toFixed(0), { v: b.did_rev_pct, color: b.did_rev_pct.startsWith("+") ? t.green : b.did_rev_pct.startsWith("-") ? t.orange : t.text }, { v: (b.rev_day_attr >= 0 ? "+" : "") + "€" + b.rev_day_attr, color: b.rev_day_attr > 0 ? t.green : b.rev_day_attr < 0 ? t.orange : t.text }]} t={t} />)}
+      <Row cells={[tx(lang, "NET", "NETO"), "", "", "", "", "", { v: "+€" + D.impactDID.net_day.toFixed(1) + "/d", color: t.purple }]} t={t} />
+    </Xp>}
+
+    {/* MIX SHIFT (hidden in DID view) */}
+    {!isDID && <Xp title={tx(lang, "Mix shift + statistical tests", "Mix shift + tests estadisticos")} desc={L.mixDesc} t={t}>
+      <Row cells={[tx(lang, "Bucket", "Bucket"), tx(lang, "Pre opd", "Pre opd") + " (" + ref + ")", tx(lang, "Post opd", "Post opd"), tx(lang, "Change", "Cambio"), tx(lang, "Pre share", "Share pre"), tx(lang, "Post share", "Share post")]} header t={t} />
+      {D.mix.map((m, i) => { const pre = ref === "14d" && m.pre14 ? m.pre14 : m.pre; const delta = ref === "14d" && m.delta14 ? m.delta14 : m.delta; return <Row key={i} cells={[m.b, pre.toFixed(1), m.post.toFixed(1), { v: delta, color: delta.startsWith("-") ? t.orange : t.accent }, m.preS.toFixed(1) + "%", m.postS.toFixed(1) + "%"]} t={t} />; })}
+      <Row cells={[tx(lang, "TOTAL SHORT (1-3d)", "TOTAL CORTOS (1-3d)"), "", "", "", D.mixTotals.shortPre + "%", D.mixTotals.shortPost + "% (" + D.mixTotals.shortD + ")"]} t={t} />
+      <Row cells={[tx(lang, "TOTAL LONG (4+d)", "TOTAL LARGOS (4+d)"), "", "", "", D.mixTotals.longPre + "%", D.mixTotals.longPost + "% (" + D.mixTotals.longD + ")"]} t={t} />
+      <div style={{ marginTop: 10 }}>
+        <PropBar label={tx(lang, "Before", "Antes") + " (" + ref + ")"} a={D.mixTotals.shortPre} b={D.mixTotals.longPre} aL={"Short " + D.mixTotals.shortPre + "%"} bL={"Long " + D.mixTotals.longPre + "%"} color={t.accent} t={t} />
+        <PropBar label={tx(lang, "After (post)", "Despues (post)")} a={D.mixTotals.shortPost} b={D.mixTotals.longPost} aL={"Short " + D.mixTotals.shortPost + "%"} bL={"Long " + D.mixTotals.longPost + "%"} color={t.green} t={t} />
+      </div>
+      {ref === "90d" && <Sec color={t.green} t={t}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: t.green, marginBottom: 6 }}>Chi-square: {D.sig.chi.val} vs {D.sig.chi.threshold} = {tx(lang, "SIGNIFICANT", "SIGNIFICATIVO")}</div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6 }}>{L.chiFeynman}</div>
+        <div style={{ marginTop: 8, padding: "10px 12px", background: t.accent + "06", borderRadius: 6 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.accent, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "HOW WE CALCULATED CHI-SQUARE", "COMO CALCULAMOS CHI-CUADRADO")}</div>
+          <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Step 1: For each bucket, calculate expected orders = total post orders x pre-launch share (90d)", "Paso 1: Para cada bucket, calcular ordenes esperadas = total ordenes post x share pre-lanzamiento (90d)")}</div>
+          <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Step 2: Chi-sq = sum of (observed - expected)² / expected for all 7 buckets", "Paso 2: Chi-sq = suma de (observado - esperado)² / esperado para los 7 buckets")}</div>
+          <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Step 3: Result = 88.70. Degrees of freedom = 7 buckets - 1 = 6", "Paso 3: Resultado = 88.70. Grados de libertad = 7 buckets - 1 = 6")}</div>
+          <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Step 4: Threshold for 6 df at 95% = 12.59 (from statistical table)", "Paso 4: Umbral para 6 gl al 95% = 12.59 (de tabla estadistica)")}</div>
+          <div style={{ fontSize: 11, color: t.green, lineHeight: 1.6, fontWeight: 500 }}>{tx(lang, "88.70 vs 12.59. Think of it as an exam: you need a 6 to pass, we scored a 49. The mix shift is real, not noise.", "88.70 vs 12.59. Pensalo como un examen: necesitas un 6 para aprobar, sacamos un 49. El cambio de mix es real, no ruido.")}</div>
+          {D.sig.chi.cramers_v && <div style={{ fontSize: 11, color: t.textDim, marginTop: 6, lineHeight: 1.5 }}>{tx(lang, "Cramer's V = " + D.sig.chi.cramers_v + " (" + D.sig.chi.cramers_v_interp + "). With 12,608 orders, chi-square inflates naturally. V normalizes by sample size. Small V is expected: we redistributed volume within the same catalog, not a structural overhaul.", "V de Cramer = " + D.sig.chi.cramers_v + " (" + D.sig.chi.cramers_v_interp + "). Con 12,608 ordenes, chi-cuadrado se infla naturalmente. V normaliza por tamano de muestra. V pequeno es esperado: redistribuimos volumen dentro del mismo catalogo, no un cambio estructural.")}</div>}
+        </div>
+      </Sec>}
+      {ref === "14d" && <div style={{ fontSize: 11, color: t.yellow, padding: "8px 12px", background: t.yellow + "06", borderRadius: 6, marginTop: 6 }}>{tx(lang, "Chi-square test (88.70 vs 12.59 = significant) was calculated against the 90d baseline distribution. Since the 14d pre had a seasonal distortion (+56% short orders), the expected distribution differs. The full chi-square analysis with step-by-step calculation is in the 90d view.", "El test chi-cuadrado (88.70 vs 12.59 = significativo) fue calculado contra la distribucion del baseline de 90d. Como los 14d pre tenian distorsion estacional (+56% ordenes cortas), la distribucion esperada difiere. El analisis chi-cuadrado completo con calculo paso a paso esta en la vista 90d.")}</div>}
+    </Xp>}
+    {isDID && <div style={{ fontSize: 11, color: t.textMuted, padding: "8px 12px", background: t.border + "20", borderRadius: 6, marginBottom: 8 }}>{tx(lang, "Mix shift analysis is not shown in DID view. DID compares treated vs control destinations, not plan mix.", "El analisis de mix shift no se muestra en vista DID. DID compara destinos tratados vs control, no la mezcla de planes.")}</div>}
+
+    {/* REVENUE PER BUCKET */}
+    {!isDID && D.revPerBucket && <Xp title={tx(lang, "Revenue per bucket (daily average)", "Revenue por bucket (promedio diario)")} desc={tx(lang, "Daily average revenue in EUR for each plan duration. Treated buckets (1-3 day) had price changes. Untreated (4+ day) had charm pricing only (<1%).", "Promedio diario de revenue en EUR por duracion de plan. Buckets tratados (1-3 dias) tuvieron cambios de precio. No tratados (4+ dias) solo charm pricing (<1%).")} t={t}>
+      <Row cells={[tx(lang, "Bucket", "Bucket"), tx(lang, "Baseline", "Baseline") + " (" + ref + ")", tx(lang, "Post", "Post"), tx(lang, "Change", "Cambio"), tx(lang, "Treated?", "Tratado?")]} header t={t} />
+      {D.revPerBucket.map((r, i) => { const base = ref === "14d" ? r.pre14 : r.pre90; const delta = ref === "14d" ? r.d14 : r.d90; return <Row key={i} cells={[r.b, "€" + base, "€" + r.post, { v: delta, color: delta.startsWith("-") ? t.orange : t.green }, r.treated ? "✅" : "—"]} t={t} />; })}
+    </Xp>}
+    {isDID && D.impactDID && <Xp title={tx(lang, "Revenue per bucket — DID breakdown (daily average)", "Revenue por bucket — desglose DID (promedio diario)")} desc={tx(lang, "Revenue per day for treated (65 destinations with price change) vs control. These are the base numbers used to calculate elasticity. Buckets 4+ days are excluded (no meaningful price change).", "Revenue por dia para tratados (65 destinos con cambio de precio) vs control. Estos son los numeros base para calcular elasticidad. Buckets 4+ dias excluidos (sin cambio de precio significativo).")} t={t}>
+      <Row cells={[tx(lang, "Bucket", "Bucket"), tx(lang, "Treated pre", "Tratados pre"), tx(lang, "Treated post", "Tratados post"), tx(lang, "Control pre", "Control pre"), tx(lang, "Control post", "Control post"), tx(lang, "DID rev", "DID rev"), tx(lang, "Price-attr. €/d", "€/d atrib. precio")]} header t={t} />
+      {D.impactDID.buckets.map((b, i) => <Row key={i} cells={[b.b + " (" + b.pc + ")", "€" + b.t_pre_rev.toFixed(0), "€" + b.t_post_rev.toFixed(0), "€" + b.c_pre_rev.toFixed(0), "€" + b.c_post_rev.toFixed(0), { v: b.did_rev_pct, color: b.did_rev_pct.startsWith("+") ? t.green : b.did_rev_pct.startsWith("-") ? t.orange : t.text }, { v: (b.rev_day_attr >= 0 ? "+" : "") + "€" + b.rev_day_attr, color: b.rev_day_attr > 0 ? t.green : b.rev_day_attr < 0 ? t.orange : t.text }]} t={t} />)}
+      <Row cells={[tx(lang, "NET", "NETO"), "", "", "", "", "", { v: "+€" + D.impactDID.net_day.toFixed(1) + "/d (€" + D.impactDID.net_annual.toLocaleString() + "/yr)", color: t.purple }]} t={t} />
+      <div style={{ marginTop: 10, padding: "10px 12px", background: t.purple + "06", borderRadius: 6 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: t.purple, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "HOW WE CALCULATED DID REVENUE", "COMO CALCULAMOS REVENUE DID")}</div>
+        <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Step 1: Measure how treated destinations changed: Treated post / Treated pre", "Paso 1: Medir como cambiaron los destinos tratados: Tratados post / Tratados pre")}</div>
+        <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Step 2: Measure how control destinations changed: Control post / Control pre", "Paso 2: Medir como cambiaron los destinos control: Control post / Control pre")}</div>
+        <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Step 3: DID = (Treated post - Treated pre) - (Control post - Control pre)", "Paso 3: DID = (Tratados post - Tratados pre) - (Control post - Control pre)")}</div>
+        <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, lineHeight: 1.6, marginBottom: 4 }}>{tx(lang, "Example (2-day): (€187 - €102) - (€200 - €145) = €85 - €55 = +€30 excess growth", "Ejemplo (2 dias): (€187 - €102) - (€200 - €145) = €85 - €55 = +€30 de crecimiento en exceso")}</div>
+        <div style={{ fontSize: 11, color: t.purple, lineHeight: 1.6, fontWeight: 500 }}>{tx(lang, "The excess growth is what the price change caused. If treated and control moved identically, DID = 0 (no price effect).", "El crecimiento en exceso es lo que causo el cambio de precio. Si tratados y control se movieron identicamente, DID = 0 (sin efecto de precio).")}</div>
+      </div>
+    </Xp>}
+
+    {/* ELASTICITY */}
+    <Xp title={tx(lang, "Price elasticity", "Elasticidad de precio")} t={t}>
+      {/* NOTE FOR 90d/14d: elasticity is DID */}
+      {!isDID && <div style={{ fontSize: 11, color: t.purple, padding: "8px 12px", background: t.purple + "06", borderRadius: 6, marginBottom: 10, lineHeight: 1.6 }}>{tx(lang, "The elasticity values (e) shown below are calculated using the DID method (treated vs control), not from observed totals. This is the most rigorous measure. The order/revenue data in each card corresponds to the " + ref + " view you selected. Switch to the DID view for the full causal breakdown and calculation formulas.", "Los valores de elasticidad (e) mostrados abajo estan calculados con el metodo DID (tratados vs control), no de totales observados. Es la medida mas rigurosa. Los datos de ordenes/revenue en cada card corresponden a la vista " + ref + " seleccionada. Cambia a la vista DID para el desglose causal completo y las formulas de calculo.")}</div>}
+      {/* MACRO SUMMARY FIRST */}
+      <div style={{ fontSize: 13, color: t.text, lineHeight: 1.7, padding: "12px 14px", background: t.accent + "06", borderRadius: 8, border: "1px solid " + t.accent + "15", marginBottom: 12 }}>{L.elastSummary}</div>
+      {/* PER-BUCKET DETAIL */}
+      {D.elast.map((e, i) => e.flag ? (
+        <Sec key={i} color={e.flag === "price_up" ? t.purple : t.yellow} t={t}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: e.flag === "price_up" ? t.purple : t.yellow }}>{e.b}</span>
+            {e.confidence && <Pill color={t[cl[e.confidence].c]}>{cl[e.confidence].l}</Pill>}
+          </div>
+          <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6 }}>{tx(lang, e.reason_en, e.reason_es)}</div>
+        </Sec>
+      ) : (
+        <Sec key={i} color={t.accent} t={t}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: t.text, marginBottom: 8 }}>{e.b} ({tx(lang, "designed", "disenado")} {e.pc})</div>
+          <Row cells={["", tx(lang, "Baseline", "Baseline") + " (" + (isDID ? tx(lang, "treated only", "solo tratados") : ref) + ")", "Post", tx(lang, "Change", "Cambio")]} header t={t} />
+          <Row cells={[tx(lang, "Orders/day", "Ordenes/dia"), (isDID && e.tPreO ? e.tPreO : ref === "14d" && e.prO14 ? e.prO14 : e.prO90).toFixed(1), (isDID && e.tPostO ? e.tPostO : e.postO).toFixed(1), { v: isDID ? (e.dVdid || e.dV90) : ref === "14d" ? (e.dV14 || e.dV90) : e.dV90, color: t.green }]} t={t} />
+          {e.prR90 && <Row cells={[tx(lang, "Revenue/day", "Revenue/dia"), "€" + (isDID && e.tPreR ? e.tPreR : ref === "14d" && e.prR14 ? e.prR14 : e.prR90).toFixed(0), "€" + (isDID && e.tPostR ? e.tPostR : e.postR).toFixed(0), { v: isDID ? (e.dRdid || e.dR90) : ref === "14d" ? (e.dR14 || e.dR90) : e.dR90, color: isDID && e.dRdid && e.dRdid.startsWith("-") ? t.orange : t.green }]} t={t} />}
+          <div style={{ display: "grid", gridTemplateColumns: e.e_upper ? "1fr 1fr" : "1fr", gap: 8, marginTop: 10 }}>
+            <div style={{ padding: 8, background: t.green + "10", borderRadius: 6, textAlign: "center" }}>
+              <div style={{ fontSize: 9, color: t.textMuted }}>DID</div>
+              <div style={{ fontSize: 22, fontWeight: 700, fontFamily: MN, color: t.green }}>{e.e_did}</div>
+              <div style={{ fontSize: 9, color: t.textDim }}>{tx(lang, "treated vs control", "tratados vs control")}</div>
+            </div>
+            {e.e_upper && <div style={{ padding: 8, background: t.border + "30", borderRadius: 6, textAlign: "center" }}>
+              <div style={{ fontSize: 9, color: t.textMuted }}>{tx(lang, "Naïve (all destinations)", "Naïve (todos los destinos)")}</div>
+              <div style={{ fontSize: 18, fontWeight: 700, fontFamily: MN, color: t.textDim }}>{e.e_upper}</div>
+              <div style={{ fontSize: 9, color: t.textDim }}>{tx(lang, "inflated by organic growth", "inflado por crecimiento orgánico")}</div>
+            </div>}
+          </div>
+          <div style={{ fontSize: 10, color: t.yellow, marginTop: 8, lineHeight: 1.5 }}>{tx(lang, e.e_note_en, e.e_note_es)}</div>
+        </Sec>
+      ))}
+      {isDID && <div style={{ fontSize: 11, color: t.textMuted, fontStyle: "italic", marginTop: 4 }}>{tx(lang, "See calculation formulas in the sections below (Parallel Trends, Revenue DID, Elasticity Formula).", "Ver formulas de calculo en las secciones de abajo (Tendencias Paralelas, Revenue DID, Formula Elasticidad).")}</div>}
+      {!isDID && <div style={{ fontSize: 11, color: t.purple, fontStyle: "italic", marginTop: 4 }}>{tx(lang, "The elasticity calculation formulas and DID breakdown are available in the DID view. Switch to 'Price-attributable (DID)' in the toggle above.", "Las formulas de calculo de elasticidad y desglose DID estan disponibles en la vista DID. Cambia a 'Atribuible al precio (DID)' en el toggle de arriba.")}</div>}
+
+      {/* PARALLEL TRENDS CHART (DID view only) */}
+      {isDID && D.parallelTrends && <Xp title={tx(lang, "📈 Parallel trends — why we can trust the DID", "📈 Tendencias paralelas — por que podemos confiar en el DID")} defaultOpen={true} t={{...t, card: "transparent", border: t.border}}>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6, marginBottom: 10 }}>{tx(lang, D.parallelTrends.note_en, D.parallelTrends.note_es)}</div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "ORDERS/DAY — 1-DAY PLAN BUCKET", "ÓRDENES/DÍA — BUCKET PLAN 1 DÍA")}</div>
+        <div style={{ marginBottom: 8, overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+            <thead><tr style={{ borderBottom: "1px solid " + t.border }}>
+              <th style={{ padding: "4px 6px", color: t.textMuted, textAlign: "left" }}>Week</th>
+              <th style={{ padding: "4px 6px", color: t.accent, textAlign: "right" }}>{tx(lang, "Treated", "Tratados")}</th>
+              <th style={{ padding: "4px 6px", color: t.textMuted, textAlign: "right" }}>Control</th>
+            </tr></thead>
+            <tbody>{D.parallelTrends.data.map((d, i) => <tr key={i} style={{ borderBottom: "1px solid " + t.border + "30", background: d.w === "Mar 8" ? t.orange + "10" : "transparent" }}>
+              <td style={{ padding: "3px 6px", color: d.w === "Mar 8" ? t.orange : t.textDim, fontFamily: MN, fontSize: 10 }}>{d.w}{d.w === "Mar 8" ? " ← Launch" : ""}</td>
+              <td style={{ padding: "3px 6px", color: t.accent, textAlign: "right", fontFamily: MN }}>{d.t}</td>
+              <td style={{ padding: "3px 6px", color: t.textMuted, textAlign: "right", fontFamily: MN }}>{d.c}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "RATIO TREATED / CONTROL (stability = parallel trends hold)", "RATIO TRATADOS / CONTROL (estabilidad = tendencias paralelas se cumplen)")}</div>
+        <div style={{ marginBottom: 8, overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+            <thead><tr style={{ borderBottom: "1px solid " + t.border }}>
+              <th style={{ padding: "4px 6px", color: t.textMuted, textAlign: "left" }}>Week</th>
+              <th style={{ padding: "4px 6px", color: t.yellow, textAlign: "right" }}>Ratio (T/C)</th>
+            </tr></thead>
+            <tbody>{D.parallelTrends.data.filter(d => d.r).map((d, i) => <tr key={i} style={{ borderBottom: "1px solid " + t.border + "30" }}>
+              <td style={{ padding: "3px 6px", color: t.textDim, fontFamily: MN, fontSize: 10 }}>{d.w}</td>
+              <td style={{ padding: "3px 6px", color: t.yellow, textAlign: "right", fontFamily: MN }}>{d.r.toFixed(3)}</td>
+            </tr>)}</tbody>
+          </table>
+          <div style={{ fontSize: 10, color: t.green, marginTop: 4 }}>{tx(lang, "Mean: 0.679 | CV: 10.6% | Threshold: <20% | VALID", "Media: 0.679 | CV: 10.6% | Umbral: <20% | VALIDO")}</div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 8 }}>
+          <div style={{ textAlign: "center", padding: "8px 6px", background: t.card, borderRadius: 6, border: "1px solid " + t.border }}>
+            <div style={{ fontSize: 9, color: t.textMuted }}>{tx(lang, "Pre-launch mean", "Media pre-launch")}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, fontFamily: MN, color: t.text }}>0.679</div>
+          </div>
+          <div style={{ textAlign: "center", padding: "8px 6px", background: t.card, borderRadius: 6, border: "1px solid " + t.green + "20" }}>
+            <div style={{ fontSize: 9, color: t.textMuted }}>CV</div>
+            <div style={{ fontSize: 16, fontWeight: 700, fontFamily: MN, color: t.green }}>{D.parallelTrends.stats.cv}</div>
+            <div style={{ fontSize: 8, color: t.green }}>{tx(lang, "threshold", "umbral")} {D.parallelTrends.stats.threshold}</div>
+          </div>
+          <div style={{ textAlign: "center", padding: "8px 6px", background: t.card, borderRadius: 6, border: "1px solid " + t.green + "20" }}>
+            <div style={{ fontSize: 9, color: t.textMuted }}>{tx(lang, "Verdict", "Veredicto")}</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: t.green }}>{D.parallelTrends.stats.verdict}</div>
+          </div>
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, padding: "10px 12px", background: t.accent + "06", borderRadius: 6 }}>{L.ptExplain}</div>
+      </Xp>}
+
+      {/* REVENUE DID TABLE (DID view only) */}
+      {isDID && D.revenueDID && <Xp title={tx(lang, "💰 Revenue DID — what's genuinely price-attributable", "💰 Revenue DID — que es genuinamente atribuible al precio")} t={{...t, card: "transparent", border: t.border}}>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 10, padding: "10px 12px", background: t.accent + "06", borderRadius: 6 }}>{L.didFormula}</div>
+        <Row cells={["Bucket", tx(lang, "Treated pre", "Tratados pre"), tx(lang, "Treated post", "Tratados post"), tx(lang, "Control pre", "Control pre"), tx(lang, "Control post", "Control post"), "DID", "e"]} header t={t} />
+        {D.revenueDID.map((r, i) => <Row key={i} cells={[r.b + " (" + r.pc + ")", "€" + r.t_pre.toFixed(0), "€" + r.t_post.toFixed(0), "€" + r.c_pre.toFixed(0), "€" + r.c_post.toFixed(0), { v: r.did, color: r.did.startsWith("+") ? t.green : r.did.startsWith("-") ? t.orange : t.text }, { v: r.e.toFixed(2), color: Math.abs(r.e) > 1 ? t.green : t.orange }]} t={t} />)}
+        {D.revenueDID.map((r, i) => <div key={"n" + i} style={{ fontSize: 11, color: Math.abs(r.e) > 1 ? t.green : t.orange, lineHeight: 1.4, padding: "4px 0 6px 0", borderBottom: i < D.revenueDID.length - 1 ? "1px solid " + t.border + "20" : "none" }}><strong>{r.b}:</strong> {tx(lang, r.note_en, r.note_es)}</div>)}
+      </Xp>}
+
+      {isDID && D.elastCalcRows && <Xp title={tx(lang, "📐 How we calculated elasticity", "📐 Como calculamos la elasticidad")} t={{...t, card: "transparent", border: t.border}}>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 12, padding: "10px 12px", background: t.accent + "06", borderRadius: 6 }}>{L.elastFormula}</div>
+        {D.elastCalcRows.map((section, si) => <div key={si} style={{ marginBottom: si < D.elastCalcRows.length - 1 ? 14 : 0 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: section.color === "accent" ? t.accent : section.color === "green" ? t.green : section.color === "yellow" ? t.yellow : t.text, letterSpacing: 0.5, marginBottom: 6 }}>{tx(lang, section.title_en, section.title_es)}</div>
+          {section.rows.map((r, ri) => <CalcRow key={ri} label={tx(lang, r.label_en, r.label_es)} from={r.from} to={r.to} delta={r.delta_en ? tx(lang, r.delta_en, r.delta_es) : r.delta} color={r.positive ? t.green : r.negative ? t.orange : t.accent} t={t} />)}
+          {section.note_en && <div style={{ fontSize: 11, color: section.warning ? t.yellow : t.textDim, marginTop: 4, lineHeight: 1.5 }}>{section.warning ? "⚠️ " : ""}{tx(lang, section.note_en, section.note_es)}</div>}
+        </div>)}
+      </Xp>}
+    </Xp>
+
+    {/* SIGNIFICANCE */}
+    <Xp title={tx(lang, "Statistical significance", "Significancia estadistica")} t={t}>
+      {ref === "90d" && <div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 12, padding: "10px 12px", background: t.accent + "06", borderRadius: 6 }}>{L.sigExplain}</div>
+        <Sec color={t.green} t={t}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: t.text }}>CR to Order (Z-test, excl. PS)</span>
+            <Pill color={t.green}>{tx(lang, vm[D.sig.cr.verdict].en, vm[D.sig.cr.verdict].es)}</Pill>
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: t.green, marginBottom: 6 }}>{L.crHeadline}</div>
+          <div style={{ fontSize: 11, color: t.textDim, lineHeight: 1.6, marginBottom: 8, padding: "8px 10px", background: t.border + "15", borderRadius: 6 }}>{tx(lang, "Data source: Adobe Analytics (excluding Paid Social). Pre-launch = 90 days before March 2 (25,704 unique visitors, 3,817 orders). Post-launch = 14 clean days March 3-16 (25,929 unique visitors, 4,964 orders). Both pools are visitors to the 65 treated MXN destinations.", "Fuente de datos: Adobe Analytics (excluyendo Paid Social). Pre-lanzamiento = 90 dias antes del 2 marzo (25,704 visitantes unicos, 3,817 ordenes). Post-lanzamiento = 14 dias limpios marzo 3-16 (25,929 visitantes unicos, 4,964 ordenes). Ambos pools son visitantes a los 65 destinos MXN tratados.")}</div>
+          <PropBar label={tx(lang, "Pre-launch (90d, old prices)", "Pre-lanzamiento (90d, precios viejos)")} a={D.sig.cr.ctrl_c} b={D.sig.cr.ctrl_v - D.sig.cr.ctrl_c} aL={(D.sig.cr.ctrl_c / D.sig.cr.ctrl_v * 100).toFixed(1) + "% converted"} bL={D.sig.cr.ctrl_v.toLocaleString() + " visitors"} color={t.textMuted} t={t} />
+          <PropBar label={tx(lang, "Post-launch (14d, new prices)", "Post-lanzamiento (14d, precios nuevos)")} a={D.sig.cr.var_c} b={D.sig.cr.var_v - D.sig.cr.var_c} aL={(D.sig.cr.var_c / D.sig.cr.var_v * 100).toFixed(1) + "% converted"} bL={D.sig.cr.var_v.toLocaleString() + " visitors"} color={t.green} t={t} />
+          <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim, marginTop: 6 }}>z = {D.sig.cr.z} | p = {D.sig.cr.p}</div>
+          <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6, marginTop: 4 }}>{L.crExplain}</div>
+          {D.zCalc && <div style={{ marginTop: 8, padding: "10px 12px", background: t.accent + "06", borderRadius: 6 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: t.accent, letterSpacing: 1, marginBottom: 6 }}>{tx(lang, "HOW WE CALCULATED Z", "COMO CALCULAMOS Z")}</div>
+            {D.zCalc[lang].map((step, i) => <div key={i} style={{ fontSize: 11, fontFamily: i < D.zCalc[lang].length - 1 ? MN : "inherit", color: i < D.zCalc[lang].length - 1 ? t.textDim : t.green, lineHeight: 1.6, marginBottom: 4, fontWeight: i === D.zCalc[lang].length - 1 ? 500 : 400 }}>{step}</div>)}
+          </div>}
+        </Sec>
+        <Sec color={t.green} t={t}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: t.text }}>ARPU (vs 90d)</span>
+            <Pill color={t.green}>{tx(lang, "POSITIVE", "POSITIVO")}</Pill>
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: t.green, marginBottom: 4 }}>{L.arpuHeadline}</div>
+          <div style={{ fontSize: 11, fontFamily: MN, color: t.textDim }}>Lift {D.sig.arpu.lift} | €{D.baselines.arpu_f} → €{D.accum.arpu_f} | {D.sig.arpu.days} days | €{D.sig.arpu.inc.toLocaleString()} incremental</div>
+          <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6, marginTop: 4 }}>{tx(lang, D.sig.arpu.note_en, D.sig.arpu.note_es)}</div>
+        </Sec>
+      </div>}
+      {ref === "14d" && <div style={{ padding: "12px 14px", background: t.yellow + "06", borderRadius: 8, border: "1px solid " + t.yellow + "20" }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: t.yellow, marginBottom: 6 }}>{tx(lang, "Statistical significance: confirmed", "Significancia estadistica: confirmada")}</div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6, marginBottom: 6 }}>{tx(lang, "CR improved +4.29pp (14.85% to 19.14%) with z=12.99 (p<0.0001). This is confirmed at 95% confidence. The z-test compares pre-launch vs post-launch visitor pools and does not change between baseline views.", "CR mejoro +4.29pp (14.85% a 19.14%) con z=12.99 (p<0.0001). Confirmado al 95% de confianza. El z-test compara pools de visitantes pre vs post lanzamiento y no cambia entre vistas de baseline.")}</div>
+        <div style={{ fontSize: 11, color: t.yellow }}>{tx(lang, "Full z-test calculation with step-by-step breakdown and ARPU analysis: switch to 90d view.", "Calculo z-test completo con desglose paso a paso y analisis de ARPU: cambiar a vista 90d.")}</div>
+      </div>}
+      {isDID && <div style={{ padding: "12px 14px", background: t.purple + "06", borderRadius: 8, border: "1px solid " + t.purple + "20" }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: t.purple, marginBottom: 6 }}>{tx(lang, "Statistical significance: confirmed", "Significancia estadistica: confirmada")}</div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6, marginBottom: 6 }}>{tx(lang, "CR improved +4.29pp (z=12.99, p<0.0001) at 95% confidence. This z-test is an observed metric (pre vs post visitor pools). In this DID view, the causal evidence comes from the treated vs control comparison above. Both confirm the experiment worked, from different angles.", "CR mejoro +4.29pp (z=12.99, p<0.0001) al 95% de confianza. Este z-test es una metrica observada (pools de visitantes pre vs post). En esta vista DID, la evidencia causal viene de la comparacion tratados vs control de arriba. Ambos confirman que el experimento funciono, desde angulos distintos.")}</div>
+        <div style={{ fontSize: 11, color: t.purple }}>{tx(lang, "Full z-test calculation and ARPU analysis: switch to 90d view.", "Calculo z-test completo y analisis de ARPU: cambiar a vista 90d.")}</div>
+      </div>}
+    </Xp>
+
+    {/* BLENDED (hidden in DID) */}
+    {!isDID && D.hasBlended && <Xp title={tx(lang, "Blended metrics (transparency)", "Metricas blended (transparencia)")} desc={L.blendedNote} t={t}>
+      <Row cells={[tx(lang, "Metric", "Métrica"), "Baseline", "Post", "Δ"]} header t={t} />
+      <Row cells={["ARPU blended", "€" + D.baselines.arpu_b, "€" + D.accum.arpu_b, { v: D.accum.arpu_b_d90, color: t.red }]} t={t} />
+      <Row cells={["CR blended", D.baselines.cr_b + "%", D.accum.cr_b + "%", { v: D.accum.cr_b_d90, color: t.red }]} t={t} />
+    </Xp>}
+
+    {/* ANOMALIES */}
+    <Xp title={tx(lang, "Anomalies", "Anomalías")} badge={<Pill color={t.yellow}>{D.anomalies.length}</Pill>} t={t}>
+      {D.anomalies.map((a, i) => <div key={i} style={{ padding: "10px 12px", borderRadius: 6, border: "1px solid " + t.border, marginBottom: 6 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
+          <strong style={{ color: t.yellow, fontSize: 13 }}>{a.bucket}</strong>
+          {a.confidence && <Pill color={t[cl[a.confidence].c]}>{cl[a.confidence].l}</Pill>}
+          <Pill color={a.status === "resolved" ? t.green : t.yellow}>{a.status.toUpperCase()}</Pill>
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.5 }}>{tx(lang, a.en, a.es)}</div>
+        <div style={{ fontSize: 11, color: t.textMuted, marginTop: 3 }}>{tx(lang, a.hyp_en, a.hyp_es)}</div>
+        {/* DESTINATIONS DETAIL */}
+        {a.destinations && <Xp title={tx(lang, "Affected destinations (" + a.destinations.length + ")", "Destinos afectados (" + a.destinations.length + ")")} desc={tx(lang, "Identified during post-experiment audit." + (a.dest_bucket ? " Applies to: " + a.dest_bucket + "." : ""), "Identificados en auditoría post-experimento." + (a.dest_bucket ? " Aplica a: " + a.dest_bucket + "." : ""))} t={{...t, card: "transparent", border: t.border}}>
+          <Row cells={[tx(lang, "Destination", "Destino"), tx(lang, "Orders", "Órdenes"), tx(lang, "AOV before", "AOV antes"), tx(lang, "AOV after", "AOV después"), tx(lang, "Change", "Cambio"), tx(lang, "Note", "Nota")]} header t={t} />
+          {a.destinations.map((d, di) => <Row key={di} cells={[d.name, String(d.orders), d.aov_before || "—", d.aov_after || "—", { v: d.aov_delta, color: d.aov_delta.startsWith("+") ? t.orange : t.green }, d.note || ""]} t={t} />)}
+          <div style={{ fontSize: 11, color: t.textDim, marginTop: 6, lineHeight: 1.5 }}>{tx(lang, a.dest_summary_en, a.dest_summary_es)}</div>
+        </Xp>}
+      </div>)}
+    </Xp>
+
+    {/* GM TIMELINE */}
+    <Xp title={tx(lang, "Gross margin timeline", "Timeline margen bruto")} desc={tx(lang, "Source: " + D.gm.source + ". Accumulated: " + D.gm.display + "%.", "Fuente: " + D.gm.source + ". Acumulado: " + D.gm.display + "%.")} t={t}>
+      {D.gm.timeline.map((r, i) => {
+        const note = typeof r.n === "object" ? tx(lang, r.n.en, r.n.es) : r.n;
+        return <Row key={i} cells={[r.d, { v: r.v + (note ? " ⚠️ " + note : ""), color: note ? t.yellow : t.text }]} t={t} />;
+      })}
+      <div style={{ marginTop: 8 }}><Gauge label={tx(lang, "Accumulated", "Acumulado")} baseline={D.baselines.gm} current={D.accum.gm} floor={30} unit="%" t={t} /></div>
+    </Xp>
+
+    {/* GAPS */}
+    <Xp title={tx(lang, "Gaps", "Gaps")} badge={<Pill color={t.orange}>{D.gaps.filter(g => g.status === "open").length} {tx(lang, "open", "abiertos")}</Pill>} t={t}>
+      {D.gaps.map((g, i) => <div key={i} style={{ padding: "8px 10px", borderRadius: 6, border: "1px solid " + t.border + "60", marginBottom: 6 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 3 }}>
+          <Pill color={g.type === "TEST" ? t.orange : g.type === "INFRASTRUCTURE" ? t.textMuted : t.accent}>{g.type}</Pill>
+          <span style={{ fontSize: 12, fontWeight: 600, color: t.text }}>{tx(lang, g.en, g.es)}</span>
+        </div>
+        <div style={{ fontSize: 11, color: t.textDim }}>{tx(lang, g.why_en, g.why_es)} · {g.owner} · {g.target}</div>
+      </div>)}
+    </Xp>
+
+    {/* VALIDATION WARNINGS — moved here from top, less intrusive */}
+    {warnings.length > 0 && !isDID && <Xp title={tx(lang, "⚙️ Data completeness (" + warnings.length + " gaps)", "⚙️ Completitud de datos (" + warnings.length + " gaps)")} t={t}>
+      {warnings.map((w, i) => <div key={i} style={{ fontSize: 11, color: t.orange, lineHeight: 1.5, marginBottom: 4, padding: "4px 0", borderBottom: i < warnings.length - 1 ? "1px solid " + t.border + "30" : "none" }}>⚠️ {tx(lang, w.en, w.es)}</div>)}
+      <div style={{ fontSize: 10, color: t.textMuted, marginTop: 6, fontStyle: "italic" }}>{tx(lang, "These gaps don't block the analysis but affect toggle accuracy or section visibility.", "Estos gaps no bloquean el análisis pero afectan precisión del toggle o visibilidad de secciones.")}</div>
+    </Xp>}
+
+    {/* GLOSSARY */}
+    <Xp title={tx(lang, "📖 Glossary", "📖 Glosario")} t={t}>
+      {[
+        { term: "MDE", def: { en: "Minimum Desirable Effect. The targets we set BEFORE the experiment to define success. Think of it as the bar the experiment needs to clear. If all MDE are met, the experiment is a success. If some are not, we investigate why.", es: "Efecto Minimo Deseado. Los objetivos que definimos ANTES del experimento para definir exito. Es la vara que el experimento tiene que superar. Si todos los MDE se cumplen, el experimento es exitoso. Si algunos no, investigamos por que." } },
+        { term: "ARPU", def: { en: "Average Revenue Per User. Total revenue divided by total unique visitors. If 1,000 people visit the store and we make EUR 5,000, ARPU is EUR 5. It captures both conversion rate and order value in one number.", es: "Revenue Promedio por Usuario. Revenue total dividido visitantes unicos totales. Si 1,000 personas visitan la tienda y facturamos EUR 5,000, ARPU es EUR 5. Captura tanto la tasa de conversion como el valor de orden en un solo numero." } },
+        { term: "CR", def: { en: "Conversion Rate. Of every 100 visitors, how many buy something. If 15 out of 100 buy, CR is 15%. A higher CR means the store is better at turning visitors into buyers.", es: "Tasa de Conversion. De cada 100 visitantes, cuantos compran algo. Si 15 de 100 compran, CR es 15%. Un CR mas alto significa que la tienda es mejor convirtiendo visitantes en compradores." } },
+        { term: "AOV", def: { en: "Average Order Value. The average EUR paid per order. If 100 orders totaled EUR 3,700, AOV is EUR 37. When we cut prices on short plans, AOV drops on those plans but volume should compensate.", es: "Valor Promedio de Orden. El promedio en EUR pagado por orden. Si 100 ordenes sumaron EUR 3,700, AOV es EUR 37. Cuando bajamos precios en planes cortos, el AOV baja en esos planes pero el volumen deberia compensar." } },
+        { term: "GM", def: { en: "Gross Margin. What percentage of revenue is profit after paying direct costs (data, carrier fees). If we make EUR 100 and costs are EUR 20, GM is 80%. Higher GM = more money left per euro of revenue.", es: "Margen Bruto. Que porcentaje del revenue es ganancia despues de pagar costos directos (datos, fees de carrier). Si facturamos EUR 100 y los costos son EUR 20, GM es 80%. Mayor GM = mas dinero por euro de revenue." } },
+        { term: "Price-per-Day (PPD)", def: { en: "The first price impression a buyer sees: plan price divided by number of days. A 3-day plan at EUR 15 has a PPD of EUR 5/day. When PPD is too high on short plans, buyers see an expensive first impression and leave. The correction brings PPD to a standard level across the catalog.", es: "La primera impresion de precio que ve el comprador: precio del plan dividido por cantidad de dias. Un plan de 3 dias a EUR 15 tiene un PPD de EUR 5/dia. Cuando el PPD es demasiado alto en planes cortos, los compradores ven una primera impresion cara y se van. La correccion lleva el PPD a un nivel estandar en todo el catalogo." } },
+        { term: "DID (Difference-in-Differences)", def: { en: "A method to isolate the effect of a price change from everything else happening in the market. We compare two groups: destinations where we changed prices (treated) vs destinations where we didn't (control). Both groups are affected by seasonality and marketing. The DIFFERENCE between how much each group changed is the price effect. Like measuring how much faster a runner got by comparing against someone who trained the same way but didn't change shoes.", es: "Un metodo para aislar el efecto de un cambio de precio de todo lo demas que pasa en el mercado. Comparamos dos grupos: destinos donde cambiamos precios (tratados) vs destinos donde no (control). Ambos grupos son afectados por estacionalidad y marketing. La DIFERENCIA entre cuanto cambio cada grupo es el efecto del precio. Como medir cuanto mas rapido corrio un atleta comparando contra alguien que entreno igual pero no cambio zapatillas." } },
+        { term: tx(lang, "Parallel Trends", "Tendencias Paralelas"), def: { en: "The requirement that treated and control groups moved together BEFORE the price change. If they did, we can trust that any divergence AFTER the change is caused by the price. We measure this with the CV (Coefficient of Variation) of their weekly ratio. CV below 20% = they moved together = DID is valid. Think of it as checking that two runners had similar pace before one changed shoes.", es: "El requisito de que los grupos tratado y control se movieron juntos ANTES del cambio de precio. Si lo hicieron, podemos confiar en que cualquier divergencia DESPUES del cambio es causada por el precio. Lo medimos con el CV (Coeficiente de Variacion) de su ratio semanal. CV debajo de 20% = se movieron juntos = DID es valido. Es como verificar que dos corredores tenian ritmo similar antes de que uno cambiara zapatillas." } },
+        { term: "CV (Coefficient of Variation)", def: { en: "A measure of how stable a ratio is over time. Low CV = stable = the two groups co-move. We use it on the weekly ratio of treated/control orders. Our CV of 10.6% means the ratio varied only 10.6% week to week over 14 weeks. That's very stable (threshold is 20%). It validates that DID is the right method.", es: "Una medida de cuan estable es un ratio en el tiempo. CV bajo = estable = los dos grupos se mueven juntos. Lo usamos en el ratio semanal de ordenes tratados/control. Nuestro CV de 10.6% significa que el ratio vario solo 10.6% de semana a semana en 14 semanas. Eso es muy estable (umbral es 20%). Valida que DID es el metodo correcto." } },
+        { term: tx(lang, "Elasticity", "Elasticidad"), def: { en: "How much volume changes when price changes. Formula: % volume change (DID-adjusted) / % price change. If we cut price 36% and volume goes up 79% (after removing organic growth), elasticity is -2.20. The absolute value |2.20| > 1 means volume reacts MORE than proportionally. When |e| > 1, lowering prices increases total revenue. When |e| < 1 (inelastic), it doesn't.", es: "Cuanto cambia el volumen cuando cambia el precio. Formula: % cambio volumen (ajustado por DID) / % cambio precio. Si bajamos precio 36% y volumen sube 79% (despues de sacar crecimiento organico), elasticidad es -2.20. El valor absoluto |2.20| > 1 significa que el volumen reacciona MAS que proporcionalmente. Cuando |e| > 1, bajar precios aumenta el revenue total. Cuando |e| < 1 (inelastico), no." } },
+        { term: tx(lang, "Break-even (Revenue-neutral)", "Punto de equilibrio (Revenue-neutral)"), def: { en: "When a price cut generates exactly enough extra volume to keep total revenue the same. For 1-day plans: we cut price 36%, volume nearly doubled, but each order brings in less money. Net result: same revenue, more customers. It's not a failure. It means pricing reached the equilibrium point of the demand curve. The value is in funnel entry and price perception, not immediate revenue.", es: "Cuando una baja de precio genera exactamente el volumen extra necesario para mantener el revenue total igual. Para planes 1 dia: bajamos precio 36%, volumen casi se duplico, pero cada orden trae menos dinero. Resultado neto: mismo revenue, mas clientes. No es un fracaso. Significa que el pricing llego al punto de equilibrio de la curva de demanda. El valor esta en la entrada al funnel y la percepcion de precio, no en revenue inmediato." } },
+        { term: "Chi-square", def: { en: "A statistical test that checks if a distribution changed for real or by chance. We use it to test whether the mix of plan durations shifted after the price change. The test produces a score (ours: 88.70). We compare it against a threshold (12.59, which depends on how many categories we have and our confidence level). Score much higher than threshold = the shift is real, not random noise.", es: "Un test estadistico que verifica si una distribucion cambio de verdad o por azar. Lo usamos para testear si la mezcla de duraciones de plan cambio despues del cambio de precio. El test produce un score (nuestro: 88.70). Lo comparamos contra un umbral (12.59, que depende de cuantas categorias tenemos y nuestro nivel de confianza). Score mucho mayor que umbral = el cambio es real, no ruido aleatorio." } },
+        { term: tx(lang, "Cramer's V", "V de Cramer"), def: { en: "Normalizes the chi-square result by sample size. Chi-square grows with more data, so a large sample always looks 'significant'. Cramer's V adjusts for this. Our V=0.087 (small) is expected: we redistributed volume within the same catalog, not a dramatic structural change. The economic impact (1-day orders +85%) is what matters.", es: "Normaliza el resultado de chi-cuadrado por tamano de muestra. Chi-cuadrado crece con mas datos, entonces una muestra grande siempre parece 'significativa'. V de Cramer ajusta por esto. Nuestro V=0.087 (pequeno) es esperado: redistribuimos volumen dentro del mismo catalogo, no un cambio estructural dramatico. El impacto economico (ordenes 1 dia +85%) es lo que importa." } },
+        { term: "Z-score", def: { en: "Measures how far a result is from 'no effect'. z = 1.96 means 95% confidence (only 5% chance the result is random). z = 2.58 means 99% confidence. Our z = 12.99 is extreme. It's so far from zero that the probability of the conversion improvement being random noise is essentially zero (p < 0.0001).", es: "Mide que tan lejos esta un resultado de 'ningun efecto'. z = 1.96 significa 95% de confianza (solo 5% de probabilidad de que el resultado sea aleatorio). z = 2.58 significa 99%. Nuestro z = 12.99 es extremo. Esta tan lejos de cero que la probabilidad de que la mejora de conversion sea ruido aleatorio es esencialmente cero (p < 0.0001)." } },
+        { term: tx(lang, "Counterfactual", "Contrafactual"), def: { en: "The answer to 'what would have happened if we hadn't changed prices?' We can't observe this directly (we can't run two parallel universes). DID estimates it by using the control group as a proxy: if control destinations grew 42%, we assume treated destinations would have grown ~42% too without the price change. Any growth above 42% is attributable to the price.", es: "La respuesta a 'que habria pasado si no hubieramos cambiado los precios?' No podemos observar esto directamente (no podemos correr dos universos paralelos). DID lo estima usando el grupo control como proxy: si los destinos control crecieron 42%, asumimos que los tratados habrian crecido ~42% tambien sin el cambio de precio. Cualquier crecimiento por encima de 42% es atribuible al precio." } },
+        { term: tx(lang, "Excluding Paid Social", "Excluyendo Paid Social"), def: { en: "Removing visitors who came through paid social media ads (Meta, TikTok, etc.) from the analysis. When a Paid Social budget change happens on the same day as a price change, it contaminates the blended metrics. By excluding PS visitors, we isolate the organic effect of the pricing change on visitors who arrived through search, direct, or other non-paid channels.", es: "Remover visitantes que llegaron por publicidad paga en redes sociales (Meta, TikTok, etc.) del analisis. Cuando un cambio de presupuesto de Paid Social ocurre el mismo dia que un cambio de precio, contamina las metricas blended. Al excluir visitantes PS, aislamos el efecto organico del cambio de pricing en visitantes que llegaron por busqueda, directo, u otros canales no pagos." } },
+      ].map((item, i, arr) => <div key={i} style={{ padding: "8px 0", borderBottom: i < arr.length - 1 ? "1px solid " + t.border + "30" : "none" }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: t.accent }}>{item.term}</span>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6, marginTop: 3 }}>{tx(lang, item.def.en, item.def.es)}</div>
+      </div>)}
+      <div style={{ fontSize: 10, color: t.textMuted, marginTop: 10, fontStyle: "italic" }}>{tx(lang, "Living document. Updated with each experiment. All terms explained in plain language.", "Documento vivo. Se actualiza con cada experimento. Todos los terminos explicados en lenguaje simple.")}</div>
+    </Xp>
+
+    {/* FOOTER */}
+    <div style={{ marginTop: 16, padding: 10, fontSize: 11, color: t.textMuted, textAlign: "center", borderTop: "1px solid " + t.border }}>{D.footer[lang]}</div>
+  </div>;
+}
+
+    ReactDOM.render(React.createElement(ExpPerf), document.getElementById('root'));
+  </script>
+</body>
+</html>

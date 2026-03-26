@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holafly · Pricing Command Center v6</title>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Mulish',sans-serif; background:#FFFFFF; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes numIn { from { opacity:0; filter:blur(4px); transform:translateY(8px); } to { opacity:1; filter:blur(0); transform:translateY(0); } }
+    @keyframes pop { from { opacity:0; transform:scale(0.92); } to { opacity:1; transform:scale(1); } }
+    .anim-card { animation: fadeUp .4s ease both; }
+    .anim-num { animation: numIn .5s ease both; }
+    .anim-pop { animation: pop .35s ease both; }
+    @media(max-width:359px){ body::before { content:'Please use a larger screen (360px+)'; position:fixed; inset:0; background:#FFFFFF; display:flex; align-items:center; justify-content:center; font-family:'Mulish',sans-serif; font-size:14px; color:#292B2E; z-index:9999; padding:20px; text-align:center; } #root { display:none; } }
+    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-thumb { background:#CCD0D7; border-radius:3px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ═══ HOLAFLY DESIGN SYSTEM V2 — LIGHT THEME ═══
+const T = {
+  bg:"#FFFFFF",card:"#F8FAFC",text:"#292B2E",textDim:"#64748B",textMuted:"#94A3B8",
+  border:"#E4E6EA",accent:"#E6485C",accentLight:"#FDE8EB",
+  successBg:"#48EC86",successText:"#15803D",dangerText:"#DC2626",warningText:"#B45309",
+  yellow:"#FFF0AB",blue:"#BFEBFF",orange:"#FFCCB0",purple:"#643560",
+};
+const CAT_C={"FX Correction":{bg:"#BFEBFF",t:"#1E3A5F"},"PPD Optimization":{bg:"#FFF0AB",t:"#7C5C00"},"Catalog Correction":{bg:"#E8F4FD",t:"#1E3A5F"},"Exploratory":{bg:"#FFCCB0",t:"#7C3A00"}};
+const MN="JetBrains Mono,Consolas,monospace",UI="Mulish,sans-serif";
+
+const TABS=[
+  {id:"overview",en:"Overview",es:"Resumen",c:T.text},
+  {id:"blockers",en:"Blockers & Decisions",es:"Bloqueos & Decisiones",c:T.dangerText},
+  {id:"experiments",en:"Experiments",es:"Experimentos",c:"#34D399"},
+  {id:"strategy",en:"Strategy",es:"Estrategia",c:T.purple},
+  {id:"data",en:"Data & Dashboards",es:"Datos & Dashboards",c:"#6BA3D6"},
+  {id:"infra",en:"Infrastructure",es:"Infraestructura",c:"#D4A843"},
+  {id:"roadmap",en:"Roadmap",es:"Hoja de ruta",c:"#D49370"},
+];
+
+// STATUS
+const ST={live:{bg:"#E8FBF0",t:T.successText,d:T.successBg},closed:{bg:T.card,t:T.textMuted,d:T.border},ready:{bg:"#FEF9C3",t:T.warningText,d:"#EAB308"},approved:{bg:"#DBEAFE",t:"#1D4ED8",d:"#3B82F6"},paused:{bg:T.accentLight,t:T.accent,d:T.accent},success:{bg:"#E8FBF0",t:T.successText,d:T.successBg},blocked:{bg:"#FEE2E2",t:T.dangerText,d:T.dangerText},pending:{bg:"#FFF7ED",t:T.warningText,d:"#F97316"},"stand-by":{bg:"#F3F4F6",t:"#6B7280",d:"#9CA3AF"}};
+const Bd=({s,label})=>{const c=ST[s]||ST.paused;return (<span style={{display:"inline-flex",alignItems:"center",gap:5,padding:"3px 10px",borderRadius:99,background:c.bg,color:c.t,fontSize:11,fontWeight:600}}><span style={{width:6,height:6,borderRadius:"50%",background:c.d,flexShrink:0}}/>{label||s}</span>)};
+const CB=({cat})=>{const c=CAT_C[cat]||{bg:T.card,t:T.textDim};return (<span style={{fontSize:10.5,fontWeight:600,padding:"3px 8px",borderRadius:4,background:c.bg,color:c.t}}>{cat}</span>)};
+
+// COMPONENTS — #1 Typography bump: body 14px, desc 14px, metrics 26px, section headers 12px
+const Card=({children,accent,onClick,s={},delay=0})=><div onClick={onClick} className="anim-card" style={{background:T.card,borderRadius:10,border:`1px solid ${T.border}`,borderLeft:accent?`3px solid ${accent}`:`1px solid ${T.border}`,padding:"16px 18px",cursor:onClick?"pointer":"default",transition:"box-shadow .15s",animationDelay:`${delay}ms`,...s}} onMouseEnter={e=>{if(onClick)e.currentTarget.style.boxShadow="0 2px 12px rgba(0,0,0,.06)"}} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>{children}</div>;
+const XL=({href,icon,title,desc,delay=0})=><Card accent={T.accent} delay={delay} onClick={()=>{if(href)window.open(href,"_blank")}}><div style={{display:"flex",gap:10,alignItems:"flex-start"}}><span style={{fontSize:18,lineHeight:1,flexShrink:0}}>{icon}</span><div style={{minWidth:0}}><div style={{fontWeight:700,fontSize:13,color:T.text,marginBottom:3}}>{title}</div><div style={{fontSize:12,color:T.textDim,lineHeight:1.45}}>{desc}</div></div></div></Card>;
+const Sec=({children,color})=><h3 style={{fontSize:12,fontWeight:700,color:color||T.textMuted,textTransform:"uppercase",letterSpacing:1.3,margin:"26px 0 12px",fontFamily:UI}}>{children}</h3>;
+const Desc=({children})=><p style={{fontSize:14,color:T.textDim,lineHeight:1.6,margin:"0 0 14px"}}>{children}</p>;
+const G=({cols="repeat(auto-fit,minmax(230px,1fr))",gap=10,children})=><div style={{display:"grid",gridTemplateColumns:cols,gap}}>{children}</div>;
+const Met=({label,value,sub,color,delay=0})=><div className="anim-pop" style={{background:T.card,borderRadius:10,border:`1px solid ${T.border}`,borderLeft:`3px solid ${color||T.textMuted}`,padding:"14px 10px",textAlign:"center",animationDelay:`${delay}ms`}}><div style={{fontSize:10.5,color:T.textMuted,fontWeight:600,textTransform:"uppercase",letterSpacing:.7,marginBottom:5}}>{label}</div><div className="anim-num" style={{fontSize:26,fontWeight:800,color:color||T.text,fontFamily:MN,lineHeight:1,animationDelay:`${delay+80}ms`}}>{value}</div>{sub&&<div style={{fontSize:10.5,color:T.textDim,marginTop:5}}>{sub}</div>}</div>;
+const L=(lang,en,es)=>lang==="en"?en:es;
+
+// COLLAPSIBLE SECTION
+const Coll=({title,color,count,children,open:initOpen=false})=>{
+  const [open,setOpen]=useState(initOpen);
+  return <div style={{marginBottom:14}}>
+    <div onClick={()=>setOpen(!open)} style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",padding:"10px 0",borderBottom:`1px solid ${T.border}`,userSelect:"none"}}>
+      <span style={{fontSize:11,color:color||T.textMuted,transition:"transform .2s",transform:open?"rotate(90deg)":"rotate(0deg)",fontWeight:700}}>▶</span>
+      <span style={{fontSize:12,fontWeight:700,color:color||T.textMuted,textTransform:"uppercase",letterSpacing:1.3,fontFamily:UI}}>{title}</span>
+      {count!=null&&<span style={{fontSize:10,fontFamily:MN,color:T.textMuted,background:T.border,padding:"1px 6px",borderRadius:4}}>{count}</span>}
+    </div>
+    {open&&<div style={{paddingTop:12}} className="anim-card">{children}</div>}
+  </div>
+};
+
+// DASHBOARD URLS (per experiment)
+const DASH={
+  "EXP-004":"https://guidomautino.github.io/holafly-pricing-dashboards/exp_004_mxn_v5_final.html",
+  "EXP-005":"https://guidomautino.github.io/holafly-pricing-dashboards/exp_005_jpy_v5_final.html",
+};
+
+// TIMELINE BAR — #20 experiment progress bar
+const TimelineBar=({start,end,label,pct,delay=0})=>{
+  const col = pct>=100?"#34D399":pct>=50?T.warningText:T.accent;
+  return <div className="anim-card" style={{display:"flex",alignItems:"center",gap:10,padding:"8px 0",animationDelay:`${delay}ms`}}>
+    <span style={{fontSize:11,fontFamily:MN,color:T.textMuted,minWidth:60}}>{start}</span>
+    <div style={{flex:1,height:6,background:T.border,borderRadius:3,overflow:"hidden",position:"relative"}}>
+      <div style={{width:`${Math.min(pct,100)}%`,height:"100%",background:col,borderRadius:3,transition:"width .6s ease"}}/>
+    </div>
+    <span style={{fontSize:11,fontFamily:MN,color:T.textMuted,minWidth:60,textAlign:"right"}}>{end}</span>
+    <span style={{fontSize:10,fontWeight:700,fontFamily:MN,color:col,minWidth:40,textAlign:"right"}}>{pct}%</span>
+  </div>
+};
+
+// LIFECYCLE BADGE — #21
+const LifecycleBd=({phase})=>{
+  const map={"pre-launch":{bg:"#FFF7ED",t:"#B45309"},"running":{bg:"#E8FBF0",t:T.successText},"closed":{bg:T.card,t:T.textMuted},"review":{bg:"#EDE9FE",t:"#6D28D9"}};
+  const c=map[phase]||map["pre-launch"];
+  return <span style={{fontSize:10,fontWeight:600,padding:"2px 7px",borderRadius:4,background:c.bg,color:c.t,textTransform:"capitalize"}}>{phase}</span>
+};
+
+// TLDR BANNER — situational summary, updated manually with each dashboard update
+const TLDR=({date,items,lang})=><div className="anim-card" style={{background:"#F8FAFC",border:`1px solid ${T.border}`,borderLeft:`3px solid ${T.accent}`,borderRadius:10,padding:"14px 18px",marginBottom:20}}>
+  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+    <span style={{fontSize:11,fontWeight:700,color:T.accent,textTransform:"uppercase",letterSpacing:1}}>TLDR</span>
+    <span style={{fontSize:10,fontFamily:MN,color:T.textMuted}}>{date}</span>
+  </div>
+  <div style={{fontSize:14,color:T.text,lineHeight:1.65}}>{items.map((it,i)=><div key={i} style={{marginBottom:i<items.length-1?6:0,display:"flex",gap:8,alignItems:"flex-start"}}><span style={{color:it.color||T.textDim,fontSize:13,lineHeight:1.7,flexShrink:0}}>{it.icon}</span><span>{it.text}</span></div>)}</div>
+</div>;
+
+// TLDR DATA — edit these when updating the dashboard
+const TLDR_OVERVIEW=(l)=>({date:"Mar 26, 2026",items:[
+  {icon:"🟢",color:T.successText,text:L(l,"2 experiments closed successfully (004 MXN, 005 JPY). 100% success rate. Combined incremental: €48K+ in 14 days. EXP-006 Thailand: 14-day window completed today, pending analysis and report. EXP-009 GBP approved, EXP-010 Gulf approved but stand-by (Iran conflict).","2 experimentos cerrados con exito (004 MXN, 005 JPY). 100% success rate. Incremental combinado: €48K+ en 14 dias. EXP-006 Tailandia: ventana 14 dias completada hoy, pendiente analisis y reporte. EXP-009 GBP aprobado, EXP-010 Gulf aprobado pero stand-by (conflicto Iran).")},
+  {icon:"⏳",text:L(l,"004 and 005 results pending formal feedback from Xabi/Alfonso before company-wide publication via #pricing. This blocks CORR-001 launch.","Resultados 004 y 005 pendientes de feedback formal de Xabi/Alfonso para publicar company-wide en #pricing. Esto bloquea CORR-001.")},
+  {icon:"📅",text:L(l,"Today: EXP-006 final + Alfonso alignment. Tomorrow: Mostafa scope (12:15). Pending: 3 Alfonso meetings (strategy, coordination, Gines behavioural).","Hoy: final EXP-006 + alineacion Alfonso. Manana: scope Mostafa (12:15). Pendiente: 3 meets Alfonso (estrategia, coordinacion, Gines behavioural).")},
+  {icon:"🔧",text:L(l,"PIM end-of-March at risk. Revenue alerts broken. Pricing Committee being evaluated. Single source of truth dashboard to define with Miquel.","PIM fin-de-marzo en riesgo. Alertas revenue rotas. Comite Pricing en evaluacion. Dashboard fuente unica a definir con Miquel.")},
+]});
+const TLDR_BLOCKERS=(l)=>({date:"Mar 26, 2026",items:[
+  {icon:"🔑",color:T.accent,text:L(l,"Highest priority: formal feedback on EXP-004/005 results. Unblocks publication to #pricing and CORR-001 launch.","Prioridad maxima: feedback formal resultados EXP-004/005. Desbloquea publicacion #pricing y CORR-001.")},
+  {icon:"🟢",color:T.successText,text:L(l,"Good news: EXP-009 GBP approved, ready for pre-launch prep (CF CSVs needed). EXP-010 Gulf approved but parked until conflict normalizes.","Buena noticia: EXP-009 GBP aprobado, listo para prep pre-lanzamiento (CSVs CF necesarios). EXP-010 Gulf aprobado pero en espera hasta normalizacion conflicto.")},
+  {icon:"🏗️",text:L(l,"PIM/Strapi: end-of-March at risk. No single source of truth dashboard yet. Nobody owns discount/AOV monitoring. All need definition with Alfonso.","PIM/Strapi: fin-de-marzo en riesgo. Sin dashboard fuente unica. Nadie ownea monitoreo descuentos/AOV. Todo necesita definicion con Alfonso.")},
+]});
+
+// URLS — #4 all verified
+const N={tracker:"https://www.notion.so/holafly/9010f2a344c24435b8f24fec5ca144c2",marco:"https://www.notion.so/holafly/321eea72a18881f384b7d0d132a9e6a5",marcoNav:"https://www.notion.so/holafly/329eea72a18881758aa6fdd3037075ae",snapshot:"https://www.notion.so/holafly/323eea72a18881daa62be22b7fac4021",checklist:"https://www.notion.so/holafly/326eea72a1888129a6eef3b93f128aef",checkpoint:"https://www.notion.so/holafly/327eea72a1888194855cef61ec91bf88",pricingMain:"https://www.notion.so/holafly/17deea72a1888034b308d325667c49f9",pricingProcess:"https://www.notion.so/holafly/182eea72a18880ccb9fad9d03ab86daa",pricingRoadmap:"https://www.notion.so/holafly/18ceea72a188802a8f10cc15c0a2e00f",pricingHub:"https://www.notion.so/holafly/1d1eea72a188809c9d02c8fe7f4769f6",expHub:"https://www.notion.so/holafly/30beea72a1888197bea7fa72c798f69f",handover:"https://www.notion.so/holafly/2fbeea72a1888027a852d469270593e2",cruisePricingES:"https://www.notion.so/holafly/322eea72a1888031b6d8f2aed4f68d28",pimCurve:"https://www.notion.so/holafly/314eea72a1888084aca8de8165ffef4e",alertsFix:"https://www.notion.so/holafly/30deea72a18880c78dfaf427f1346f0c",fxAlert:"https://www.notion.so/holafly/182eea72a188806dbd1ad9990f028f82",ppdAudit:"https://www.notion.so/holafly/328eea72a18880cdac74fdd8c4da339b",exp004:"https://www.notion.so/holafly/312eea72a188801aab58eb71720b7bce",exp005:"https://www.notion.so/holafly/310eea72a1888015b123def6eca20202",exp006:"https://www.notion.so/holafly/31eeea72a1888185a981d5d7056dde22",corr001:"https://www.notion.so/holafly/321eea72a188806db422e6756b8711d0",exp008:"https://www.notion.so/holafly/9010f2a344c24435b8f24fec5ca144c2",exp009:"https://www.notion.so/holafly/32deea72a188817c8a4bcba239451636",exp010:"https://www.notion.so/holafly/32deea72a18881969d0dc58e081bda2b",saudiEval:"https://www.notion.so/holafly/318eea72a18880959e72ed8792bec08d",stratPlan:"https://www.notion.so/holafly/18ceea72a188801e9438e97924f99074",pricingStrategy:"https://www.notion.so/holafly/100b53637fb543709221cf11e0ad05ab",competitors:"https://www.notion.so/holafly/248eea72a1888014a47fe1f52a38dcd5",legacy1d:"https://www.notion.so/holafly/226eea72a1888099bb91e4730d70409e"};
+const J={board:"https://holaflyers.atlassian.net/jira/software/projects/PA/boards/79",pa314:"https://holaflyers.atlassian.net/browse/PA-314",pa325:"https://holaflyers.atlassian.net/browse/PA-325",pa330:"https://holaflyers.atlassian.net/browse/PA-330",pa331:"https://holaflyers.atlassian.net/browse/PA-331",pa332:"https://holaflyers.atlassian.net/browse/PA-332",pa333:"https://holaflyers.atlassian.net/browse/PA-333",pa340:"https://holaflyers.atlassian.net/browse/PA-340",pa341:"https://holaflyers.atlassian.net/browse/PA-341",pa344:"https://holaflyers.atlassian.net/browse/PA-344",pa346:"https://holaflyers.atlassian.net/browse/PA-346"};
+const LS={cogs:"https://lookerstudio.google.com/u/2/reporting/a9d353a8-3da5-4af5-9136-9bf996e12fda/page/p_ntxy4wmzud?pli=1",foundational:"https://lookerstudio.google.com/u/2/reporting/a08bdd44-7a41-402d-a0e3-19c94d1c7326/page/p_3rwoqwxrzd?pli=1",prices:"https://lookerstudio.google.com/u/2/reporting/d9ca0779-164a-43e2-876d-6821e415ae06/page/p_ygugrrcczd",shopify:"https://lookerstudio.google.com/u/2/reporting/95d88d21-e3c6-4616-ac58-20cb709dab85/page/Yv4GF",currency:"https://lookerstudio.google.com/u/2/reporting/806cfae2-3819-4e73-ba9b-f9a0e970fdf0/page/X1Z4D"};
+const ADOBE="https://experience.adobe.com/#/@holafly/so:holafl0/analytics/spa/index.html#/workspace/edit/699dea137a22690a099f3bb4";
+const LAND={thailand:"https://guidomautino.github.io/Thailand-pricing-landscape-v2/",saudi:"https://guidomautino.github.io/saudi-pricing-landscape/saudi-traveler-landscape.html"};
+const SAUDI_SLIDES="https://docs.google.com/presentation/d/1LXxx-iuzIth2Cua1zsq3FY-FBnJK7qHDHEd0BLuUGeo/edit?usp=sharing";
+
+// ═══ OVERVIEW ═══
+const Overview=({l})=>(<div>
+  <TLDR {...TLDR_OVERVIEW(l)} lang={l}/>
+
+  <Coll title={L(l,"Area KPIs — Q1 2026","KPIs del Area — Q1 2026")} open={true}>
+    <G cols="repeat(auto-fit,minmax(130px,1fr))">
+      <Met label="ARPU Target" value="+10%" sub={L(l,"DID delta per experiment","DID delta por exp")} color={T.accent} delay={0}/>
+      <Met label={L(l,"Exp / month","Exp / mes")} value="5+" sub={L(l,"55 over 11 months","55 en 11 meses")} delay={60}/>
+      <Met label={L(l,"Rev Target","Rev Objetivo")} value="€6-15M" sub={L(l,"incremental (ann.)","incremental (anual)")} color={T.successText} delay={120}/>
+      <Met label="GM Floor" value="30%" sub={L(l,"Confirmed guardrail","Guardrail confirmado")} delay={180}/>
+    </G>
+  </Coll>
+
+  <Coll title="Portfolio" open={true}>
+    <Card delay={0} onClick={()=>window.open(N.tracker,"_blank")} s={{cursor:"pointer"}}>
+      <G cols="repeat(auto-fit,minmax(100px,1fr))">{[
+        {v:"8",l:L(l,"Total entries","Total entries")},
+        {v:"2/2",l:L(l,"Success (closed)","Exito (cerrados)"),c:T.successText},
+        {v:"2",l:L(l,"Ready","Listos"),c:"#EAB308"},
+        {v:"1",l:L(l,"Stand-by","Stand-by"),c:"#6B7280"},
+        {v:"55",l:L(l,"Target 11mo","Objetivo 11m")}
+      ].map((m,i)=><div key={i} style={{textAlign:"center"}}><div className="anim-num" style={{fontSize:22,fontWeight:800,fontFamily:MN,color:m.c||T.text,animationDelay:`${i*60}ms`}}>{m.v}</div><div style={{fontSize:10.5,color:T.textMuted}}>{m.l}</div></div>)}</G>
+      <div style={{fontSize:10.5,color:T.accent,textAlign:"center",marginTop:8,fontWeight:600}}>Experiment Tracker →</div>
+    </Card>
+  </Coll>
+
+  <Coll title={L(l,"Team","Equipo")} count={3}>
+    <Card>{[{r:"Pricing Manager P4",w:L(l,"Open","Abierto"),s:"paused"},{r:"Growth Pricing Manager",w:"Guido",s:"live"},{r:"Pricing Analyst P3",w:L(l,"Open","Abierto"),s:"paused"}].map((p,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:i<2?`1px solid ${T.border}`:"none"}}><div><div style={{fontWeight:700,fontSize:13,color:T.text}}>{p.r}</div><div style={{fontSize:11.5,color:T.textDim}}>{p.w}</div></div><Bd s={p.s} label={p.s==="live"?"Active":L(l,"Open","Abierto")}/></div>)}</Card>
+  </Coll>
+
+  <Coll title="Stakeholders" count={13}>
+    <G cols="repeat(auto-fit,minmax(175px,1fr))">{[
+      {n:"Xabi",r:"Head of Growth",c:L(l,"DM before Slack","DM antes de Slack")},
+      {n:"Alfonso",r:L(l,"Strategic Lead","Lead Estrategico"),c:L(l,"Area oversight. New.","Supervision area. Nuevo.")},
+      {n:"Miquel",r:"Head of Data",c:L(l,"Single source of truth dashboard. ARPU methodology.","Dashboard fuente unica de verdad. Metodologia ARPU.")},
+      {n:"Mati",r:"Data",c:"BQ / GA4-Shopify"},
+      {n:"Josy",r:L(l,"Head of Carriers Performance","Head Carriers Performance"),c:L(l,"Costs, GM, revenue, traffic, QA. Key for Pricing Committee.","Costes, GM, revenue, trafico, QA. Clave para Comite Pricing.")},
+      {n:"Inigo",r:"Engineering",c:"PIM / Strapi"},
+      {n:"Tomeu & Sofia",r:"Paid Media",c:L(l,"Campaign coord.","Coord. campanas")},
+      {n:"Sebas",r:"Content",c:L(l,"Changes via Jira","Cambios via Jira")},
+      {n:"Daniel",r:"LTV",c:L(l,"LTV computation","Calculo LTV")},
+      {n:"Mostafa",r:"PM Checkout",c:L(l,"Statsig. Meet Mar 27 to understand scope.","Statsig. Meet 27 Mar para entender scope.")},
+      {n:"Shravan",r:"Customer Experience",c:L(l,"Pricing complaints/perception. Inquiry sent, pending response.","Quejas/percepcion pricing. Consulta enviada, pendiente respuesta.")},
+      {n:"Ari",r:"Head of Partnerships",c:L(l,"Partner negotiations. For Committee: Elchin (her boss) decides rep.","Negociaciones partners. Para Comite: Elchin (su jefa) decide representante.")},
+      {n:"Gines",r:L(l,"Experimentation (Product Hackers)","Experimentacion (Product Hackers)"),c:L(l,"Behavioural experimentation. Pending meet with Alfonso.","Experimentacion behavioural. Pendiente meet con Alfonso.")},
+    ].map((s,i)=><Card key={i} delay={i*40} s={{padding:"10px 14px"}}><div style={{fontWeight:700,fontSize:13,color:T.text}}>{s.n}</div><div style={{fontSize:11,color:T.accent,fontWeight:600}}>{s.r}</div><div style={{fontSize:10.5,color:T.textMuted,marginTop:3}}>{s.c}</div></Card>)}</G>
+  </Coll>
+
+  <Coll title={L(l,"Methodology","Metodologia")}>
+    <Desc>{L(l,"How we measure impact. Defines the analytical standard for every experiment.","Como medimos impacto. Define el estandar analitico de cada experimento.")}</Desc>
+    <Card accent={T.purple}><div style={{fontSize:14,color:T.text,lineHeight:1.7}}>
+      <strong>DID (Difference-in-Differences)</strong> — {L(l,"Primary method. No A/B until Statsig delivers (post-May 2026). Geographic or product-level variation.","Metodo primario. Sin A/B hasta Statsig (post-mayo 2026). Variacion geografica o por producto.")}
+      <br/><br/><strong>{L(l,"Contrafactual system","Sistema contrafactual")}</strong> — {L(l,"Adobe CF model (LinearRegression + trend + DOW). 3 modes. Break-even by bucket. Primary comparison lens for all dashboards (not 90d baseline).","Modelo Adobe CF (LinearRegression + tendencia + DOW). 3 modos. Break-even por bucket. Lente primaria para dashboards (no baseline 90d).")}
+      <br/><br/><strong>{L(l,"Revenue scope:","Scope revenue:")}</strong> FX → ORIGIN · PPD → DESTINATION · Duration → VARIANT
+    </div></Card>
+  </Coll>
+</div>);
+
+// ═══ BLOCKERS ═══
+// #9 GAS/Guido-owned moved to Operational Pendientes. #10 ordered by person. #13 Nuno reformulated. #14 Governance as open theme.
+const Blockers=({l})=>(<div>
+  <TLDR {...TLDR_BLOCKERS(l)} lang={l}/>
+
+  <Coll title={L(l,"Pending Reviews","Reviews Pendientes")} color={T.warningText} count={2} open={true}>
+    <Desc>{L(l,"Need formal feedback before moving forward.","Necesitan feedback formal para avanzar.")}</Desc>
+    {[
+      {id:"EXP-004 / 005",name:L(l,"Experiment results — formal feedback","Resultados experimentos — feedback formal"),detail:L(l,"Both experiments closed with positive results (MXN ARPU +33.7%, JPY GM +6.62pp). Dashboards live. Need formal feedback from Xabi/Alfonso before publishing to #pricing and communicating company-wide. Unblocks CORR-001 launch (depends on EXP-005 closure publication).","Ambos experimentos cerrados con resultados positivos (MXN ARPU +33.7%, JPY GM +6.62pp). Dashboards live. Necesitan feedback formal de Xabi/Alfonso antes de publicar en #pricing y comunicar a toda la compania. Desbloquea lanzamiento CORR-001 (depende de publicacion cierre EXP-005)."),url:N.exp004,accent:T.accent},
+      {id:"CORR-001",name:L(l,"TW+SK PPD Alignment","Alineacion PPD TW+SK"),detail:L(l,"Ready — pending EXP-005 closure publication. Low-impact correction (only JPY 1-3d, two destinations). Validated with Carriers for GM. Blocked on Sebas coordination for Content implementation. CSV ready, HEADER in Notion.","Listo — pendiente publicacion cierre EXP-005. Correccion bajo impacto (solo JPY 1-3d, dos destinos). Validado con Carriers para GM. Bloqueado en coordinacion Sebas. CSV listo, HEADER en Notion."),url:N.corr001,accent:"#EAB308"},
+    ].map((b,i)=><Card key={i} accent={b.accent} delay={i*60} s={{marginBottom:8}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:4}}><div><div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}><span style={{fontFamily:MN,fontSize:11,color:T.accent,fontWeight:700}}>{b.id}</span><span style={{fontWeight:700,fontSize:13,color:T.text}}>{b.name}</span></div><div style={{fontSize:14,color:T.textDim,lineHeight:1.55}}>{b.detail}</div></div><Bd s="pending" label={L(l,"Awaiting feedback","Pendiente feedback")}/></div>{b.url&&<a href={b.url} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.accent,fontWeight:600,marginTop:6,display:"inline-block"}}>Notion →</a>}</Card>)}
+  </Coll>
+
+  <Coll title={L(l,"Structural Blockers","Bloqueos Estructurales")} color={T.dangerText} count={3}>
+    {[
+      {title:"PIM / Strapi Migration",owner:L(l,"Inigo (internal development)","Inigo (desarrollo interno)"),impact:L(l,"All future pricing goes through Strapi. Internal build by Inigo's team. Product Hackers contribute pricing models, they are not PIM owners. Until resolved, manual CSV updates via Sebas/Jira.","Todo pricing futuro pasa por Strapi. Build interno del equipo de Inigo. Product Hackers contribuyen modelos de pricing, no son owners del PIM. Hasta resolverse, updates CSV manuales via Sebas/Jira."),unblock:L(l,"Making Science delivery + Inigo's team takeover. End of March target at risk.","Delivery Making Science + takeover equipo Inigo. Target fin marzo en riesgo."),jira:J.pa314,accent:T.dangerText},
+      {title:"Statsig — A/B testing",owner:L(l,"Mostafa (PM Checkout) / Engineering","Mostafa (PM Checkout) / Engineering"),impact:L(l,"Selected but no PRD, no delivery priority. Meet with Mostafa Mar 27 to understand scope and capacity.","Seleccionado pero sin PRD ni prioridad. Meet con Mostafa 27 Mar para entender scope y capacidad."),unblock:L(l,"PRD delivery + engineering prioritization.","Delivery PRD + priorizacion ingenieria."),accent:T.warningText},
+      {title:L(l,"Iran-Gulf conflict","Conflicto Iran-Golfo"),owner:L(l,"External","Externo"),impact:L(l,"Gulf travel volumes -75%. EXP-010 approved but on stand-by until conflict normalizes.","Volumenes viaje Golfo -75%. EXP-010 aprobado pero en stand-by hasta normalizacion."),unblock:L(l,"Trigger: >=80% pre-conflict volume for 4 consecutive weeks (est. Q4 2026).","Trigger: >=80% volumen pre-conflicto por 4 semanas consecutivas (est. Q4 2026)."),accent:T.textMuted},
+    ].map((b,i)=><Card key={i} accent={b.accent} delay={i*60} s={{marginBottom:8}}><div><div style={{fontWeight:700,fontSize:13.5,color:T.text}}>{b.title}</div><div style={{fontSize:11.5,color:T.accent,fontWeight:600,marginTop:3}}>{L(l,"Owner:","Owner:")} {b.owner}</div><div style={{fontSize:14,color:T.textDim,lineHeight:1.55,marginTop:5}}><strong style={{color:T.text}}>{L(l,"Impact:","Impacto:")}</strong> {b.impact}</div><div style={{fontSize:14,color:T.textDim,lineHeight:1.55,marginTop:3}}><strong style={{color:T.text}}>{L(l,"Unblocks:","Desbloquea:")}</strong> {b.unblock}</div></div>{b.jira&&<a href={b.jira} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.accent,fontWeight:600,marginTop:6,display:"inline-block"}}>Jira →</a>}</Card>)}
+  </Coll>
+
+  <Coll title={L(l,"Open Decisions","Decisiones Abiertas")} color={T.purple} count={5}>
+    <Card accent={T.purple}><div style={{fontSize:14,color:T.text,lineHeight:1.8}}>
+      {[
+        {q:L(l,"Governance:","Gobernanza:"),d:L(l,"No formal approval process. Define with Alfonso: who approves what? Threshold-based? (e.g., <€100K = Guido decides, >€100K = Xabi/Alfonso)","Sin proceso formal de aprobacion. Definir con Alfonso: quien aprueba que? Basado en umbrales? (ej: <€100K = Guido, >€100K = Xabi/Alfonso)")},
+        {q:"Statsig timeline:",d:L(l,"When does A/B capability arrive? Meet with Mostafa Mar 27 to understand scope and capacity.","Cuando llega A/B? Meet con Mostafa 27 Mar para entender scope y capacidad.")},
+        {q:L(l,"Pricing Committee:","Comite de Pricing:"),d:L(l,"Alfonso evaluating if it makes sense. Josy (Carriers Performance) recommends herself as sole Carriers rep — her team already handles costs, GM, revenue, traffic, QA. For Partnerships: Elchin (Ari's boss) should decide who represents. Josy's advice: keep it lean, expand only if needed for specific topics. Pending: define scope, members, cadence with Alfonso.","Alfonso evaluando si tiene sentido. Josy (Carriers Performance) se recomienda como unica rep de Carriers — su equipo ya maneja costes, GM, revenue, trafico, QA. Para Partnerships: Elchin (jefa de Ari) decide quien representa. Consejo Josy: mantenerlo lean, expandir solo si necesario. Pendiente: definir scope, miembros, cadencia con Alfonso.")},
+        {q:L(l,"Single source of truth dashboard:","Dashboard fuente unica de verdad:"),d:L(l,"Need a unified dashboard with: CR, price, competitor prices, NPS by destination (correlation with price?), GB consumption cost, carrier costs, GM, revenue, orders, ARPU. Pending definition with Miquel (Head of Data) + Alfonso. Open question: ARPU today depends on Adobe — what alternatives exist?","Necesitamos dashboard unificado con: CR, precio, precio competidores, NPS por destino (correlacion con precio?), costo consumo GB, costos carriers, GM, revenue, ordenes, ARPU. Pendiente definir con Miquel (Head of Data) + Alfonso. Pregunta abierta: ARPU hoy depende de Adobe — que alternativas existen?")},
+        {q:L(l,"Discount/AOV monitoring ownership:","Ownership monitoreo descuentos/AOV:"),d:L(l,"Nobody currently audits discount usage, AOV impact, or how discounts connect to recurrence. Pricing should own this, but it's unassigned. Needs definition with Alfonso.","Nadie audita actualmente uso de descuentos, impacto AOV, ni como descuentos se vinculan con recurrencia. Pricing deberia ownearlo, pero no esta asignado. Necesita definicion con Alfonso.")},
+        {q:L(l,"Scaling criteria:","Criterios escalado:"),d:L(l,"When does an experiment become permanent policy? Currently case by case. Needs formalization.","Cuando un experimento se vuelve politica permanente? Actualmente caso por caso. Necesita formalizacion.")},
+        {q:L(l,"LTV integration:","Integracion LTV:"),d:L(l,"Daniel meeting this week. How does pricing connect to LTV decisions?","Reunion Daniel esta semana. Como conecta pricing con decisiones LTV?")},
+        {q:L(l,"GOI Tree:","Arbol GOI:"),d:L(l,"Session designed in 3 blocks (decomposition, levers, prioritization). Pending scheduling with Alfonso.","Sesion disenada en 3 bloques (descomposicion, palancas, priorizacion). Pendiente agendar con Alfonso.")},
+      ].map((x,i)=><div key={i} style={{marginBottom:8}}><strong style={{color:T.purple}}>{i+1}. {x.q}</strong> {x.d}</div>)}
+    </div></Card>
+  </Coll>
+
+  <Coll title={L(l,"Operational Pending (Guido-owned)","Pendientes Operativos (Guido)")} count={5}>
+    {[
+      {item:L(l,"Shravan CX inquiry — pricing complaints","Consulta Shravan CX — quejas pricing"),detail:L(l,"Message sent asking about user complaints related to pricing perception (too expensive, not justified). No response yet. May redirect to another person.","Mensaje enviado preguntando sobre quejas de usuarios respecto a percepcion de pricing (caro, no justificado). Sin respuesta. Puede redirigir a otra persona.")},
+      {item:L(l,"GAS alert broken","Alerta GAS rota"),detail:L(l,"Sales & Revenue by Currency script failed Sunday. No revenue anomaly detection active. Debug + redirect emails to Alfonso.","Script Sales & Revenue fallo domingo. Sin deteccion anomalias. Debug + redirigir emails a Alfonso.")},
+      {item:L(l,"Adobe CF CSVs pre-launch","CSVs Adobe CF pre-lanzamiento"),detail:L(l,"Required for EXP-009 before launch. Largest Marco compliance gap.","Requeridos para EXP-009 antes de lanzar. Mayor gap de compliance del Marco.")},
+      {item:L(l,"Post-experiment validation","Validacion post-experimento"),detail:L(l,"EXP-004 and EXP-005 D+30 checkpoints Apr 15. GM source Foundational needs COGS confirmation. Mix shift analysis pending. LEARNs 76-79 in Marco.","Checkpoints D+30 para 004 y 005 el 15 Abr. GM fuente Foundational necesita confirmacion COGS. Analisis mix shift pendiente. LEARNs 76-79 en Marco.")},
+      {item:L(l,"Coordinate Gines + Alfonso meeting","Coordinar meet Gines + Alfonso"),detail:L(l,"Behavioural experimentation related to pricing. Product Hackers. Pending scheduling.","Experimentacion behavioural relacionada con pricing. Product Hackers. Pendiente agendar.")},
+    ].map((b,i)=><Card key={i} delay={i*60} s={{marginBottom:7}}><div style={{fontWeight:700,fontSize:13,color:T.text}}>{b.item}</div><div style={{fontSize:14,color:T.textDim,marginTop:3,lineHeight:1.5}}>{b.detail}</div></Card>)}
+  </Coll>
+</div>);
+
+// ═══ EXPERIMENTS ═══
+// #11 EXP-008 COP added. #6 CORR-001 status corrected. #20 timeline bars. #21 lifecycle system.
+const Experiments=({l})=>{
+  const [f,sF]=useState("all");
+  const exps=[
+    {id:"EXP-006",name:L(l,"Thailand PPD €2.90","Tailandia PPD €2.90"),st:"live",cat:"PPD Optimization",meth:"DID",phase:"running",
+      detail:L(l,"D+14 final analysis TODAY (Mar 26). 8-14d bucket (41% revenue) not responding. TH/VN ratio 1.86x. DID toggle + significance tests unlock at close.","Analisis final D+14 HOY (26 Mar). Bucket 8-14d (41% revenue) sin respuesta. Ratio TH/VN 1.86x. DID toggle + tests significancia se desbloquean al cierre."),
+      dates:L(l,"D+14 TODAY","D+14 HOY"),url:N.exp006,start:"Mar 12",end:"Mar 26",pct:100},
+    {id:"CORR-001",name:L(l,"TW+SK PPD Alignment (ex EXP-007)","Alineacion PPD TW+SK (ex EXP-007)"),st:"ready",cat:"Catalog Correction",meth:"Pre-Post",phase:"pre-launch",
+      // #6 — Corrected status
+      detail:L(l,"Ready — pending EXP-005 closure publication. Low-impact correction: only JPY 1-3d buyers (~89 opd), two destinations. Validated with Carriers for GM. HEADER created §14.4.1. Pending Sebas coordination.","Listo — pendiente publicacion cierre EXP-005. Correccion bajo impacto: solo compradores JPY 1-3d (~89 opd), dos destinos. Validado con Carriers para GM. HEADER creado §14.4.1. Pendiente coordinacion Sebas."),
+      dates:L(l,"Ready — pending EXP-005 closure publication","Listo — pendiente publicacion cierre EXP-005"),url:N.corr001,start:"—",end:"TBD",pct:0},
+    {id:"EXP-009",name:L(l,"GBP PPD Correction","Correccion PPD GBP"),st:"approved",cat:"FX Correction",meth:"DID",phase:"pre-launch",
+      detail:L(l,"Approved by Xabi/Alfonso. EUR values copy-pasted into GBP. 63 dest × 3 days × 190 variants. -21% on short plans. €394K-591K ann. Adobe CF CSVs needed pre-launch.","Aprobado por Xabi/Alfonso. Valores EUR copiados en GBP. 63 dest × 3 dias × 190 variantes. -21% en cortos. €394K-591K anual. CSVs Adobe CF necesarios."),
+      dates:L(l,"Approved — pre-launch","Aprobado — pre-lanzamiento"),url:N.exp009,start:"—",end:"TBD",pct:0},
+    {id:"EXP-010",name:L(l,"Gulf PPD (AED/QAR/SAR)","Gulf PPD (AED/QAR/SAR)"),st:"stand-by",cat:"FX Correction",meth:"Pre-Post",phase:"pre-launch",
+      detail:L(l,"Approved but on stand-by until Iran-Gulf conflict normalizes. Overpriced +20-44%. Will implement when travel volumes recover (>=80% pre-conflict for 4 weeks, est. Q4 2026).","Aprobado pero en stand-by hasta que se normalice conflicto Iran-Golfo. Sobreprecio +20-44%. Se implementa cuando volumenes recuperen (>=80% pre-conflicto por 4 semanas, est. Q4 2026)."),
+      dates:L(l,"Stand-by — Iran-Gulf conflict","Stand-by — conflicto Iran-Golfo"),url:N.exp010,start:"—",end:"Q4 eval",pct:0},
+    // #11 — EXP-008 COP re-added as stand-by
+    {id:"EXP-008",name:L(l,"COP PPD (MXN pattern scale)","COP PPD (patron MXN)"),st:"stand-by",cat:"PPD Optimization",meth:"DID",phase:"pre-launch",
+      detail:L(l,"Validates EXP-004 MXN pattern for COP. Pending: exclude 8 floor-effect destinations + PIM implemented. Important for pattern validation at scale.","Valida patron EXP-004 MXN para COP. Pendiente: excluir 8 destinos efecto piso + PIM implementado. Importante para validar patron a escala."),
+      dates:L(l,"Stand-by — PIM dependency","Stand-by — dep. PIM"),url:N.exp008,start:"—",end:"TBD",pct:0},
+    {id:"EXP-005",name:"JPY Fixed Rate 175",st:"closed",cat:"FX Correction",meth:"DID",phase:"review",
+      detail:L(l,"GM +6.62pp sustained. ARPU -6.7% vs CF (expected, AOV masking LEARN-52). CR +3.8% vs CF. V4 dashboard live.","GM +6.62pp sostenido. ARPU -6.7% vs CF (esperado, AOV masking LEARN-52). CR +3.8% vs CF. Dashboard V4 live."),
+      dates:L(l,"Closed — Scale","Cerrado — Scale"),result:"success",url:N.exp005,start:"Mar 2",end:"Mar 16",pct:100,
+      review:[{d:"D+30",date:"Apr 15",focus:L(l,"GM COGS confirmation, AOV masking sustainability, Singapore benchmark drift","Confirmacion GM COGS, sostenibilidad AOV masking, drift benchmark Singapore"),done:false},{d:"D+60",date:"May 16",focus:L(l,"Effect degradation, long-plan volume trend","Degradacion efecto, tendencia volumen planes largos"),done:false},{d:"D+90",date:"Jun 14",focus:L(l,"Full sustainability. Policy permanence decision.","Sostenibilidad completa. Decision politica permanente."),done:false}]},
+    {id:"EXP-004",name:L(l,"MXN Currency Launch","Lanzamiento MXN"),st:"closed",cat:"FX Correction",meth:"DID",phase:"review",
+      detail:L(l,"ARPU +33.7% vs CF (p=0.001). €48,113 incremental in 14d. 5/5 MDE. V4 dashboard live. LEARNs 76-79 from Dani feedback incorporated.","ARPU +33.7% vs CF (p=0.001). €48.113 incremental en 14d. 5/5 MDE. Dashboard V4 live. LEARNs 76-79 del feedback Dani incorporados."),
+      dates:L(l,"Closed — Scale","Cerrado — Scale"),result:"success",url:N.exp004,start:"Feb 25",end:"Mar 16",pct:100,
+      review:[{d:"D+30",date:"Apr 15",focus:L(l,"GM COGS confirmation, Easter seasonal caveat, contraintuitive GM increase mechanism","Confirmacion GM COGS, caveat estacional Easter, mecanismo aumento GM contraintuitivo"),done:false},{d:"D+60",date:"May 16",focus:L(l,"Mix shift validation, effect degradation","Validacion mix shift, degradacion efecto"),done:false},{d:"D+90",date:"Jun 14",focus:L(l,"Full sustainability. COP scale decision gate.","Sostenibilidad completa. Gate decision escalar COP."),done:false}]},
+  ];
+  const flt=f==="all"?exps:exps.filter(e=>e.st===f);
+  return(<div>
+    <Desc>{L(l,"Every pricing experiment with lifecycle tracking. Closed experiments have D+30/60/90 review phases.","Cada experimento con ciclo de vida. Experimentos cerrados tienen fases de review D+30/60/90.")}</Desc>
+    <div style={{display:"flex",gap:5,marginBottom:14,flexWrap:"wrap"}}>{["all","live","approved","ready","stand-by","closed"].map(x=><button key={x} onClick={()=>sF(x)} style={{padding:"5px 12px",borderRadius:6,border:"none",cursor:"pointer",background:f===x?T.text:T.border,color:f===x?T.bg:T.textDim,fontSize:11,fontWeight:600,textTransform:"capitalize",fontFamily:UI}}>{x==="all"?L(l,"All","Todos"):x}</button>)}</div>
+
+    <Coll title={L(l,"Experiment List","Lista de Experimentos")} count={flt.length} open={true}>
+    {/* #21 — Lifecycle system explanation */}
+    <Card accent={T.purple} delay={0} s={{marginBottom:14}}>
+      <div style={{fontSize:12,fontWeight:700,color:T.purple,marginBottom:6}}>{L(l,"Experiment Lifecycle","Ciclo de Vida")}</div>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+        {["pre-launch","running","closed","review"].map((p,i)=><React.Fragment key={p}>
+          <LifecycleBd phase={p}/>
+          {i<3&&<span style={{color:T.textMuted,fontSize:11}}>→</span>}
+        </React.Fragment>)}
+      </div>
+      <div style={{fontSize:12.5,color:T.textDim,marginTop:6,lineHeight:1.5}}>{L(l,"Closed ≠ done. D+30/60/90 checkpoints verify GM with COGS, effect sustainability, and seasonal caveats. Phase from Dani Samaniego's feedback (LEARN-77).","Cerrado ≠ terminado. Checkpoints D+30/60/90 verifican GM con COGS, sostenibilidad del efecto, y caveats estacionales. Fase del feedback de Dani Samaniego (LEARN-77).")}</div>
+    </Card>
+
+    <div style={{display:"flex",flexDirection:"column",gap:10}}>{flt.map((e,idx)=><Card key={e.id} accent={e.st==="live"?"#34D399":e.st==="ready"?"#EAB308":e.st==="approved"?"#3B82F6":e.st==="stand-by"?"#9CA3AF":T.border} delay={idx*60}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:5}}>
+        <div><div style={{display:"flex",alignItems:"center",gap:7,marginBottom:4}}><span style={{fontFamily:MN,fontSize:11,color:T.accent,fontWeight:700}}>{e.id}</span><span style={{fontWeight:700,fontSize:13.5,color:T.text}}>{e.name}</span></div>
+          <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:6}}><Bd s={e.st}/>{e.result&&<Bd s={e.result} label="Scale"/>}<LifecycleBd phase={e.phase}/><span style={{fontSize:10,color:T.textMuted,padding:"2px 6px",background:T.border,borderRadius:3}}>{e.meth}</span><CB cat={e.cat}/></div></div>
+        <span style={{fontSize:10.5,color:T.textMuted,whiteSpace:"nowrap"}}>{e.dates}</span></div>
+      <div style={{fontSize:14,color:T.textDim,lineHeight:1.55,marginTop:3}}>{e.detail}</div>
+      {/* #20 — Timeline bar per experiment */}
+      {e.start!=="—"&&<TimelineBar start={e.start} end={e.end} pct={e.pct} delay={idx*60+100}/>}
+      {/* Review schedule for closed experiments */}
+      {e.review&&<div style={{marginTop:8,padding:"8px 12px",background:"#FAFAFE",borderRadius:6,border:`1px solid ${T.border}`}}>
+        <div style={{fontSize:10.5,fontWeight:700,color:T.purple,marginBottom:6,textTransform:"uppercase",letterSpacing:.8}}>{L(l,"Review Schedule","Calendario Review")}</div>
+        <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>{e.review.map((r,ri)=><div key={ri} style={{flex:"1 1 180px",padding:"6px 10px",borderRadius:5,border:`1px solid ${r.done?T.successBg:T.border}`,background:r.done?"#F0FDF4":"#FFFFFF"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:3}}>
+            <span style={{fontFamily:MN,fontSize:11,fontWeight:700,color:r.done?T.successText:T.text}}>{r.d}</span>
+            <span style={{fontFamily:MN,fontSize:10,color:T.textMuted}}>{r.date}</span>
+          </div>
+          <div style={{fontSize:11.5,color:T.textDim,lineHeight:1.4}}>{r.focus}</div>
+        </div>)}</div>
+      </div>}
+      {e.url&&<div style={{display:"flex",gap:12,marginTop:6,flexWrap:"wrap"}}>
+        <a href={e.url} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.accent,fontWeight:600}}>Notion →</a>
+        {DASH[e.id]&&<a href={DASH[e.id]} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.purple,fontWeight:600}}>Dashboard →</a>}
+      </div>}
+    </Card>)}</div>
+    </Coll>
+
+    <Coll title={L(l,"Competitive Landscapes (WIP)","Landscapes Competitivos (WIP)")}>
+      <G><XL icon="🇹🇭" title={L(l,"Thailand Landscape","Landscape Tailandia")} desc="Holafly vs Airalo, Saily, Nomad, Yesim + AIS, TrueMove, dtac" href={LAND.thailand}/>
+        <XL icon="🇸🇦" title={L(l,"Saudi Arabia Landscape","Landscape Saudi Arabia")} desc={L(l,"7 destinations, global + local operators","7 destinos, operadores globales + locales")} href={LAND.saudi} delay={60}/>
+        <XL icon="📊" title="Saudi Deep Dive (Slides)" desc={L(l,"Stakeholder presentation","Presentacion stakeholders")} href={SAUDI_SLIDES} delay={120}/>
+        <XL icon="📄" title="Eval-Pric-001 (Notion)" desc={L(l,"Full documentation","Documentacion completa")} href={N.saudiEval} delay={180}/></G>
+    </Coll>
+
+    <Coll title="Portfolio" open={true}>
+      <Card onClick={()=>window.open(N.tracker,"_blank")} s={{cursor:"pointer"}}>
+        <G cols="repeat(auto-fit,minmax(100px,1fr))">{[
+        {v:"8",l:L(l,"Total entries","Total entries")},
+        {v:"2/2",l:L(l,"Success (closed)","Exito (cerrados)"),c:T.successText},
+        {v:"2",l:L(l,"Ready","Listos"),c:"#EAB308"},
+        {v:"1",l:L(l,"Stand-by","Stand-by"),c:"#6B7280"},
+        {v:"55",l:L(l,"Target 11mo","Objetivo 11m")},
+        {v:"15%",l:L(l,"Completion","Completado"),c:T.accent},
+      ].map((m,i)=><div key={i} style={{textAlign:"center"}}><div className="anim-num" style={{fontSize:22,fontWeight:800,fontFamily:MN,color:m.c||T.text,animationDelay:`${i*60}ms`}}>{m.v}</div><div style={{fontSize:10.5,color:T.textMuted}}>{m.l}</div></div>)}</G>
+      <div style={{fontSize:10.5,color:T.accent,textAlign:"center",marginTop:8,fontWeight:600}}>Experiment Tracker →</div></Card>
+    </Coll>
+  </div>);
+};
+
+// ═══ STRATEGY ═══
+// #15 "Coordinates" reformulated. #16 Opportunity sizing → pending. #17 open questions removed (moved to Blockers).
+const Strategy=({l})=>(<div>
+  <Desc>{L(l,"Company context and strategic framing. Connects experiments to Holafly's 2026 goals.","Contexto de compania y framing estrategico. Conecta experimentos con objetivos 2026.")}</Desc>
+
+  <Coll title={L(l,"Company Goals 2026","Metas Compania 2026")} open={true}>
+    <G cols="repeat(auto-fit,minmax(130px,1fr))"><Met label="Revenue" value="€550M" sub="€470M BAU + €80M new" delay={0}/><Met label="GM" value=">65%" sub={L(l,"Op. profit >=16%","Ganancia op. >=16%")} color={T.successText} delay={60}/><Met label="GM Floor" value="30%" sub={L(l,"Confirmed minimum","Minimo confirmado")} color={T.text} delay={120}/><Met label="NPS" value=">60%" delay={180}/></G>
+  </Coll>
+
+  <Coll title={L(l,"Strategic Shift","Cambio Estrategico")}>
+    <Card accent={T.purple}><div style={{fontSize:14,color:T.text,lineHeight:1.7}}>
+      <strong>{L(l,"From \"Unlimited Data\" → \"Always-On\"","De \"Unlimited Data\" → \"Always-On\"")}</strong>. {L(l,"Volume to value. From CAC obsession to #orders/customer.","De volumen a valor. De obsesion con CAC a #orders/customer.")}
+      <br/><br/><strong>Q1 North Star:</strong> +3% ARPU (pricing) + 1% (international). {L(l,"Pricing mandate: +10% ARPU annually.","Mandato pricing: +10% ARPU anual.")}
+    </div></Card>
+  </Coll>
+
+  <Coll title={L(l,"Pricing Territory","Territorio Pricing")}>
+    <Desc>{L(l,"What pricing owns vs what the area coordinates with other teams.","Lo que pricing controla vs lo que el area coordina con otros equipos.")}</Desc>
+    <G cols="1fr 1fr">
+      <Card accent={"#34D399"}><div style={{fontWeight:700,fontSize:12.5,color:T.successText,marginBottom:5}}>{L(l,"Pricing owns","Pricing controla")}</div><div style={{fontSize:14,color:T.textDim,lineHeight:1.6}}>PPD by destination. FX (26 currencies). Variant structure. Charm pricing. Competitive positioning. Margin by route.</div></Card>
+      <Card accent={T.border}><div style={{fontWeight:700,fontSize:12.5,color:T.textDim,marginBottom:5}}>{L(l,"Area coordinates with other teams","El area coordina con otros equipos")}</div><div style={{fontSize:14,color:T.textDim,lineHeight:1.6}}>{L(l,"Promo codes (holacoins, referidos). Bundles. Upsells. Paid Media campaigns (confounder). Retention/loyalty. Data cost by carrier.","Codigos promo (holacoins, referidos). Bundles. Upsells. Campanas Paid Media (confounder). Retencion/loyalty. Costo data por carrier.")}</div></Card>
+    </G>
+  </Coll>
+
+  <Coll title={L(l,"Opportunity Sizing (Preliminary)","Sizing Oportunidades (Preliminar)")}>
+    <Card accent={T.accent}><div style={{fontSize:14,color:T.text,lineHeight:1.7}}>
+      <strong>{L(l,"19-currency PPD audit:","Auditoria PPD 19 monedas:")}</strong> {L(l,"€44.7M annual revenue (12% total) across 65 destinations where the €3.79/day rule for days 1, 2 and 3 was not applied. Batch correction approved. EXP-009 (GBP) and EXP-010 (Gulf) are the first two corrections from this batch.","€44.7M revenue anual (12% total) en 65 destinos donde la regla €3.79/dia para dias 1, 2 y 3 no fue aplicada. Correccion batch aprobada. EXP-009 (GBP) y EXP-010 (Gulf) son las dos primeras correcciones de este batch.")}
+      <br/><br/><strong>{L(l,"10 negative-margin destinations:","10 destinos margen negativo:")}</strong> {L(l,"€252K losses. Saudi Arabia main opportunity.","€252K perdidas. Saudi Arabia oportunidad principal.")}
+      <br/><br/><span style={{fontSize:12,color:T.warningText,fontWeight:600}}>⚠ {L(l,"Pending: GOI tree session with Alfonso (3 blocks: decomposition, levers, prioritization).","Pendiente: sesion arbol GOI con Alfonso (3 bloques: descomposicion, palancas, priorizacion).")}</span>
+    </div></Card>
+  </Coll>
+
+  <Coll title={L(l,"References","Referencias")}>
+    <G><XL icon="📊" title={L(l,"Pricing Strategy Plan","Plan Estrategia Pricing")} desc="Q3'25-Q4'26" href={N.stratPlan}/><XL icon="🔍" title={L(l,"Competitors' Strategy","Estrategia Competidores")} desc="Airalo, Saily, Ubigi" href={N.competitors} delay={60}/><XL icon="📉" title={L(l,"Legacy: 1-day Prices","Legacy: Precios 1-dia")} desc="Hfly-pricing-002" href={N.legacy1d} delay={120}/><XL icon="🏷️" title={L(l,"Pricing Strategy (original)","Estrategia Pricing (original)")} desc={L(l,"Acquisition x revenue","Adquisicion x revenue")} href={N.pricingStrategy} delay={180}/></G>
+  </Coll>
+</div>);
+
+// ═══ DATA ═══
+// #18 — Reordered by frequency: Tier 1 (daily), Tier 2 (weekly), Tier 3 (reference)
+const Data=({l})=>(<div>
+  <Desc>{L(l,"Every data source and documentation page. Ordered by frequency of use.","Cada fuente de datos y documentacion. Ordenado por frecuencia de uso.")}</Desc>
+
+  <Coll title={L(l,"Tier 1 — Daily Use","Tier 1 — Uso Diario")} color={T.accent} open={true}>
+    <G>
+      <XL icon="📐" title="Adobe Workspace" desc={L(l,"ARPU, CR to Order, excl_PS","ARPU, CR to Order, excl_PS")} href={ADOBE}/>
+      <XL icon="📊" title="Foundational KPIs" desc={L(l,"Origins / Destinations / Variants","Origenes / Destinos / Variantes")} href={LS.foundational} delay={60}/>
+      <XL icon="💻" title="BigQuery" desc="int_shopify_sales_with_vat_adjusted" href={null}/>
+      <XL icon="📊" title="Experiment Tracker" desc={L(l,"Central DB","DB central")} href={N.tracker} delay={120}/>
+    </G>
+    <Card accent={T.purple} s={{marginTop:8}}><div style={{fontSize:13,color:T.text,lineHeight:1.7}}><span style={{fontFamily:MN,fontSize:11,color:T.purple}}>activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted</span><br/><span style={{color:T.textDim}}><strong style={{color:T.text}}>Revenue:</strong> current_total_price · <strong style={{color:T.text}}>Duration:</strong> days_of_product · <strong style={{color:T.text}}>Currency:</strong> presentment_currency_code · <strong style={{color:T.text}}>Date:</strong> created_at<br/><strong style={{color:T.text}}>Discount:</strong> applied_discount_code=FALSE · <strong style={{color:T.text}}>Segment:</strong> short=1-3d, long=4+d</span></div></Card>
+  </Coll>
+
+  <Coll title={L(l,"Tier 2 — Weekly Use","Tier 2 — Uso Semanal")}>
+    <G>
+      <XL icon="💰" title="COGS / Gross Margin" desc={L(l,"Official GM source","Fuente oficial GM")} href={LS.cogs}/>
+      <XL icon="📈" title={L(l,"Shopify Orders","Ordenes Shopify")} desc={L(l,"Revenue by currency","Revenue por moneda")} href={LS.shopify} delay={60}/>
+      <XL icon="💱" title="Currency Tracker" desc={L(l,"Volume trends","Tendencias volumen")} href={LS.currency} delay={120}/>
+      <XL icon="🏷️" title={L(l,"Current Prices","Precios Actuales")} desc={L(l,"Full catalog","Catalogo completo")} href={LS.prices} delay={180}/>
+    </G>
+  </Coll>
+
+  <Coll title={L(l,"Tier 3 — Reference","Tier 3 — Referencia")}>
+    <G>
+      <XL icon="📐" title={L(l,"Marco de Analisis","Marco de Analisis")} desc="§1-§18, 82 LEARNs" href={N.marco}/>
+      <XL icon="✅" title="Checklist v1.5" desc={L(l,"27 items","27 items")} href={N.checklist} delay={60}/>
+      <XL icon="📸" title="Snapshot v1.8" desc={L(l,"35 rules","35 reglas")} href={N.snapshot} delay={120}/>
+      <XL icon="🧭" title={L(l,"Navigation Guide","Guia Navegacion")} desc={L(l,"Router","Router")} href={N.marcoNav} delay={180}/>
+      <XL icon="📈" title="CHECKPOINT v10" desc="Template" href={N.checkpoint} delay={240}/>
+      <XL icon="🧪" title={L(l,"Experimentation Hub","Hub Experimentacion")} desc="200+ dest" href={N.expHub} delay={300}/>
+    </G>
+  </Coll>
+
+  <Coll title={L(l,"Notion — Pricing","Notion — Pricing")} count={7}>
+    <G>
+      <XL icon="📌" title={L(l,"Pricing (Main)","Pricing (Principal)")} desc="Top-level" href={N.pricingMain}/>
+      <XL icon="📋" title={L(l,"Pricing Process","Proceso Pricing")} desc="Shopify→Strapi" href={N.pricingProcess} delay={60}/>
+      <XL icon="🗺" title="Roadmap 25-26" href={N.pricingRoadmap} delay={120} desc={L(l,"Multi-phase","Multi-fase")}/>
+      <XL icon="📦" title={L(l,"Documentation Hub","Hub Docs")} href={N.pricingHub} delay={180} desc={L(l,"All compiled","Todo compilado")}/>
+      <XL icon="🤝" title="Handover 25→26" href={N.handover} delay={240} desc={L(l,"Previous PM","PM anterior")}/>
+      <XL icon="💰" title={L(l,"PPD Audit","Auditoria PPD")} desc="€44.7M" href={N.ppdAudit} delay={300}/>
+      <XL icon="🚢" title={L(l,"Cruise eSIM","Cruceros eSIM")} desc="PA-344" href={N.cruisePricingES} delay={360}/>
+    </G>
+  </Coll>
+
+  <Coll title="Jira — PA Board" count={6}>
+    <G>
+      <XL icon="🎯" title="PA Board 79" desc={L(l,"Full board","Board completo")} href={J.board}/>
+      <XL icon="📌" title="PA-340" desc="EXP-006 Thailand" href={J.pa340} delay={60}/>
+      <XL icon="📌" title="PA-346" desc="CORR-001 TW+SK" href={J.pa346} delay={120}/>
+      <XL icon="📌" title="PA-341" desc={L(l,"Currency status","Status monedas")} href={J.pa341} delay={180}/>
+      <XL icon="🚢" title="PA-344" desc={L(l,"Cruise eSIM","Cruceros")} href={J.pa344} delay={240}/>
+      <XL icon="🔧" title="PA-314" desc="PIM Migration" href={J.pa314} delay={300}/>
+    </G>
+  </Coll>
+</div>);
+
+// ═══ INFRA ═══
+// #19 — Fixed: proper JSX structure
+const Infra=({l})=>(<div>
+  <Desc>{L(l,"Systems built and maintained. The rails everything runs on.","Sistemas construidos y mantenidos. Los rieles.")}</Desc>
+
+  <Coll title={L(l,"Monitoring (Production)","Monitoreo (Produccion)")} open={true}>
+    <Card accent={"#34D399"} s={{marginBottom:9}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap"}}>
+        <div><div style={{fontWeight:700,fontSize:14,color:T.text}}>FX Rate Monitor</div>
+          <div style={{fontSize:14,color:T.textDim,lineHeight:1.6,marginTop:4}}>Google Apps Script → Slack Block Kit. OpenExchangeRates API.</div></div>
+        <Bd s="live" label="Production"/>
+      </div>
+    </Card>
+    <Card accent={T.warningText} s={{marginBottom:9}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap"}}>
+        <div><div style={{fontWeight:700,fontSize:14,color:T.text}}>Sales & Revenue by Currency</div>
+          <div style={{fontSize:14,color:T.textDim,lineHeight:1.6,marginTop:4}}>{L(l,"Volume-floor tiers. 7-day trailing avg. Script failed Sunday — debugging pending (Guido-owned).","Pisos volumen. Promedio 7 dias. Script fallo domingo — debug pendiente (Guido).")}</div></div>
+        <Bd s="blocked" label={L(l,"Broken","Roto")}/>
+      </div>
+    </Card>
+  </Coll>
+
+  <Coll title={L(l,"Dashboard System V4","Sistema Dashboard V4")}>
+    <Card accent={T.purple}>
+      <div style={{fontSize:14,color:T.text,lineHeight:1.7}}>
+        <strong>Template:</strong> exp_004_mxn_v4_final.jsx. Mulish. Dual-green. 3 views (Summary/Leadership/Pricing). Audience toggle.
+        <br/><br/><strong>D Object:</strong> TIER 1+2 always. TIER 3 at D+14. CF fields + gm.source_type + validation(d30/d60/d90) + contraintuitive_flags[].
+        <br/><br/><strong>LEARNs:</strong> 15→82. {L(l,"76-82 from Dani feedback.","76-82 del feedback Dani.")}
+      </div>
+    </Card>
+  </Coll>
+
+  <Coll title="PIM / Strapi">
+    <Card accent={T.dangerText}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap"}}>
+        <div><div style={{fontWeight:700,fontSize:14,color:T.text}}>Shopify → Strapi CMS</div>
+          <div style={{fontSize:14,color:T.textDim,lineHeight:1.7,marginTop:4}}>
+            {L(l,"Internal development by Inigo's team. Product Hackers help with pricing models, not PIM owners. End of March target at risk.","Desarrollo interno del equipo de Inigo. Product Hackers ayudan con modelos de pricing, no son owners PIM. Target fin marzo en riesgo.")}
+          </div></div>
+        <Bd s="blocked" label={L(l,"Blocked","Bloqueado")}/>
+      </div>
+      <div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap"}}>
+        <a href={N.pricingProcess} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.accent,fontWeight:600}}>Process →</a>
+        <a href={N.pimCurve} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.accent,fontWeight:600}}>PIM Curve →</a>
+        <a href={J.pa314} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.accent,fontWeight:600}}>PA-314 →</a>
+      </div>
+    </Card>
+  </Coll>
+
+  <Coll title={L(l,"Experiment Config System","Sistema Config Experimentos")}>
+    <Card><div style={{fontSize:14,color:T.textDim,lineHeight:1.6}}>
+      {L(l,"Marco §14: 5 questions + audienceHint/outputType. §14.4.1: HEADER created pre-launch when checklist complete (CORR-001 first case). Snapshot Prompt v1.8, Closing Checklist v1.5.","Marco §14: 5 preguntas + audienceHint/outputType. §14.4.1: HEADER creado pre-lanzamiento cuando checklist completo (CORR-001 primer caso). Snapshot Prompt v1.8, Closing Checklist v1.5.")}
+    </div></Card>
+  </Coll>
+</div>);
+
+// ═══ ROADMAP ═══
+// #12 — Alfonso meeting corrected to TODAY Mar 26
+const Roadmap=({l})=>(<div>
+  <Desc>{L(l,"What's happening this week and what's next.","Que pasa esta semana y que viene.")}</Desc>
+
+  <Coll title={L(l,"This Week (Mar 26-28)","Esta Semana (26-28 Mar)")} open={true} count={7}>
+    {[
+      {d:L(l,"TODAY","HOY"),item:L(l,"EXP-006 Thailand D+14 final","EXP-006 Tailandia D+14 final"),accent:T.accent,detail:L(l,"DID + significance unlock. 8-14d bucket primary watchpoint. Decision: scale, iterate, or archive.","DID + significancia. Bucket 8-14d watchpoint principal. Decision: escalar, iterar o archivar.")},
+      {d:L(l,"TODAY","HOY"),item:L(l,"Alfonso alignment meeting","Reunion alineacion Alfonso"),accent:T.purple,detail:L(l,"Pricing overview & strategic alignment. This dashboard. Key: governance, GM floor 30%, GOI tree, Statsig, Pricing Committee.","Overview pricing & alineacion estrategica. Este dashboard. Clave: gobernanza, GM floor 30%, arbol GOI, Statsig, Comite Pricing.")},
+      {d:"Mar 27",item:L(l,"Mostafa scope meeting (12:15)","Meet scope Mostafa (12:15)"),accent:"#3B82F6",detail:L(l,"Understand his scope, capacity, what he could do for pricing beyond checkout. Question: with new app + PIM, will price updates be as agile or more?","Entender scope, capacidad, que podria hacer para pricing ademas de checkout. Pregunta: con app nueva + PIM, actualizaciones de precio seran tan agiles o mas?")},
+      {d:L(l,"This week","Esta semana"),item:L(l,"CORR-001 → Sebas coordination","CORR-001 → coordinacion Sebas"),accent:"#34D399",detail:L(l,"CSV ready. Needs Content team implementation.","CSV listo. Necesita implementacion Content team.")},
+      {d:L(l,"Pending","Pendiente"),item:L(l,"Alfonso: strategy & vision meeting","Alfonso: meet estrategia y vision"),accent:T.purple,detail:L(l,"Strategic direction of the company. Key input: the App takes a protagonist role. Needed before GOI tree.","Direccion estrategica de la compania. Dato clave: la App toma rol protagonista. Necesario antes del arbol GOI.")},
+      {d:L(l,"Pending","Pendiente"),item:L(l,"Alfonso: pricing coordination meeting","Alfonso: meet coordinacion pricing"),accent:T.purple,detail:L(l,"How pricing works with Data: assign one-shot responsible for single source of truth dashboard. Define metrics. Coordinate with Miquel.","Como trabaja pricing con Data: asignar responsable one-shot para dashboard fuente unica. Definir metricas. Coordinar con Miquel.")},
+      {d:L(l,"Pending","Pendiente"),item:L(l,"Gines + Alfonso: behavioural experimentation","Gines + Alfonso: experimentacion behavioural"),accent:T.orange,detail:L(l,"Product Hackers. Behavioural experiments related to pricing. Guido coordinating scheduling.","Product Hackers. Experimentos behavioural relacionados con pricing. Guido coordinando agenda.")},
+    ].map((x,i)=><Card key={i} accent={x.accent} delay={i*60} s={{marginBottom:8}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}><div><div style={{fontWeight:700,fontSize:13,color:T.text}}>{x.item}</div><div style={{fontSize:14,color:T.textDim,marginTop:3}}>{x.detail}</div></div><span style={{fontSize:11,fontWeight:700,color:T.textMuted,fontFamily:MN,whiteSpace:"nowrap"}}>{x.d}</span></div></Card>)}
+  </Coll>
+
+  <Coll title={L(l,"April Pipeline","Pipeline Abril")} count={5}>
+    {[
+      {item:L(l,"19-currency batch correction (65 dest, €3.79/day rule)","Correccion batch 19 monedas (65 dest, regla €3.79/dia)"),detail:L(l,"€44.7M scope. 65 destinations where the €3.79/day price for days 1-3 was not applied across 19 currencies. EXP-009 (GBP) first, then remaining currencies after validation.","€44.7M scope. 65 destinos donde el precio €3.79/dia para dias 1-3 no fue aplicado en 19 monedas. EXP-009 (GBP) primero, luego restantes monedas despues de validar.")},
+      {item:L(l,"EXP-008 COP (scale MXN → COP)","EXP-008 COP (escalar MXN → COP)"),detail:L(l,"Part of batch. Exclude 8 floor-effect destinations first. Validates EXP-004 pattern.","Parte del batch. Excluir 8 destinos efecto piso primero. Valida patron EXP-004.")},
+      {item:L(l,"Contrafactual V2 integration","Integracion contrafactual V2"),detail:L(l,"Standalone JSX done (515 lines). Pending rebuild into V4 dashboard template.","JSX standalone listo (515 lineas). Pendiente rebuild en template V4.")},
+      {item:L(l,"Competitive intel productization","Productizacion inteligencia competitiva"),detail:L(l,"Claude Code + Playwright. Thailand first, then expand.","Claude Code + Playwright. Tailandia primero, luego expandir.")},
+      {item:L(l,"D+30 checkpoints (Apr 15)","Checkpoints D+30 (15 Abr)"),detail:L(l,"EXP-004 MXN + EXP-005 JPY. GM COGS confirmation + effect sustainability.","EXP-004 MXN + EXP-005 JPY. Confirmacion GM COGS + sostenibilidad efecto.")},
+    ].map((x,i)=><Card key={i} delay={i*60} s={{marginBottom:8}}><div style={{fontWeight:700,fontSize:13,color:T.text}}>{x.item}</div><div style={{fontSize:14,color:T.textDim,marginTop:3}}>{x.detail}</div></Card>)}
+  </Coll>
+
+  <Coll title={L(l,"Key Learnings","Aprendizajes Clave")} count={5}>
+    <Card accent={T.purple}><div style={{fontSize:14,color:T.textDim,lineHeight:1.8}}>
+      {[{k:L(l,"Contrafactual > 90d:","Contrafactual > 90d:"),v:L(l,"Adobe CF model is the primary lens. 90d is supplementary.","Modelo Adobe CF es la lente primaria. 90d es suplementario.")},
+        {k:L(l,"GM needs source declaration:","GM necesita declaracion fuente:"),v:L(l,"Foundational (estimated) vs COGS (real). Always state which. LEARN-76.","Foundational (estimado) vs COGS (real). Siempre declarar cual. LEARN-76.")},
+        {k:L(l,"Closed ≠ done:","Cerrado ≠ terminado:"),v:L(l,"D+30/60/90 checkpoints are part of the experiment. LEARN-77.","Checkpoints D+30/60/90 son parte del experimento. LEARN-77.")},
+        {k:L(l,"Paid Social confounder:","Confounder Paid Social:"),v:L(l,"If active at launch, excl_PS is the reference.","Si activo al lanzar, excl_PS es la referencia.")},
+        {k:L(l,"AOV masking:","AOV masking:"),v:L(l,"When opposite forces cancel in blended average, decompose by subgroup. LEARN-52.","Cuando fuerzas opuestas se cancelan, descomponer por subgrupo. LEARN-52.")},
+      ].map((x,i)=><div key={i} style={{marginBottom:7}}><strong style={{color:T.text}}>{x.k}</strong> {x.v}</div>)}
+    </div></Card>
+  </Coll>
+</div>);
+
+// ═══ MAIN ═══
+function PCC(){
+  const [tab,setTab]=useState(0);
+  const [lang,setLang]=useState("en");
+  const [mob,setMob]=useState(false);
+  const [menu,setMenu]=useState(false);
+  useEffect(()=>{const h=()=>setMob(window.innerWidth<768);h();window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
+  const content=[<Overview l={lang}/>,<Blockers l={lang}/>,<Experiments l={lang}/>,<Strategy l={lang}/>,<Data l={lang}/>,<Infra l={lang}/>,<Roadmap l={lang}/>];
+  const sidebar=<div style={{display:"flex",flexDirection:"column",gap:3,padding:mob?"14px":"0"}}>{TABS.map((t,i)=><button key={t.id} onClick={()=>{setTab(i);if(mob)setMenu(false)}} style={{display:"flex",alignItems:"center",gap:9,padding:"9px 14px",borderRadius:8,border:"none",cursor:"pointer",fontFamily:UI,fontSize:12.5,fontWeight:tab===i?700:500,textAlign:"left",width:"100%",background:tab===i?T.card:"transparent",color:tab===i?T.text:T.textDim,borderLeft:tab===i?`3px solid ${t.c}`:"3px solid transparent",transition:"all .12s"}}><span style={{width:9,height:9,borderRadius:"50%",background:t.c,opacity:tab===i?1:.4,flexShrink:0}}/>{lang==="en"?t.en:t.es}</button>)}</div>;
+
+  // #2 — Full width, no maxWidth
+  return(<div style={{fontFamily:UI,background:T.bg,minHeight:"100vh",display:"flex",flexDirection:"column",fontSize:14}}>
+    <div style={{background:T.bg,padding:"16px 24px",borderBottom:`1px solid ${T.border}`,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8,position:"sticky",top:0,zIndex:20}}>
+      <div style={{display:"flex",alignItems:"center",gap:14}}>
+        {mob&&<button onClick={()=>setMenu(!menu)} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",padding:0,color:T.text}}>☰</button>}
+        <div><div style={{fontSize:10,fontWeight:700,color:T.accent,letterSpacing:2,textTransform:"uppercase"}}>Holafly · Growth Pricing</div><span style={{fontSize:17,fontWeight:800,color:T.text,letterSpacing:-.3}}>Pricing Command Center</span><span style={{fontSize:11,color:T.textMuted,marginLeft:8}}>v6</span></div></div>
+      <div style={{display:"flex",alignItems:"center",gap:14}}>
+        <div style={{textAlign:"right"}}><div style={{fontSize:10,color:T.textMuted}}>{lang==="en"?"Updated":"Actualizado"}</div><div style={{fontSize:11,fontWeight:600,color:T.textDim}}>Mar 26, 2026</div></div>
+        <div style={{display:"flex",background:T.border,borderRadius:6,overflow:"hidden"}}><button onClick={()=>setLang("en")} style={{padding:"5px 12px",border:"none",cursor:"pointer",fontSize:11,fontWeight:lang==="en"?700:400,background:lang==="en"?T.text:"transparent",color:lang==="en"?T.bg:T.textDim,fontFamily:UI}}>EN</button><button onClick={()=>setLang("es")} style={{padding:"5px 12px",border:"none",cursor:"pointer",fontSize:11,fontWeight:lang==="es"?700:400,background:lang==="es"?T.text:"transparent",color:lang==="es"?T.bg:T.textDim,fontFamily:UI}}>ES</button></div></div></div>
+    {mob&&menu&&<div style={{position:"fixed",top:56,left:0,right:0,bottom:0,background:"rgba(0,0,0,.3)",zIndex:15}} onClick={()=>setMenu(false)}><div style={{background:T.bg,width:240,height:"100%",borderRight:`1px solid ${T.border}`,paddingTop:8}} onClick={e=>e.stopPropagation()}>{sidebar}</div></div>}
+    <div style={{display:"flex",flex:1,minHeight:0}}>
+      {!mob&&<div style={{width:200,minWidth:200,borderRight:`1px solid ${T.border}`,padding:"18px 12px",position:"sticky",top:56,height:"calc(100vh - 56px)",overflowY:"auto"}}>{sidebar}</div>}
+      {/* #2 — No maxWidth, full expansion */}
+      <div style={{flex:1,padding:mob?"14px 16px 48px":"24px 40px 48px",minWidth:0}}>{content[tab]}</div></div>
+  </div>);
+}
+
+ReactDOM.render(<PCC/>, document.getElementById("root"));
+</script>
+</body>
+</html>

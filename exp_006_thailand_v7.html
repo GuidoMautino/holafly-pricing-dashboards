@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EXP-PRIC-006 Thailand — D+14 Final Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+const { useState } = React;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DESIGN SYSTEM (fonts, theme, CSS, components)
+// ═══════════════════════════════════════════════════════════════════════════
+const MN = "JetBrains Mono, Consolas, monospace";
+const UI = "Mulish, sans-serif";
+
+const TH = {
+  light: {
+    bg: "#FFFFFF", card: "#F8FAFC", border: "#E4E6EA", text: "#292B2E",
+    textDim: "#64748B", textMuted: "#94A3B8", accent: "#E6485C",
+    green: "#15803D", gFill: "#48EC86", gBg: "#F0FDF4", gBdr: "#DCFCE7",
+    yellow: "#B45309", yBg: "#FFFBEB", yBdr: "#FDE68A",
+    red: "#DC2626", rBg: "#FEF2F2",
+    purple: "#7C3AED", bBg: "#EFF6FF", bBdr: "#DBEAFE",
+  },
+  dark: {
+    bg: "#0F172A", card: "#1E293B", border: "#334155", text: "#F1F5F9",
+    textDim: "#94A3B8", textMuted: "#64748B", accent: "#E6485C",
+    green: "#4ADE80", gFill: "#48EC86", gBg: "#052e16", gBdr: "#14532d",
+    yellow: "#FBBF24", yBg: "#1a1505", yBdr: "#713f12",
+    red: "#F87171", rBg: "#1a0505",
+    purple: "#A78BFA", bBg: "#0c1524", bBdr: "#1e3a5f",
+  },
+};
+
+const V2_CSS = `@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes numIn{from{opacity:0;filter:blur(3px);transform:translateY(4px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}
+@keyframes pop{0%{opacity:0;transform:scale(.92)}60%{transform:scale(1.02)}100%{opacity:1;transform:scale(1)}}
+@keyframes barGrow{from{width:0}}
+.v2-container{margin:0 auto;padding:20px 32px;max-width:100%}
+.v2-gc:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.v2-gc{transition:transform .15s,box-shadow .15s}
+.cc{transition:transform .12s}.cc:hover{transform:scale(1.003)}
+@media(max-width:640px){
+  .v2-container{padding:14px}
+  .v2-resp-grid5{grid-template-columns:1fr 1fr!important}
+  .v2-resp-col2{grid-template-columns:1fr!important}
+  .g2{grid-template-columns:1fr!important}
+  .g3{grid-template-columns:1fr!important}
+  .g4{grid-template-columns:1fr 1fr!important}
+}
+@media(min-width:1200px){.v2-container{padding:32px 48px}}
+@media(min-width:1440px){.v2-container{padding:36px 64px}}`;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════════════════
+const tx = (l, en, es) => l === "en" ? en : es;
+const fm = n => "€" + Math.round(Math.abs(n)).toLocaleString("de-DE");
+const pc = n => (n >= 0 ? "+" : "") + n.toFixed(1).replace(".", ",") + "%";
+
+// ═══════════════════════════════════════════════════════════════════════════
+// D OBJECT — EXP-PRIC-006 THAILAND (cross-experiment refs stripped)
+// ═══════════════════════════════════════════════════════════════════════════
+const D = {
+  code: "EXP-PRIC-006", name: "Thailand €2.90 PPD Repricing", flag: "🇹🇭",
+  jira: "PA-340", status: "Completed", category: "PPD Optimization",
+  notion: "https://www.notion.so/holafly/31eeea72a1888185a981d5d7056dde22",
+  revScope: "Destination", checkpoint: "D+14", checkpointDate: "2026-03-25",
+  cleanDays: 14, totalOrders: 10542, preActualDays: 14,
+  signal: "Iterate", causalConfidence: "LOW",
+  nHypotheses: 1, h1Status: "Rejected", h2Status: null,
+
+  declaration: {
+    launchDate: "2026-03-11", firstCleanDay: "2026-03-12",
+    expectedCleanDays: 14, actualCleanDays: 14,
+    endDate: "2026-03-25", checkpointDate: "2026-03-25", status: "Completed",
+  },
+
+  experimentConfig: {
+    primaryQuestion: {
+      en: "Is price actually a conversion barrier in Thailand, or is it just our assumption?",
+      es: "¿El precio es realmente una barrera de conversión en Thailand, o es solo nuestra suposición?",
+    },
+    treatmentScope: {
+      treatedBuckets: ["1-3d", "4-7d", "8-14d", "15-30d", "31-90d"],
+      controlType: "external_benchmark",
+      controlName: "Vietnam (order correlation r=0.867)",
+      revenueAtRisk: 1.00, criticalBucket: "8-14d", criticalBucketRevShare: 0.41,
+      treatmentNote: {
+        en: "PPD reduced from €3.79 to €2.90 flat for days 1-17. Gradual adjustment d18-d90 (-1% to -3%). All Thailand plans, all currencies. 90 variants updated.",
+        es: "PPD reducido de €3.79 a €2.90 flat para días 1-17. Ajuste gradual d18-d90 (-1% a -3%). Todos los planes Thailand, todas las monedas. 90 variantes actualizadas.",
+      },
+    },
+    riskProfile: { level: "high", criticalBucket: "8-14d", criticalBucketShare: 0.41, rollbackMetric: "TH/VN ratio", rollbackThreshold: "TH/VN ratio below 1.62x for 2 consecutive checks" },
+    decisionLens: "volume_compensation", causalForces: 1,
+  },
+
+  questionAnswered: {
+    status: "partially",
+    en: "For 8-14d plans (41% of revenue): answered. Price is NOT the conversion barrier. A -13.7% price cut produced insufficient volume response (+2.7% vs +14.1% needed). For other segments: not answered. The seasonal decline (~5%/week) overwhelms the price signal.",
+    es: "Para planes 8-14d (41% del revenue): respondida. El precio NO es la barrera de conversión. Un recorte de -13.7% no produjo respuesta de volumen significativa (+2.7% vs +14.1% necesario). Para otros segmentos: no respondida. La caída estacional (~5%/semana) domina la señal de precio.",
+    h1_answer: {
+      status: "Rejected",
+      en: "Lower prices did not generate compensating volume in any segment. Break-even not achieved in 4 of 5 buckets. Closest: 8-14d at +2.7% vs +14.1% required.",
+      es: "Los precios más bajos no generaron volumen compensatorio en ningún segmento. Break-even no alcanzado en 4 de 5 buckets. Más cercano: 8-14d con +2,7% vs +14,1% requerido.",
+    },
+    h2_answer: null,
+  },
+
+  decisionRationale: {
+    en: "Iterate because: (1) no bucket broke even on volume, (2) combined cost of maintaining new prices is €2,406-€3,716/day with no evidence of compensating demand, (3) the 8-14d finding (price is not the barrier) is a genuine insight worth preserving, (4) seasonal conditions prevented clean measurement on other segments, justifying a re-test rather than archiving.",
+    es: "Iterar porque: (1) ningún bucket alcanzó break-even en volumen, (2) costo combinado de mantener nuevos precios es €2.406-€3.716/día sin evidencia de demanda compensatoria, (3) el hallazgo 8-14d es un insight genuino, (4) condiciones estacionales impidieron medición limpia en otros segmentos.",
+    nextExperiment: "Dedicated 1-7d experiment during Songkran peak (mid-April)",
+    scalingScope: "Full rollback. Re-test short plans only during high-traffic window.",
+  },
+
+  confounder: null, hasFiltered: false, hasBenchmark: true, hasBenchmarkPost: true,
+  hasLtvCaveat: false, hasBlended: true, hasTwoForces: false,
+
+  timeline: [
+    { date: "2026-02-25", label: "Pre-period start", type: "pre" },
+    { date: "2026-03-11", label: "Launch", type: "launch" },
+    { date: "2026-03-18", label: "D+7 ✓", type: "checkpoint" },
+    { date: "2026-03-25", label: "D+14 close", type: "close" },
+    { date: "ASAP", label: "Rollback", type: "action" },
+    { date: "2026-04-24", label: "D+30 validation", type: "future" },
+    { date: "Mid-April", label: "Songkran re-test", type: "future" },
+  ],
+
+  text: {
+    en: { h1: "IF we reduce the Price-per-Day from €3.79 to €2.90 flat for days 1-17 across all Thailand plans, THEN volume increases enough to compensate the lower prices and total revenue holds or grows, BECAUSE lower first-price impressions reduce the conversion barrier for price-sensitive travelers.", h2: null },
+    es: { h1: "SI reducimos el Precio-por-Día de €3.79 a €2.90 flat para días 1-17 en todos los planes Thailand, ENTONCES el volumen aumenta lo suficiente para compensar los precios más bajos y el revenue total se mantiene o crece, PORQUE las primeras impresiones de precio más bajas reducen la barrera de conversión para viajeros sensibles al precio.", h2: null },
+  },
+
+  summary: {
+    en: {
+      headline: [
+        { t: "The price correction did not damage margins but ", b: false },
+        { t: "failed to generate compensating volume", b: true },
+        { t: " in any segment. Revenue declined ", b: false },
+        { t: "-€3,701/day", b: true },
+        { t: " (", b: false },{ t: "-16.2%", b: true },
+        { t: " vs 14d pre) across ", b: false },
+        { t: "10,542 orders", b: true },
+        { t: ". Key finding: for 8-14d plans (", b: false },
+        { t: "41% of revenue", b: true },
+        { t: "), a -13.7% price cut produced ", b: false },
+        { t: "insufficient volume response (+2.7% vs +14.1% needed)", b: true },
+        { t: ". ", b: false },
+        { t: "1 of 5 MDE", b: true },
+        { t: " met (GM, not attributable to experiment). Full rollback recommended.", b: false },
+      ],
+      caveat: "Thailand was declining ~5%/week for 6 weeks before the experiment (exiting peak season). The CF model cannot separate a moderate price effect from this seasonal noise at p<0.05. The 8-14d finding (price is not the barrier) is the most robust conclusion because that bucket had stable volume (+2.7%) despite a meaningful price cut (-13.7%).",
+      action: [
+        "We recommend full rollback to pre-experiment pricing. No bucket generated the volume needed to break even. The combined cost of maintaining new prices is €2,406-€3,716/day with no evidence of compensating demand.",
+        "The competitive positioning argument (below Airalo at €2.90) is real but did not translate into measurable volume in 14 days. If we want to test that hypothesis properly, we should design a dedicated short-plan experiment during Songkran (mid-April) when Thailand traffic peaks.",
+        "Alternative considered and rejected: partial rollback (revert 8-14d only, keep 1-7d at €2.90). Rejected because 1-7d shows the same pattern: volume did not respond. Keeping 1-7d at lower prices costs €1,512/day for a competitive advantage that hasn't produced measurable results.",
+      ],
+      learnings: [
+        { pill: "KEY FINDING", color: "red", text: "Price is NOT the conversion barrier for 8-14d Thailand plans. 41% of revenue, -13.7% price cut, +2.7% volume (needed +14.1%). The traveler buying 8-14d is already committed.", views: ["CF", "14d"] },
+        { pill: "NO BREAK-EVEN", color: "red", text: "No bucket broke even on volume at D+14 accumulated. Revenue declined across every segment.", views: ["CF", "14d"] },
+        { pill: "SEASONAL LIMITATION", color: "yellow", text: "14 days is insufficient to measure price effects in a market with ~5%/week seasonal decline. Future experiments need longer windows or stable traffic.", views: ["CF", "14d"] },
+        { pill: "GM NOT ATTRIBUTABLE", color: "yellow", text: "GM +1.9pp is driven by carrier cost reduction (7-18% across buckets), not pricing. Do not present GM as an experiment result.", views: ["CF", "14d"] },
+        { pill: "PROCESS LEARNING", color: "yellow", text: "D+7 same-day data misled D+14 narrative. One Tuesday: +20-25% volume in short plans. 14d accumulated: those same buckets at -3% to -12%. Weight accumulated over single-day.", views: ["14d"] },
+      ],
+    },
+    es: {
+      headline: [
+        { t: "La corrección de precio no dañó márgenes pero ", b: false },
+        { t: "no generó volumen compensatorio", b: true },
+        { t: " en ningún segmento. Revenue cayó ", b: false },
+        { t: "-€3.701/día", b: true },
+        { t: " (", b: false },{ t: "-16,2%", b: true },
+        { t: " vs 14d pre) con ", b: false },
+        { t: "10.542 órdenes", b: true },
+        { t: ". Hallazgo clave: para planes 8-14d (", b: false },
+        { t: "41% del revenue", b: true },
+        { t: "), un recorte de -13,7% produjo ", b: false },
+        { t: "respuesta de volumen insuficiente (+2,7% vs +14,1% necesario)", b: true },
+        { t: ". ", b: false },
+        { t: "1 de 5 MDE", b: true },
+        { t: " cumplido (GM, no atribuible al experimento). Rollback completo recomendado.", b: false },
+      ],
+      caveat: "Thailand estaba cayendo ~5%/semana durante 6 semanas antes del experimento. El modelo CF no puede separar un efecto de precio moderado del ruido estacional a p<0.05.",
+      action: [
+        "Recomendamos rollback completo a precios pre-experimento. Ningún bucket generó el volumen necesario para break-even. El costo combinado de mantener nuevos precios es €2.406-€3.716/día sin evidencia de demanda compensatoria.",
+        "El argumento de posicionamiento competitivo (por debajo de Airalo a €2.90) es real pero no se tradujo en volumen medible en 14 días.",
+        "Alternativa considerada y rechazada: rollback parcial. Rechazada porque 1-7d muestra el mismo patrón: el volumen no respondió.",
+      ],
+      learnings: [
+        { pill: "HALLAZGO CLAVE", color: "red", text: "El precio NO es la barrera de conversión para planes 8-14d de Thailand. 41% del revenue, -13.7% de recorte, +2.7% volumen (se necesitaba +14.1%).", views: ["CF", "14d"] },
+        { pill: "SIN BREAK-EVEN", color: "red", text: "Ningún bucket alcanzó break-even en volumen a D+14 acumulado.", views: ["CF", "14d"] },
+        { pill: "LIMITACIÓN ESTACIONAL", color: "yellow", text: "14 días es insuficiente para medir efectos de precio en un mercado con ~5%/semana de caída estacional.", views: ["CF", "14d"] },
+        { pill: "GM NO ATRIBUIBLE", color: "yellow", text: "GM +1.9pp es por reducción de costos del carrier (7-18% por bucket), no por pricing.", views: ["CF", "14d"] },
+        { pill: "APRENDIZAJE DE PROCESO", color: "yellow", text: "Datos same-day de D+7 engañaron la narrativa de D+14. Ponderar acumulado sobre día individual.", views: ["14d"] },
+      ],
+    },
+  },
+
+  mde: {
+    reference: "14d",
+    note_en: "14-day pre-launch baseline is primary because Thailand was in steep seasonal decline.",
+    note_es: "Baseline 14 días pre-lanzamiento es primario porque Thailand estaba en caída estacional pronunciada.",
+    criteria: [
+      { id: "vol", label_en: "Volume 1-14d", label_es: "Volumen 1-14d", threshold: "≥ +15% opd", target: "+15% orders/day", result: "-5.6% total", status: "not_met" },
+      { id: "bench", label_en: "Revenue vs Vietnam", label_es: "Revenue vs Vietnam", threshold: "Gap < 5pp", target: "TH not >5pp below VN", result: "W2: +14.5pp, W3: -9.4pp", status: "not_met" },
+      { id: "gm", label_en: "Gross Margin", label_es: "Margen bruto", threshold: "≥ 75%", target: "75%+", result: "84.73% (cost-driven)", status: "met" },
+      { id: "cr", label_en: "CR excl Paid Social", label_es: "CR excl Paid Social", threshold: "≥ +0.5pp", target: "12.25%+", result: "+1.43pp (p=0.626, n.s.)", status: "not_met" },
+      { id: "ratio", label_en: "TH/VN ratio", label_es: "Ratio TH/VN", threshold: "≥ 1.62x", target: "1.62x+", result: "Accum 1.75x, Last Tue 1.58x", status: "not_met" },
+    ],
+  },
+
+  baselines: { arpu_f: 4.66, arpu_b: 4.66, arpu_14d: 4.05, cr_f: 11.19, cr_b: 11.19, cr_14d: 11.75, gm: 82.75, gm_14d: 84.43, arpuFloor: 3.50, missing14d: false },
+  accum: { arpu_f: 4.188, arpu_f_d90: "-10.1%", arpu_f_d14: "+3.4%", arpu_status: "negative", cr_f: 13.68, cr_f_d90: "+2.49pp", cr_f_d14: "+1.93pp", gm: 84.73, gm_d90: "+1.98pp", gm_d14: "+0.30pp", arpu_b: 3.615, arpu_b_d90: "-22.4%", cr_b: 11.81, cr_b_d90: "+0.62pp" },
+
+  impact: {
+    short: null, long: null,
+    total: {
+      rev_day_base90: 22908, rev_day_base14: 22908, rev_day_post: 19206,
+      d90: "-16.2%", d14: "-16.2%",
+      inc_day_90: -3701, inc_day_14: -3701,
+      inc_annual_90d: "-€1.35M", inc_annual_14d: "-€1.35M",
+      annual_note: {
+        en: "This annualization is misleading. Thailand was declining ~5%/week pre-launch. The -16.2% includes ~11% seasonal decline and an estimated 0-5% price effect. Do not quote -€1.35M as price damage.",
+        es: "Esta anualización es engañosa. El -16.2% incluye ~11% de caída estacional y un efecto de precio estimado de 0-5%.",
+      },
+    },
+  },
+
+  sig: {
+    cr: { ctrl_v: null, ctrl_c: null, var_v: 24582, var_c: 3363, z: null, p: "0.626", verdict: "not_sig" },
+    chi: null,
+    arpu: { lift: "-5.6% vs CF projected", liftSimple: "-10.1% vs 90d", status: "negative_not_significant", pVal: "0.328", inc: -51815, days: 14, note_en: "ARPU declined but not significantly below CF projection (p=0.328). Most of the decline is seasonal.", note_es: "ARPU cayó pero no significativamente por debajo de la proyección CF (p=0.328)." },
+  },
+
+  checks: [
+    { en: "Volume break-even in treated buckets", es: "Break-even de volumen en buckets tratados", r_en: "0 of 4 meaningful buckets broke even. 8-14d: +2.7% (needed +14.1%). 4-7d: -11.5% (needed +24.5%).", r_es: "0 de 4 buckets significativos alcanzaron break-even.", v: "not_met" },
+    { en: "AOV landed as designed", es: "AOV aterrizó según diseño", r_en: "Within 1-4pp in every bucket. Implementation was clean.", r_es: "Dentro de 1-4pp en cada bucket. Implementación fue limpia.", v: "met" },
+    { en: "Gross Margin above 75%", es: "Margen bruto sobre 75%", r_en: "84.73%. Met, but not attributable to experiment (cost/act declined 7-18% independently).", r_es: "84.73%. Cumplido, pero no atribuible al experimento.", v: "met" },
+    { en: "No rollback triggered during experiment", es: "Sin rollback activado durante experimento", r_en: "TH/VN ratio remained above 1.62x at D+7. Last Tuesday dropped to 1.58x.", r_es: "Ratio TH/VN se mantuvo sobre 1.62x en D+7. Último martes cayó a 1.58x.", v: "met" },
+    { en: "CF model shows positive or neutral effect", es: "Modelo CF muestra efecto positivo o neutro", r_en: "ARPU -5.6% vs CF (p=0.328, not significant). CR +2.2% (p=0.626, not significant). No metric significant.", r_es: "ARPU -5.6% vs CF (p=0.328, no significativo). CR +2.2% (p=0.626). Ninguna métrica significativa.", v: "not_met" },
+  ],
+
+  gm: {
+    display: 84.73, source: "BQ product_end_date_gm_v2, cross-validated Looker Carriers_02",
+    attribution: { en: "NOT attributable to experiment. Cost/activation declined 7-18% independently across all buckets (carrier migration).", es: "NO atribuible al experimento. Costo/activación bajó 7-18% independientemente (migración de carrier)." },
+    timeline: [
+      { d: "Pre-90d", v: "82.75" },
+      { d: "Pre-14d", v: "84.43" },
+      { d: "Post D+14", v: "84.73", n: { en: "cost-driven, not price-driven", es: "por costos, no por precio" } },
+    ],
+    byBucket: [
+      { name: "1-3d", gmPre: 74.0, gmPost: 72.2, gmDelta: -1.8, costPre: 1.35, costPost: 1.28 },
+      { name: "4-7d", gmPre: 83.7, gmPost: 83.3, gmDelta: -0.3, costPre: 2.78, costPost: 2.58 },
+      { name: "8-14d", gmPre: 85.3, gmPost: 86.6, gmDelta: 1.3, costPre: 4.69, costPost: 4.11 },
+      { name: "15-30d", gmPre: 82.7, gmPost: 85.4, gmDelta: 2.7, costPre: 7.88, costPost: 6.55 },
+      { name: "31-90d", gmPre: 71.6, gmPost: 78.3, gmDelta: 6.7, costPre: 20.10, costPost: 16.42 },
+    ],
+    caveat: { en: "COGS uses plan expiry date, not purchase date. Plans 15+ days bought late haven't expired yet. Full COGS available at D+30 (Apr 24).", es: "COGS usa fecha de expiración, no compra. Planes 15+ días comprados tarde aún no expiraron." },
+  },
+
+  aov: [
+    { b: "1-3d", base: 7.27, b14: 7.27, post: 5.77, d90: "-20.7%", d14: "-20.7%", designed: -23.5, designDir: "down", orders: 2723, chk: "ok" },
+    { b: "4-7d", base: 19.20, b14: 19.20, post: 15.42, d90: "-19.7%", d14: "-19.7%", designed: -23.5, designDir: "down", orders: 2640, chk: "ok" },
+    { b: "8-14d", base: 37.96, b14: 37.96, post: 33.28, d90: "-12.3%", d14: "-12.3%", designed: -13.7, designDir: "down", orders: 3402, chk: "ok" },
+    { b: "15-30d", base: 54.24, b14: 54.24, post: 53.29, d90: "-1.8%", d14: "-1.8%", designed: -3.0, designDir: "down", orders: 1603, chk: "watch" },
+    { b: "31-90d", base: 85.18, b14: 85.18, post: 79.56, d90: "-6.6%", d14: "-6.6%", designed: -2.1, designDir: "down", orders: 174, chk: "alert", anomaly: true, anomalyNote: { en: "AOV dropped -6.6% vs designed -2.1%. Only 174 orders — statistical noise.", es: "AOV bajó -6.6% vs diseñado -2.1%. Solo 174 órdenes — ruido estadístico." } },
+  ],
+
+  breakEven: [
+    { b: "1-3d", seg: "short", priceCut: -20.7, beRequired: 26.0, volActual: -2.7, met: false, gap: -28.7, revCostDay: 332, revCost14d: -4645 },
+    { b: "4-7d", seg: "short", priceCut: -19.7, beRequired: 24.5, volActual: -11.5, met: false, gap: -36.0, revCostDay: 1180, revCost14d: -16524 },
+    { b: "8-14d", seg: "medium", priceCut: -12.3, beRequired: 14.1, volActual: 2.7, met: false, gap: -11.4, revCostDay: 894, revCost14d: -12519, critical: true },
+    { b: "15-30d", seg: "long", priceCut: -1.8, beRequired: 1.8, volActual: -16.2, met: false, gap: -18.0, revCostDay: 1310, revCost14d: -18342, warn: true, warnNote: { en: "Volume decline (-16.2%) mostly seasonal. Treatment was only -3%.", es: "Caída de volumen mayormente estacional. Tratamiento fue solo -3%." } },
+    { b: "31-90d", seg: "long", priceCut: -6.6, beRequired: 7.1, volActual: 8.7, met: true, gap: 1.6, revCostDay: -15, revCost14d: 215, lowN: true },
+  ],
+
+  mix: [
+    { b: "1-3d", pre: 199.9, post: 194.5, delta: "-2.7%", preS: 25.1, postS: 25.8 },
+    { b: "4-7d", pre: 213.0, post: 188.6, delta: "-11.5%", preS: 26.7, postS: 25.0 },
+    { b: "8-14d", pre: 236.6, post: 243.0, delta: "+2.7%", preS: 29.7, postS: 32.3 },
+    { b: "15-30d", pre: 136.6, post: 114.5, delta: "-16.2%", preS: 17.1, postS: 15.2 },
+    { b: "31-90d", pre: 11.4, post: 12.4, delta: "+8.7%", preS: 1.4, postS: 1.6 },
+  ],
+
+  treatment: [
+    { zone: "1-3d", revWeight: 0.047, avgChange: -23.5 },
+    { zone: "4-7d", revWeight: 0.122, avgChange: -23.5 },
+    { zone: "8-14d", revWeight: 0.410, avgChange: -13.7 },
+    { zone: "15-30d", revWeight: 0.353, avgChange: -3.0 },
+    { zone: "31-90d", revWeight: 0.069, avgChange: -2.1 },
+  ],
+
+  elast: [
+    { b: "all", flag: "not_calculable",
+      reason_en: "CF p-values too high (0.111-0.874). Seasonal noise overwhelms price signal. Three conditions would fix this: (1) re-test during ascending traffic (Songkran), (2) longer observation window (D+30+), or (3) A/B test infrastructure.",
+      reason_es: "P-values del CF demasiado altos (0.111-0.874). El ruido estacional domina la señal de precio. Tres condiciones lo resolverían: (1) re-testear en tráfico ascendente (Songkran), (2) ventana más larga (D+30+), o (3) infraestructura A/B.",
+    },
+  ],
+
+  confidence: {
+    level: 3,
+    en: {
+      solid: [
+        { t: "AOV landed within 1-4pp of design in ", b: false },
+        { t: "every bucket", b: true },
+        { t: ". Implementation was clean. ", b: false },
+        { t: "8-14d finding", b: true },
+        { t: " (41% of revenue, insufficient volume response to -13.7% cut: +2.7% vs +14.1% needed) is the most robust conclusion. ", b: false },
+        { t: "10,542 orders", b: true },
+        { t: " over 14 clean days.", b: false },
+      ],
+      solid_items: [
+        "AOV direction correct in all 5 buckets. What we changed, changed as designed.",
+        "8-14d volume was stable (+2.7%) despite meaningful price cut. Genuine finding.",
+        "Parallel trends with Vietnam validated (CV orders 11.2%, CV revenue 15.5%).",
+        "GM stable at 84.73%. Business not damaged by experiment.",
+      ],
+      uncertain_items: [
+        "Seasonal decline (~5%/week) overwhelms price signal for all segments except 8-14d.",
+        "CF model: no metric is statistically significant (p=0.111-0.874).",
+        "Vietnam DID inconsistent: W2 positive (+14.5pp), W3 negative (-9.4pp).",
+        "15-30d volume decline (-16.2%) may be mostly seasonal (treatment was only -3%).",
+      ],
+      improve: [
+        "Re-test short plans (1-7d only) during Songkran peak when traffic is ascending.",
+        "Longer observation window (D+30+) if re-testing in similar seasonal conditions.",
+        "A/B test infrastructure (post-May 2026) for clean causal attribution.",
+      ],
+    },
+    es: {
+      solid: [
+        { t: "AOV aterrizó dentro de 1-4pp del diseño en ", b: false },
+        { t: "todos los buckets", b: true },
+        { t: ". Implementación limpia. ", b: false },
+        { t: "Hallazgo 8-14d", b: true },
+        { t: " (41% del revenue, respuesta de volumen insuficiente a -13.7%: +2.7% vs +14.1% necesario) es la conclusión más robusta. ", b: false },
+        { t: "10.542 órdenes", b: true },
+        { t: " en 14 días limpios.", b: false },
+      ],
+      solid_items: [
+        "Dirección AOV correcta en los 5 buckets. Lo que cambiamos, cambió según diseño.",
+        "Volumen 8-14d estable (+2.7%) pese a recorte significativo. Hallazgo genuino.",
+        "Parallel trends con Vietnam validados (CV órdenes 11.2%, CV revenue 15.5%).",
+        "GM estable en 84.73%. Negocio no dañado.",
+      ],
+      uncertain_items: [
+        "Caída estacional domina señal de precio en todos excepto 8-14d.",
+        "Modelo CF: ninguna métrica significativa (p=0.111-0.874).",
+        "Vietnam DID inconsistente: W2 +14.5pp, W3 -9.4pp.",
+        "Volumen 15-30d: caída puede ser mayormente estacional.",
+      ],
+      improve: [
+        "Re-testear planes cortos durante Songkran.",
+        "Ventana más larga (D+30+) si condiciones estacionales similares.",
+        "Infraestructura A/B (post-mayo 2026).",
+      ],
+    },
+  },
+
+  setupValidation: {
+    sampleBalance: { status: "pass", note: "10,542 post vs 11,166 baseline (-5.6%). Consistent with seasonal trend." },
+    dataQuality: { status: "pass", note: "All data cross-validated: BQ, Adobe 4 CSVs, Looker Carriers_02, BQ product_end_date_gm_v2." },
+    durationCheck: { planned: 14, actual: 14, fullCycles: true },
+    confounders: [
+      { name: "Paid Social", status: "dismissed", explanation_en: "PS = 8-16% of UV. No budget spike on launch.", explanation_es: "PS = 8-16% del UV. Sin spike de presupuesto." },
+      { name: "Seasonality", status: "active", explanation_en: "Dominant confounder. Thailand -5%/week for 6 weeks pre-launch. Primary reason CF model cannot reach significance.", explanation_es: "Confounder dominante. Thailand -5%/semana durante 6 semanas pre-lanzamiento." },
+      { name: "Competitive landscape", status: "documented", explanation_en: "Saily -10% all unlimited, Yesim +10% unlimited Thailand. Documented but not quantifiable.", explanation_es: "Saily -10% todo unlimited, Yesim +10% unlimited Thailand. Documentado." },
+    ],
+  },
+
+  gaps: [
+    { type: "DATA", en: "Full COGS for plans 15+ days", es: "COGS completo para planes 15+ días", why_en: "Plans bought late haven't expired yet", why_es: "Planes comprados tarde aún no expiraron", owner: "Guido", target: "D+30 (Apr 24)", status: "open" },
+    { type: "METHODOLOGY", en: "Re-test short plans during Songkran", es: "Re-testear planes cortos durante Songkran", why_en: "Seasonal noise prevented clean measurement", why_es: "Ruido estacional impidió medición limpia", owner: "Guido", target: "Mid-April", status: "open" },
+    { type: "DATA", en: "Post-rollback revenue recovery validation", es: "Validación de recuperación post-rollback", why_en: "Confirm prices reverted and revenue recovered", why_es: "Confirmar reversión de precios y recuperación", owner: "Guido", target: "Apr 24", status: "open" },
+    { type: "CAUSAL", en: "Price elasticity for Thailand", es: "Elasticidad de precio para Thailand", why_en: "CF not significant. Need stable-traffic window.", why_es: "CF no significativo. Necesita ventana estable.", owner: "Structural", target: "Songkran experiment", status: "open" },
+  ],
+
+  anomalies: [
+    { bucket: "31-90d AOV", en: "AOV dropped -6.6% vs designed -2.1%. Only 174 orders.", es: "AOV bajó -6.6% vs diseñado -2.1%. Solo 174 órdenes.", status: "resolved", confidence: "confirmed" },
+    { bucket: "D+7 same-day mislead", en: "Tuesday Mar 18 showed +20-25% volume in short plans. 14d accumulated showed -3% to -12%.", es: "Martes 18 mar mostró +20-25% volumen en cortos. Acumulado 14d mostró -3% a -12%.", status: "resolved", confidence: "confirmed" },
+  ],
+
+  glossary: [
+    { term: "PPD", def_en: "Price-per-Day. The first price impression: plan price divided by number of days. €2.90/day means a 7-day plan at €20.30.", def_es: "Precio por Día. La primera impresión de precio: precio del plan dividido por cantidad de días." },
+    { term: "Break-Even", def_en: "The volume increase needed to offset a price decrease so total revenue stays the same. If you cut price 20%, you need volume to grow 25%.", def_es: "El aumento de volumen necesario para compensar una baja de precio." },
+    { term: { en: "Counterfactual (CF)", es: "Contrafactual (CF)" }, def_en: "The answer to 'what would have happened without the price change?' Estimated using a statistical model trained on pre-launch data.", def_es: "La respuesta a '¿qué habría pasado sin el cambio de precio?'" },
+    { term: { en: "Seasonal decline", es: "Caída estacional" }, def_en: "Thailand's normal pattern of decreasing travel demand as peak season ends. Revenue was dropping ~€11,700/week before the experiment.", def_es: "El patrón normal de demanda decreciente al terminar la temporada alta." },
+    { term: { en: "Benchmark (Vietnam)", es: "Benchmark (Vietnam)" }, def_en: "A comparable market that didn't receive the price change. Vietnam was chosen because its order patterns correlate 0.867 with Thailand's.", def_es: "Un mercado comparable que no recibió el cambio de precio." },
+    { term: "p-value", def_en: "The probability that the observed result happened by chance. p=0.05 means 5% chance. Our results: p=0.11-0.87 — too high to conclude.", def_es: "La probabilidad de que el resultado sea por azar. Nuestros resultados: p=0.11-0.87, demasiado alto." },
+    { term: "ARPU", def_en: "Average Revenue Per User. Total revenue divided by total unique visitors.", def_es: "Revenue Promedio por Usuario." },
+    { term: "CR", def_en: "Conversion Rate. Of every 100 visitors, how many buy.", def_es: "Tasa de Conversión." },
+    { term: "GM", def_en: "Gross Margin. What percentage of revenue is profit after paying carrier costs.", def_es: "Margen Bruto." },
+    { term: { en: "Break-even gap", es: "Gap de break-even" }, def_en: "The difference between volume needed to break even and actual volume. Gap of -28.7pp means volume must grow 28.7pp more.", def_es: "Diferencia entre volumen necesario y real." },
+    { term: { en: "Treatment zone", es: "Zona de tratamiento" }, def_en: "A group of plan durations that received the same percentage price change.", def_es: "Grupo de duraciones de plan con el mismo cambio de precio." },
+    { term: { en: "Revenue at risk", es: "Revenue en riesgo" }, def_en: "Fraction of total revenue exposed to the price change. 100% for Thailand (all plans changed).", def_es: "Fracción del revenue total expuesta al cambio." },
+    { term: { en: "Same-day DID", es: "DID mismo día" }, def_en: "Comparing the same day-of-week before and after, using a benchmark market. Tuesday vs Tuesday removes day-of-week effects.", def_es: "Comparar el mismo día de la semana antes y después, usando un benchmark." },
+    { term: { en: "Rollback threshold", es: "Umbral de rollback" }, def_en: "A pre-defined limit that triggers reverting the price change. For Thailand: TH/VN ratio below 1.62x for 2 consecutive checks.", def_es: "Límite que activa revertir el cambio de precio." },
+    { term: { en: "Sensitivity analysis", es: "Análisis de sensibilidad" }, def_en: "Using multiple projection methods to see if the conclusion changes. If all methods agree, the conclusion is robust.", def_es: "Usar múltiples métodos de proyección para ver si la conclusión cambia." },
+  ],
+
+  footer: {
+    en: "D+14 Final (March 25, 2026) · 14 clean days · 10,542 orders · Signal: ITERATE · Benchmark: Vietnam (r=0.867) · CF model: no metric significant",
+    es: "D+14 Final (25 marzo 2026) · 14 días limpios · 10.542 órdenes · Señal: ITERAR · Benchmark: Vietnam (r=0.867) · Modelo CF: ninguna métrica significativa",
+  },
+
+  revFramingNote: {
+    "CF": { en: "Comparing actual results against the counterfactual model. Adobe CF trained on 100 days (Dec 1 – Mar 10). No metric reaches statistical significance. Range of price-driven gap: -€421/day (CF) to -€2,449/day (trend).", es: "Comparando resultados reales contra modelo contrafactual. Ninguna métrica alcanza significancia. Rango: -€421/día a -€2.449/día." },
+    "14d": { en: "Comparing 14 post-change days against 14-day pre-launch baseline. Revenue declined -16.2%. This includes seasonal decline (~11%) and potential price effect (0-5%).", es: "Comparando 14 días post contra baseline 14d pre. Revenue cayó -16.2%. Incluye caída estacional (~11%) y efecto precio (0-5%)." },
+  },
+
+  toggleInsights: {
+    "CF": {
+      en: [
+        "ARPU excl PS: €4.07 actual vs €4.31 projected (-5.6%, p=0.328). Not significant.",
+        "CR excl PS: 13.18% actual vs 12.89% projected (+2.2%, p=0.626). Not significant.",
+        "Three methods agree: no positive effect detected. Range: -€421/day (CF) to -€2,449/day (trend).",
+        "Seasonal noise is too large for the CF model to isolate the price effect in 14 days of data.",
+        "This is the decision view. The experiment did not produce a measurable positive effect. Rollback is correct.",
+      ],
+      es: [
+        "ARPU excl PS: €4.07 vs €4.31 proyectado (-5.6%, p=0.328). No significativo.",
+        "CR excl PS: 13.18% vs 12.89% proyectado (+2.2%, p=0.626). No significativo.",
+        "Tres métodos coinciden: sin efecto positivo. Rango: -€421/día a -€2.449/día.",
+        "El ruido estacional es demasiado grande para aislar el efecto de precio en 14 días.",
+        "Vista de decisión. Sin efecto positivo medible. Rollback es correcto.",
+      ],
+    },
+    "14d": {
+      en: [
+        "Revenue declined -16.2% vs 14d baseline (€22,908 to €19,206/day). Gap: -€51,815 in 14 days.",
+        "Break-even not achieved. 8-14d: +2.7% vs +14.1% needed. 4-7d: -11.5% vs +24.5% needed.",
+        "AOV landed as designed in every bucket (within 1-4pp). Implementation was clean.",
+        "Context: Thailand was declining ~5%/week for 6 weeks pre-launch.",
+        "This view shows raw before/after. Use CF view for the decision.",
+      ],
+      es: [
+        "Revenue cayó -16.2% vs 14d pre. Gap: -€51.815 en 14 días.",
+        "Break-even no alcanzado. 8-14d: +2.7% vs +14.1% necesario.",
+        "AOV aterrizó según diseño en cada bucket (dentro de 1-4pp).",
+        "Thailand caía ~5%/semana durante 6 semanas pre-lanzamiento.",
+        "Vista cruda antes/después. Usar vista CF para la decisión.",
+      ],
+    },
+  },
+
+  keyInsight: {
+    en: [
+      [{ t: "Price is not the conversion barrier for Thailand's core segment. ", b: true }, { t: "8-14d plans (41% of revenue) showed insufficient volume response to a -13.7% price cut (+2.7% vs +14.1% needed).", b: false }],
+      [{ t: "The experiment was cleanly executed: AOV landed as designed in every bucket. ", b: false }, { t: "The traveler buying 8-14d is already committed.", b: true }, { t: " Something else drives that purchase decision.", b: false }],
+      [{ t: "For shorter plans, the seasonal decline (~5%/week) prevents clean measurement. A dedicated 1-7d experiment during Songkran would isolate the price effect in ascending traffic.", b: false }],
+    ],
+    es: [
+      [{ t: "El precio no es la barrera de conversión para el segmento core de Thailand. ", b: true }, { t: "Planes 8-14d (41% del revenue) no mostraron respuesta significativa a -13.7%.", b: false }],
+      [{ t: "Ejecución limpia: AOV según diseño en cada bucket. ", b: false }, { t: "El viajero que compra 8-14d ya está comprometido.", b: true }, { t: " Otra cosa impulsa esa decisión.", b: false }],
+      [{ t: "Para planes cortos, la caída estacional impide medición limpia. Experimento dedicado 1-7d durante Songkran aislaría el efecto de precio.", b: false }],
+    ],
+  },
+
+  tuesdays: [
+    { date: "Tue 4 Mar", period: "PRE", th: 21288, vn: 12175, ratio: 1.75, did: null },
+    { date: "Tue 11 Mar", period: "PRE", th: 21461, vn: 12034, ratio: 1.78, did: null },
+    { date: "Tue 18 Mar", period: "POST W2", th: 21673, vn: 10628, ratio: 2.04, did: 14.5 },
+    { date: "Tue 25 Mar", period: "POST W3", th: 18920, vn: 11968, ratio: 1.58, did: -9.4 },
+  ],
+
+  parallelTrends: {
+    bucket: "all", variable: "orders_per_day + revenue_per_day",
+    source: "BigQuery fct_routes_and_destinations",
+    stats: { cvOrders: 11.2, cvRevenue: 15.5, threshold: "<20%", verdict: "VALID" },
+    caveat: { en: "TH/VN ratio declining from 2.7x (Nov) to 2.1x (Mar) due to asynchronous seasonality. Parallel in direction but ratio converges.", es: "Ratio TH/VN declinando de 2.7x a 2.1x por estacionalidad asincrónica." },
+    note_en: "15 weeks pre-launch (Nov 24 – Mar 10). Both markets move in the same direction week to week.",
+    note_es: "15 semanas pre-lanzamiento. Ambos mercados se mueven en la misma dirección.",
+  },
+
+  benchmarkPost: {
+    name: "Vietnam", type: "order-correlated benchmark (r=0.867)",
+    period: "2026-03-12 to 2026-03-25",
+    total: { orders: 5115, revenue: 154088, ratio: 1.75 },
+    rollbackThreshold: 1.62,
+    note_en: "Accumulated TH/VN ratio 1.75x above 1.62x threshold. But last Tuesday (Mar 25) dropped to 1.58x. Trend deteriorating.",
+    note_es: "Ratio acumulado 1.75x sobre umbral 1.62x. Pero último martes cayó a 1.58x. Tendencia deteriorándose.",
+  },
+
+  counterfactual: {
+    mode: "adobe_cf", baselineDays: 100, postDays: 14,
+    adobeCf: {
+      note_en: "Adobe CF model (LinearRegression + trend + DOW dummies). 100 training days (Dec 1 – Mar 10). Paid Social was NOT a confounder (8-16% UV, no spike).",
+      note_es: "Modelo CF Adobe (Regresión Lineal + tendencia + dummies día de semana). 100 días de entrenamiento.",
+      excl_ps: {
+        arpu: { projected: 4.31, actual: 4.07, lift: "-5.6%", p: "0.328", sig: false },
+        cr: { projected: 12.89, actual: 13.18, lift: "+2.2%", p: "0.626", sig: false },
+      },
+      blended: {
+        arpu: { projected: 3.81, actual: 3.50, lift: "-8.2%", p: "0.111", sig: false },
+        cr: { projected: 11.43, actual: 11.36, lift: "-0.6%", p: "0.874", sig: false },
+      },
+      finding_en: "No metric is statistically significant. The seasonal decline overwhelms the price signal in 14 days.",
+      finding_es: "Ninguna métrica es estadísticamente significativa. La caída estacional domina la señal de precio en 14 días.",
+    },
+    sensitivity: {
+      flat: { label_en: "Flat 6-week average", label_es: "Promedio plano 6 semanas", projected: 396677, real: 268890, delta: -127787, deltaPct: "-32.2%" },
+      trend: { label_en: "Trend-based regression (principal)", label_es: "Regresión de tendencia (principal)", projected: 303180, real: 268890, delta: -34290, deltaPct: "-11.3%" },
+      last4w: { label_en: "Last 4 weeks average", label_es: "Promedio últimas 4 semanas", projected: 375446, real: 268890, delta: -106556, deltaPct: "-28.4%" },
+    },
+    revenueDecomposition: {
+      totalGapVsBaseline: -51815, cfAttributableGap: -5900, cfAttributableDay: -421, cfPValue: 0.328,
+      trendGap: -34290, trendGapDay: -2449,
+      seasonalEstimate: { low: -17500, high: -46000 },
+      priceEstimate: { low: -5900, high: -34290 },
+      note_en: "Three methods agree: no positive effect. Disagree on magnitude. Range: -€421/day to -€2,449/day.",
+      note_es: "Tres métodos coinciden: sin efecto positivo. Rango: -€421/día a -€2.449/día.",
+    },
+    gmCf: { pre: 82.75, post: 84.73, delta: "+1.98pp", src: "BQ + Looker" },
+  },
+
+  seasonalContext: {
+    weeklyRevenue: [
+      { week: "Jan 26", th: 220061, wow: null },
+      { week: "Feb 2", th: 219078, wow: -0.4 },
+      { week: "Feb 9", th: 211695, wow: -3.4 },
+      { week: "Feb 16", th: 192221, wow: -9.2 },
+      { week: "Feb 23", th: 183458, wow: -4.6 },
+      { week: "Mar 2", th: 163518, wow: -10.9 },
+    ],
+    declineRate: "~5%/week, ~€11,687/week",
+    note_en: "Thailand exiting peak season. Revenue dropped 26% in 6 weeks pre-launch. The question is whether the price change made it decline more.",
+    note_es: "Thailand saliendo de temporada alta. Revenue cayó 26% en 6 semanas pre-lanzamiento.",
+  },
+
+  dataSources: [
+    { name: "Thailand D+14", system: "BQ fct_routes_and_destinations", period: "Mar 12-25", records: "10,542 orders" },
+    { name: "Vietnam benchmark", system: "BQ fct_routes_and_destinations", period: "Mar 12-25", records: "5,115 orders" },
+    { name: "Parallel trends", system: "BQ fct_routes_and_destinations", period: "Nov 24 – Mar 10", records: "15 weeks" },
+    { name: "Adobe CF model", system: "4 CSVs (pre/post × blend/exclPS)", period: "Dec 1 – Mar 25", records: "100+14 days" },
+    { name: "BQ sensitivity", system: "Weekly revenue 6 weeks pre", period: "Jan 26 – Mar 8", records: "6 data points" },
+    { name: "GM COGS post", system: "product_end_date_gm_v2", period: "Mar 12-25", records: "13,558 act" },
+    { name: "GM COGS pre", system: "product_end_date_gm_v2", period: "Dec 12 – Mar 11", records: "106,930 act" },
+    { name: "GM Carriers_02", system: "Looker export", period: "Mar 12-25", records: "77 variants" },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SHARED COMPONENTS
+// ═══════════════════════════════════════════════════════════════════════════
+const Pill = ({ color, bg, children }) => <span style={{ display: "inline-block", padding: "2px 10px", borderRadius: 4, fontSize: 10, fontWeight: 700, letterSpacing: 0.5, color, background: bg || color + "15", border: "1px solid " + color + "30" }}>{children}</span>;
+const Bar3 = ({ c }) => <div style={{ borderTop: `3px solid ${c || "#E6485C"}`, width: 36, marginBottom: 10 }} />;
+
+const Note = ({ bg, bdr, ac, strong, children, t: th }) => <div style={{
+  marginTop: 10, padding: "10px 14px", background: bg, border: `1px solid ${bdr}`,
+  borderLeft: `4px solid ${ac || bdr}`, borderRadius: 8, fontSize: 12, color: th.text, lineHeight: 1.7,
+}}>{strong && <div style={{ fontWeight: 700, color: ac || th.text, marginBottom: 3 }}>{strong}</div>}{children}</div>;
+
+const MC = ({ label, value, sub, delta, c, bdr, t: th }) => <div className="cc" style={{
+  background: `linear-gradient(135deg,${(bdr || th.textMuted)}06,${th.card})`,
+  border: `1px solid ${th.border}`, borderRadius: 10, borderLeft: `3px solid ${bdr || th.textMuted}`,
+  padding: "12px 14px", animation: "fadeUp .4s ease both",
+}}>
+  <div style={{ fontSize: 10, color: th.textDim, fontWeight: 600, marginBottom: 4 }}>{label}</div>
+  <div style={{ fontSize: 19, fontWeight: 800, fontFamily: MN, color: c || th.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</div>
+  {delta != null && <div style={{ fontSize: 11, fontWeight: 700, color: c, marginTop: 2 }}>{delta}</div>}
+  {sub && <div style={{ fontSize: 10, color: th.textMuted, marginTop: 4, lineHeight: 1.4 }}>{sub}</div>}
+</div>;
+
+const Xp = ({ title, desc, children, defaultOpen, t: th, id }) => {
+  const [open, setOpen] = useState(defaultOpen || false);
+  return <div id={id} style={{ marginBottom: 10, border: "1px solid " + th.border, borderRadius: 10, overflow: "hidden" }}>
+    <div onClick={() => setOpen(!open)} style={{ padding: "10px 14px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", background: th.card }}>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: th.text }}>{title}</div>
+        {desc && <div style={{ fontSize: 11, color: th.textDim, marginTop: 2 }}>{desc}</div>}
+      </div>
+      <span style={{ fontSize: 14, color: th.textMuted }}>{open ? "▲" : "▼"}</span>
+    </div>
+    {open && <div style={{ padding: "14px 16px", borderTop: "1px solid " + th.border }}>{children}</div>}
+  </div>;
+};
+
+// Headline renderer with bold segments
+const Hl = ({ parts, t: th, size }) => <div style={{ fontSize: size || 14, lineHeight: 1.7, color: th.text }}>
+  {parts.map((p, i) => p.b ? <strong key={i} style={{ color: th.text }}>{p.t}</strong> : <span key={i}>{p.t}</span>)}
+</div>;
+
+// Goal Card (GC) — design system component. showGoal controls threshold visibility.
+const GC = ({ label, result, threshold, target, met, showGoal, t: th, delay }) => {
+  const cc = met ? th.green : th.red;
+  const scBg = met ? th.gFill : th.red;
+  return <div className="v2-gc" style={{
+    background: `linear-gradient(135deg, ${scBg}06, ${th.card})`,
+    border: "1px solid " + th.border, borderLeft: "4px solid " + cc,
+    borderRadius: 12, padding: "16px 14px", textAlign: "center",
+    display: "flex", flexDirection: "column", alignItems: "center",
+    animation: `pop .4s cubic-bezier(.34,1.56,.64,1) ${delay || 0}s both`,
+  }}>
+    <div style={{ fontSize: 10, color: th.textDim, fontWeight: 600, lineHeight: 1.3, minHeight: 28, display: "flex", alignItems: "center" }}>{label}</div>
+    {showGoal && target && <>
+      <div style={{ fontSize: 8, color: th.textMuted, letterSpacing: 1.5, fontWeight: 700, marginTop: 6 }}>GOAL</div>
+      <div style={{ fontSize: 14, fontFamily: MN, fontWeight: 700, color: th.accent, marginBottom: 2 }}>{target}</div>
+      <div style={{ borderTop: "1px dashed " + th.border, width: "50%", height: 8, marginTop: 2, marginBottom: 2 }} />
+    </>}
+    <div style={{ fontSize: 8, color: th.textMuted, letterSpacing: 1.5, fontWeight: 700, marginTop: showGoal ? 0 : 6 }}>RESULT</div>
+    <div style={{ fontSize: 17, fontFamily: MN, fontWeight: 800, color: cc, animation: `numIn .5s ease ${(delay || 0) + .15}s both`, marginTop: 2 }}>{result}</div>
+    <div style={{ fontSize: 10, fontWeight: 800, color: cc, marginTop: 6, padding: "2px 8px", borderRadius: 4, background: cc + "10" }}>{met ? "MET" : "NOT MET"}</div>
+  </div>;
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SVG GRAPHS
+// ═══════════════════════════════════════════════════════════════════════════
+const SeasonalChart = ({ t: th, lang }) => {
+  const data = D.seasonalContext.weeklyRevenue;
+  const maxVal = Math.max(...data.map(d => d.th));
+  const w = 560, h = 200, barW = 60, gap = 24, baseY = h - 30;
+  const totalW = data.length * (barW + gap) - gap;
+  const startX = (w - totalW) / 2;
+  const reds = ["#FCA5A5", "#F87171", "#EF4444", "#DC2626", "#B91C1C", "#991B1B"];
+  return <svg viewBox={`0 0 ${w} ${h + 10}`} style={{ width: "100%", maxWidth: 580 }}>
+    {data.map((d, i) => {
+      const barH = (d.th / maxVal) * (baseY - 20);
+      const x = startX + i * (barW + gap);
+      const y = baseY - barH;
+      return <g key={i}>
+        <rect x={x} y={y} width={barW} height={barH} rx={4} fill={reds[i]} opacity={0.85} />
+        <text x={x + barW / 2} y={y - 6} textAnchor="middle" fontSize={10} fontFamily={MN} fill={th.text} fontWeight={700}>€{Math.round(d.th / 1000)}K</text>
+        {d.wow != null && <text x={x + barW / 2} y={y + barH / 2 + 4} textAnchor="middle" fontSize={9} fontFamily={MN} fill="#FFF" fontWeight={600}>{d.wow > 0 ? "+" : ""}{d.wow}%</text>}
+        <text x={x + barW / 2} y={baseY + 14} textAnchor="middle" fontSize={9} fontFamily={UI} fill={th.textDim}>{d.week}</text>
+      </g>;
+    })}
+  </svg>;
+};
+
+const TuesdayChart = ({ t: th }) => {
+  const data = D.tuesdays;
+  const w = 480, h = 160, dotR = 8;
+  const minR = Math.min(...data.map(d => d.ratio));
+  const maxR = Math.max(...data.map(d => d.ratio));
+  const rangeR = maxR - minR + 0.2;
+  const padY = 30, padX = 60;
+  const threshold = D.benchmarkPost.rollbackThreshold;
+  const yScale = (v) => padY + ((maxR + 0.1 - v) / rangeR) * (h - padY * 2);
+  const xScale = (i) => padX + i * ((w - padX * 2) / (data.length - 1));
+  const threshY = yScale(threshold);
+  return <svg viewBox={`0 0 ${w} ${h}`} style={{ width: "100%", maxWidth: 500 }}>
+    <line x1={padX} y1={threshY} x2={w - padX} y2={threshY} stroke={th.red} strokeWidth={1.5} strokeDasharray="6 4" />
+    <text x={w - padX + 4} y={threshY + 4} fontSize={9} fontFamily={MN} fill={th.red}>{threshold}x</text>
+    {data.map((d, i) => {
+      if (i > 0) {
+        const prev = data[i - 1];
+        return <line key={"l" + i} x1={xScale(i - 1)} y1={yScale(prev.ratio)} x2={xScale(i)} y2={yScale(d.ratio)} stroke={th.textMuted} strokeWidth={1.5} />;
+      }
+      return null;
+    })}
+    {data.map((d, i) => {
+      const isPre = d.period === "PRE";
+      const isAbove = d.ratio >= threshold;
+      const color = isPre ? th.textMuted : isAbove ? th.green : th.red;
+      return <g key={i}>
+        <circle cx={xScale(i)} cy={yScale(d.ratio)} r={dotR} fill={color} opacity={isPre ? 0.5 : 1} />
+        <text x={xScale(i)} y={yScale(d.ratio) - 14} textAnchor="middle" fontSize={11} fontFamily={MN} fill={color} fontWeight={700}>{d.ratio.toFixed(2)}x</text>
+        <text x={xScale(i)} y={h - 4} textAnchor="middle" fontSize={8} fontFamily={UI} fill={th.textDim}>{d.date}</text>
+        {d.did != null && <text x={xScale(i)} y={yScale(d.ratio) + 20} textAnchor="middle" fontSize={8} fontFamily={MN} fill={color}>DID: {d.did > 0 ? "+" : ""}{d.did}pp</text>}
+      </g>;
+    })}
+  </svg>;
+};
+
+const BreakEvenChart = ({ t: th }) => {
+  const data = D.breakEven;
+  const w = 560, h = 200, barW = 80, gap = 20, baseY = h - 30;
+  const maxGap = Math.max(...data.map(d => Math.abs(d.gap)));
+  const totalW = data.length * (barW + gap) - gap;
+  const startX = (w - totalW) / 2;
+  return <svg viewBox={`0 0 ${w} ${h + 10}`} style={{ width: "100%", maxWidth: 580 }}>
+    {data.map((d, i) => {
+      const barH = (Math.abs(d.gap) / maxGap) * (baseY - 30);
+      const x = startX + i * (barW + gap);
+      const color = d.met ? th.green : th.red;
+      const opacity = d.lowN ? 0.4 : 0.8;
+      return <g key={i}>
+        <rect x={x} y={baseY - barH} width={barW} height={barH} rx={4} fill={color} opacity={opacity} />
+        <text x={x + barW / 2} y={baseY - barH - 6} textAnchor="middle" fontSize={10} fontFamily={MN} fill={color} fontWeight={700}>{d.gap > 0 ? "+" : ""}{d.gap}pp</text>
+        <text x={x + barW / 2} y={baseY - barH + 16} textAnchor="middle" fontSize={10} fill="#FFF" fontWeight={700}>{d.met ? "✓" : "✗"}</text>
+        {d.critical && <text x={x + barW / 2} y={baseY - barH - 18} textAnchor="middle" fontSize={12} fill={th.yellow}>★</text>}
+        <text x={x + barW / 2} y={baseY + 14} textAnchor="middle" fontSize={10} fontFamily={UI} fill={th.textDim}>{d.b}</text>
+      </g>;
+    })}
+  </svg>;
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TIMELINE COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════
+const Timeline = ({ t: th }) => {
+  const items = D.timeline;
+  const colors = { pre: th.textMuted, launch: th.accent, checkpoint: th.green, close: th.yellow, action: th.red, future: th.purple };
+  return <div style={{ display: "flex", alignItems: "center", gap: 0, padding: "8px 0", marginBottom: 16, overflow: "auto" }}>
+    {items.map((it, i) => <React.Fragment key={i}>
+      {i > 0 && <div style={{ flex: 1, height: 2, background: th.border, minWidth: 20 }} />}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 60 }}>
+        <div style={{ width: 10, height: 10, borderRadius: "50%", background: colors[it.type] || th.textMuted, border: "2px solid " + (colors[it.type] || th.textMuted) + "40" }} />
+        <div style={{ fontSize: 8, fontFamily: MN, color: th.textDim, marginTop: 4, textAlign: "center", whiteSpace: "nowrap" }}>{it.date}</div>
+        <div style={{ fontSize: 8, color: th.textMuted, textAlign: "center", lineHeight: 1.2, maxWidth: 70 }}>{it.label}</div>
+      </div>
+    </React.Fragment>)}
+  </div>;
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+function Dashboard() {
+  const [dark, setDark] = useState(false);
+  const [lang, setLang] = useState("en");
+  const [activeView, setActiveView] = useState("summary");
+  const [cfView, setCfView] = useState("CF");
+
+  const t = dark ? TH.dark : TH.light;
+  const isSummary = activeView === "summary";
+  const isLeadership = activeView === "leadership";
+  const isPricing = activeView === "pricing";
+  const isC = isSummary;
+  const showL = isLeadership || isPricing;
+  const sc = t.yellow; // ITERATE = yellow
+  const CF = D.counterfactual;
+
+  // Block 1: Pre-formatted MDE values
+  const goalClean = { vol: "+15% opd", bench: "< 5pp gap", gm: "≥ 75%", cr: "+0.5pp+", ratio: "≥ 1.62x" };
+  const resultClean = { vol: "-5.6%", bench: "+14.5 / -9.4pp", gm: "84.73%", cr: "+1.43pp (n.s.)", ratio: "1.75x avg" };
+
+  // Collapsed summary one-liner
+  const collapsedSummary = `ITERATE · Full rollback · 1/5 MDE · -€3,701/day`;
+
+  // Scroll helper for composition table
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+  // Table cell style
+  const td = { padding: "6px 10px", fontSize: 11, fontFamily: MN, borderBottom: "1px solid " + t.border };
+  const th_ = { ...td, fontWeight: 700, fontSize: 10, color: t.textDim, fontFamily: UI };
+
+  return <div className="v2-container" style={{ fontFamily: UI, background: t.bg, color: t.text, minHeight: "100vh" }}>
+    <style>{V2_CSS}</style>
+
+    {/* ════ HEADER ════ */}
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, animation: "fadeIn .3s ease both" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <span style={{ fontSize: 26 }}>{D.flag}</span>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+            <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0, fontFamily: UI }}>{D.code}</h1>
+            <Pill color={sc}>{D.signal.toUpperCase()}</Pill>
+          </div>
+          <div style={{ fontSize: 15, color: t.text, fontWeight: 500, lineHeight: 1.3 }}>{D.name}</div>
+        </div>
+      </div>
+    </div>
+    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
+      <Pill color="#1E3A5F" bg="#BFEBFF">{D.category}</Pill>
+      <span style={{ fontSize: 11, color: t.textDim }}>{D.jira} · {D.revScope} · {D.causalConfidence} confidence · {D.totalOrders.toLocaleString()} {tx(lang, "orders", "órdenes")}</span>
+      <a href={D.notion} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: t.accent, textDecoration: "none" }}>Notion ↗</a>
+    </div>
+
+    {/* ════ STICKY CONTROLS — CF/14d toggle in ALL views ════ */}
+    <div style={{ position: "sticky", top: 0, zIndex: 20, background: t.bg, borderBottom: "1px solid " + t.border, padding: "8px 0", marginBottom: 8, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+      <button onClick={() => setDark(!dark)} style={{ background: "none", border: "1px solid " + t.border, borderRadius: 8, padding: "6px 12px", fontSize: 12, cursor: "pointer", fontFamily: UI, color: t.textDim }}>{dark ? "Light" : "Dark"}</button>
+      <button onClick={() => setLang(lang === "en" ? "es" : "en")} style={{ background: "none", border: "1px solid " + t.border, borderRadius: 8, padding: "6px 12px", fontSize: 12, cursor: "pointer", fontFamily: UI, color: t.textDim }}>{lang === "en" ? "ES" : "EN"}</button>
+      <div style={{ width: 1, height: 20, background: t.border }} />
+      {["summary", "leadership", "pricing"].map(v => {
+        const labels = { summary: "Summary", leadership: "Leadership", pricing: "Pricing" };
+        const colors = { summary: t.textDim, leadership: t.green, pricing: t.accent };
+        const isActive = activeView === v;
+        return <button key={v} onClick={() => setActiveView(v)} style={{
+          background: isActive ? colors[v] + "10" : "transparent",
+          border: `1px solid ${isActive ? colors[v] : t.border}`,
+          borderRadius: 8, padding: "6px 12px", fontSize: 11, cursor: "pointer",
+          fontFamily: UI, color: isActive ? colors[v] : t.textDim, fontWeight: isActive ? 700 : 500,
+        }}>{labels[v]}</button>;
+      })}
+      <div style={{ width: 1, height: 20, background: t.border }} />
+      {["CF", "14d"].map(v => {
+        const isActive = cfView === v;
+        const vc = v === "CF" ? t.accent : t.yellow;
+        const label = v === "CF" ? "vs CF" : "vs 14d pre";
+        return <button key={v} onClick={() => setCfView(v)} style={{
+          padding: "5px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, fontFamily: MN,
+          cursor: "pointer", border: "1px solid " + (isActive ? vc : t.border),
+          background: isActive ? vc + "12" : "transparent", color: isActive ? vc : t.textDim,
+        }}>{label}</button>;
+      })}
+    </div>
+
+    {/* ════ TIMELINE BAR ════ */}
+    <Timeline t={t} />
+
+    {/* ═══════════════════════════════════════════════════════════════════════
+        SUMMARY VIEW
+    ═══════════════════════════════════════════════════════════════════════ */}
+    {isSummary && <div style={{ animation: "fadeUp .4s ease both" }}>
+
+      {/* Block 1: Question Answered — yellow border, no emoji, no pill */}
+      <div style={{ padding: "12px 16px", borderRadius: 10, borderLeft: `4px solid ${sc}`, background: t.yBg, border: `1px solid ${t.yBdr}`, marginBottom: 12 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text, marginBottom: 4 }}>{tx(lang, "Is price actually a conversion barrier in Thailand?", "¿El precio es realmente una barrera de conversión en Thailand?")}</div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6 }}>{tx(lang, D.questionAnswered.h1_answer.en, D.questionAnswered.h1_answer.es)}</div>
+        <div style={{ fontSize: 10, color: t.textMuted, marginTop: 6 }}>{tx(lang, "Full answer in Leadership →", "Respuesta completa en Leadership →")}</div>
+      </div>
+
+      {/* Block 2: Signal + Headline */}
+      <div style={{ padding: "16px 20px", borderRadius: 12, background: `linear-gradient(135deg, ${sc}08, ${sc}03)`, border: "1px solid " + sc + "20", borderLeft: "4px solid " + sc, marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+          <span style={{ fontWeight: 800, fontSize: 20, color: sc }}>{tx(lang, "Iterate.", "Iterar.")}</span>
+          <Pill color={sc}>{D.signal.toUpperCase()}</Pill>
+        </div>
+        <Hl parts={tx(lang, D.summary.en.headline, D.summary.es.headline)} t={t} />
+      </div>
+
+      {/* Block 3: Metric Cards — what happened (NOT MDE pass/fail) */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginBottom: 12 }} className="g4">
+        {[
+          { label: tx(lang, "Revenue/day", "Revenue/día"), value: "€19.206", delta: "-€3.701/d vs 14d pre", sub: tx(lang, "10,542 orders in 14 clean days", "10.542 órdenes en 14 días limpios"), c: t.red },
+          { label: tx(lang, "Break-Even", "Break-Even"), value: "0/4", delta: tx(lang, "Closest: 8-14d (11.4pp gap)", "Más cercano: 8-14d (11.4pp gap)"), sub: tx(lang, "No bucket compensated the price cut", "Ningún bucket compensó el recorte"), c: t.red },
+          { label: "ARPU vs CF", value: "€4,07", delta: "-5.6% vs projected", sub: "p=0.328 (n.s.)", c: t.yellow },
+          { label: tx(lang, "Gross Margin", "Margen Bruto"), value: "84,73%", delta: "+1.98pp (cost-driven)", sub: tx(lang, "NOT attributable to experiment", "NO atribuible al experimento"), c: t.yellow },
+        ].map((m, i) => (
+          <div key={i} style={{ padding: "12px 14px", borderRadius: 10, background: t.card, border: "1px solid " + t.border, borderLeft: "3px solid " + m.c, animation: `pop .4s cubic-bezier(.34,1.56,.64,1) ${i * .06}s both` }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: t.textDim, marginBottom: 6 }}>{m.label}</div>
+            <div style={{ fontSize: 22, fontWeight: 800, fontFamily: MN, color: m.c, lineHeight: 1 }}>{m.value}</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: m.c, marginTop: 4 }}>{m.delta}</div>
+            {m.sub && <div style={{ fontSize: 9, color: t.textMuted, marginTop: 4 }}>{m.sub}</div>}
+          </div>
+        ))}
+      </div>
+
+      {/* Block 4: Action */}
+      <div style={{ padding: "12px 16px", borderRadius: 10, borderLeft: "4px solid " + t.red, background: t.rBg + "40", marginBottom: 12, border: "1px solid " + t.red + "20" }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text }}>{tx(lang, "Full rollback to pre-experiment pricing", "Rollback completo a precios pre-experimento")}</div>
+        <div style={{ fontSize: 11, color: t.textDim, marginTop: 4, lineHeight: 1.5 }}>{tx(lang, "Coordinate with Sebas via Jira. Re-test during Songkran (mid-April).", "Coordinar con Sebas via Jira. Re-testear durante Songkran (mediados de abril).")}</div>
+      </div>
+
+      {/* Block 5: Strategic Reading — 2 titled paragraphs in Summary */}
+      <div style={{ padding: "16px 20px", borderRadius: 12, background: t.accent + "05", border: "1px solid " + t.accent + "15", borderLeft: "3px solid " + t.accent }}>
+        <div style={{ fontSize: 9, fontWeight: 700, color: t.accent, letterSpacing: 1.5, marginBottom: 12 }}>{tx(lang, "STRATEGIC READING", "LECTURA ESTRATÉGICA")}</div>
+
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text, lineHeight: 1.5, marginBottom: 8 }}>
+          {tx(lang, "Price is not the barrier for Thailand's core segment.", "El precio no es la barrera para el segmento core de Thailand.")}
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 16 }}>
+          {lang === "en" ? <>We cut prices across all Thailand plans. For the largest segment — 8-14d plans representing <strong style={{ color: t.text }}>41% of revenue</strong> — a <strong style={{ color: t.red }}>-13.7% price cut</strong> produced insufficient volume response: <strong style={{ color: t.red }}>+2.7% vs the +14.1% needed</strong> to break even. The traveler buying 8-14 days is already committed. Something else drives that decision. Revenue declined <strong style={{ color: t.red }}>-€3,701/day</strong> across all segments, with <strong style={{ color: t.red }}>0 of 4 meaningful buckets</strong> reaching break-even.</> : <>Recortamos precios en todos los planes Thailand. Para el segmento más grande — planes 8-14d representando <strong style={{ color: t.text }}>41% del revenue</strong> — un <strong style={{ color: t.red }}>recorte de -13.7%</strong> produjo respuesta insuficiente: <strong style={{ color: t.red }}>+2.7% vs +14.1% necesario</strong>. El viajero de 8-14d ya está comprometido. Revenue cayó <strong style={{ color: t.red }}>-€3.701/día</strong>, con <strong style={{ color: t.red }}>0 de 4 buckets</strong> alcanzando break-even.</>}
+        </div>
+
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text, lineHeight: 1.5, marginBottom: 8 }}>
+          {tx(lang, "The season, not the price, drove most of the decline.", "La temporada, no el precio, causó la mayor parte de la caída.")}
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7 }}>
+          {lang === "en" ? <>Thailand was losing <strong style={{ color: t.text }}>~5%/week</strong> of revenue for 6 weeks before the experiment — peak season ending. The CF model cannot separate a moderate price effect from this seasonal noise (p=0.328). The total -16.2% decline is <strong style={{ color: t.text }}>~11% seasonal + 0-5% price-driven</strong>. The experiment didn't damage the business. It revealed that price is not the lever we assumed.</> : <>Thailand perdía <strong style={{ color: t.text }}>~5%/semana</strong> durante 6 semanas antes del experimento. El modelo CF no puede separar un efecto moderado de precio del ruido estacional (p=0.328). El -16.2% total es <strong style={{ color: t.text }}>~11% estacional + 0-5% por precio</strong>. El experimento no dañó el negocio. Reveló que el precio no es la palanca que asumíamos.</>}
+        </div>
+
+        <div style={{ fontSize: 10, color: t.textMuted, borderTop: `1px solid ${t.border}30`, paddingTop: 10, lineHeight: 1.5, marginTop: 16 }}>
+          {tx(lang, "Switch to Leadership for the evidence behind these conclusions.", "Cambiar a Leadership para la evidencia detrás de estas conclusiones.")}
+        </div>
+      </div>
+    </div>}
+
+    {/* ═══════════════════════════════════════════════════════════════════════
+        LEADERSHIP VIEW
+    ═══════════════════════════════════════════════════════════════════════ */}
+    {isLeadership && <div style={{ animation: "fadeUp .4s ease both" }}>
+
+      {/* Collapsed Summary */}
+      <Xp title={collapsedSummary} desc={tx(lang, "Expand to see Summary view", "Expandir para ver vista Summary")} defaultOpen={false} t={t}>
+        <div style={{ padding: "8px 0" }}>
+          <div style={{ padding: "10px 14px", borderRadius: 8, borderLeft: "4px solid " + sc, background: sc + "08", marginBottom: 8 }}>
+            <Hl parts={tx(lang, D.summary.en.headline, D.summary.es.headline)} t={t} size={12} />
+          </div>
+        </div>
+      </Xp>
+
+      {/* §1: Hypothesis + Status — always visible, NOT Xp */}
+      <div style={{ padding: "10px 16px", borderRadius: 8, background: t.card, border: "1px solid " + t.border, borderLeft: "3px solid " + t.accent, marginBottom: 10 }}>
+        <strong style={{ color: t.accent, fontSize: 12 }}>H1:</strong>{" "}
+        <span style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6 }}>{tx(lang, D.text.en.h1, D.text.es.h1)}</span>{" "}
+        <strong style={{ color: t.red, fontSize: 12 }}>{tx(lang, "Rejected.", "Rechazada.")}</strong>
+      </div>
+
+      {/* §2: Strategic Reading — 3 titled paragraphs, always visible */}
+      <div style={{ padding: "16px 20px", borderRadius: 12, background: t.accent + "05", border: "1px solid " + t.accent + "15", borderLeft: "3px solid " + t.accent, marginBottom: 10 }}>
+        <div style={{ fontSize: 9, fontWeight: 700, color: t.accent, letterSpacing: 1.5, marginBottom: 12 }}>{tx(lang, "STRATEGIC READING", "LECTURA ESTRATÉGICA")}</div>
+
+        {/* P1: Core finding */}
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text, lineHeight: 1.5, marginBottom: 8 }}>
+          {tx(lang, "Price is not the barrier for Thailand's core segment.", "El precio no es la barrera para el segmento core de Thailand.")}
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 16 }}>
+          {lang === "en" ? <>We cut prices across all Thailand plans. For the largest segment — 8-14d plans representing <strong style={{ color: t.text }}>41% of revenue</strong> — a <strong style={{ color: t.red }}>-13.7% price cut</strong> produced insufficient volume response: <strong style={{ color: t.red }}>+2.7% vs the +14.1% needed</strong> to break even. The traveler buying 8-14 days is already committed. Something else drives that decision. Revenue declined <strong style={{ color: t.red }}>-€3,701/day</strong> across all segments, with <strong style={{ color: t.red }}>0 of 4 meaningful buckets</strong> reaching break-even.</> : <>Recortamos precios en todos los planes Thailand. Para el segmento más grande — planes 8-14d representando <strong style={{ color: t.text }}>41% del revenue</strong> — un <strong style={{ color: t.red }}>recorte de -13.7%</strong> produjo respuesta insuficiente: <strong style={{ color: t.red }}>+2.7% vs +14.1% necesario</strong>. El viajero de 8-14d ya está comprometido. Revenue cayó <strong style={{ color: t.red }}>-€3.701/día</strong>, con <strong style={{ color: t.red }}>0 de 4 buckets</strong> alcanzando break-even.</>}
+        </div>
+
+        {/* P2 Leadership: Season + 8-14d robustness */}
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text, lineHeight: 1.5, marginBottom: 8 }}>
+          {tx(lang, "The season dominated, but the 8-14d finding is robust.", "La temporada dominó, pero el hallazgo 8-14d es robusto.")}
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 16 }}>
+          {lang === "en" ? <>Thailand was losing <strong style={{ color: t.text }}>~5%/week</strong> for 6 weeks pre-launch. Three projection methods agree that revenue fell below every forecast — but disagree on how much is seasonal vs price-driven (range: <strong style={{ color: t.red }}>-€421/day</strong> CF to <strong style={{ color: t.red }}>-€2,449/day</strong> trend). What IS clear: <strong style={{ color: t.text }}>8-14d volume was stable</strong> (+2.7%) despite a meaningful price cut. This is the cleanest signal in the experiment. The traveler buying 8-14d is <strong style={{ color: t.text }}>price-insensitive</strong> for this destination. The combined cost of maintaining lower prices with no volume response is <strong style={{ color: t.red }}>€2,406-€3,716/day</strong>.</> : <>Thailand perdía <strong style={{ color: t.text }}>~5%/semana</strong> durante 6 semanas. Tres métodos coinciden en que revenue cayó — pero discrepan en cuánto es estacional vs precio (rango: <strong style={{ color: t.red }}>-€421/día</strong> CF a <strong style={{ color: t.red }}>-€2.449/día</strong> tendencia). Lo que SÍ es claro: <strong style={{ color: t.text }}>el volumen 8-14d fue estable</strong> (+2.7%) pese a un recorte significativo. El viajero de 8-14d es <strong style={{ color: t.text }}>insensible al precio</strong>. Costo combinado de mantener precios más bajos: <strong style={{ color: t.red }}>€2.406-€3.716/día</strong>.</>}
+        </div>
+
+        {/* P3 Leadership: Confidence + next step */}
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text, lineHeight: 1.5, marginBottom: 8 }}>
+          {tx(lang, "Moderate confidence, with a clear next step.", "Confianza moderada, con un próximo paso claro.")}
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7 }}>
+          {lang === "en" ? <>Implementation was clean: AOV landed within 1-4pp of design in <strong style={{ color: t.text }}>every bucket</strong>. Parallel trends with Vietnam validated (CV 11.2%/15.5%). But the CF model reached <strong style={{ color: t.red }}>no significant result</strong> on any metric (p=0.111-0.874), and the Vietnam DID was <strong style={{ color: t.red }}>inconsistent</strong> (W2: +14.5pp, W3: -9.4pp). The recommendation: <strong style={{ color: t.text }}>full rollback</strong> + dedicated 1-7d experiment during <strong style={{ color: t.text }}>Songkran</strong> (mid-April) when ascending traffic would let us isolate price from season.</> : <>Implementación limpia: AOV dentro de 1-4pp del diseño en <strong style={{ color: t.text }}>cada bucket</strong>. Parallel trends validados (CV 11.2%/15.5%). Pero el modelo CF <strong style={{ color: t.red }}>no alcanzó significancia</strong> en ninguna métrica (p=0.111-0.874), y el DID Vietnam fue <strong style={{ color: t.red }}>inconsistente</strong> (W2: +14.5pp, W3: -9.4pp). Recomendación: <strong style={{ color: t.text }}>rollback completo</strong> + experimento dedicado 1-7d durante <strong style={{ color: t.text }}>Songkran</strong> (mediados de abril).</>}
+        </div>
+
+        {/* P4 Pricing only: Why 8-14d tells us something */}
+        {isPricing && <>
+          <div style={{ fontSize: 13, fontWeight: 700, color: t.text, lineHeight: 1.5, marginBottom: 8, marginTop: 16 }}>
+            {tx(lang, "Why 8-14d tells us something, and the rest doesn't — yet.", "Por qué 8-14d nos dice algo, y el resto no — aún.")}
+          </div>
+          <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7 }}>
+            {lang === "en" ? <>The <strong style={{ color: t.text }}>8-14d bucket</strong> is the most informative because: (a) it's 41% of revenue (large sample), (b) the price cut was meaningful (-13.7%, not a rounding error), (c) volume was STABLE (+2.7%) while all other segments declined. For <strong style={{ color: t.text }}>1-7d plans</strong>, the -20% cuts SHOULD have generated a visible response if price were a barrier, but the seasonal decline overwhelms any signal. We cannot conclude they're price-insensitive — we just can't see through the noise. For <strong style={{ color: t.text }}>15-30d</strong>, the treatment was only -3%, too small to detect anything against -5%/week seasonal decline.</> : <>El <strong style={{ color: t.text }}>bucket 8-14d</strong> es el más informativo porque: (a) es 41% del revenue, (b) el recorte fue significativo (-13.7%), (c) el volumen fue ESTABLE (+2.7%) mientras otros caían. Para <strong style={{ color: t.text }}>planes 1-7d</strong>, los recortes de -20% DEBERÍAN haber generado respuesta visible si el precio fuera barrera, pero la caída estacional domina. Para <strong style={{ color: t.text }}>15-30d</strong>, el tratamiento fue solo -3%, demasiado pequeño contra -5%/semana.</>}
+          </div>
+        </>}
+
+        <div style={{ fontSize: 10, color: t.textMuted, borderTop: `1px solid ${t.border}30`, paddingTop: 10, lineHeight: 1.5, marginTop: 16 }}>
+          {tx(lang, "Each conclusion is sourced from a different method and dataset. See sections below.", "Cada conclusión proviene de un método y dataset diferente. Ver secciones abajo.")}
+        </div>
+      </div>
+
+      {/* Block 3: KEY LEARNINGS with icons — Leadership+ only */}
+      <div style={{ borderRadius: 12, border: "1px solid " + t.border, overflow: "hidden", marginBottom: 12 }}>
+        <div style={{ padding: "12px 16px", background: t.card, borderBottom: "1px solid " + t.border }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1.2 }}>{tx(lang, "KEY LEARNINGS", "APRENDIZAJES CLAVE")}</div>
+        </div>
+        <div style={{ padding: "12px 16px" }}>
+          {[
+            { icon: "✗", c: t.red, text: tx(lang, "Price-per-Day reductions in Thailand did not generate compensating volume in any segment at D+14. The hypothesis that lower prices reduce the conversion barrier was rejected for 8-14d (41% of revenue) and inconclusive for other segments.", "Las reducciones de PPD en Thailand no generaron volumen compensatorio en ningún segmento a D+14. La hipótesis fue rechazada para 8-14d (41% del revenue) e inconclusa para otros segmentos.") },
+            { icon: "★", c: t.yellow, text: tx(lang, "The 8-14d traveler is price-insensitive for Thailand. A -13.7% cut moved volume +2.7% (needed +14.1%). This is the most robust finding — it persisted while all other segments declined. The conversion barrier for this segment is not price.", "El viajero 8-14d es insensible al precio. Un recorte de -13.7% movió el volumen +2.7% (necesitaba +14.1%). Es el hallazgo más robusto — persistió mientras otros caían.") },
+            { icon: "△", c: t.yellow, text: tx(lang, "14 days is insufficient to measure price effects during steep seasonal decline (~5%/week). Future experiments in seasonal markets need ascending traffic periods or longer windows.", "14 días es insuficiente durante caída estacional fuerte (~5%/semana). Futuros experimentos necesitan períodos de tráfico ascendente o ventanas más largas.") },
+          ].map((l, i) => <div key={i} style={{ display: "flex", gap: 10, marginBottom: 10, padding: "6px 0", borderBottom: i < 2 ? "1px solid " + t.border + "40" : "none" }}>
+            <span style={{ fontSize: 14, color: l.c, minWidth: 20 }}>{l.icon}</span>
+            <span style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7 }}>{l.text}</span>
+          </div>)}
+        </div>
+      </div>
+
+      {/* Block 8: COMPOSITION TABLE — how each conclusion was built */}
+      <div style={{ borderRadius: 12, border: "1px solid " + t.border, overflow: "hidden", marginBottom: 12 }}>
+        <div style={{ padding: "12px 16px", background: t.card, borderBottom: "1px solid " + t.border }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.textMuted, letterSpacing: 1.2 }}>{tx(lang, "HOW THIS READING WAS BUILT", "CÓMO SE CONSTRUYÓ ESTA LECTURA")}</div>
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Question","Pregunta"),tx(lang,"Result","Resultado"),tx(lang,"Conf.","Conf."),tx(lang,"Detail","Detalle")].map((h,i) => <th key={i} style={{ ...th_, textAlign: i === 0 ? "left" : "center" }}>{h}</th>)}</tr></thead>
+            <tbody>
+              {[
+                { q: tx(lang, "Is price a conversion barrier?", "¿El precio es barrera?"), src: tx(lang, "BQ break-even, 10,542 orders", "BQ break-even, 10.542 órdenes"), result: "0/4 break-even", rc: t.red, conf: "high", secId: "sec-breakeven" },
+                { q: tx(lang, "How much decline is price vs season?", "¿Cuánta caída es precio vs temporada?"), src: tx(lang, "Adobe CF, 100d training", "Adobe CF, 100d"), result: "p=0.328 (n.s.)", rc: t.yellow, conf: "low", secId: "sec-decomp" },
+                { q: tx(lang, "Did conversion improve?", "¿Mejoró la conversión?"), src: "Adobe Analytics, excl PS", result: "+1.43pp (n.s.)", rc: t.yellow, conf: "low", secId: "sec-cf" },
+                { q: tx(lang, "Is the benchmark consistent?", "¿Es consistente el benchmark?"), src: "BQ Tuesday DID, TH vs VN", result: "W2 +14.5 / W3 -9.4", rc: t.yellow, conf: "low", secId: "sec-vietnam" },
+                { q: tx(lang, "Was the setup clean?", "¿El setup fue limpio?"), src: "BQ + Adobe + Looker", result: "PASS", rc: t.green, conf: "high", secId: "sec-setup" },
+              ].map((row, i) => <tr key={i}>
+                <td style={{ ...td, fontFamily: UI }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: t.text }}>{row.q}</div>
+                  <div style={{ fontSize: 9, color: t.textMuted }}>{row.src}</div>
+                </td>
+                <td style={{ ...td, textAlign: "center", fontWeight: 700, color: row.rc }}>{row.result}</td>
+                <td style={{ ...td, textAlign: "center" }}>
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: row.conf === "high" ? t.green : t.red, display: "inline-block" }} />
+                </td>
+                <td style={{ ...td, textAlign: "center" }}>
+                  <button onClick={() => scrollTo(row.secId)} style={{ background: "none", border: "1px solid " + t.border, borderRadius: 4, padding: "2px 8px", fontSize: 10, cursor: "pointer", color: t.accent, fontFamily: UI }}>↓</button>
+                </td>
+              </tr>)}
+            </tbody>
+          </table>
+        </div>
+        {!isPricing && <div style={{ padding: "8px 16px", fontSize: 10, color: t.textMuted, borderTop: "1px solid " + t.border }}>
+          {tx(lang, "Some sections are only available in the Pricing view.", "Algunas secciones solo están disponibles en la vista Pricing.")}
+        </div>}
+      </div>
+
+      {/* Block 9: MDE Declaration as list rows (NOT cards) — Leadership */}
+      {isLeadership && <Xp title={tx(lang, "MDE Declaration", "Declaración MDE")} desc={tx(lang, "5 targets defined before launch", "5 objetivos definidos antes del lanzamiento")} defaultOpen={true} t={t}>
+        {D.mde.criteria.map((c, i) => {
+          const met = c.status === "met";
+          const cc = met ? t.green : t.red;
+          return <div key={i} style={{
+            display: "grid", gridTemplateColumns: "1fr 100px 140px 40px", gap: 8,
+            padding: "8px 14px", marginBottom: 3, borderRadius: 8,
+            background: met ? t.gBg : t.rBg + "40",
+            border: `1px solid ${met ? t.gBdr : t.red + "30"}`,
+            borderLeft: `4px solid ${cc}`, alignItems: "center",
+          }}>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{tx(lang, c.label_en, c.label_es)}</div>
+              <div style={{ fontSize: 10, color: t.textMuted, marginTop: 2 }}>{c.threshold}</div>
+            </div>
+            <div style={{ fontSize: 10, color: t.textDim, fontFamily: MN }}>{c.target}</div>
+            <div style={{ fontSize: 12, fontWeight: 700, fontFamily: MN, color: cc }}>{resultClean[c.id]}</div>
+            <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: cc }}>{met ? "✓" : "✗"}</div>
+          </div>;
+        })}
+        <div style={{ marginTop: 8, padding: "8px 14px", borderRadius: 6, background: t.yellow + "08", border: "1px solid " + t.yellow + "15", borderLeft: "3px solid " + t.yellow, display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 16, fontWeight: 800, fontFamily: MN, color: t.yellow }}>1/5</span>
+          <span style={{ fontSize: 11, color: t.textDim }}>{tx(lang, "1 MDE met (GM, cost-driven). 4 not met. No bucket broke even on volume.", "1 MDE cumplido (GM, por costos). 4 no cumplidos. Ningún bucket alcanzó break-even.")}</span>
+        </div>
+      </Xp>}
+
+      {/* §3: Goal Verification */}
+      <Xp title={tx(lang, "Goal Verification", "Verificación de Objetivos")} desc={tx(lang, "Pre-registered checks vs actual results", "Checks pre-registrados vs resultados")} defaultOpen={false} t={t}>
+        {D.checks.map((c, i) => {
+          const met = c.v === "met";
+          const cc = met ? t.green : t.red;
+          return <div key={i} style={{ padding: "8px 12px", marginBottom: 4, borderRadius: 8, borderLeft: `3px solid ${cc}`, background: met ? t.gBg : t.rBg + "40" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{tx(lang, c.en, c.es)}</div>
+                <div style={{ fontSize: 11, color: t.textDim, marginTop: 2, lineHeight: 1.5 }}>{tx(lang, c.r_en, c.r_es)}</div>
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 800, color: cc, minWidth: 20, textAlign: "right" }}>{met ? "✓" : "✗"}</span>
+            </div>
+          </div>;
+        })}
+      </Xp>
+
+      {/* §4: Break-Even Analysis ★ CENTRAL — defaultOpen */}
+      <Xp title={tx(lang, "Break-Even Analysis ★", "Análisis Break-Even ★")} desc={tx(lang, "Central evidence: did lower prices generate enough volume?", "Evidencia central: ¿los precios más bajos generaron suficiente volumen?")} defaultOpen={true} t={t} id="sec-breakeven">
+        {/* Graph 3: Break-Even Gap Bars */}
+        <div style={{ textAlign: "center", marginBottom: 12 }}>
+          <BreakEvenChart t={t} />
+        </div>
+        {/* Table */}
+        <div style={{ overflowX: "auto", marginBottom: 10 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr>{[tx(lang,"Bucket","Bucket"),tx(lang,"Price Cut","Recorte"),tx(lang,"Vol Required","Vol Req"),tx(lang,"Vol Actual","Vol Real"),tx(lang,"Gap","Gap"),tx(lang,"Cost/Day","Costo/Día"),tx(lang,"Cost 14d","Costo 14d")].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {D.breakEven.map((r, i) => <tr key={i} style={{ background: r.critical ? t.yBg : "transparent" }}>
+                <td style={{ ...td, color: t.text, fontWeight: r.critical ? 700 : 500, fontFamily: UI }}>{r.b}{r.critical && " ★"}</td>
+                <td style={td}>{r.priceCut}%</td>
+                <td style={td}>+{r.beRequired}%</td>
+                <td style={{ ...td, color: r.met ? t.green : t.red }}>{r.volActual > 0 ? "+" : ""}{r.volActual}%</td>
+                <td style={{ ...td, color: r.met ? t.green : t.red, fontWeight: 700 }}>{r.gap > 0 ? "+" : ""}{r.gap}pp</td>
+                <td style={td}>€{Math.abs(r.revCostDay).toLocaleString("de-DE")}</td>
+                <td style={{ ...td, color: r.revCost14d > 0 ? t.green : t.red }}>{r.revCost14d > 0 ? "+" : "-"}€{Math.abs(r.revCost14d).toLocaleString("de-DE")}</td>
+              </tr>)}
+            </tbody>
+          </table>
+        </div>
+        {/* 8-14d callout */}
+        <Note bg={t.yBg} bdr={t.yBdr} ac={t.yellow} strong={tx(lang, "8-14d: 41% of revenue", "8-14d: 41% del revenue")} t={t}>
+          {tx(lang, "-13.7% price cut. +2.7% volume (needed +14.1%). The traveler buying 8-14d is already committed.", "-13.7% recorte. +2.7% volumen (necesitaba +14.1%). El viajero de 8-14d ya está comprometido.")}
+        </Note>
+        {/* 15-30d warning */}
+        <Note bg={t.card} bdr={t.border} ac={t.textMuted} t={t}>
+          {tx(lang, "15-30d: Volume decline (-16.2%) mostly seasonal. Treatment was only -3% price change.", "15-30d: Caída de volumen mayormente estacional. Tratamiento fue solo -3%.")}
+        </Note>
+      </Xp>
+
+      {/* §5: Seasonal Context */}
+      <Xp title={tx(lang, "Seasonal Context", "Contexto Estacional")} desc={tx(lang, "Thailand was declining before the experiment started", "Thailand ya estaba cayendo antes del experimento")} defaultOpen={false} t={t}>
+        <div style={{ textAlign: "center", marginBottom: 12 }}>
+          <SeasonalChart t={t} lang={lang} />
+        </div>
+        <div style={{ overflowX: "auto", marginBottom: 10 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Week","Semana"),tx(lang,"Revenue","Revenue"),"WoW%"].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{D.seasonalContext.weeklyRevenue.map((r,i) => <tr key={i}>
+              <td style={{ ...td, fontFamily: UI }}>{r.week}</td>
+              <td style={td}>€{Math.round(r.th).toLocaleString("de-DE")}</td>
+              <td style={{ ...td, color: r.wow != null ? t.red : t.textMuted }}>{r.wow != null ? r.wow + "%" : "—"}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        <Note bg={t.yBg} bdr={t.yBdr} ac={t.yellow} t={t}>
+          {tx(lang, D.summary.en.caveat, D.summary.es.caveat)}
+        </Note>
+      </Xp>
+
+      {/* §6: Sensitivity Analysis */}
+      <Xp title={tx(lang, "Sensitivity Analysis", "Análisis de Sensibilidad")} desc={tx(lang, "Multiple projection methods — do they agree?", "Múltiples métodos de proyección — ¿coinciden?")} defaultOpen={false} t={t}>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Method","Método"),tx(lang,"Projected","Proyectado"),tx(lang,"Actual","Real"),tx(lang,"Gap","Gap"),"%"].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{Object.entries(CF.sensitivity).map(([k, s], i) => {
+              const isPrimary = k === "trend";
+              return <tr key={i} style={{ background: isPrimary ? t.yBg : "transparent" }}>
+                <td style={{ ...td, fontFamily: UI, fontWeight: isPrimary ? 700 : 400 }}>{tx(lang, s.label_en, s.label_es)}{isPrimary && " ★"}</td>
+                <td style={td}>€{Math.round(s.projected).toLocaleString("de-DE")}</td>
+                <td style={td}>€{Math.round(s.real).toLocaleString("de-DE")}</td>
+                <td style={{ ...td, color: t.red }}>{s.delta > 0 ? "+" : "-"}€{Math.abs(s.delta).toLocaleString("de-DE")}</td>
+                <td style={{ ...td, color: t.red }}>{s.deltaPct}</td>
+              </tr>;
+            })}</tbody>
+          </table>
+        </div>
+        <Note bg={t.card} bdr={t.border} t={t}>
+          {tx(lang, "All three methods agree: revenue declined. They disagree on how much. Range: -11.3% (trend, most conservative) to -32.2% (flat average, includes full seasonal effect).", "Los tres métodos coinciden: revenue cayó. Discrepan en cuánto. Rango: -11.3% a -32.2%.")}
+        </Note>
+      </Xp>
+
+      {/* §7: Revenue Decomposition — 3-row flow */}
+      <Xp title={tx(lang, "Revenue Decomposition", "Descomposición de Revenue")} desc={tx(lang, "Breaking the total gap into seasonal vs price-driven", "Separando el gap total en estacional vs precio")} defaultOpen={false} t={t} id="sec-decomp">
+        <div style={{ marginBottom: 12 }}>
+          {[
+            { label: tx(lang, "Total gap (14d)", "Gap total (14d)"), value: "-€51,815", color: t.red, size: 18 },
+            { label: tx(lang, "Of which seasonal", "De lo cual estacional"), value: "~€17,500 – €46,000", color: t.yellow, size: 15 },
+            { label: tx(lang, "Of which price-driven", "De lo cual por precio"), value: "~€5,900 – €34,290", color: t.red, size: 15, sub: "p=0.328" },
+          ].map((row, i) => <div key={i} style={{
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+            padding: "10px 14px", borderLeft: `4px solid ${row.color}`,
+            background: i === 0 ? row.color + "08" : "transparent",
+            borderBottom: i < 2 ? "1px solid " + t.border : "none",
+          }}>
+            <span style={{ fontSize: 12, color: t.textDim }}>{i > 0 && "↳ "}{row.label}</span>
+            <div style={{ textAlign: "right" }}>
+              <span style={{ fontSize: row.size, fontWeight: 800, fontFamily: MN, color: row.color }}>{row.value}</span>
+              {row.sub && <div style={{ fontSize: 9, color: t.textMuted }}>{row.sub}</div>}
+            </div>
+          </div>)}
+        </div>
+        <div className="g2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+          <MC label={tx(lang, "CF-attributable/day", "CF-atribuible/día")} value="-€421" sub="p=0.328" c={t.red} bdr={t.red} t={t} />
+          <MC label={tx(lang, "Trend gap/day (worst case)", "Gap tendencia/día (peor caso)")} value="-€2,449" c={t.red} bdr={t.red} t={t} />
+        </div>
+        <Note bg={t.card} bdr={t.border} t={t}>{tx(lang, CF.revenueDecomposition.note_en, CF.revenueDecomposition.note_es)}</Note>
+      </Xp>
+
+      {/* §8: Vietnam Benchmark (Tuesday DID) */}
+      <Xp title={tx(lang, "Vietnam Benchmark — Tuesday DID", "Benchmark Vietnam — DID Martes")} desc={tx(lang, "Same-day comparison: is Thailand underperforming its benchmark?", "Comparación mismo día: ¿Thailand rinde menos que su benchmark?")} defaultOpen={false} t={t} id="sec-vietnam">
+        <div style={{ textAlign: "center", marginBottom: 12 }}>
+          <TuesdayChart t={t} />
+        </div>
+        <div style={{ overflowX: "auto", marginBottom: 10 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Date","Fecha"),tx(lang,"Period","Período"),"TH Rev","VN Rev","Ratio","DID"].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{D.tuesdays.map((r,i) => {
+              const isPre = r.period === "PRE";
+              return <tr key={i} style={{ opacity: isPre ? 0.7 : 1 }}>
+                <td style={{ ...td, fontFamily: UI }}>{r.date}</td>
+                <td style={td}>{r.period}</td>
+                <td style={td}>€{r.th.toLocaleString("de-DE")}</td>
+                <td style={td}>€{r.vn.toLocaleString("de-DE")}</td>
+                <td style={{ ...td, fontWeight: 700, color: r.ratio >= 1.62 ? t.green : t.red }}>{r.ratio.toFixed(2)}x</td>
+                <td style={{ ...td, color: r.did != null ? (r.did > 0 ? t.green : t.red) : t.textMuted }}>{r.did != null ? (r.did > 0 ? "+" : "") + r.did + "pp" : "—"}</td>
+              </tr>;
+            })}</tbody>
+          </table>
+        </div>
+        <Note bg={t.yBg} bdr={t.yBdr} ac={t.yellow} t={t}>
+          {tx(lang, D.benchmarkPost.note_en, D.benchmarkPost.note_es)}
+        </Note>
+      </Xp>
+
+      {/* §9: Gross Margin */}
+      <Xp title={tx(lang, "Gross Margin", "Margen Bruto")} desc={tx(lang, "Stable but NOT attributable to experiment", "Estable pero NO atribuible al experimento")} defaultOpen={false} t={t}>
+        <div className="g3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 10 }}>
+          {D.gm.timeline.map((g, i) => <MC key={i} label={g.d} value={g.v + "%"} sub={g.n ? tx(lang, g.n.en, g.n.es) : null} c={t.textDim} bdr={t.textDim} t={t} />)}
+        </div>
+        <Note bg={t.yBg} bdr={t.yBdr} ac={t.yellow} strong={tx(lang, "NOT attributable to experiment", "NO atribuible al experimento")} t={t}>
+          {tx(lang, D.gm.attribution.en, D.gm.attribution.es)}
+        </Note>
+        <div style={{ overflowX: "auto", marginTop: 10 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Bucket","Bucket"),"GM Pre","GM Post","Δ GM",tx(lang,"Cost Pre","Costo Pre"),tx(lang,"Cost Post","Costo Post")].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{D.gm.byBucket.map((r,i) => <tr key={i}>
+              <td style={{ ...td, fontFamily: UI }}>{r.name}</td>
+              <td style={td}>{r.gmPre}%</td>
+              <td style={td}>{r.gmPost}%</td>
+              <td style={{ ...td, color: r.gmDelta >= 0 ? t.green : t.red }}>{r.gmDelta > 0 ? "+" : ""}{r.gmDelta}pp</td>
+              <td style={td}>€{r.costPre.toFixed(2)}</td>
+              <td style={{ ...td, color: r.costPost < r.costPre ? t.green : t.textDim }}>€{r.costPost.toFixed(2)}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        <Note bg={t.card} bdr={t.border} t={t}>{tx(lang, D.gm.caveat.en, D.gm.caveat.es)}</Note>
+      </Xp>
+
+      {/* §10: Recommendation Detail */}
+      <Xp title={tx(lang, "Recommendation Detail", "Detalle de Recomendación")} desc={tx(lang, "Full action plan with rationale", "Plan de acción completo con justificación")} defaultOpen={false} t={t}>
+        {tx(lang, D.summary.en.action, D.summary.es.action).map((p, i) => <div key={i} style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 10 }}>{p}</div>)}
+        <Note bg={t.purple + "08"} bdr={t.purple + "30"} ac={t.purple} strong={tx(lang, "Decision Rationale", "Justificación de Decisión")} t={t}>
+          {tx(lang, D.decisionRationale.en, D.decisionRationale.es)}
+        </Note>
+        <div style={{ marginTop: 12 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: t.textDim, marginBottom: 6 }}>{tx(lang, "Next Steps", "Siguientes Pasos")}</div>
+          {[
+            { date: "ASAP", action: tx(lang, "Full rollback to pre-experiment pricing (Jira + Sebas)", "Rollback completo (Jira + Sebas)") },
+            { date: "Apr 24", action: tx(lang, "D+30 validation: post-rollback revenue recovery + full COGS", "D+30: validación post-rollback + COGS completo") },
+            { date: "Mid-April", action: tx(lang, "Design dedicated 1-7d Songkran experiment", "Diseñar experimento dedicado 1-7d Songkran") },
+          ].map((s, i) => <div key={i} style={{ display: "flex", gap: 10, padding: "4px 0", borderBottom: "1px solid " + t.border }}>
+            <span style={{ fontSize: 11, fontFamily: MN, color: t.accent, minWidth: 80 }}>{s.date}</span>
+            <span style={{ fontSize: 11, color: t.textDim }}>{s.action}</span>
+          </div>)}
+        </div>
+      </Xp>
+    </div>}
+
+    {/* ═══════════════════════════════════════════════════════════════════════
+        PRICING VIEW
+    ═══════════════════════════════════════════════════════════════════════ */}
+    {isPricing && <div style={{ animation: "fadeUp .4s ease both" }}>
+
+      {/* Collapsed Summary */}
+      <Xp title={collapsedSummary} desc="Summary" defaultOpen={false} t={t}>
+        <Hl parts={tx(lang, D.summary.en.headline, D.summary.es.headline)} t={t} size={12} />
+      </Xp>
+
+      {/* Collapsed Leadership sections */}
+      <Xp title={tx(lang, "Leadership Evidence (expand for details)", "Evidencia Leadership (expandir para detalles)")} defaultOpen={false} t={t}>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.6 }}>
+          {tx(lang, "Contains: Hypothesis, Strategic Reading, Goal Verification, Break-Even Analysis, Seasonal Context, Sensitivity, Revenue Decomposition, Vietnam DID, Gross Margin, Recommendation. Switch to Leadership view for full interactive version.", "Contiene: Hipótesis, Lectura Estratégica, Verificación de Objetivos, Break-Even, Contexto Estacional, Sensibilidad, Descomposición de Revenue, DID Vietnam, GM, Recomendación. Cambiar a vista Leadership para versión interactiva completa.")}
+        </div>
+      </Xp>
+
+      {/* ──── PRICING-SPECIFIC SECTIONS ──── */}
+
+      {/* P1: Learning Pills */}
+      <Xp title={tx(lang, "Learning Pills", "Píldoras de Aprendizaje")} desc={tx(lang, "What did we learn? Key findings from this experiment.", "¿Qué aprendimos? Hallazgos clave.")} defaultOpen={true} t={t}>
+        {tx(lang, D.summary.en.learnings, D.summary.es.learnings)
+          .filter(l => !l.views || l.views.includes(cfView))
+          .map((l, i) => {
+            const pillColor = l.color === "red" ? t.red : l.color === "yellow" ? t.yellow : l.color === "green" ? t.green : t.textDim;
+            return <div key={i} style={{ padding: "8px 12px", borderLeft: `3px solid ${pillColor}`, marginBottom: 6, borderRadius: "0 6px 6px 0", background: pillColor + "06" }}>
+              <Pill color={pillColor}>{l.pill}</Pill>
+              <div style={{ fontSize: 11, color: t.textDim, marginTop: 4, lineHeight: 1.6 }}>{l.text}</div>
+            </div>;
+          })}
+      </Xp>
+
+      {/* P2: CF Model Details — TABLES FIRST */}
+      <Xp title={tx(lang, "Counterfactual Model Details", "Detalles del Modelo Contrafactual")} desc={tx(lang, "How did we measure what would have happened? Tables first, interpretation after.", "¿Cómo medimos lo que habría pasado? Tablas primero, interpretación después.")} defaultOpen={true} t={t} id="sec-cf">
+        {/* Table A: Excl PS */}
+        <div style={{ fontSize: 10, fontWeight: 700, color: t.textDim, marginBottom: 4 }}>{tx(lang, "EXCL PAID SOCIAL (PRIMARY)", "EXCL PAID SOCIAL (PRIMARIO)")}</div>
+        <div style={{ overflowX: "auto", marginBottom: 12 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Metric","Métrica"),tx(lang,"Projected","Proyectado"),tx(lang,"Actual","Real"),tx(lang,"Lift","Lift"),"p-value",tx(lang,"Significant?","¿Significativo?")].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{Object.entries(CF.adobeCf.excl_ps).map(([k, v], i) => <tr key={i}>
+              <td style={{ ...td, fontFamily: UI, fontWeight: 700 }}>{k.toUpperCase()}</td>
+              <td style={td}>{k === "arpu" ? "€" : ""}{v.projected}{k === "cr" ? "%" : ""}</td>
+              <td style={td}>{k === "arpu" ? "€" : ""}{v.actual}{k === "cr" ? "%" : ""}</td>
+              <td style={{ ...td, color: t.textMuted }}>{v.lift}</td>
+              <td style={td}>{v.p}</td>
+              <td style={{ ...td, color: t.textMuted }}>{tx(lang, "No", "No")}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        {/* Table B: Blended */}
+        <div style={{ fontSize: 10, fontWeight: 700, color: t.textDim, marginBottom: 4 }}>{tx(lang, "BLENDED (ALL TRAFFIC)", "BLENDED (TODO EL TRÁFICO)")}</div>
+        <div style={{ overflowX: "auto", marginBottom: 12 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Metric","Métrica"),tx(lang,"Projected","Proyectado"),tx(lang,"Actual","Real"),tx(lang,"Lift","Lift"),"p-value",tx(lang,"Significant?","¿Significativo?")].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{Object.entries(CF.adobeCf.blended).map(([k, v], i) => <tr key={i}>
+              <td style={{ ...td, fontFamily: UI, fontWeight: 700 }}>{k.toUpperCase()}</td>
+              <td style={td}>{k === "arpu" ? "€" : ""}{v.projected}{k === "cr" ? "%" : ""}</td>
+              <td style={td}>{k === "arpu" ? "€" : ""}{v.actual}{k === "cr" ? "%" : ""}</td>
+              <td style={{ ...td, color: t.textMuted }}>{v.lift}</td>
+              <td style={td}>{v.p}</td>
+              <td style={{ ...td, color: t.textMuted }}>{tx(lang, "No", "No")}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        {/* Finding — AFTER tables */}
+        <div style={{ fontSize: 12, fontWeight: 700, color: t.text, marginBottom: 6 }}>{tx(lang, CF.adobeCf.finding_en, CF.adobeCf.finding_es)}</div>
+        {/* Method */}
+        <div style={{ fontSize: 11, color: t.textMuted, lineHeight: 1.6 }}>{tx(lang, CF.adobeCf.note_en, CF.adobeCf.note_es)}</div>
+      </Xp>
+
+      {/* P3: Parallel Trends */}
+      <Xp title={tx(lang, "Parallel Trends", "Tendencias Paralelas")} desc={tx(lang, "Can we trust Vietnam as a benchmark? Pre-period correlation check.", "¿Podemos confiar en Vietnam como benchmark?")} defaultOpen={false} t={t}>
+        <div className="g3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 10 }}>
+          <MC label="CV Orders" value={D.parallelTrends.stats.cvOrders + "%"} sub={tx(lang, "Threshold: <20%", "Umbral: <20%")} c={t.green} bdr={t.green} t={t} />
+          <MC label="CV Revenue" value={D.parallelTrends.stats.cvRevenue + "%"} sub={tx(lang, "Threshold: <20%", "Umbral: <20%")} c={t.green} bdr={t.green} t={t} />
+          <MC label={tx(lang, "Verdict", "Veredicto")} value="VALID ✓" c={t.green} bdr={t.green} t={t} />
+        </div>
+        <Note bg={t.yBg} bdr={t.yBdr} ac={t.yellow} t={t}>{tx(lang, D.parallelTrends.caveat.en, D.parallelTrends.caveat.es)}</Note>
+        <div style={{ fontSize: 11, color: t.textMuted, marginTop: 8, lineHeight: 1.5 }}>{tx(lang, D.parallelTrends.note_en, D.parallelTrends.note_es)}</div>
+      </Xp>
+
+      {/* P4: Elasticity */}
+      <Xp title={tx(lang, "Elasticity Explanation", "Explicación de Elasticidad")} desc={tx(lang, "Why we cannot calculate price elasticity from this experiment.", "Por qué no podemos calcular elasticidad de precio de este experimento.")} defaultOpen={false} t={t}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: t.text, marginBottom: 8 }}>{tx(lang, "Elasticity is not calculable for this experiment.", "La elasticidad no es calculable para este experimento.")}</div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 8 }}>
+          {tx(lang, "WHY: CF p-values are too high (0.111-0.874). Elasticity requires the model to isolate the price effect with statistical significance (p<0.05). The ~5%/week seasonal decline is so large that 14 days cannot separate what's seasonal from what's price-driven.", "POR QUÉ: Los p-values del CF son demasiado altos (0.111-0.874). La elasticidad requiere aislar el efecto de precio con significancia estadística (p<0.05). La caída estacional de ~5%/semana es tan grande que 14 días no pueden separar lo estacional de lo causado por precio.")}
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7, marginBottom: 8 }}>
+          {tx(lang, "Our p-values: 0.111 (blended ARPU) to 0.874 (blended CR). Required: <0.05. The gap exists because the seasonal noise overwhelms the price signal.", "Nuestros p-values: 0.111 (ARPU blended) a 0.874 (CR blended). Requerido: <0.05.")}
+        </div>
+        <div style={{ fontSize: 12, color: t.textDim, lineHeight: 1.7 }}>
+          {tx(lang, "Three conditions would fix this: (1) Re-test during ascending traffic (Songkran, mid-April), (2) Longer observation window (D+30+), or (3) A/B test infrastructure for clean randomization.", "Tres condiciones lo resolverían: (1) Re-testear en tráfico ascendente (Songkran), (2) Ventana más larga (D+30+), o (3) Infraestructura A/B.")}
+        </div>
+      </Xp>
+
+      {/* P5: Confidence — NOT hidden. Always visible. Intellectual honesty. */}
+      <div style={{ padding: "16px 20px", borderRadius: 12, background: t.yBg, border: "1px solid " + t.yBdr, marginBottom: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <div style={{ fontSize: 9, fontWeight: 700, color: t.yellow, letterSpacing: 1.5 }}>{tx(lang, "CONFIDENCE ASSESSMENT", "EVALUACIÓN DE CONFIANZA")}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ display: "flex", gap: 4 }}>
+              {Array.from({ length: 5 }).map((_, i) => <div key={i} style={{ width: 20, height: 10, borderRadius: 4, background: i < D.confidence.level ? t.yellow : t.border }} />)}
+            </div>
+            <span style={{ fontSize: 13, fontWeight: 800, fontFamily: MN, color: t.yellow }}>{D.confidence.level}/5</span>
+          </div>
+        </div>
+        <Hl parts={tx(lang, D.confidence.en.solid, D.confidence.es.solid)} t={t} size={13} />
+        {/* What we're sure of */}
+        <div style={{ marginTop: 12, padding: "10px 14px", borderLeft: "3px solid " + t.green, background: t.gBg, borderRadius: "0 8px 8px 0" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.green, marginBottom: 6 }}>{tx(lang, "WHAT WE'RE SURE OF", "DE QUÉ ESTAMOS SEGUROS")}</div>
+          {tx(lang, D.confidence.en.solid_items, D.confidence.es.solid_items).map((item, i) => <div key={i} style={{ fontSize: 11, color: t.textDim, lineHeight: 1.6, marginBottom: 2 }}>• {item}</div>)}
+        </div>
+        {/* What we're not sure of */}
+        <div style={{ marginTop: 8, padding: "10px 14px", borderLeft: "3px solid " + t.yellow, background: t.yBg, borderRadius: "0 8px 8px 0" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.yellow, marginBottom: 6 }}>{tx(lang, "WHAT WE'RE NOT SURE OF", "DE QUÉ NO ESTAMOS SEGUROS")}</div>
+          {tx(lang, D.confidence.en.uncertain_items, D.confidence.es.uncertain_items).map((item, i) => <div key={i} style={{ fontSize: 11, color: t.textDim, lineHeight: 1.6, marginBottom: 2 }}>• {item}</div>)}
+        </div>
+        {/* What would increase confidence */}
+        <div style={{ marginTop: 8, padding: "10px 14px", borderLeft: "3px solid " + t.purple, background: t.bBg, borderRadius: "0 8px 8px 0" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: t.purple, marginBottom: 6 }}>{tx(lang, "WHAT WOULD INCREASE CONFIDENCE", "QUÉ AUMENTARÍA LA CONFIANZA")}</div>
+          {tx(lang, D.confidence.en.improve, D.confidence.es.improve).map((item, i) => <div key={i} style={{ fontSize: 11, color: t.textDim, lineHeight: 1.6, marginBottom: 2 }}>• {item}</div>)}
+        </div>
+      </div>
+
+      {/* P6: Setup Validation */}
+      <Xp title={tx(lang, "Setup Validation", "Validación del Setup")} desc={tx(lang, "Was the experiment correctly set up? Data quality and confounders.", "¿El experimento se configuró correctamente?")} defaultOpen={false} t={t} id="sec-setup">
+        <div className="g3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 10 }}>
+          <MC label={tx(lang, "Sample Balance", "Balance de Muestra")} value={D.setupValidation.sampleBalance.status === "pass" ? "PASS ✓" : "FLAG"} sub={D.setupValidation.sampleBalance.note} c={t.green} bdr={t.green} t={t} />
+          <MC label={tx(lang, "Data Quality", "Calidad de Datos")} value={D.setupValidation.dataQuality.status === "pass" ? "PASS ✓" : "FLAG"} sub={D.setupValidation.dataQuality.note} c={t.green} bdr={t.green} t={t} />
+          <MC label={tx(lang, "Duration", "Duración")} value={D.setupValidation.durationCheck.actual + "d / " + D.setupValidation.durationCheck.planned + "d"} sub={tx(lang, "Full cycles: yes", "Ciclos completos: sí")} c={t.green} bdr={t.green} t={t} />
+        </div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: t.textDim, marginBottom: 6, marginTop: 8 }}>{tx(lang, "CONFOUNDERS", "CONFOUNDERS")}</div>
+        {D.setupValidation.confounders.map((c, i) => {
+          const statusColor = c.status === "dismissed" ? t.green : c.status === "active" ? t.red : t.yellow;
+          return <div key={i} style={{ padding: "6px 10px", marginBottom: 4, borderLeft: `3px solid ${statusColor}`, borderRadius: "0 6px 6px 0" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{c.name}</span>
+              <Pill color={statusColor}>{c.status.toUpperCase()}</Pill>
+            </div>
+            <div style={{ fontSize: 11, color: t.textDim, marginTop: 2 }}>{tx(lang, c.explanation_en, c.explanation_es)}</div>
+          </div>;
+        })}
+      </Xp>
+
+      {/* P7: AOV Implementation Check */}
+      <Xp title={tx(lang, "AOV Implementation Check", "Verificación de Implementación AOV")} desc={tx(lang, "Did prices land where designed? Proves clean execution.", "¿Los precios aterrizaron donde se diseñaron?")} defaultOpen={false} t={t}>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Bucket","Bucket"),tx(lang,"Baseline","Baseline"),tx(lang,"Post","Post"),"Δ%",tx(lang,"Designed","Diseñado"),tx(lang,"Match?","¿Match?"),tx(lang,"Orders","Órdenes")].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{D.aov.map((r,i) => <tr key={i} style={{ background: r.anomaly ? t.yBg : "transparent" }}>
+              <td style={{ ...td, fontFamily: UI }}>{r.b}</td>
+              <td style={td}>€{r.base.toFixed(2)}</td>
+              <td style={td}>€{r.post.toFixed(2)}</td>
+              <td style={{ ...td, color: t.textDim }}>{r.d90}</td>
+              <td style={td}>{r.designed}%</td>
+              <td style={{ ...td, color: r.chk === "ok" ? t.green : r.chk === "watch" ? t.yellow : t.red }}>{r.chk === "ok" ? "✓" : r.chk === "watch" ? "~" : "✗"}</td>
+              <td style={td}>{r.orders.toLocaleString("de-DE")}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+        {D.aov.filter(a => a.anomaly).map((a, i) => <Note key={i} bg={t.yBg} bdr={t.yBdr} ac={t.yellow} t={t}>{tx(lang, a.anomalyNote.en, a.anomalyNote.es)}</Note>)}
+      </Xp>
+
+      {/* P8: MDE with Thresholds — GC cards with GOAL/RESULT sizing */}
+      <Xp title={tx(lang, "MDE with Thresholds", "MDE con Umbrales")} desc={tx(lang, "Full goal cards with targets visible. Methodology reference.", "Tarjetas de objetivos completas con metas visibles.")} defaultOpen={false} t={t}>
+        <div className="v2-resp-grid5" style={{ display: "grid", gridTemplateColumns: `repeat(${D.mde.criteria.length}, 1fr)`, gap: 10, marginBottom: 10 }}>
+          {D.mde.criteria.map((c, i) => {
+            const met = c.status === "met";
+            const cc = met ? t.green : t.red;
+            const scBg = met ? t.gFill : t.red;
+            return <div key={i} className="v2-gc" style={{
+              background: `linear-gradient(135deg, ${scBg}06, ${t.card})`,
+              border: "1px solid " + t.border, borderLeft: "4px solid " + cc,
+              borderRadius: 12, padding: "20px 14px", textAlign: "center",
+              display: "flex", flexDirection: "column", alignItems: "center",
+              animation: `pop .4s cubic-bezier(.34,1.56,.64,1) ${i * .06}s both`,
+            }}>
+              <div style={{ fontSize: 11, color: t.textDim, fontWeight: 600, lineHeight: 1.3, height: 30, display: "flex", alignItems: "center" }}>{tx(lang, c.label_en, c.label_es)}</div>
+              <div style={{ fontSize: 8, color: t.textMuted, letterSpacing: 1.5, fontWeight: 700, marginTop: 8 }}>GOAL</div>
+              <div style={{ fontSize: 17, fontFamily: MN, fontWeight: 700, color: t.accent, height: 28, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>{goalClean[c.id]}</div>
+              <div style={{ borderTop: "1px dashed " + t.border, width: "50%", position: "relative", height: 14, marginTop: 4 }}>
+                <span style={{ position: "absolute", top: -5, left: "50%", transform: "translateX(-50%)", fontSize: 9, color: scBg + "80" }}>✦</span>
+              </div>
+              <div style={{ fontSize: 8, color: t.textMuted, letterSpacing: 1.5, fontWeight: 700 }}>RESULT</div>
+              <div style={{ fontSize: 18, fontFamily: MN, fontWeight: 700, color: cc, height: 28, display: "flex", alignItems: "center", animation: `numIn .5s ease ${i * .06 + .15}s both` }}>{resultClean[c.id]}</div>
+            </div>;
+          })}
+        </div>
+        <div style={{ marginTop: 8, padding: "8px 14px", borderRadius: 6, background: t.yellow + "08", border: "1px solid " + t.yellow + "15", borderLeft: "3px solid " + t.yellow, display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 16, fontWeight: 800, fontFamily: MN, color: t.yellow }}>1/5</span>
+          <span style={{ fontSize: 11, color: t.textDim }}>{tx(lang, "1 MDE met (GM, cost-driven — not attributable to experiment). 4 not met.", "1 MDE cumplido (GM, por costos — no atribuible al experimento). 4 no cumplidos.")}</span>
+        </div>
+        <div style={{ marginTop: 8, fontSize: 11, color: t.textMuted }}>{tx(lang, D.mde.note_en, D.mde.note_es)}</div>
+      </Xp>
+
+      {/* P9: Data Sources */}
+      <Xp title={tx(lang, "Data Sources", "Fuentes de Datos")} desc={tx(lang, "Audit trail: where every number comes from.", "Trazabilidad: de dónde viene cada número.")} defaultOpen={false} t={t}>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead><tr>{[tx(lang,"Source","Fuente"),tx(lang,"System","Sistema"),tx(lang,"Period","Período"),tx(lang,"Records","Registros")].map((h,i) => <th key={i} style={th_}>{h}</th>)}</tr></thead>
+            <tbody>{D.dataSources.map((s,i) => <tr key={i}>
+              <td style={{ ...td, fontFamily: UI }}>{s.name}</td>
+              <td style={{ ...td, fontSize: 10 }}>{s.system}</td>
+              <td style={td}>{s.period}</td>
+              <td style={td}>{s.records}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+      </Xp>
+
+      {/* P10: Open Gaps */}
+      <Xp title={tx(lang, "Open Gaps", "Gaps Abiertos")} desc={tx(lang, "What's still open and who owns it.", "Qué queda abierto y quién es responsable.")} defaultOpen={false} t={t}>
+        {D.gaps.map((g, i) => {
+          const typeColors = { DATA: t.yellow, METHODOLOGY: t.purple, CAUSAL: t.red, TEST: t.green, INFRASTRUCTURE: t.textDim };
+          return <div key={i} style={{ padding: "8px 12px", marginBottom: 6, borderLeft: `3px solid ${typeColors[g.type] || t.textMuted}`, borderRadius: "0 6px 6px 0" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+              <Pill color={typeColors[g.type] || t.textMuted}>{g.type}</Pill>
+              <span style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{tx(lang, g.en, g.es)}</span>
+            </div>
+            <div style={{ fontSize: 11, color: t.textDim }}>{tx(lang, g.why_en, g.why_es)}</div>
+            <div style={{ fontSize: 10, color: t.textMuted, marginTop: 2 }}>{g.owner} · {g.target} · {g.status}</div>
+          </div>;
+        })}
+      </Xp>
+
+      {/* P11: Glossary */}
+      <Xp title={tx(lang, "Glossary", "Glosario")} desc={tx(lang, "Feynman-style: if a 12-year-old can't understand it, rewrite.", "Estilo Feynman: si un niño de 12 años no lo entiende, reescribir.")} defaultOpen={false} t={t}>
+        {D.glossary.map((g, i) => {
+          const termText = typeof g.term === "string" ? g.term : tx(lang, g.term.en, g.term.es);
+          return <div key={i} style={{ padding: "6px 0", borderBottom: "1px solid " + t.border }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{termText}</span>
+            <span style={{ fontSize: 11, color: t.textDim, marginLeft: 8 }}>{tx(lang, g.def_en, g.def_es)}</span>
+          </div>;
+        })}
+      </Xp>
+
+    </div>}
+
+    {/* ════ TOGGLE INSIGHTS (contextual note at bottom) ════ */}
+    {isPricing && D.toggleInsights[cfView] && <div style={{ padding: "10px 14px", borderRadius: 8, background: t.card, border: "1px dashed " + t.border, marginTop: 16, marginBottom: 12 }}>
+      <div style={{ fontSize: 9, fontWeight: 700, color: t.textMuted, letterSpacing: 1, marginBottom: 6 }}>{cfView === "CF" ? "CF VIEW" : "14d VIEW"}</div>
+      <div style={{ fontSize: 11, color: t.textDim, lineHeight: 1.7 }}>{tx(lang, D.revFramingNote[cfView].en, D.revFramingNote[cfView].es)}</div>
+    </div>}
+
+    {/* ════ FOOTER ════ */}
+    <div style={{ padding: "16px 0", textAlign: "center", fontSize: 11, fontFamily: MN, color: t.textMuted, borderTop: "1px solid " + t.border, marginTop: 20 }}>
+      {tx(lang, D.footer.en, D.footer.es)}
+    </div>
+
+  </div>;
+}
+
+ReactDOM.render(<Dashboard />, document.getElementById("root"));
+  </script>
+</body>
+</html>

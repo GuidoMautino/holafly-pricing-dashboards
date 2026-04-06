@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Holafly · Pricing SSoT</title>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Mulish',sans-serif;background:#FFF;color:#292B2E;font-size:14px;line-height:1.65}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .25s ease both}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#CCD0D7;border-radius:3px}
+@media(max-width:640px){body{font-size:13px}}
+table.dt{width:100%;border-collapse:collapse;font-size:13px}
+table.dt th{text-align:left;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid #E4E6EA}
+table.dt td{padding:10px;border-bottom:1px solid #E4E6EA;vertical-align:top}
+table.dt tr:hover{background:#F8FAFC}
+table.dt tr.exp-row td{background:#F8FAFC;border-left:2px solid #643560;font-size:12px;color:#3D4754;padding:10px 14px 10px 24px}
+.badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.b-ready{background:#E8FBF0;color:#15803D}.b-partial{background:#FEF9C3;color:#B45309}
+.b-gap{background:#FEE2E2;color:#DC2626}.b-wip{background:#DBEAFE;color:#1D4ED8}
+.b-ok{background:#E8FBF0;color:#15803D}.b-no{background:#FEE2E2;color:#DC2626}
+.b-pending{background:#FEF9C3;color:#B45309}.b-info{background:#F1F5F9;color:#475569}
+.pill{font-size:10px;padding:3px 8px;border-radius:4px;font-weight:500;display:inline-block;margin:2px}
+.bullet-list{margin:0;padding:0;list-style:none}
+.bullet-list li{padding:4px 0 4px 14px;position:relative;font-size:13px;color:#475569;line-height:1.55}
+.bullet-list li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:#94A3B8}
+.bullet-list li strong{color:#292B2E;font-weight:700}
+.kvgrid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:12px}
+.kvgrid dt{color:#94A3B8;font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding-top:2px}
+.kvgrid dd{color:#475569;line-height:1.55}
+.kvgrid dd strong{color:#292B2E}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.split-card{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.split-card .col{padding:10px 12px;border-radius:8px;background:#F8FAFC}
+.split-card .col h4{font-size:11px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.split-card .col dl{font-size:12px;color:#475569}
+.split-card .col dl div{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed #E4E6EA}
+.split-card .col dl div:last-child{border-bottom:none}
+.split-card .col dl dt{color:#94A3B8}
+.split-card .col dl dd{color:#292B2E;font-weight:700;font-family:'JetBrains Mono',monospace}
+@media(max-width:640px){.split-card{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,Fragment:F}=React;
+const M="JetBrains Mono,Consolas,monospace",UI="Mulish,sans-serif";
+const T={bg:"#FFF",card:"#F8FAFC",text:"#292B2E",dim:"#475569",muted:"#94A3B8",border:"#E4E6EA",accent:"#E6485C",accentL:"#FDE8EB",green:"#15803D",greenBg:"#E8FBF0",red:"#DC2626",redBg:"#FEE2E2",warn:"#B45309",warnBg:"#FEF9C3",blue:"#1D4ED8",blueBg:"#DBEAFE",purple:"#643560",purpleBg:"#F3E8F4"};
+const L=(l,en,es)=>l==="en"?en:es;
+const V=(x,l)=>typeof x==="object"&&x!==null&&"en" in x?L(l,x.en,x.es):x;
+
+const URLS={
+  foundational:"https://lookerstudio.google.com/u/2/reporting/a08bdd44-7a41-402d-a0e3-19c94d1c7326/page/p_3rwoqwxrzd",
+  cogs:"https://lookerstudio.google.com/u/2/reporting/a9d353a8-3da5-4af5-9136-9bf996e12fda/page/p_ntxy4wmzud",
+  recurrence:"https://lookerstudio.google.com/u/2/reporting/840e489b-8b2f-4513-8577-ef20c12e193f",
+  aovOscar:"https://lookerstudio.google.com/u/0/reporting/dc1ad20d-70ee-4386-8ab4-2ef5257bc85e/page/tEnnC",
+  ltvDani:"https://lookerstudio.google.com/reporting/822e95f5-b3da-4cf4-9903-fac132f96a5b/page/QxFjF",
+  adobe:"https://experience.adobe.com/#/@holafly/so:holafl0/analytics/spa/index.html#/workspace/edit/699dea137a22690a099f3bb4",
+  pcc:"https://guidomautino.github.io/holafly-pricing-dashboards/pricing_command_center_v6.html",
+  tracker:"https://www.notion.so/holafly/9010f2a344c24435b8f24fec5ca144c2",
+  travelClub:"https://esim.holafly.com/news/holafly-travel-club/",
+  plansEsim:"https://esim.holafly.com/es/planes-esim/"
+};
+
+/* ===== CAUSAL VARIABLES =====
+Tier definitions:
+- control: levers Pricing actively manages
+- monitor: variables Pricing tracks but does not control directly
+- blind: variables that affect pricing but Pricing cannot see today
+- radar: longer-term factors, watch but not act
+*/
+const CAUSAL=[
+  // CONTROL TIER (8)
+  {tier:"control",n:{en:"Price per day per destination",es:"Precio por día por destino"},
+    s:{en:"How much we charge per day in each destination. Main pricing lever today. Applied across more than 200 destinations with country-specific curves.",es:"Cuánto cobramos por día en cada destino. Principal palanca de pricing hoy. Aplicado en más de 200 destinos con curvas por país."},
+    affects:["price","mix"]},
+  {tier:"control",n:{en:"FX rate policy",es:"Política de tipo de cambio"},
+    s:{en:"Whether storefront prices follow live FX or stay fixed. Twenty-five active currencies, each with its own price ladder. A currency move can shift EUR revenue without us touching prices.",es:"Si los precios storefront siguen el FX en vivo o quedan fijos. Veinticinco monedas activas, cada una con su escalera de precios. Un movimiento de moneda puede mover el revenue en EUR sin que toquemos precios."},
+    affects:["price"]},
+  {tier:"control",n:{en:"Plan duration structure",es:"Estructura de duración de planes"},
+    s:{en:"The set of plan lengths offered (1d to 90d) and how prices scale across them. The shape of this ladder drives which plans customers pick.",es:"El set de duraciones ofrecidas (1d a 90d) y cómo escalan los precios entre ellas. La forma de esta escalera determina qué planes elige el cliente."},
+    affects:["mix","price"]},
+  {tier:"control",n:{en:"Bundling & top-ups",es:"Bundling y top-ups"},
+    s:{en:"Multi-destination bundles, plan upgrades during a trip, top-ups for extra data. Each is a pricing decision distinct from the base plan.",es:"Bundles multi-destino, upgrades de plan durante un viaje, top-ups para data extra. Cada uno es una decisión de pricing distinta del plan base."},
+    affects:["mix","price"]},
+  {tier:"control",n:{en:"Web vs App channel",es:"Canal Web vs App"},
+    s:{en:"Web and App show two distinct buyer profiles with different average tickets and discount usage. Pricing decisions can be made per-channel rather than blended across both.",es:"Web y App muestran dos perfiles de comprador distintos con diferentes tickets promedio y uso de descuentos. Las decisiones de pricing pueden hacerse por canal en vez de mezcladas."},
+    affects:["intent","mix"]},
+  {tier:"control",n:{en:"Always-On (AON)",es:"Always-On (AON)"},
+    s:{en:"One free GB per month, for life, for every Holafly customer who has purchased at least one eSIM. Launched in 2026. Strategic move that destroys competitor value proposition but adds a permanent cost floor per customer. Economics not yet modeled.",es:"Un GB gratis por mes, de por vida, para todo cliente Holafly que haya comprado al menos una eSIM. Lanzado en 2026. Movimiento estratégico que destruye la propuesta de valor de la competencia pero agrega un piso de costo permanente por cliente. Economía aún sin modelar."},
+    affects:["price","intent","cost"]},
+  {tier:"control",n:{en:"Subscription plans",es:"Planes de suscripción"},
+    s:{en:"Two monthly plans publicly offered: Light (25 GB/month, €45.95) and Unlimited (unlimited data, €59.95). Different LTV logic from single-trip purchases. Annual billing saves 22%. AON included in both.",es:"Dos planes mensuales en oferta pública: Light (25 GB/mes, €45,95) y Unlimited (datos ilimitados, €59,95). Lógica de LTV distinta a la compra de viaje único. Facturación anual ahorra 22%. AON incluido en ambos."},
+    affects:["mix","intent"]},
+  {tier:"control",n:{en:"Loyalty (Holafly Travel Club)",es:"Loyalty (Holafly Travel Club)"},
+    s:{en:"Cashback program in HolaCoins. Three tiers based on Level Points: Silver (5% cashback), Gold (6%), Platinum (7%). 100 HolaCoins equal one euro. Affects effective price paid by repeat customers and creates a non-monetary lock-in.",es:"Programa de cashback en HolaCoins. Tres tiers según Level Points: Silver (5% cashback), Gold (6%), Platinum (7%). 100 HolaCoins equivalen a un euro. Afecta el precio efectivo que paga el cliente recurrente y genera un lock-in no monetario."},
+    affects:["price","intent"]},
+  {tier:"control",n:"B2B",
+    s:{en:"Corporate channel with different pricing logic and volume commitments. Today identified inside the sales table as destinations named 'Global B2B' and 'Business Traveler' rather than as a separate channel field. Real volume and margin contribution unknown.",es:"Canal corporativo con lógica de pricing distinta y compromisos por volumen. Hoy se identifica dentro de la tabla de ventas como destinos llamados 'Global B2B' y 'Business Traveler' en lugar de un campo de canal separado. Volumen real y contribución a margen desconocidos."},
+    affects:["mix","price"]},
+
+  // MONITOR TIER (6)
+  {tier:"monitor",n:{en:"Discount usage",es:"Uso de descuentos"},
+    s:{en:"How much of the order base carries some kind of discount and what type. Affects effective price paid and net margin per order. Today the classification of codes is broken in our analysis tables.",es:"Cuánto de la base de órdenes lleva algún tipo de descuento y de qué tipo. Afecta el precio efectivo pagado y el margen neto por orden. Hoy la clasificación de códigos está rota en nuestras tablas de análisis."},
+    affects:["price"]},
+  {tier:"monitor",n:{en:"Carrier costs",es:"Costos de carriers"},
+    s:{en:"Cost per GB negotiated with carriers in each country. The Core migration is changing this cost base destination by destination. When margin moves in an experiment, we need to separate carrier savings from pricing impact.",es:"Costo por GB negociado con carriers en cada país. La migración Core está cambiando esta base de costo destino por destino. Cuando el margen se mueve en un experimento, hay que separar el ahorro de carrier del impacto de pricing."},
+    affects:["cost"]},
+  {tier:"monitor",n:{en:"Destination mix",es:"Mix de destinos"},
+    s:{en:"Which destinations make up most of the revenue and how their share shifts seasonally. A change in destination mix can move blended margins without any pricing decision being taken.",es:"Qué destinos componen la mayor parte del revenue y cómo cambia su share estacionalmente. Un cambio en el mix de destinos puede mover los márgenes blended sin que se haya tomado ninguna decisión de pricing."},
+    affects:["mix","cost"]},
+  {tier:"monitor",n:{en:"FX market movements",es:"Movimientos del mercado FX"},
+    s:{en:"Currency fluctuations against the euro, independent of our FX policy. A 5% swing in GBP or USD moves reported revenue without any pricing action.",es:"Fluctuaciones de moneda contra el euro, independientes de nuestra política FX. Un swing de 5% en GBP o USD mueve el revenue reportado sin ninguna acción de pricing."},
+    affects:["price"]},
+  {tier:"monitor",n:{en:"Refund rate",es:"Tasa de reembolso"},
+    s:{en:"Returns reduce net revenue and signal pricing or product friction by destination. Today we have no systematic view of refunds segmented by plan or destination.",es:"Las devoluciones reducen el revenue neto y son una señal de fricción de pricing o producto por destino. Hoy no tenemos vista sistemática de reembolsos segmentada por plan o destino."},
+    affects:["price","intent"]},
+  {tier:"monitor",n:{en:"App Store fees",es:"Comisiones de App Store"},
+    s:{en:"Apple charges 15-30% on App Store transactions. iOS represents 44% of order volume. Whether and how this fee is reflected in our gross margin tables is not clear today.",es:"Apple cobra 15-30% en transacciones por App Store. iOS representa el 44% del volumen de órdenes. Si y cómo se refleja esta comisión en nuestras tablas de margen bruto no está claro hoy."},
+    affects:["cost"]},
+  {tier:"monitor",n:{en:"Network ownership transition",es:"Transición a red propia"},
+    s:{en:"All Hands signaled a move from Reseller to Owner of core network infrastructure. Medium-term initiative. Will change cost structure from the root once it lands. Not yet affecting pricing decisions today.",es:"El All Hands marcó el paso de Reseller a Owner de la infraestructura de red core. Iniciativa de mediano plazo. Cambiará la estructura de costo desde la raíz cuando aterrice. Aún no afecta decisiones de pricing hoy."},
+    affects:["cost"]},
+
+  // BLIND SPOTS (4)
+  {tier:"blind",n:{en:"Price elasticity",es:"Elasticidad de precio"},
+    s:{en:"How volume responds to price changes. Builds destination by destination from experiments. Today we have no baseline elasticity curve for any destination.",es:"Cómo responde el volumen a cambios de precio. Se construye destino por destino con experimentos. Hoy no tenemos curva de elasticidad base para ningún destino."},
+    affects:["intent"]},
+  {tier:"blind",n:{en:"Competitor prices",es:"Precios de competencia"},
+    s:{en:"Willingness to pay is relative to alternatives (Airalo, Saily, Nomad). We have a Firecrawl MVP for scraping but it is not in production and the workflow is not approved yet. Several days of work pending.",es:"La disposición a pagar es relativa a las alternativas (Airalo, Saily, Nomad). Tenemos un MVP de Firecrawl para scraping pero no está en producción y el flujo no está aprobado todavía. Faltan varios días de trabajo."},
+    affects:["intent"]},
+  {tier:"blind",n:"NPS",
+    s:{en:"NPS by destination would let us spot mispriced markets: high NPS plus high price means room to charge more, low NPS plus high price means we are overcharging. Company target is greater than 60% but we do not know which system stores the destination-level data.",es:"El NPS por destino nos dejaría ver mercados mal priceados: NPS alto más precio alto significa espacio para cobrar más, NPS bajo más precio alto significa que estamos sobrecobrando. Objetivo de empresa es mayor a 60% pero no sabemos en qué sistema vive la data a nivel destino."},
+    affects:["intent"]},
+  {tier:"blind",n:{en:"Payment methods",es:"Métodos de pago"},
+    s:{en:"Available payment options vary by country and may affect conversion. We have not analyzed this yet and do not know if the sales table has a payment method field we can use.",es:"Las opciones de pago disponibles varían por país y pueden afectar la conversión. No lo hemos analizado todavía y no sabemos si la tabla de ventas tiene un campo de método de pago utilizable."},
+    affects:["intent"]},
+
+  // RADAR (2)
+  {tier:"radar",n:{en:"Data consumption per user",es:"Consumo de datos por usuario"},
+    s:{en:"How close customers get to the 12 GB per day fair use limit. If consumption keeps rising, the cost economics of unlimited plans changes. Medium-term risk, not immediate.",es:"Qué tan cerca llegan los clientes al límite de fair use de 12 GB por día. Si el consumo sigue subiendo, la economía de costo de los planes ilimitados cambia. Riesgo de mediano plazo, no inmediato."},
+    affects:["cost"]},
+  {tier:"radar",n:{en:"Regulatory environment",es:"Entorno regulatorio"},
+    s:{en:"Roaming and connectivity rules vary by country and change. Complex to model. We watch but do not actively price against this today.",es:"Las reglas de roaming y conectividad varían por país y cambian. Complejo de modelar. Lo observamos pero no priceamos activamente contra esto hoy."},
+    affects:["cost"]},
+];
+
+const TIER={
+  control:{bg:"#E1F5EE",t:"#085041",stroke:"#5DCAA5",l:{en:"We control",es:"Controlamos"}},
+  monitor:{bg:"#FAEEDA",t:"#633806",stroke:"#D4A574",l:{en:"We monitor",es:"Monitoreamos"}},
+  blind:{bg:"#FCEBEB",t:"#791F1F",stroke:"#E89090",l:{en:"Blind spots",es:"Puntos ciegos"}},
+  radar:{bg:"#F1EFE8",t:"#5F5E5A",stroke:"#B0AEA8",l:{en:"Radar",es:"Radar"}}
+};
+
+const MEDIATORS=[
+  {id:"price",n:{en:"Effective price",es:"Precio efectivo"},c:T.accent,d:{en:"What the customer actually pays after discounts, FX, and loyalty.",es:"Lo que el cliente realmente paga después de descuentos, FX y loyalty."}},
+  {id:"intent",n:{en:"Purchase intent",es:"Intención de compra"},c:T.blue,d:{en:"How likely a visitor is to buy at the price shown.",es:"Qué tan probable es que un visitante compre al precio mostrado."}},
+  {id:"cost",n:{en:"Cost structure",es:"Estructura de costo"},c:T.warn,d:{en:"What it costs us to deliver one order.",es:"Lo que nos cuesta entregar una orden."}},
+  {id:"mix",n:{en:"Revenue mix",es:"Mix de revenue"},c:T.purple,d:{en:"How orders distribute across plans, durations, and destinations.",es:"Cómo se distribuyen las órdenes entre planes, duraciones y destinos."}},
+];
+
+const OUTPUTS=[
+  {n:"AOV",v:"€27.8",label:{en:"Mar 2026",es:"Mar 2026"},note:{en:"Was €33 in Apr 2025. Decline driven by mix shift, not price erosion.",es:"Era €33 en Abr 2025. Caída por cambio de mix, no erosión de precio."}},
+  {n:"CR",v:"11.6%",label:{en:"Mar 2026 (Adobe)",es:"Mar 2026 (Adobe)"},note:{en:"Was 15.7% in Oct 2025. Paid Social traffic dilutes blended conversion.",es:"Era 15.7% en Oct 2025. El tráfico de Paid Social diluye la conversión blended."}},
+  {n:"GM",v:"62%",label:{en:"2025 result",es:"Resultado 2025"},note:{en:"Target greater than 65% for 2026. Pricing floor set at 30%.",es:"Objetivo mayor a 65% para 2026. Floor de pricing fijado en 30%."}},
+  {n:"ARPU",v:"+10%",label:{en:"Per experiment target",es:"Objetivo por experimento"},note:{en:"Measured as DID delta. Today depends on Adobe sessions.",es:"Medido como delta DID. Hoy depende de sessions de Adobe."}},
+];
+/* ===== METRICS — expanded with how/who/blocker/validation ===== */
+const METRICS=[
+  // CORE DASHBOARD
+  {g:"core",n:{en:"Price per destination",es:"Precio por destino"},src:"BigQuery",st:"ready",
+    why:{en:"Backbone of any pricing dashboard. Lets us spot anomalies, run experiments, and track impact destination by destination.",es:"Columna vertebral de cualquier dashboard de pricing. Permite detectar anomalías, correr experimentos, y trackear impacto destino por destino."},
+    how:{en:"From the sales table in BigQuery, average paid amount per day per destination.",es:"Desde la tabla de ventas en BigQuery, monto promedio pagado por día por destino."},
+    who:{en:"No external dependency.",es:"Sin dependencia externa."},
+    blocker:{en:"None today.",es:"Ninguno hoy."}},
+  {g:"core",n:{en:"Active currencies",es:"Monedas activas"},src:"BigQuery",st:"ready",
+    why:{en:"Twenty-five currencies are active today, each with its own price ladder. FX corrections are among our highest-impact experiments.",es:"Hoy hay veinticinco monedas activas, cada una con su escalera de precios. Las correcciones de FX están entre nuestros experimentos de mayor impacto."},
+    how:{en:"From the presentment_currency_code field in the sales table.",es:"Desde el campo presentment_currency_code en la tabla de ventas."},
+    who:{en:"No external dependency.",es:"Sin dependencia externa."},
+    blocker:{en:"None today.",es:"Ninguno hoy."}},
+  {g:"core",n:"AOV",src:"BigQuery",st:"ready",
+    why:{en:"Declining from €33 (Apr 2025) to €27.8 (Mar 2026). The decline is mix shift, not price erosion. The dashboard must decompose AOV by channel, duration, and discount or it will mislead.",es:"Cayendo de €33 (Abr 2025) a €27.8 (Mar 2026). La caída es cambio de mix, no erosión de precio. El dashboard debe descomponer AOV por canal, duración y descuento o va a confundir."},
+    how:{en:"Sum of revenue divided by count of orders, segmented by channel and plan duration.",es:"Suma de revenue dividida por conteo de órdenes, segmentada por canal y duración del plan."},
+    who:{en:"No external dependency.",es:"Sin dependencia externa."},
+    blocker:{en:"Need to confirm with Finance which revenue field matches their P&L (current_total_price vs net_sales).",es:"Hay que confirmar con Finance qué campo de revenue matchea su P&L (current_total_price vs net_sales)."}},
+  {g:"core",n:{en:"Orders",es:"Órdenes"},src:"BigQuery",st:"ready",
+    why:{en:"Orders grew 49% year over year while revenue grew only 25%. The gap is the AOV compression story. Need orders broken down by channel, destination, and plan type.",es:"Las órdenes crecieron 49% año contra año mientras revenue creció solo 25%. La brecha es la historia de compresión de AOV. Necesitamos órdenes desglosadas por canal, destino y tipo de plan."},
+    how:{en:"Count of distinct order IDs from the sales table.",es:"Conteo de IDs distintos de orden desde la tabla de ventas."},
+    who:{en:"No external dependency.",es:"Sin dependencia externa."},
+    blocker:{en:"None today.",es:"Ninguno hoy."}},
+  {g:"core",n:{en:"Gross margin",es:"Margen bruto"},src:{en:"BigQuery (GM tables)",es:"BigQuery (tablas GM)"},st:"partial",
+    why:{en:"Floor set at 30%. Two material destinations sit below it: Morocco at 21.5% and Andorra at 12%. Twenty-four destinations have negative GM. The dashboard needs active alerting on this.",es:"Floor fijado en 30%. Dos destinos materiales están debajo: Morocco a 21.5% y Andorra a 12%. Veinticuatro destinos tienen GM negativo. El dashboard necesita alertas activas sobre esto."},
+    how:{en:"From the product_purchase_date_gm and product_end_date_gm_v2 tables in mdm_delivery, calculated as (revenue minus cost) divided by revenue at the destination level.",es:"Desde las tablas product_purchase_date_gm y product_end_date_gm_v2 en mdm_delivery, calculado como (revenue menos costo) dividido revenue a nivel destino."},
+    who:{en:"Carriers team (Josy) for cost validation.",es:"Equipo de Carriers (Josy) para validación de costos."},
+    blocker:{en:"Destination naming mismatches between sales and GM tables. Cannot reliably calculate GM by sales channel today (the join produces a cartesian product).",es:"Diferencias de naming de destinos entre tablas de ventas y GM. No podemos calcular GM por canal de ventas confiablemente hoy (el join produce producto cartesiano)."}},
+  {g:"core",n:{en:"Discount penetration",es:"Penetración de descuentos"},src:"BigQuery",st:"partial",
+    why:{en:"35% of orders carry a discount as of Mar 2026, up from 26% twelve months earlier. Counterintuitively, discounted orders have higher AOV than clean orders (€29.8 vs €26.7). We cannot interpret this until we can classify discount types correctly.",es:"35% de las órdenes llevan descuento al Mar 2026, contra 26% doce meses antes. Contraintuitivamente, las órdenes con descuento tienen AOV más alto que las limpias (€29.8 vs €26.7). No podemos interpretar esto hasta poder clasificar los tipos de descuento correctamente."},
+    how:{en:"From the applied_discount_code flag and discount_code field in the sales table.",es:"Desde el flag applied_discount_code y el campo discount_code en la tabla de ventas."},
+    who:{en:"Oscar for the canonical mapping table that powers the Recurrence Cockpit.",es:"Oscar para la tabla canónica de mapping que alimenta el Recurrence Cockpit."},
+    blocker:{en:"Pattern matching on code prefixes fails. Our classification finds fewer than 25 holacoins per month while the Cockpit finds 385K in a quarter. We need access to the source-of-truth mapping.",es:"El pattern matching por prefijo de código falla. Nuestra clasificación encuentra menos de 25 holacoins por mes mientras el Cockpit encuentra 385K en un trimestre. Necesitamos acceso al mapping fuente de verdad."}},
+  {g:"core",n:"NPS",src:{en:"Unknown",es:"Desconocida"},st:"gap",
+    why:{en:"Company target is greater than 60% (was 58% in 2025). For pricing, NPS by destination would let us identify mispriced markets — high NPS plus high price means room to charge more, low NPS plus high price signals overcharging.",es:"Objetivo de empresa es mayor a 60% (era 58% en 2025). Para pricing, NPS por destino nos dejaría identificar mercados mal priceados — NPS alto más precio alto significa espacio para subir, NPS bajo más precio alto señala sobrecobrar."},
+    how:{en:"Today: unknown. Likely needs to come from the system that runs post-purchase or in-app NPS surveys.",es:"Hoy: desconocido. Probablemente desde el sistema que corre encuestas NPS post-compra o in-app."},
+    who:{en:"Data team to identify the source. Possibly Shravan if it sits in a CX or research system.",es:"Equipo de Data para identificar la fuente. Posiblemente Shravan si está en un sistema de CX o research."},
+    blocker:{en:"We do not know which system stores NPS data or whether it can be joined to destination in BigQuery.",es:"No sabemos en qué sistema vive la data de NPS ni si se puede joinear con destino en BigQuery."}},
+  {g:"core",n:"ARPU",src:"Adobe",st:"partial",
+    why:{en:"Pricing target is +10% per experiment, measured as a DID delta. Calculation requires sessions data, which lives only in Adobe today. This dependency is what slows the close of every experiment.",es:"El objetivo de pricing es +10% por experimento, medido como delta DID. El cálculo requiere data de sessions, que hoy vive solo en Adobe. Esta dependencia es lo que ralentiza el cierre de cada experimento."},
+    how:{en:"Revenue divided by sessions, from Adobe Analytics. A BigQuery proxy would use revenue divided by unique customers per day.",es:"Revenue dividido por sessions, desde Adobe Analytics. Un proxy en BigQuery usaría revenue dividido por clientes únicos por día."},
+    who:{en:"Data team for migration path. Mati for the GA4-Shopify join already in scope.",es:"Equipo de Data para el camino de migración. Mati para el join GA4-Shopify ya en scope."},
+    blocker:{en:"We cannot verify or reproduce Adobe's number independently. Need either GA4 sessions in BigQuery or an agreed proxy.",es:"No podemos verificar ni reproducir el número de Adobe independientemente. Necesitamos sessions de GA4 en BigQuery o un proxy acordado."}},
+
+  // CAUSAL MAP METRICS
+  {g:"causal",n:{en:"Web vs App split",es:"Split Web vs App"},src:"BigQuery",st:"ready",
+    why:{en:"Two distinct buyer profiles on the same platform. Web has €30.7 AOV with fewer discounts; App has €25.1 AOV with more short plans and more discount usage. The €5.6 gap is structural. Per-channel experimentation becomes possible.",es:"Dos perfiles de comprador distintos en la misma plataforma. Web tiene AOV €30.7 con menos descuentos; App tiene AOV €25.1 con más planes cortos y más uso de descuentos. La brecha de €5.6 es estructural. Habilita experimentación por canal."},
+    how:{en:"From the sales_channel field (Web, App, Light Web) and app_platform field (iOS, Android, null) in the sales table.",es:"Desde el campo sales_channel (Web, App, Light Web) y app_platform (iOS, Android, null) en la tabla de ventas."},
+    who:{en:"No external dependency for the split. Data team to confirm whether this segmentation is stable enough to lock in.",es:"Sin dependencia externa para el split. Equipo de Data para confirmar si esta segmentación es estable para fijarla."},
+    blocker:{en:"None today.",es:"Ninguno hoy."}},
+  {g:"causal",n:{en:"Plan duration mix",es:"Mix de duración de planes"},src:"BigQuery",st:"ready",
+    why:{en:"Main driver of the AOV decline. Short plans (1-3 days) doubled their share from 15% to 28% over twelve months. Each duration bucket has stable AOV; the blended decline comes purely from mix.",es:"Principal driver de la caída de AOV. Los planes cortos (1-3 días) duplicaron su share de 15% a 28% en doce meses. Cada bucket de duración tiene AOV estable; la caída blended viene puramente del mix."},
+    how:{en:"From days_of_product field in the sales table, bucketed.",es:"Desde el campo days_of_product en la tabla de ventas, agrupado en buckets."},
+    who:{en:"No external dependency.",es:"Sin dependencia externa."},
+    blocker:{en:"None today.",es:"Ninguno hoy."}},
+  {g:"causal",n:{en:"Destination revenue mix",es:"Mix de revenue por destino"},src:{en:"BigQuery + Foundational KPIs",es:"BigQuery + Foundational KPIs"},st:"partial",
+    why:{en:"Concentration of revenue across destinations and how it shifts seasonally. Lets us isolate pricing effects from travel pattern effects.",es:"Concentración de revenue entre destinos y cómo cambia estacionalmente. Permite aislar efectos de pricing de efectos de patrón de viaje."},
+    how:{en:"Revenue grouped by destination, ranked by share of total. Today we know it can be calculated but we have not run the breakdown for top destinations and percentage concentration in this analysis cycle.",es:"Revenue agrupado por destino, rankeado por share del total. Hoy sabemos que se puede calcular pero no hemos corrido el desglose para top destinos y concentración porcentual en este ciclo de análisis."},
+    who:{en:"No external dependency.",es:"Sin dependencia externa."},
+    blocker:{en:"Pending a clean breakdown query in this cycle.",es:"Falta un desglose limpio en este ciclo."}},
+  {g:"causal",n:{en:"Carrier costs by destination",es:"Costos de carrier por destino"},src:{en:"mdm tables",es:"tablas mdm"},st:"partial",
+    why:{en:"The Core migration is changing carrier cost structure destination by destination. When margin improves in an experiment, we must split: how much was pricing, how much was carrier savings? Without this attribution, every margin claim is suspect.",es:"La migración Core está cambiando la estructura de costo de carrier destino por destino. Cuando el margen mejora en un experimento, tenemos que separar: cuánto fue pricing, cuánto fue ahorro de carrier. Sin esta atribución, cada claim de margen queda sospechado."},
+    how:{en:"From mdm_delivery cost tables joined with sales by destination.",es:"Desde las tablas de costo en mdm_delivery joineadas con ventas por destino."},
+    who:{en:"Carriers team (Josy) for cost timing and migration scope.",es:"Equipo de Carriers (Josy) para timing de costos y scope de migración."},
+    blocker:{en:"Cost attribution by experiment timeframe is not automated.",es:"La atribución de costo por timeframe de experimento no está automatizada."}},
+  {g:"causal",n:{en:"Conversion rate",es:"Tasa de conversión"},src:"Adobe",st:"partial",
+    why:{en:"Price changes affect conversion. Today CR lives only in Adobe, which means we cannot independently verify or reproduce it.",es:"Los cambios de precio afectan la conversión. Hoy la CR vive solo en Adobe, lo que significa que no podemos verificarla ni reproducirla independientemente."},
+    how:{en:"Adobe sessions divided by orders. A BigQuery alternative would require GA4-derived sessions data.",es:"Sessions de Adobe divididas por órdenes. Una alternativa en BigQuery requeriría data de sessions derivada de GA4."},
+    who:{en:"Data team for the GA4 path.",es:"Equipo de Data para el camino GA4."},
+    blocker:{en:"Same Adobe dependency as ARPU.",es:"Misma dependencia de Adobe que ARPU."}},
+  {g:"causal",n:{en:"Competitor prices",es:"Precios de competencia"},src:"Firecrawl",st:"gap",
+    why:{en:"Willingness to pay is relative to alternatives. Without systematic tracking of Airalo, Saily, and Nomad on our top destinations, every pricing decision is being made in the dark.",es:"La disposición a pagar es relativa a las alternativas. Sin tracking sistemático de Airalo, Saily y Nomad en nuestros top destinos, cada decisión de pricing se toma a ciegas."},
+    how:{en:"Web scraping via Firecrawl. Today we have an MVP that proves the approach works; productionizing it requires several days of work and approval that we do not have yet.",es:"Web scraping via Firecrawl. Hoy tenemos un MVP que prueba que el approach funciona; productizarlo requiere varios días de trabajo y aprobación que aún no tenemos."},
+    who:{en:"Internal Pricing decision plus engineering capacity.",es:"Decisión interna de Pricing más capacidad de engineering."},
+    blocker:{en:"Not in BigQuery. Productionization not approved.",es:"No está en BigQuery. Productización no aprobada."}},
+  {g:"causal",n:{en:"CAC by acquisition channel",es:"CAC por canal de adquisición"},src:{en:"Unknown",es:"Desconocida"},st:"gap",
+    why:{en:"Price affects conversion, conversion affects CAC. A price increase that drops conversion raises the cost of acquiring each customer. Today we do not measure this for pricing decisions.",es:"El precio afecta la conversión, la conversión afecta el CAC. Una suba de precio que baja la conversión sube el costo de adquirir cada cliente. Hoy no lo medimos para decisiones de pricing."},
+    how:{en:"Would require connecting paid media spend with conversions by channel. The Core migration brings this closer but it is not in place.",es:"Requeriría conectar inversión de paid media con conversiones por canal. La migración Core lo acerca pero no está en pie."},
+    who:{en:"Data team to confirm timeline and source. Paid Media team (Tomeu, Sofia) as stakeholders.",es:"Equipo de Data para confirmar timeline y fuente. Equipo de Paid Media (Tomeu, Sofía) como stakeholders."},
+    blocker:{en:"No source we can pull from today.",es:"No hay fuente de la que podamos extraer hoy."}},
+
+  // LTV & RETENTION
+  {g:"ltv",n:{en:"Predicted LTV",es:"LTV predicho"},src:{en:"BigQuery (Dani v1.1)",es:"BigQuery (Dani v1.1)"},st:"wip",
+    why:{en:"Connects short-term pricing decisions to long-term customer value. A price cut that loses revenue today but increases LTV may still be the right call.",es:"Conecta decisiones de pricing de corto plazo con valor del cliente de largo plazo. Una baja de precio que pierde revenue hoy pero aumenta LTV puede ser la decisión correcta."},
+    how:{en:"Beta-geometric model maintained by Dani in growth_test_dataset.",es:"Modelo beta-geométrico mantenido por Dani en growth_test_dataset."},
+    who:{en:"Dani.",es:"Dani."},
+    blocker:{en:"Cost attribution logic in PA-350 is being rewritten and affects LTV inputs.",es:"La lógica de atribución de costo en PA-350 se está reescribiendo y afecta inputs de LTV."}},
+  {g:"ltv",n:{en:"Repeat purchase rate",es:"Tasa de recompra"},src:"BigQuery",st:"ready",
+    why:{en:"47.8% in mature cohorts. If pricing changes hurt repeat behavior, the LTV loss outweighs any short-term gain. Anchor metric for any pricing decision that affects existing customers.",es:"47.8% en cohorts maduros. Si los cambios de pricing dañan la recompra, la pérdida de LTV supera cualquier ganancia de corto plazo. Métrica ancla para cualquier decisión de pricing que afecte clientes existentes."},
+    how:{en:"Cohort analysis based on customer_id from the sales table, measured at 15 months of maturity.",es:"Análisis de cohorts basado en customer_id de la tabla de ventas, medido a 15 meses de madurez."},
+    who:{en:"Data team to confirm customer_id is consistent across web and app purchases.",es:"Equipo de Data para confirmar que customer_id es consistente entre compras web y app."},
+    blocker:{en:"If customer_id differs by device, the rate is underestimated.",es:"Si customer_id difiere por dispositivo, la tasa está subestimada."}},
+];
+
+/* ===== ASSUMPTIONS — full context, no Q-abbreviations ===== */
+const ASSUMPTIONS=[
+  {id:"A1",t:{en:"Web and App can be separated cleanly in BigQuery",es:"Web y App se pueden separar limpiamente en BigQuery"},st:"ok",
+    looked:{en:"We checked the sales table for fields that distinguish purchase channel and device.",es:"Revisamos la tabla de ventas buscando campos que distingan canal de compra y dispositivo."},
+    found:{en:"Two fields work together: sales_channel (Web, App, Light Web) and app_platform (iOS, Android, null). Six months of data show consistent values: Web 46%, iOS 44%, Android 9%, Light Web below 1%. Light Web is negligible at roughly 260 orders per month.",es:"Dos campos funcionan juntos: sales_channel (Web, App, Light Web) y app_platform (iOS, Android, null). Seis meses de data muestran valores consistentes: Web 46%, iOS 44%, Android 9%, Light Web por debajo del 1%. Light Web es despreciable, cerca de 260 órdenes por mes."},
+    matters:{en:"This is the foundation for per-channel pricing experiments. If the segmentation were unstable, every channel-level analysis would be unreliable.",es:"Esta es la base para experimentos de pricing por canal. Si la segmentación fuera inestable, todo análisis a nivel canal sería poco confiable."},
+    action:{en:"Confirm with Data team that this segmentation is stable enough to use as a primary slice in the dashboard.",es:"Confirmar con el equipo de Data que esta segmentación es lo suficientemente estable para usarla como slice primario en el dashboard."}},
+
+  {id:"A2",t:{en:"Destination names match between sales and gross margin tables",es:"Los nombres de destino matchean entre tablas de ventas y margen bruto"},st:"partial",
+    looked:{en:"We compared the distinct destination values in the sales table with the distinct plan_country values in the gross margin table.",es:"Comparamos los valores distintos de destination en la tabla de ventas con los valores distintos de plan_country en la tabla de margen bruto."},
+    found:{en:"37 destinations exist in sales but not in the GM table. 54 exist in GM but not in sales. Causes are mixed: encoding differences (Curaçao vs Curacao), naming variants (The Balkans vs Balkans), 'with calls' variants only in GM, and product types not in the GM table at all (1GB Freemium destinations, Global B2B, Business Traveler, Light Plan, Starter Plan, Unlimited Plan, eSIM Trial).",es:"37 destinos existen en ventas pero no en la tabla GM. 54 existen en GM pero no en ventas. Las causas son variadas: diferencias de encoding (Curaçao vs Curacao), variantes de naming (The Balkans vs Balkans), variantes 'with calls' solo en GM, y tipos de producto que no están en la tabla GM en absoluto (destinos 1GB Freemium, Global B2B, Business Traveler, Light Plan, Starter Plan, Unlimited Plan, eSIM Trial)."},
+    matters:{en:"For mainstream destinations the join works and GM analysis is reliable. For new product types (Freemium, B2B, subscriptions) we have no GM visibility today.",es:"Para destinos mainstream el join funciona y el análisis de GM es confiable. Para tipos de producto nuevos (Freemium, B2B, suscripciones) no tenemos visibilidad de GM hoy."},
+    action:{en:"Share the mismatch list with the Data team so they can update the GM table or expose a different one that includes the new product categories.",es:"Compartir la lista de diferencias con el equipo de Data para que actualicen la tabla GM o expongan una distinta que incluya las categorías de producto nuevas."}},
+
+  {id:"A3",t:{en:"Orders with 100% discount are legitimate",es:"Las órdenes con 100% de descuento son legítimas"},st:"ok",
+    looked:{en:"We pulled all orders where the total price was zero in Q1 2026, looking at which discount codes generated them.",es:"Sacamos todas las órdenes donde el precio total fue cero en Q1 2026, mirando qué códigos de descuento las generaron."},
+    found:{en:"57.8K orders had zero price and no discount code attached. These are AON and Freemium products being delivered. The remaining zero-price orders break into two groups: small-value influencer codes (HOLADTO5, MYESIMNOW5, HOLA5) applied to cheap one-day plans where the discount exceeds the price; and one CX compensation code (OFRPLANB-CSTEAM-2026) responsible for 2.3K orders. None of these are data errors.",es:"57.8K órdenes tuvieron precio cero y ningún código de descuento adjunto. Estas son productos AON y Freemium siendo entregados. Las órdenes restantes con precio cero se dividen en dos grupos: códigos de influencer de bajo valor (HOLADTO5, MYESIMNOW5, HOLA5) aplicados a planes baratos de un día donde el descuento supera al precio; y un código de compensación de CX (OFRPLANB-CSTEAM-2026) responsable de 2.3K órdenes. Ninguno es error de data."},
+    matters:{en:"For pricing analysis we need to filter AON and Freemium products separately so they do not pull average revenue figures down. They should be tracked as their own category, not lumped with paid orders.",es:"Para análisis de pricing tenemos que filtrar productos AON y Freemium aparte para que no tiren los promedios de revenue hacia abajo. Deberían trackearse como su propia categoría, no mezclados con órdenes pagas."},
+    action:{en:"Decide with Data team how to flag these in dashboards. Ideally a product_type or is_paid field at the source.",es:"Decidir con el equipo de Data cómo flaggearlos en dashboards. Idealmente un campo product_type o is_paid en la fuente."}},
+
+  {id:"A4",t:{en:"customer_id identifies the same person across web and app",es:"customer_id identifica a la misma persona entre web y app"},st:"pending",
+    looked:{en:"We have not directly tested this. The repeat rate calculation (47.8% in mature cohorts) assumes that a customer buying from web and later from app counts as one repeat customer, not two new ones.",es:"No lo hemos testeado directamente. El cálculo de repeat rate (47.8% en cohorts maduros) asume que un cliente que compra desde web y después desde app cuenta como un cliente que recompra, no como dos nuevos."},
+    found:{en:"Web and App represent almost equal volume (46% vs 44%). Cross-device purchases are very likely common given how customers behave (research on web, install on phone). If customer_id differs across devices, every retention number we report is underestimated.",es:"Web y App representan volumen casi igual (46% vs 44%). Las compras cross-dispositivo son muy probablemente comunes dado el comportamiento de los clientes (research en web, instalación en teléfono). Si customer_id difiere entre dispositivos, todo número de retención que reportamos está subestimado."},
+    matters:{en:"Repeat rate, LTV, and any experiment that measures impact on returning customers all depend on this. If the assumption is wrong, every customer-lifetime metric needs to be revised upward.",es:"Repeat rate, LTV, y cualquier experimento que mida impacto en clientes que vuelven dependen de esto. Si la asunción es incorrecta, toda métrica de vida del cliente tiene que ser revisada hacia arriba."},
+    action:{en:"Ask Data team how customer_id is generated in Shopify and whether it persists across devices for the same user.",es:"Preguntar al equipo de Data cómo se genera customer_id en Shopify y si persiste entre dispositivos para el mismo usuario."}},
+];
+
+/* ===== BLOCKERS — with mitigation plan ===== */
+const BLOCKERS=[
+  {w:{en:"AOV decline driven by mix shift, not pricing",es:"Caída de AOV por cambio de mix, no por pricing"},
+    d:{en:"Short plans (1-3 days) doubled their share from 15% to 28% of orders over twelve months. AOV per duration bucket is stable, but the blended number is dropping. Revenue grew 25% while orders grew 49%.",es:"Los planes cortos (1-3 días) duplicaron su share de 15% a 28% de las órdenes en doce meses. El AOV por bucket de duración es estable, pero el número blended está cayendo. El revenue creció 25% mientras las órdenes crecieron 49%."},
+    risk:{en:"If the dashboard shows blended AOV without decomposition, leadership will misread it as a pricing problem and push for the wrong corrective action.",es:"Si el dashboard muestra AOV blended sin descomposición, leadership lo va a malinterpretar como un problema de pricing y va a empujar la acción correctiva equivocada."},
+    mit:{en:"Build the AOV view in the SSoT with mandatory decomposition by duration and channel. Never show blended AOV without the breakdown alongside it.",es:"Construir la vista de AOV en el SSoT con descomposición obligatoria por duración y canal. Nunca mostrar AOV blended sin el breakdown al lado."}},
+  {w:{en:"No A/B testing infrastructure available until after May",es:"Sin infraestructura de A/B testing disponible hasta después de mayo"},
+    d:{en:"Statsig is not yet available for Pricing experiments. Until it is, every experiment relies on pre/post DID methodology.",es:"Statsig aún no está disponible para experimentos de Pricing. Hasta que lo esté, cada experimento se apoya en metodología DID pre/post."},
+    risk:{en:"Slower iteration speed and weaker statistical power. Limits the number of decisions we can validate per quarter.",es:"Velocidad de iteración más lenta y poder estadístico más débil. Limita el número de decisiones que podemos validar por trimestre."},
+    mit:{en:"Until Statsig is in place, experiments live in their own pre/post DID workflow outside the SSoT dashboard. The dashboard does not need to support DID comparison views; that is a separate workstream that becomes relevant once we have proper A/B infrastructure.",es:"Hasta que Statsig esté en pie, los experimentos viven en su propio workflow DID pre/post fuera del dashboard SSoT. El dashboard no necesita soportar vistas de comparación DID; eso es un workstream separado que se vuelve relevante una vez que tengamos infraestructura A/B propiamente."}},
+  {w:{en:"Price changes frozen on destinations going through PIM migration",es:"Cambios de precio congelados en destinos en migración PIM"},
+    d:{en:"The PIM/Strapi migration is happening in phases. Destinations currently being migrated cannot have their prices modified during their migration window. The full migration runs into mid-year.",es:"La migración PIM/Strapi se está haciendo en fases. Los destinos actualmente en migración no pueden tener sus precios modificados durante su ventana de migración. La migración completa va hasta mitad de año."},
+    risk:{en:"Experiment scheduling has to work around the migration calendar, which means some destinations are simply unavailable for testing during certain windows.",es:"El scheduling de experimentos tiene que trabajar alrededor del calendario de migración, lo que significa que algunos destinos están simplemente no disponibles para testing en ciertas ventanas."},
+    mit:{en:"The dashboard should flag which destinations are currently in migration so we know which ones are available for experiments at any given moment.",es:"El dashboard debería flaggear qué destinos están actualmente en migración para que sepamos cuáles están disponibles para experimentos en cada momento."}},
+  {w:{en:"Adobe-only ARPU and CR limit experiment closeout speed",es:"ARPU y CR solo en Adobe limitan velocidad de cierre de experimentos"},
+    d:{en:"Both ARPU and CR rely on Adobe sessions data. Pricing cannot independently verify these numbers, which means every experiment closeout requires an Adobe round-trip.",es:"Tanto ARPU como CR dependen de data de sessions de Adobe. Pricing no puede verificar estos números independientemente, lo que significa que cada cierre de experimento requiere ida y vuelta con Adobe."},
+    risk:{en:"Experiment cycle time stays high. We cannot react quickly to results.",es:"El tiempo de ciclo de experimentos se mantiene alto. No podemos reaccionar rápido a los resultados."},
+    mit:{en:"Two paths to evaluate with Data team: (a) GA4 sessions delivered into BigQuery, (b) an agreed BigQuery proxy using revenue divided by unique customers per day. Either unblocks Pricing.",es:"Dos caminos a evaluar con el equipo de Data: (a) sessions de GA4 entregadas a BigQuery, (b) un proxy acordado en BigQuery usando revenue dividido por clientes únicos por día. Cualquiera desbloquea a Pricing."}},
+  {w:{en:"AON economics not yet modeled",es:"Economía de AON aún sin modelar"},
+    d:{en:"Always-On gives every Holafly customer 1GB free per month for life. The strategic logic is clear (destroys competitor value proposition) but the cost economics are not. Carrier cost for that GB is real and recurring per customer for as long as they remain a customer.",es:"Always-On le da a cada cliente Holafly 1GB gratis por mes de por vida. La lógica estratégica es clara (destruye la propuesta de valor de la competencia) pero la economía de costo no. El costo de carrier por ese GB es real y recurrente por cliente mientras permanezca como cliente."},
+    risk:{en:"If AON scales without an economic model, we are taking on uncontrolled cost. The boundary between free and paid becomes the most consequential pricing decision in the company and we cannot make it informed today.",es:"Si AON escala sin un modelo económico, estamos tomando costo no controlado. La frontera entre gratis y pago se convierte en la decisión de pricing más importante de la empresa y hoy no podemos tomarla informada."},
+    mit:{en:"Build the cost model: carrier cost per AON GB, customer lifespan distribution, total cost projection at different adoption levels. This is a Pricing workstream that needs to start before AON adoption is significant.",es:"Construir el modelo de costo: costo de carrier por GB de AON, distribución de vida del cliente, proyección de costo total a distintos niveles de adopción. Es un workstream de Pricing que tiene que empezar antes de que la adopción de AON sea significativa."}},
+];
+
+/* ===== ALFONSO PRE-MEETING — what we want to validate before going to Data ===== */
+const ALFONSO_TOPICS=[
+  {t:{en:"AON product reality",es:"Realidad del producto AON"},
+    why:{en:"AON is a strategic move with permanent cost implications. Before showing this to Data, we want to confirm with you what we know and what we are still guessing.",es:"AON es un movimiento estratégico con implicaciones de costo permanentes. Antes de mostrar esto a Data, queremos confirmar contigo qué sabemos y qué estamos adivinando."},
+    points:[
+      {en:"Is AON 1GB free per month for every Holafly customer who has bought at least one eSIM, with no other condition?",es:"¿Es AON 1GB gratis por mes para todo cliente Holafly que haya comprado al menos una eSIM, sin otra condición?"},
+      {en:"When was AON officially launched? We have it as 'sometime in 2026' but no exact date.",es:"¿Cuándo se lanzó oficialmente AON? Lo tenemos como 'algún momento de 2026' pero sin fecha exacta."},
+      {en:"Do we have any internal projection of AON adoption (how many active free GB users today, growth curve)?",es:"¿Tenemos alguna proyección interna de adopción de AON (cuántos usuarios activos de GB gratis hoy, curva de crecimiento)?"},
+      {en:"Are the destinations in BigQuery named '1GB Freemium' (Asia, Europe, Latin America, etc.) the technical implementation of AON, or are they separate free-tier products?",es:"¿Los destinos en BigQuery llamados '1GB Freemium' (Asia, Europa, Latinoamérica, etc.) son la implementación técnica de AON, o son productos free-tier separados?"},
+      {en:"Has anyone already started modeling AON cost economics, or is this work that Pricing should pick up?",es:"¿Alguien ya empezó a modelar la economía de costo de AON, o es trabajo que Pricing debería tomar?"},
+    ]},
+
+  {t:{en:"Loyalty program (Holafly Travel Club)",es:"Programa de loyalty (Holafly Travel Club)"},
+    why:{en:"We pulled the public-facing mechanics (tiers, cashback rates) but want to understand the strategic context.",es:"Sacamos la mecánica pública (tiers, tasas de cashback) pero queremos entender el contexto estratégico."},
+    points:[
+      {en:"What is the goal of HTC: customer retention, reactivation of dormant users, attribution of word-of-mouth, or something else?",es:"¿Cuál es el objetivo de HTC: retención de clientes, reactivación de usuarios dormidos, atribución de boca a boca, otra cosa?"},
+      {en:"Do we have visibility today on what percentage of customers are active in HTC, and at which tier (Silver, Gold, Platinum)?",es:"¿Tenemos visibilidad hoy de qué porcentaje de clientes está activo en HTC, y en qué tier (Silver, Gold, Platinum)?"},
+      {en:"Are HolaCoins meant to influence pricing decisions, or are they purely a marketing lever owned outside Pricing?",es:"¿Las HolaCoins están pensadas para influir en decisiones de pricing, o son puramente una palanca de marketing fuera de Pricing?"},
+    ]},
+
+  {t:{en:"Subscription plans status",es:"Estado de los planes de suscripción"},
+    why:{en:"Public site shows two plans (Light and Unlimited) but BigQuery contains additional named destinations like Starter Plan that do not appear in the public offering.",es:"El sitio público muestra dos planes (Light y Unlimited) pero BigQuery contiene destinos adicionales como Starter Plan que no aparecen en la oferta pública."},
+    points:[
+      {en:"Are Light and Unlimited the only subscription products currently being sold, or are there others not on the public site?",es:"¿Son Light y Unlimited los únicos productos de suscripción que se están vendiendo actualmente, o hay otros que no están en el sitio público?"},
+      {en:"What does 'Starter Plan' refer to in the sales table? Is it a legacy plan, a deprecated test, or an active product through a different channel?",es:"¿A qué se refiere 'Starter Plan' en la tabla de ventas? ¿Es un plan legacy, un test depreciado, o un producto activo por otro canal?"},
+      {en:"What share of revenue does the subscription business represent today, and what is the growth target for 2026?",es:"¿Qué share del revenue representa hoy el negocio de suscripciones, y cuál es el objetivo de crecimiento para 2026?"},
+    ]},
+
+  {t:{en:"B2B channel weight and structure",es:"Peso y estructura del canal B2B"},
+    why:{en:"BigQuery shows B2B as destinations (Global B2B, Business Traveler) but not as a separate sales channel. Real volume and contribution are unclear.",es:"BigQuery muestra B2B como destinos (Global B2B, Business Traveler) pero no como un canal de ventas separado. El volumen real y la contribución no están claros."},
+    points:[
+      {en:"What is the revenue contribution of B2B today, and is it growing or stable?",es:"¿Cuál es la contribución de revenue de B2B hoy, y está creciendo o estable?"},
+      {en:"Does B2B have its own pricing logic and discount structure, or does it ride on the standard catalog?",es:"¿B2B tiene su propia lógica de pricing y estructura de descuentos, o monta sobre el catálogo estándar?"},
+      {en:"Who owns B2B pricing decisions today? Is Pricing involved or is it handled by the partnerships team?",es:"¿Quién tiene la decisión de pricing de B2B hoy? ¿Pricing está involucrado o lo maneja el equipo de partnerships?"},
+    ]},
+
+  {t:{en:"Attribution of growth levers",es:"Atribución de palancas de crecimiento"},
+    why:{en:"Revenue is targeted to nearly double in 2026. We do not have clarity today on how that growth is being attributed across the levers (pricing, AON, subscriptions, B2B, market expansion).",es:"El revenue tiene como objetivo casi duplicarse en 2026. No tenemos claridad hoy de cómo ese crecimiento está siendo atribuido entre las palancas (pricing, AON, suscripciones, B2B, expansión de mercado)."},
+    points:[
+      {en:"How is the €550M target broken down across growth levers in the company plan?",es:"¿Cómo se desglosa el objetivo de €550M entre palancas de crecimiento en el plan de la compañía?"},
+      {en:"What share of incremental revenue is expected from pricing experiments specifically?",es:"¿Qué share del revenue incremental se espera específicamente de experimentos de pricing?"},
+      {en:"Where does Pricing sit in the attribution conversation? Are we measured on a specific contribution or on supporting other workstreams?",es:"¿Dónde se sienta Pricing en la conversación de atribución? ¿Nos miden por una contribución específica o por dar soporte a otros workstreams?"},
+    ]},
+
+  {t:{en:"Open input from you",es:"Input abierto de tu parte"},
+    why:{en:"This document is a work in progress and we want your read on it before going to Data. Anything you think is missing, off, or could land better should come up here.",es:"Este documento es un trabajo en progreso y queremos tu lectura antes de ir a Data. Cualquier cosa que veas que falta, que esté desfasada, o que podría aterrizar mejor debería salir acá."},
+    points:[
+      {en:"What questions do you anticipate from Miquel or Oscar that we are not prepared for?",es:"¿Qué preguntas anticipás de Miquel u Oscar para las que no estamos preparados?"},
+      {en:"Is there any context about the relationship with Data team that should change how we frame the ask?",es:"¿Hay algún contexto sobre la relación con el equipo de Data que debería cambiar cómo encuadramos el pedido?"},
+      {en:"Anything missing from this document that you would expect to see?",es:"¿Algo que falte en este documento que esperarías ver?"},
+    ]},
+];
+
+/* ===== KEY FINDINGS — bullet structure, not comma-separated prose ===== */
+const FINDINGS=[
+  {id:"webApp",t:{en:"Web and App are two different buyer profiles",es:"Web y App son dos perfiles de comprador diferentes"},c:T.blue,
+    period:{en:"Oct 2025 to Mar 2026",es:"Oct 2025 a Mar 2026"},
+    intro:{en:"On the same product catalog, Web and App customers behave differently enough to justify separate pricing strategies.",es:"Sobre el mismo catálogo de producto, los clientes de Web y App se comportan de manera lo suficientemente distinta para justificar estrategias de pricing separadas."},
+    compare:{
+      web:{label:"Web",rows:[
+        {k:{en:"Volume share",es:"Share de volumen"},v:"46%"},
+        {k:"AOV",v:"€30.7"},
+        {k:{en:"Short plans (1-3d)",es:"Planes cortos (1-3d)"},v:"23%"},
+        {k:{en:"Discounted orders",es:"Órdenes con descuento"},v:"33%"},
+      ]},
+      app:{label:"App (iOS)",rows:[
+        {k:{en:"Volume share",es:"Share de volumen"},v:"44%"},
+        {k:"AOV",v:"€25.1"},
+        {k:{en:"Short plans (1-3d)",es:"Planes cortos (1-3d)"},v:"33%"},
+        {k:{en:"Discounted orders",es:"Órdenes con descuento"},v:"38%"},
+      ]},
+    },
+    so:{en:"The €5.6 AOV gap is structural, not coincidental. It opens the door to designing experiments that target one channel without disturbing the other.",es:"La brecha de AOV de €5.6 es estructural, no casual. Abre la puerta a diseñar experimentos que apunten a un canal sin tocar el otro."}},
+
+  {id:"aov",t:{en:"AOV decline is mix, not price erosion",es:"La caída de AOV es mix, no erosión de precio"},c:T.warn,
+    period:{en:"Apr 2025 to Mar 2026",es:"Abr 2025 a Mar 2026"},
+    intro:{en:"The headline AOV dropped from €33 to €27.8 in twelve months. This looks alarming until you decompose it.",es:"El AOV titular cayó de €33 a €27.8 en doce meses. Parece alarmante hasta que lo descomponés."},
+    bullets:[
+      {en:"Short plans (1 to 3 days) doubled their share of orders, going from 15% to 28% of total volume.",es:"Los planes cortos (1 a 3 días) duplicaron su share de órdenes, pasando del 15% al 28% del volumen total."},
+      {en:"AOV inside each duration bucket is stable. A 5-day plan still costs roughly what it cost a year ago.",es:"El AOV dentro de cada bucket de duración es estable. Un plan de 5 días sigue costando aproximadamente lo que costaba hace un año."},
+      {en:"The blended AOV is being pulled down mechanically by the change in mix, not by anyone lowering prices.",es:"El AOV blended está siendo bajado mecánicamente por el cambio de mix, no porque alguien esté bajando precios."},
+      {en:"As a comparison: discounted orders actually have a higher AOV than clean orders (€29.8 vs €26.7) because discounts attract longer plans.",es:"Como comparación: las órdenes con descuento en realidad tienen AOV más alto que las órdenes limpias (€29.8 vs €26.7) porque los descuentos atraen planes más largos."},
+    ],
+    so:{en:"Any dashboard that shows blended AOV without decomposing by duration will be misread. The decomposition has to be the default view.",es:"Cualquier dashboard que muestre AOV blended sin descomponer por duración va a ser malinterpretado. La descomposición tiene que ser la vista por defecto."}},
+
+  {id:"gm",t:{en:"Gross margin floor violations",es:"Violaciones del floor de margen bruto"},c:T.red,
+    period:{en:"Last 90 days",es:"Últimos 90 días"},
+    intro:{en:"Company gross margin improved from 54% (2024) to 62% (2025) and targets above 65% for 2026. The pricing-relevant floor is set at 30%. Two material destinations sit below it.",es:"El margen bruto de empresa mejoró de 54% (2024) a 62% (2025) y apunta por encima del 65% para 2026. El floor relevante para pricing está fijado en 30%. Dos destinos materiales están por debajo."},
+    bullets:[
+      {en:"Morocco: 21.5% gross margin, roughly €10.4M annualized revenue. Nine percentage points below the floor.",es:"Morocco: 21.5% de margen bruto, aproximadamente €10.4M anualizados. Nueve puntos porcentuales debajo del floor."},
+      {en:"Andorra: 12% gross margin, roughly €2.6M annualized revenue. Eighteen percentage points below the floor.",es:"Andorra: 12% de margen bruto, aproximadamente €2.6M anualizados. Dieciocho puntos porcentuales debajo del floor."},
+      {en:"Twenty-four other destinations show negative gross margin, but most are micro-volume.",es:"Otros veinticuatro destinos muestran margen bruto negativo, pero la mayoría son de micro-volumen."},
+      {en:"At the variant level, 1-day plans run at 39.3% gross margin (the lowest of any duration) and their share is growing.",es:"A nivel variante, los planes de 1 día corren a 39.3% de margen bruto (el más bajo de cualquier duración) y su share está creciendo."},
+    ],
+    so:{en:"The dashboard needs active alerting on floor violations. The 1-day plan trajectory deserves its own watch because it combines low margin with growing share.",es:"El dashboard necesita alertas activas sobre violaciones del floor. La trayectoria de los planes de 1 día merece su propio watch porque combina margen bajo con share creciente."}},
+
+  {id:"newProducts",t:{en:"AON, B2B, and subscriptions are visible in BigQuery as destinations",es:"AON, B2B y suscripciones son visibles en BigQuery como destinos"},c:T.blue,
+    period:{en:"All time check, Q1 2026 detail",es:"Check histórico, detalle Q1 2026"},
+    intro:{en:"When we compared the destinations list in the sales table against the destinations list in the gross margin table, we found product types that exist in sales but not in GM tracking.",es:"Cuando comparamos la lista de destinos en la tabla de ventas contra la lista en la tabla de margen bruto, encontramos tipos de producto que existen en ventas pero no en el tracking de GM."},
+    bullets:[
+      {en:"Free-tier products appear as: Asia 1GB Freemium, Europe 1GB Freemium, Latin America 1GB Freemium, North America 1GB Freemium, Caribbean 1GB Freemium, eSIM Trial.",es:"Los productos free-tier aparecen como: Asia 1GB Freemium, Europe 1GB Freemium, Latin America 1GB Freemium, North America 1GB Freemium, Caribbean 1GB Freemium, eSIM Trial."},
+      {en:"B2B appears as: Global B2B, Business Traveler. There is no separate B2B sales channel; the segmentation lives in the destination name.",es:"B2B aparece como: Global B2B, Business Traveler. No hay un canal de ventas B2B separado; la segmentación vive en el nombre del destino."},
+      {en:"Subscription plans appear as: Light Plan, Starter Plan, Unlimited Plan. The public site only offers Light and Unlimited today, so Starter Plan needs explanation.",es:"Los planes de suscripción aparecen como: Light Plan, Starter Plan, Unlimited Plan. El sitio público solo ofrece Light y Unlimited hoy, así que Starter Plan necesita explicación."},
+      {en:"57.8K orders in Q1 2026 had a price of zero with no discount code attached. These are AON and Freemium products being delivered, not data errors.",es:"57.8K órdenes en Q1 2026 tuvieron precio cero sin código de descuento adjunto. Son productos AON y Freemium siendo entregados, no errores de data."},
+    ],
+    so:{en:"The categories of business that matter most strategically are exactly the ones our current GM dashboard cannot track. The SSoT needs to handle them as first-class citizens, not exceptions.",es:"Las categorías de negocio que importan más estratégicamente son exactamente las que nuestro dashboard de GM actual no puede trackear. El SSoT tiene que manejarlas como ciudadanos de primer orden, no excepciones."}},
+
+  {id:"retention",t:{en:"Repeat behavior is strong, paid traffic dilutes funnel metrics",es:"El comportamiento de recompra es fuerte, el tráfico pago diluye las métricas del funnel"},c:T.green,
+    period:{en:"Repeat: cohorts since Jan 2025. Adobe: Oct 2025 to Mar 2026.",es:"Repeat: cohorts desde Ene 2025. Adobe: Oct 2025 a Mar 2026."},
+    intro:{en:"Two patterns running in parallel. Customer behavior post-purchase looks very healthy. Top-of-funnel metrics in Adobe look like they are deteriorating.",es:"Dos patrones corriendo en paralelo. El comportamiento del cliente post-compra se ve muy sano. Las métricas top-of-funnel en Adobe parecen estar deteriorándose."},
+    bullets:[
+      {en:"In the January 2025 cohort (now 15 months mature), 47.8% of customers have purchased again.",es:"En el cohort de Enero 2025 (ahora 15 meses maduro), el 47.8% de los clientes ha comprado de nuevo."},
+      {en:"Revenue per customer in mature cohorts reaches €74.6, against €30.7 for recent cohorts.",es:"El revenue por cliente en cohorts maduros llega a €74.6, contra €30.7 para cohorts recientes."},
+      {en:"Adobe shows conversion rate dropping from 15.7% to 11.6% over six months. ARPU dropped from €5.39 to €3.96 in the same window.",es:"Adobe muestra la tasa de conversión cayendo del 15.7% al 11.6% en seis meses. El ARPU cayó de €5.39 a €3.96 en la misma ventana."},
+      {en:"The main diluter appears to be Paid Social traffic: roughly 1.87M visitors at 0.44% conversion. This volume drags blended numbers down regardless of organic performance.",es:"El principal diluyente parece ser el tráfico de Paid Social: aproximadamente 1.87M visitantes al 0.44% de conversión. Este volumen tira los números blended hacia abajo independientemente de la performance orgánica."},
+      {en:"Note: the Adobe figures here come from earlier analysis cycles and have not been re-validated in this batch. Worth confirming with Data which Adobe view is the canonical source.",es:"Nota: las cifras de Adobe acá vienen de ciclos de análisis anteriores y no han sido re-validadas en este batch. Vale confirmar con Data qué vista de Adobe es la fuente canónica."},
+    ],
+    so:{en:"The retention story validates that pricing decisions which preserve repeat behavior are protecting real long-term value. The Adobe story tells us that any blended top-of-funnel metric needs Paid Social filtered out to be useful.",es:"La historia de retención valida que las decisiones de pricing que preservan el comportamiento de recompra están protegiendo valor real de largo plazo. La historia de Adobe nos dice que cualquier métrica blended de top-of-funnel necesita filtrar Paid Social para ser útil."}},
+];
+/* ===== UI COMPONENTS ===== */
+const ST_CLS={ready:"b-ready",partial:"b-partial",gap:"b-gap",wip:"b-wip",ok:"b-ok",no:"b-no",pending:"b-pending"};
+const ST_LBL={
+  ready:{en:"BigQuery ready",es:"BigQuery listo"},
+  partial:{en:"Partial",es:"Parcial"},
+  gap:{en:"Gap",es:"Gap"},
+  wip:{en:"In progress",es:"En progreso"},
+  ok:{en:"Validated",es:"Validada"},
+  no:{en:"Invalidated",es:"Invalidada"},
+  pending:{en:"Pending validation",es:"Pendiente validar"}
+};
+
+const Bd=({s,l})=><span className={`badge ${ST_CLS[s]||"b-pending"}`}>{V(ST_LBL[s]||ST_LBL.pending,l)}</span>;
+
+const Card=({accent,children,s={}})=>
+  <div className="anim" style={{background:T.card,borderRadius:10,border:`1px solid ${T.border}`,borderLeft:accent?`3px solid ${accent}`:`1px solid ${T.border}`,padding:"16px 18px",marginBottom:10,...s}}>{children}</div>;
+
+const KPI=({label,value,sub,color})=>
+  <div style={{background:T.card,borderRadius:10,border:`1px solid ${T.border}`,borderLeft:`3px solid ${color||T.muted}`,padding:"12px 14px",flex:"1 1 140px",minWidth:140}}>
+    <div style={{fontSize:10,color:T.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.5,marginBottom:4}}>{label}</div>
+    <div style={{fontSize:22,fontWeight:800,color:color||T.text,fontFamily:M,lineHeight:1}}>{value}</div>
+    {sub&&<div style={{fontSize:10,color:T.dim,marginTop:5,lineHeight:1.4}}>{sub}</div>}
+  </div>;
+
+const Coll=({title,color,count,children,open:init=false,hint})=>{
+  const[o,setO]=useState(init);
+  return<div style={{marginBottom:12}}>
+    <div onClick={()=>setO(!o)} style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",padding:"10px 0",borderBottom:`1px solid ${T.border}`,userSelect:"none"}}>
+      <span style={{fontSize:10,color:color||T.muted,transition:"transform .2s",transform:o?"rotate(90deg)":"rotate(0)",fontWeight:700}}>▶</span>
+      <span style={{fontSize:12,fontWeight:700,color:color||T.muted,textTransform:"uppercase",letterSpacing:1}}>{title}</span>
+      {count!=null&&<span style={{fontSize:10,fontFamily:M,color:T.muted,background:T.card,padding:"1px 6px",borderRadius:3}}>{count}</span>}
+      {hint&&!o&&<span style={{fontSize:10,color:T.muted,fontStyle:"italic",marginLeft:"auto",textAlign:"right"}}>{hint}</span>}
+    </div>
+    {o&&<div style={{paddingTop:10}} className="anim">{children}</div>}
+  </div>
+};
+
+const Sec=({id,children})=><section id={id} style={{marginBottom:34}}>{children}</section>;
+const SH=({children,color,sub})=>
+  <div style={{marginBottom:12}}>
+    <h2 style={{fontSize:17,fontWeight:800,color:color||T.text,letterSpacing:-.3,margin:0,fontFamily:UI}}>{children}</h2>
+    {sub&&<div style={{fontSize:12,color:T.dim,marginTop:4,lineHeight:1.5}}>{sub}</div>}
+  </div>;
+
+const Lnk=({href,children})=><a href={href} target="_blank" rel="noreferrer" style={{fontSize:11,color:T.accent,fontWeight:600,textDecoration:"none"}}>{children} →</a>;
+
+/* Metric row with expanded panel showing why/how/who/blocker */
+const MetricRow=({m,l})=>{
+  const[o,setO]=useState(false);
+  return<F>
+    <tr onClick={()=>setO(!o)} style={{cursor:"pointer"}}>
+      <td>
+        <span style={{fontSize:10,color:T.muted,marginRight:6,transition:"transform .15s",display:"inline-block",transform:o?"rotate(90deg)":""}}>▶</span>
+        <strong>{V(m.n,l)}</strong>
+      </td>
+      <td style={{fontSize:12,color:T.dim}}>{V(m.src,l)}</td>
+      <td><Bd s={m.st} l={l}/></td>
+    </tr>
+    {o&&<tr className="exp-row anim"><td colSpan={3}>
+      <dl className="kvgrid">
+        <dt>{L(l,"Why","Por qué")}</dt><dd>{V(m.why,l)}</dd>
+        <dt>{L(l,"How","Cómo")}</dt><dd>{V(m.how,l)}</dd>
+        <dt>{L(l,"Who","Quién")}</dt><dd>{V(m.who,l)}</dd>
+        <dt>{L(l,"Blocker","Bloqueador")}</dt><dd>{V(m.blocker,l)}</dd>
+      </dl>
+    </td></tr>}
+  </F>
+};
+
+/* Assumption row with full pattern: looked/found/matters/action */
+const AssumptionCard=({a,l})=>
+  <Card accent={a.st==="ok"?T.green:a.st==="no"?T.red:T.warn} s={{marginBottom:14}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:10}}>
+      <div style={{flex:1}}>
+        <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>{a.id}</span>
+        <strong style={{fontSize:14,color:T.text}}>{V(a.t,l)}</strong>
+      </div>
+      <Bd s={a.st} l={l}/>
+    </div>
+    <dl className="kvgrid">
+      <dt>{L(l,"What we did","Qué hicimos")}</dt><dd>{V(a.looked,l)}</dd>
+      <dt>{L(l,"What we found","Qué encontramos")}</dt><dd>{V(a.found,l)}</dd>
+      <dt>{L(l,"Why it matters","Por qué importa")}</dt><dd>{V(a.matters,l)}</dd>
+      <dt style={{color:T.purple}}>{L(l,"Action","Acción")}</dt><dd style={{color:T.purple,fontWeight:600}}>{V(a.action,l)}</dd>
+    </dl>
+  </Card>;
+
+const GN={core:{en:"Core dashboard metrics",es:"Métricas core del dashboard"},causal:{en:"Causal map metrics",es:"Métricas del mapa causal"},ltv:{en:"LTV and retention",es:"LTV y retención"}};
+
+function App(){
+  const[lang,setLang]=useState("en");
+  const[view,setView]=useState("brief");
+  const[mFilter,setMF]=useState("all");
+  const l=lang;
+  const full=view==="full";
+  const prio=view==="priority";
+  const alfonso=view==="alfonso";
+
+  const fMetrics=METRICS.filter(m=>mFilter==="all"||m.st===mFilter);
+  const grouped={};fMetrics.forEach(m=>{if(!grouped[m.g])grouped[m.g]=[];grouped[m.g].push(m)});
+  const mc={
+    all:METRICS.length,
+    ready:METRICS.filter(m=>m.st==="ready").length,
+    partial:METRICS.filter(m=>m.st==="partial").length,
+    gap:METRICS.filter(m=>m.st==="gap").length,
+    wip:METRICS.filter(m=>m.st==="wip").length
+  };
+  const tiers=["control","monitor","blind","radar"];
+
+  return<div style={{maxWidth:1080,margin:"0 auto",padding:"0 28px 50px",fontFamily:UI}}>
+
+    {/* HEADER */}
+    <div style={{padding:"18px 0 14px",borderBottom:`1px solid ${T.border}`,marginBottom:22,display:"flex",justifyContent:"space-between",alignItems:"flex-end",flexWrap:"wrap",gap:10}}>
+      <div>
+        <div style={{fontSize:10,fontWeight:700,color:T.accent,letterSpacing:2,textTransform:"uppercase"}}>Holafly · Pricing</div>
+        <div style={{fontSize:20,fontWeight:800,color:T.text,marginTop:1}}>Single Source of Truth</div>
+        <div style={{fontSize:12,color:T.dim,marginTop:3}}>{L(l,"Working document for the Data team meeting · Updated April 2026","Documento de trabajo para la reunión con el equipo de Data · Actualizado Abril 2026")}</div>
+      </div>
+      <div style={{display:"flex",gap:6}}>
+        <div style={{display:"flex",background:T.border,borderRadius:6,overflow:"hidden"}}>
+          {["brief","alfonso","priority","full"].map(v=>
+            <button key={v} onClick={()=>setView(v)} style={{padding:"5px 12px",border:"none",cursor:"pointer",fontSize:11,fontWeight:view===v?700:400,background:view===v?T.accent:"transparent",color:view===v?"#fff":T.dim,fontFamily:UI}}>
+              {v==="brief"?"Brief":v==="alfonso"?"Pre-Alfonso":v==="priority"?L(l,"Priority","Prioridad"):L(l,"Full","Completo")}
+            </button>
+          )}
+        </div>
+        <div style={{display:"flex",background:T.border,borderRadius:6,overflow:"hidden"}}>
+          {["en","es"].map(lg=>
+            <button key={lg} onClick={()=>setLang(lg)} style={{padding:"5px 10px",border:"none",cursor:"pointer",fontSize:11,fontWeight:lang===lg?700:400,background:lang===lg?T.text:"transparent",color:lang===lg?"#fff":T.dim,fontFamily:UI}}>
+              {lg.toUpperCase()}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+
+    {/* CONTEXT — restructured with hierarchy, not a wall of text */}
+    <Sec id="ctx">
+      <Card accent={T.accent}>
+        <div style={{fontSize:10,fontWeight:700,color:T.accent,textTransform:"uppercase",letterSpacing:1,marginBottom:6}}>{L(l,"Context","Contexto")}</div>
+        <div style={{fontSize:14,color:T.text,fontWeight:700,marginBottom:10,lineHeight:1.4}}>
+          {L(l,"Meeting scheduled with the Data team (Miquel and Oscar) to align on what Pricing needs as a single source of truth.","Reunión agendada con el equipo de Data (Miquel y Oscar) para alinear qué necesita Pricing como single source of truth.")}
+        </div>
+        <ul className="bullet-list">
+          <li>{L(l,<span><strong>Goal:</strong> agree on the dashboard, the assumptions behind it, and the support model to keep it alive.</span>,<span><strong>Objetivo:</strong> acordar el dashboard, las asunciones detrás, y el modelo de soporte para mantenerlo vivo.</span>)}</li>
+          <li>{L(l,<span><strong>What we bring:</strong> 13 BigQuery queries executed, 5 companion data sources, 7 explicit assumptions, and findings on Web vs App, AOV decomposition, GM violations, and new product visibility.</span>,<span><strong>Qué traemos:</strong> 13 queries en BigQuery ejecutadas, 5 fuentes de datos companion, 7 asunciones explícitas, y hallazgos sobre Web vs App, descomposición de AOV, violaciones de GM, y visibilidad de productos nuevos.</span>)}</li>
+          <li>{L(l,<span><strong>What we need:</strong> definitions on three things (revenue field, discount taxonomy, ARPU path), one table fix (GM by channel), help finding the NPS source, and a recurring support model.</span>,<span><strong>Qué necesitamos:</strong> definiciones sobre tres cosas (campo de revenue, taxonomía de descuentos, camino para ARPU), un fix de tabla (GM por canal), ayuda para encontrar la fuente de NPS, y un modelo de soporte recurrente.</span>)}</li>
+          <li>{L(l,<span><strong>Three views in this document:</strong> Brief (overview and causal map), Priority (what to resolve in the meeting), Full (all the detail).</span>,<span><strong>Tres vistas en este documento:</strong> Brief (overview y mapa causal), Prioridad (qué resolver en la reunión), Completo (todo el detalle).</span>)}</li>
+        </ul>
+      </Card>
+
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:14}}>
+        <KPI label="Revenue 2026" value="€550M" sub={L(l,"€306M in 2025. €470M base plus €80M new business.","€306M en 2025. €470M base más €80M new business.")} color={T.accent}/>
+        <KPI label="GM 2026" value=">65%" sub={L(l,"62% in 2025. Floor for pricing set at 30%.","62% en 2025. Floor de pricing fijado en 30%.")} color={T.green}/>
+        <KPI label="NPS 2026" value=">60%" sub={L(l,"58% in 2025. Source unknown for pricing analysis.","58% en 2025. Fuente desconocida para análisis de pricing.")} color={T.blue}/>
+        <KPI label="ARPU" value="+10%" sub={L(l,"Per experiment, measured as DID delta.","Por experimento, medido como delta DID.")} color={T.accent}/>
+        <KPI label={L(l,"Experiments","Experimentos")} value="55" sub={L(l,"Target across 11 months. €6 to €15M incremental.","Objetivo en 11 meses. €6 a €15M incremental.")} color={T.green}/>
+      </div>
+    </Sec>
+
+    {/* ALFONSO PRE-MEETING TOPICS — Top of Alfonso view */}
+    {alfonso&&<Sec id="alfonso-top">
+      <SH color={T.purple} sub={L(l,"This document is a work in progress and we want your read on it before going to Data on Thursday. These are the topics where your input would help most. The rest of the document is the supporting material for that conversation.","Este documento es un trabajo en progreso y queremos tu lectura antes de ir a Data el jueves. Estos son los temas donde tu input ayudaría más. El resto del documento es el material de soporte para esa conversación.")}>
+        {L(l,"What we want to validate with you","Qué queremos validar con vos")}
+      </SH>
+      {ALFONSO_TOPICS.map((t,i)=>
+        <Coll key={i} title={V(t.t,l)} color={T.purple} count={t.points.length}>
+          <div style={{fontSize:13,color:T.dim,lineHeight:1.55,marginBottom:10,fontStyle:"italic"}}>{V(t.why,l)}</div>
+          <ul className="bullet-list">
+            {t.points.map((p,j)=><li key={j}>{V(p,l)}</li>)}
+          </ul>
+        </Coll>
+      )}
+    </Sec>}
+
+    {/* PRIORITY VIEW — placeholder for now, questions section to be approved separately */}
+    {prio&&<Sec id="prio">
+      <SH color={T.red} sub={L(l,"What needs to be resolved in the Data meeting and the risks to be aware of going in.","Qué necesita resolverse en la reunión con Data y los riesgos a tener presentes al entrar.")}>
+        {L(l,"Critical for Thursday","Crítico para el jueves")}
+      </SH>
+
+      <Card accent={T.accent}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:6}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q1</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Which table do we use for revenue?","¿Qué tabla usamos para revenue?")}</strong>
+          </div>
+          <span className="badge b-info">Miquel</span>
+        </div>
+        <div style={{fontSize:12,color:T.dim,lineHeight:1.55}}>
+          {L(l,"BigQuery sums to ~€350M for 2025; All Hands reports €306M. We are likely on a field that includes tax. Different teams use different tables. For an SSoT aligned with Finance, which one would you recommend?","BigQuery suma ~€350M para 2025; el All Hands reporta €306M. Probablemente estamos en un campo que incluye impuestos. Distintos equipos usan distintas tablas. Para un SSoT alineado con Finance, ¿cuál nos recomiendan?")}
+        </div>
+      </Card>
+
+      <Card accent={T.accent}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:6}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q2</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"How do we unblock ARPU without depending on Adobe?","¿Cómo desbloqueamos ARPU sin depender de Adobe?")}</strong>
+          </div>
+          <span className="badge b-info">Miquel + Oscar</span>
+        </div>
+        <div style={{fontSize:12,color:T.dim,lineHeight:1.55}}>
+          {L(l,"Today ARPU lives only in Adobe. For the Looker dashboard to show it in real time we need sessions in BigQuery. Is there a path on your roadmap, or a proxy we can use in the meantime?","Hoy ARPU vive solo en Adobe. Para que el dashboard de Looker pueda mostrarlo en tiempo real necesitamos sessions en BigQuery. ¿Hay un camino en su roadmap, o un proxy que podamos usar mientras tanto?")}
+        </div>
+      </Card>
+
+      <Card accent={T.warn}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:6}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q3</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Where does the correct discount classification come from?","¿De dónde sale la clasificación correcta de descuentos?")}</strong>
+          </div>
+          <span className="badge b-info">Oscar</span>
+        </div>
+        <div style={{fontSize:12,color:T.dim,lineHeight:1.55}}>
+          {L(l,"Our BigQuery classification does not match the Recurrence Cockpit. We assume a mapping table we are not using. What is the correct source and can it be exposed in BigQuery?","Nuestra clasificación en BigQuery no matchea con el Recurrence Cockpit. Asumimos una tabla de mapping que no estamos usando. ¿Cuál es la fuente correcta y puede exponerse en BigQuery?")}
+        </div>
+      </Card>
+
+      <div style={{fontSize:11,color:T.muted,fontStyle:"italic",margin:"4px 0 18px",textAlign:"center"}}>
+        {L(l,"For the full set of 9 questions including dashboard requirements and operational topics, switch to the Full view.","Para el set completo de 9 preguntas incluyendo requirements del dashboard y temas operativos, cambiar a la vista Completo.")}
+      </div>
+    </Sec>}
+
+    {/* BLOCKERS — Priority view (Alfonso has its own block later) */}
+    {prio&&<Sec id="blockers">
+      <SH color={T.dim} sub={L(l,"Things that could derail Pricing's contribution to 2026 goals if not addressed.","Cosas que podrían descarrilar la contribución de Pricing a los objetivos 2026 si no se abordan.")}>
+        {L(l,"Risks and blockers","Riesgos y bloqueadores")}
+      </SH>
+      {BLOCKERS.map((b,i)=>
+        <Card key={i} accent={T.dim}>
+          <div style={{fontWeight:700,fontSize:14,color:T.text,marginBottom:8}}>{V(b.w,l)}</div>
+          <dl className="kvgrid">
+            <dt>{L(l,"Detail","Detalle")}</dt><dd>{V(b.d,l)}</dd>
+            <dt>{L(l,"Risk","Riesgo")}</dt><dd style={{color:T.red}}>{V(b.risk,l)}</dd>
+            <dt style={{color:T.green}}>{L(l,"Mitigation","Mitigación")}</dt><dd style={{color:T.green,fontWeight:600}}>{V(b.mit,l)}</dd>
+          </dl>
+        </Card>
+      )}
+    </Sec>}
+
+    {/* CAUSAL MAP — Brief and Full, not Priority */}
+    {!prio&&<Sec id="causal">
+      <SH sub={L(l,"22 variables organized by how much control Pricing has over each one. They feed four mediating mechanisms, which in turn drive four output metrics that the company tracks.","22 variables organizadas por cuánto control tiene Pricing sobre cada una. Alimentan cuatro mecanismos mediadores, que a su vez impulsan las cuatro métricas output que sigue la compañía.")}>
+        {L(l,"What affects pricing","Qué afecta al pricing")}
+      </SH>
+
+      {/* LEGEND */}
+      <div style={{background:T.card,borderRadius:8,padding:"10px 14px",marginBottom:14,fontSize:11,color:T.dim,border:`1px solid ${T.border}`}}>
+        <div style={{fontWeight:700,fontSize:10,textTransform:"uppercase",letterSpacing:.5,color:T.muted,marginBottom:6}}>{L(l,"How to read this map","Cómo leer este mapa")}</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:14,marginBottom:6}}>
+          {tiers.map(t=>
+            <span key={t}><span className="legend-dot" style={{background:TIER[t].bg,border:`1.5px solid ${TIER[t].stroke}`}}></span>{V(TIER[t].l,l)}</span>
+          )}
+        </div>
+        <div style={{lineHeight:1.5,color:T.dim}}>
+          {L(l,"All 22 variables collectively feed the 4 mediators (effective price, purchase intent, cost structure, revenue mix). Mediators in turn drive AOV, CR, GM, and ARPU. The arrows are many-to-many, not one-to-one. To see which mediators each variable affects, open the variable detail in the Full view.","Las 22 variables alimentan colectivamente los 4 mediadores (precio efectivo, intención de compra, estructura de costo, mix de revenue). Los mediadores a su vez impulsan AOV, CR, GM y ARPU. Las flechas son many-to-many, no uno-a-uno. Para ver qué mediadores afecta cada variable, abrir el detalle de la variable en la vista Completo.")}
+        </div>
+      </div>
+
+      {/* AT-A-GLANCE MAP */}
+      <div style={{background:T.card,borderRadius:10,border:`1px solid ${T.border}`,padding:"16px",marginBottom:14}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 28px 1fr 28px 1fr",alignItems:"center",gap:6}}>
+          <div>
+            {tiers.map(tier=>{
+              const items=CAUSAL.filter(c=>c.tier===tier);
+              if(!items.length)return null;
+              const tc=TIER[tier];
+              return<div key={tier} style={{marginBottom:10}}>
+                <div style={{fontSize:10,fontWeight:700,color:tc.t,marginBottom:4,display:"flex",alignItems:"center",gap:5}}>
+                  <span className="legend-dot" style={{background:tc.bg,border:`1.5px solid ${tc.stroke}`,margin:0}}></span>
+                  {V(tc.l,l)} ({items.length})
+                </div>
+                <div style={{display:"flex",flexWrap:"wrap",gap:3}}>
+                  {items.map((c,i)=>
+                    <span key={i} className="pill" style={{background:tc.bg,color:tc.t}}>{V(c.n,l)}</span>
+                  )}
+                </div>
+              </div>
+            })}
+          </div>
+          <div style={{textAlign:"center",color:T.muted,fontSize:18}}>→</div>
+          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+            <div style={{fontSize:10,fontWeight:700,color:T.muted,marginBottom:2,textAlign:"center",textTransform:"uppercase",letterSpacing:.5}}>{L(l,"Mediators","Mediadores")}</div>
+            {MEDIATORS.map((m,i)=>
+              <div key={i} style={{background:"#FFF",borderRadius:6,padding:"7px 10px",border:`1px solid ${T.border}`,borderLeft:`3px solid ${m.c}`,textAlign:"center",fontSize:11,fontWeight:700,color:T.text}}>
+                {V(m.n,l)}
+              </div>
+            )}
+          </div>
+          <div style={{textAlign:"center",color:T.muted,fontSize:18}}>→</div>
+          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+            <div style={{fontSize:10,fontWeight:700,color:T.muted,marginBottom:2,textAlign:"center",textTransform:"uppercase",letterSpacing:.5}}>{L(l,"Outputs","Outputs")}</div>
+            {OUTPUTS.map((o,i)=>
+              <div key={i} style={{background:"#EEEDFE",borderRadius:6,padding:"7px 10px",textAlign:"center"}}>
+                <span style={{fontSize:12,fontWeight:800,color:"#3C3489",fontFamily:M}}>{o.n}</span>
+                <span style={{fontSize:11,color:"#534AB7",marginLeft:6,fontWeight:600}}>{o.v}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {!full&&<div style={{fontSize:12,color:T.muted,fontStyle:"italic",marginTop:-4,marginBottom:10,textAlign:"center"}}>
+        {L(l,"For the description of each variable and the mediators it affects, switch to the Full view.","Para la descripción de cada variable y los mediadores que afecta, cambiar a vista Completo.")}
+      </div>}
+
+      {full&&<Coll title={L(l,"Variable detail","Detalle de variables")} color={T.text} count={CAUSAL.length}>
+        <table className="dt"><thead><tr>
+          <th>{L(l,"Variable","Variable")}</th>
+          <th>{L(l,"Tier","Tier")}</th>
+          <th>{L(l,"Description","Descripción")}</th>
+          <th>{L(l,"Affects","Afecta a")}</th>
+        </tr></thead><tbody>
+          {CAUSAL.map((c,i)=>
+            <tr key={i}>
+              <td><strong>{V(c.n,l)}</strong></td>
+              <td><span className="pill" style={{background:TIER[c.tier].bg,color:TIER[c.tier].t,whiteSpace:"nowrap"}}>{V(TIER[c.tier].l,l)}</span></td>
+              <td style={{fontSize:12,color:T.dim,lineHeight:1.55}}>{V(c.s,l)}</td>
+              <td style={{fontSize:11,color:T.dim}}>
+                {c.affects.map((a,j)=>{
+                  const med=MEDIATORS.find(m=>m.id===a);
+                  return<div key={j} style={{display:"flex",alignItems:"center",gap:4,marginBottom:2}}>
+                    <span style={{width:6,height:6,borderRadius:"50%",background:med?.c||T.muted,flexShrink:0}}/>
+                    <span>{V(med?.n||a,l)}</span>
+                  </div>
+                })}
+              </td>
+            </tr>
+          )}
+        </tbody></table>
+      </Coll>}
+    </Sec>}
+
+    {/* METRICS — Full only, comes BEFORE assumptions */}
+    {full&&<Sec id="met">
+      <SH sub={L(l,"What we want the SSoT dashboard to track and why each metric matters. Click any row to see how we calculate it, who we depend on, and what is blocking us today.","Qué queremos que el dashboard SSoT tracke y por qué importa cada métrica. Click en cualquier fila para ver cómo la calculamos, de quién dependemos, y qué nos está bloqueando hoy.")}>
+        {L(l,"Metrics to track","Métricas a trackear")}
+      </SH>
+      <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
+        {["all","ready","partial","gap","wip"].map(f=>
+          <button key={f} onClick={()=>setMF(f)} style={{padding:"5px 12px",borderRadius:5,border:"none",cursor:"pointer",fontSize:11,fontWeight:mFilter===f?700:500,background:mFilter===f?T.text:T.card,color:mFilter===f?"#fff":T.dim,fontFamily:UI}}>
+            {f==="all"?L(l,"All","Todas")+" "+mc.all:f==="ready"?L(l,"Ready","Listas")+" "+mc.ready:f==="partial"?L(l,"Partial","Parciales")+" "+mc.partial:f==="gap"?"Gap "+mc.gap:L(l,"In progress","En progreso")+" "+mc.wip}
+          </button>
+        )}
+      </div>
+      {Object.entries(grouped).map(([g,ms])=>
+        <Coll key={g} title={V(GN[g],l)} count={ms.length} color={T.dim}>
+          <table className="dt"><thead><tr>
+            <th>{L(l,"Metric","Métrica")}</th>
+            <th>{L(l,"Source","Fuente")}</th>
+            <th>{L(l,"Status","Estado")}</th>
+          </tr></thead><tbody>
+            {ms.map((m,i)=><MetricRow key={i} m={m} l={l}/>)}
+          </tbody></table>
+        </Coll>
+      )}
+    </Sec>}
+
+    {/* ASSUMPTIONS — Full only, AFTER metrics, BEFORE findings */}
+    {/* FINDINGS — Full and Alfonso */}
+    {(full||alfonso)&&<Sec id="find">
+      <SH sub={L(l,"What the queries showed once we ran them. Each finding tells us something about the dashboard we need to build.","Qué mostraron las queries una vez que las corrimos. Cada hallazgo nos dice algo sobre el dashboard que tenemos que construir.")}>
+        {L(l,"Key findings","Hallazgos clave")}
+      </SH>
+      {FINDINGS.map((f,i)=>
+        <Coll key={i} title={V(f.t,l)} color={f.c} hint={V(f.period,l)}>
+          <div style={{padding:"8px 0"}}>
+            <div style={{fontSize:13,color:T.dim,lineHeight:1.6,marginBottom:12}}>{V(f.intro,l)}</div>
+            {f.compare&&
+              <div className="split-card" style={{marginBottom:12}}>
+                <div className="col">
+                  <h4>{f.compare.web.label}</h4>
+                  <dl>
+                    {f.compare.web.rows.map((r,j)=><div key={j}><dt>{V(r.k,l)}</dt><dd>{r.v}</dd></div>)}
+                  </dl>
+                </div>
+                <div className="col">
+                  <h4>{f.compare.app.label}</h4>
+                  <dl>
+                    {f.compare.app.rows.map((r,j)=><div key={j}><dt>{V(r.k,l)}</dt><dd>{r.v}</dd></div>)}
+                  </dl>
+                </div>
+              </div>
+            }
+            {f.bullets&&
+              <ul className="bullet-list" style={{marginBottom:12}}>
+                {f.bullets.map((b,j)=><li key={j}>{V(b,l)}</li>)}
+              </ul>
+            }
+            <div style={{padding:"10px 12px",background:"#F3E8F4",borderRadius:6,borderLeft:`3px solid ${T.purple}`,fontSize:12,color:T.purple}}>
+              <strong>{L(l,"What it means: ","Qué significa: ")}</strong><span style={{color:T.dim}}>{V(f.so,l)}</span>
+            </div>
+          </div>
+        </Coll>
+      )}
+    </Sec>}
+
+    {/* ASSUMPTIONS — Full and Alfonso */}
+    {(full||alfonso)&&<Sec id="assum">
+      <SH color={T.warn} sub={L(l,"The findings above only hold up if these assumptions are correct. Each one explains what we tested, what we found, why it matters, and what we still need to confirm.","Los hallazgos de arriba solo se sostienen si estas asunciones son correctas. Cada una explica qué testeamos, qué encontramos, por qué importa, y qué nos falta confirmar.")}>
+        {L(l,"Assumptions behind the analysis","Asunciones detrás del análisis")}
+      </SH>
+      {ASSUMPTIONS.map((a,i)=><AssumptionCard key={i} a={a} l={l}/>)}
+    </Sec>}
+
+    {/* ALFONSO PRE-MEETING — Full only */}
+    {full&&<Sec id="alfonso">
+      <SH color={T.purple} sub={L(l,"Before going to the Data team, we want to walk through this document with Alfonso. These are topics where his read can sharpen what we bring to Data, and where some questions might already have answers we have not seen yet.","Antes de ir al equipo de Data, queremos recorrer este documento con Alfonso. Son temas donde su lectura puede afinar lo que llevamos a Data, y donde algunas preguntas pueden ya tener respuestas que no estamos viendo todavía.")}>
+        {L(l,"Validation with Alfonso (pre-Data meeting)","Validación con Alfonso (pre-reunión Data)")}
+      </SH>
+      {ALFONSO_TOPICS.map((t,i)=>
+        <Coll key={i} title={V(t.t,l)} color={T.purple} count={t.points.length}>
+          <div style={{fontSize:13,color:T.dim,lineHeight:1.55,marginBottom:10,fontStyle:"italic"}}>{V(t.why,l)}</div>
+          <ul className="bullet-list">
+            {t.points.map((p,j)=><li key={j}>{V(p,l)}</li>)}
+          </ul>
+        </Coll>
+      )}
+    </Sec>}
+
+    {/* BLOCKERS — Alfonso view only (priority view has its own block earlier) */}
+    {alfonso&&<Sec id="blockers-alfonso">
+      <SH color={T.dim} sub={L(l,"Things that could derail Pricing's contribution to 2026 goals if not addressed. We want your read on whether we are seeing the right ones and missing any.","Cosas que podrían descarrilar la contribución de Pricing a los objetivos 2026 si no se abordan. Queremos tu lectura sobre si estamos viendo los correctos y si nos falta alguno.")}>
+        {L(l,"Risks and blockers","Riesgos y bloqueadores")}
+      </SH>
+      {BLOCKERS.map((b,i)=>
+        <Card key={i} accent={T.dim}>
+          <div style={{fontWeight:700,fontSize:14,color:T.text,marginBottom:8}}>{V(b.w,l)}</div>
+          <dl className="kvgrid">
+            <dt>{L(l,"Detail","Detalle")}</dt><dd>{V(b.d,l)}</dd>
+            <dt>{L(l,"Risk","Riesgo")}</dt><dd style={{color:T.red}}>{V(b.risk,l)}</dd>
+            <dt style={{color:T.green}}>{L(l,"Mitigation","Mitigación")}</dt><dd style={{color:T.green,fontWeight:600}}>{V(b.mit,l)}</dd>
+          </dl>
+        </Card>
+      )}
+    </Sec>}
+
+    {/* QUESTIONS — Full and Alfonso views */}
+    {(full||alfonso)&&<Sec id="q">
+      <SH color={T.accent} sub={L(l,"The Data team will build the dashboard. These questions are framed around what we want to know to inform our own analysis work and to understand where to pull data from in BigQuery when we need it. Each one shows the source we are basing the question on.","El equipo de Data va a construir el dashboard. Estas preguntas están pensadas alrededor de qué queremos saber para informar nuestro propio trabajo de análisis y para entender de dónde sacar data en BigQuery cuando lo necesitemos. Cada una muestra la fuente sobre la que nos basamos para preguntar.")}>
+        {L(l,"Questions for the Data meeting","Preguntas para la reunión con Data")}
+      </SH>
+
+      {alfonso&&<Card accent={T.purple} s={{background:"#F3E8F4"}}>
+        <div style={{fontSize:13,color:T.purple,lineHeight:1.6}}>
+          <strong>{L(l,"For the Alfonso review:","Para la revisión con Alfonso:")}</strong> {L(l,"these are the 9 questions we plan to bring to Data on Thursday. We want your read on whether the framing works, whether anything is missing, and whether any of these have answers you can already give us before we go.","estas son las 9 preguntas que planeamos llevar a Data el jueves. Queremos tu lectura sobre si el framing funciona, si falta algo, y si alguna ya tiene respuesta que nos puedas dar vos antes de ir.")}
+        </div>
+      </Card>}
+
+      {/* Q1 — Revenue field */}
+      <Card accent={T.accent}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q1</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Which table should we use for revenue when we want to align with Finance?","¿Qué tabla deberíamos usar para revenue cuando queremos alinearnos con Finance?")}</strong>
+          </div>
+          <span className="badge b-info">Miquel</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6}}>
+          {L(l,"For our own analysis we have been pulling revenue from the sales table in BigQuery. We do not need you to use any specific field in the dashboard, but we would like to know which one you consider canonical so we can match our internal numbers to whatever you build. Different teams in the company use different tables, and we want to use the same source you use.","Para nuestro propio análisis hemos venido sacando revenue de la tabla de ventas en BigQuery. No necesitamos que ustedes usen un campo específico en el dashboard, pero nos gustaría saber cuál consideran canónico para poder matchear nuestros números internos con lo que ustedes construyan. Distintos equipos en la compañía usan distintas tablas, y queremos usar la misma fuente que ustedes.")}
+        </div>
+        <div style={{marginTop:12,padding:"10px 12px",background:"#F1F5F9",borderRadius:6,borderLeft:`2px solid ${T.muted}`}}>
+          <div style={{fontSize:10,fontWeight:700,color:T.muted,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>{L(l,"Source we are looking at","Fuente sobre la que estamos mirando")}</div>
+          <ul className="bullet-list" style={{fontSize:12}}>
+            <li><strong>{L(l,"Table:","Tabla:")}</strong> <code style={{fontFamily:M,fontSize:11}}>activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted</code></li>
+            <li><strong>{L(l,"Field:","Campo:")}</strong> <code style={{fontFamily:M,fontSize:11}}>current_total_price</code> {L(l,", summed for the full year 2025",", sumado para el año 2025 completo")}</li>
+            <li><strong>{L(l,"What we observed:","Qué observamos:")}</strong> {L(l,"BigQuery sums to roughly €350M while the All Hands reports €306M for the same period. The 15% gap most likely comes from tax inclusion. The same table also has a net_sales field that excludes tax and discounts.","BigQuery suma cerca de €350M mientras el All Hands reporta €306M para el mismo período. La brecha de 15% probablemente viene de la inclusión de impuestos. La misma tabla tiene un campo net_sales que excluye impuestos y descuentos.")}</li>
+          </ul>
+        </div>
+      </Card>
+
+      {/* Q2 — ARPU path */}
+      <Card accent={T.accent}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q2</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Is there a way for us to calculate ARPU without depending on Adobe?","¿Hay alguna forma de que calculemos ARPU sin depender de Adobe?")}</strong>
+          </div>
+          <span className="badge b-info">Miquel + Oscar</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6}}>
+          {L(l,"For our own experiment closeouts we calculate ARPU from Adobe because it needs sessions data. This creates a meaningful operational dependency: every closeout requires an Adobe round-trip, and we cannot verify the number independently. We are not asking the dashboard to show ARPU in real time, but we would like to know if there is a path on your roadmap that would let us compute it from BigQuery, or a proxy you would recommend in the meantime.","Para nuestros propios cierres de experimentos calculamos ARPU desde Adobe porque necesita data de sessions. Esto nos crea una dependencia operativa importante: cada cierre requiere ida y vuelta con Adobe, y no podemos verificar el número independientemente. No les estamos pidiendo que el dashboard muestre ARPU en tiempo real, pero nos gustaría saber si hay algún camino en su roadmap que nos permita calcularlo desde BigQuery, o algún proxy que nos recomienden mientras tanto.")}
+        </div>
+        <div style={{marginTop:12,padding:"10px 12px",background:"#F1F5F9",borderRadius:6,borderLeft:`2px solid ${T.muted}`}}>
+          <div style={{fontSize:10,fontWeight:700,color:T.muted,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>{L(l,"Source we are looking at","Fuente sobre la que estamos mirando")}</div>
+          <ul className="bullet-list" style={{fontSize:12}}>
+            <li><strong>{L(l,"Today:","Hoy:")}</strong> {L(l,"Adobe Analytics workspace, where ARPU is calculated as revenue divided by sessions.","Workspace de Adobe Analytics, donde ARPU se calcula como revenue dividido por sessions.")}</li>
+            <li><strong>{L(l,"Possible BigQuery proxy:","Posible proxy en BigQuery:")}</strong> {L(l,"revenue divided by unique customers per day, computed from the sales table.","revenue dividido por clientes únicos por día, computado desde la tabla de ventas.")}</li>
+          </ul>
+        </div>
+      </Card>
+
+      {/* Q3 — Discount classification */}
+      <Card accent={T.warn}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q3</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Where does the canonical discount classification live?","¿Dónde vive la clasificación canónica de descuentos?")}</strong>
+          </div>
+          <span className="badge b-info">Oscar</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6}}>
+          {L(l,"For our analysis we tried to classify discount codes by name pattern but it does not work. The Recurrence Cockpit clearly uses a different source. We would like to be able to use the same classification you use, ideally exposed in BigQuery so we can join it with sales for our own analysis.","Para nuestro análisis intentamos clasificar códigos de descuento por patrón de nombre pero no funciona. El Recurrence Cockpit claramente usa otra fuente. Nos gustaría poder usar la misma clasificación que ustedes, idealmente expuesta en BigQuery para que podamos joinearla con ventas para nuestro propio análisis.")}
+        </div>
+        <div style={{marginTop:12,padding:"10px 12px",background:"#F1F5F9",borderRadius:6,borderLeft:`2px solid ${T.muted}`}}>
+          <div style={{fontSize:10,fontWeight:700,color:T.muted,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>{L(l,"Source we are looking at","Fuente sobre la que estamos mirando")}</div>
+          <ul className="bullet-list" style={{fontSize:12}}>
+            <li><strong>{L(l,"What we tried:","Qué intentamos:")}</strong> {L(l,"pattern matching on the","pattern matching sobre el campo")} <code style={{fontFamily:M,fontSize:11}}>discount_code</code> {L(l,"field in","en")} <code style={{fontFamily:M,fontSize:11}}>int_shopify_sales_with_vat_adjusted</code> ({L(l,"codes starting with HFREF as referrals, ALY as holacoins, and so on","códigos que empiezan con HFREF como referidos, ALY como holacoins, etc")}).</li>
+            <li><strong>{L(l,"What we found:","Qué encontramos:")}</strong> {L(l,"our BigQuery classification finds fewer than 25 holacoins per month, while the Recurrence Cockpit finds 385K in a single quarter. 34% of all discounted orders fall into an unclassified 'other promo' bucket. The actual codes do not follow predictable prefixes.","nuestra clasificación en BigQuery encuentra menos de 25 holacoins por mes, mientras el Recurrence Cockpit encuentra 385K en un solo trimestre. 34% de todas las órdenes con descuento caen en un bucket 'other promo' sin clasificar. Los códigos reales no siguen prefijos predecibles.")}</li>
+            <li><strong>{L(l,"Reference:","Referencia:")}</strong> {L(l,"the Recurrence Cockpit dashboard, which clearly uses a mapping table we are not seeing.","el dashboard del Recurrence Cockpit, que claramente usa una tabla de mapping que no estamos viendo.")}</li>
+          </ul>
+        </div>
+      </Card>
+
+      {/* Q4 — NPS source */}
+      <Card accent={T.blue}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q4</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Where does NPS data live and can we use it at the destination level?","¿Dónde vive la data de NPS y la podemos usar a nivel destino?")}</strong>
+          </div>
+          <span className="badge b-info">{L(l,"Miquel (or Shravan)","Miquel (o Shravan)")}</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6}}>
+          {L(l,"We know as a company we are measuring NPS but we do not know which system stores the data. For our analysis we would like to cross-reference NPS with destination: high NPS combined with high price suggests room to charge more, low NPS with high price suggests we are overcharging. We are not asking you to put NPS in the dashboard, but if it exists somewhere joinable we would like to know how to access it.","Sabemos que como compañía estamos midiendo NPS pero no sabemos en qué sistema vive la data. Para nuestro análisis nos gustaría cruzar NPS con destino: NPS alto combinado con precio alto sugiere espacio para subir, NPS bajo con precio alto sugiere que estamos sobrecobrando. No les estamos pidiendo poner NPS en el dashboard, pero si existe en algún lado joineable nos gustaría saber cómo acceder.")}
+        </div>
+        <div style={{marginTop:12,padding:"10px 12px",background:"#F1F5F9",borderRadius:6,borderLeft:`2px solid ${T.muted}`}}>
+          <div style={{fontSize:10,fontWeight:700,color:T.muted,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>{L(l,"Source we are looking at","Fuente sobre la que estamos mirando")}</div>
+          <ul className="bullet-list" style={{fontSize:12}}>
+            <li><strong>{L(l,"What we know:","Qué sabemos:")}</strong> {L(l,"company NPS target is greater than 60% for 2026, was 58% in 2025 (reported in the All Hands).","el objetivo de NPS de la compañía es mayor a 60% para 2026, fue 58% en 2025 (reportado en el All Hands).")}</li>
+            <li><strong>{L(l,"What we do not know:","Qué no sabemos:")}</strong> {L(l,"which system stores the underlying data (Zendesk? a post-purchase survey? a third-party tool?), or whether it can be linked to destination.","qué sistema almacena la data subyacente (¿Zendesk? ¿una encuesta post-compra? ¿una herramienta tercerizada?), o si se puede vincular a destino.")}</li>
+          </ul>
+        </div>
+      </Card>
+
+      {/* Q5 — customer_id */}
+      <Card accent={T.purple}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q5</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"How is customer_id built across web and app?","¿Cómo se arma el customer_id entre web y app?")}</strong>
+          </div>
+          <span className="badge b-info">{L(l,"Data team","Equipo de Data")}</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6}}>
+          {L(l,"For our retention and LTV analysis we are assuming that a customer buying first from web and later from app counts as one repeat customer, not two new ones. We have not directly tested this. If the assumption is wrong, our retention numbers are systematically underestimated and we should know that.","Para nuestro análisis de retención y LTV estamos asumiendo que un cliente que compra primero desde web y después desde app cuenta como un cliente que recompra, no como dos nuevos. No lo hemos testeado directamente. Si la asunción está mal, nuestros números de retención están sistemáticamente subestimados y deberíamos saberlo.")}
+        </div>
+        <div style={{marginTop:12,padding:"10px 12px",background:"#F1F5F9",borderRadius:6,borderLeft:`2px solid ${T.muted}`}}>
+          <div style={{fontSize:10,fontWeight:700,color:T.muted,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>{L(l,"Source we are looking at","Fuente sobre la que estamos mirando")}</div>
+          <ul className="bullet-list" style={{fontSize:12}}>
+            <li><strong>{L(l,"Field:","Campo:")}</strong> <code style={{fontFamily:M,fontSize:11}}>customer_id</code> {L(l,"in","en")} <code style={{fontFamily:M,fontSize:11}}>int_shopify_sales_with_vat_adjusted</code></li>
+            <li><strong>{L(l,"What we computed:","Qué computamos:")}</strong> {L(l,"cohort repeat rate of 47.8% in mature cohorts (15 months from Jan 2025).","tasa de repetición por cohort de 47.8% en cohorts maduros (15 meses desde Enero 2025).")}</li>
+            <li><strong>{L(l,"Context:","Contexto:")}</strong> {L(l,"Web and App represent almost equal volume (46% vs 44%), so cross-device purchases are likely common.","Web y App representan volumen casi igual (46% vs 44%), así que las compras cross-dispositivo son probablemente comunes.")}</li>
+          </ul>
+        </div>
+      </Card>
+
+      {/* Q6 — GM by channel */}
+      <Card accent={T.dim}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q6</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Is there a table that shows gross margin broken down by sales channel?","¿Existe una tabla que muestre margen bruto desglosado por canal de ventas?")}</strong>
+          </div>
+          <span className="badge b-info">{L(l,"Data team","Equipo de Data")}</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6}}>
+          {L(l,"For our analysis we want to understand whether profitability differs between Web and App, given that Apple charges between 15 and 30% on in-app iOS purchases and App represents 44% of volume. The gross margin tables we know about today are aggregated by destination, without sales channel. We would like to know if there is an existing table or view that already includes this dimension.","Para nuestro análisis queremos entender si la rentabilidad difiere entre Web y App, considerando que Apple cobra entre 15 y 30% en compras dentro de iOS y que App representa el 44% del volumen. Las tablas de margen bruto que conocemos hoy están agregadas por destino, sin canal de ventas. Nos gustaría saber si existe una tabla o vista que ya incluya esta dimensión.")}
+        </div>
+        <div style={{marginTop:12,padding:"10px 12px",background:"#F1F5F9",borderRadius:6,borderLeft:`2px solid ${T.muted}`}}>
+          <div style={{fontSize:10,fontWeight:700,color:T.muted,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>{L(l,"Source we are looking at","Fuente sobre la que estamos mirando")}</div>
+          <ul className="bullet-list" style={{fontSize:12}}>
+            <li><strong>{L(l,"Tables we know:","Tablas que conocemos:")}</strong> <code style={{fontFamily:M,fontSize:11}}>mdm_delivery.product_purchase_date_gm</code> {L(l,"and","y")} <code style={{fontFamily:M,fontSize:11}}>mdm_delivery.product_end_date_gm_v2</code>, {L(l,"both aggregated at the destination level.","ambas agregadas a nivel destino.")}</li>
+            <li><strong>{L(l,"What we tried:","Qué intentamos:")}</strong> {L(l,"joining the sales table with the gross margin table to derive GM by sales_channel ourselves.","joinear la tabla de ventas con la tabla de margen bruto para derivar GM por sales_channel nosotros.")}</li>
+            <li><strong>{L(l,"What we found:","Qué encontramos:")}</strong> {L(l,"the join returned a row count that is orders of magnitude higher than the real number of orders, which tells us we are using the wrong join logic or the wrong table for this question.","el join devolvió un conteo de filas órdenes de magnitud más alto que el número real de órdenes, lo que nos dice que estamos usando la lógica de join equivocada o la tabla equivocada para esta pregunta.")}</li>
+          </ul>
+        </div>
+      </Card>
+
+      {/* Q7 — Things valuable for our day-to-day */}
+      <Card accent={T.green}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q7</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Cuts that would be valuable for our day-to-day pricing work","Cortes que nos serían valiosos para nuestro día a día de pricing")}</strong>
+          </div>
+          <span className="badge b-info">{L(l,"Data team","Equipo de Data")}</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6,marginBottom:10}}>
+          {L(l,"Since you will be building the dashboard, we wanted to share which cuts would be most valuable for our day-to-day pricing work, so you can take them into account in the design. These are starting points, not requirements.","Como ustedes van a construir el dashboard, queríamos compartir qué cortes serían más valiosos para nuestro día a día de pricing, para que los tengan en cuenta en el diseño. Son puntos de partida, no requirements.")}
+        </div>
+        <ul className="bullet-list" style={{marginBottom:10}}>
+          <li>{L(l,<span><strong>Price, AOV, orders, GM and discount penetration</strong>, broken down by origin, destination and channel (Web vs App), with monthly trends.</span>,<span><strong>Precio, AOV, órdenes, GM y penetración de descuentos</strong>, desglosados por origen, destino y canal (Web vs App), con tendencia mensual.</span>)}</li>
+          <li>{L(l,<span><strong>AOV decomposition by plan duration.</strong> Showing blended AOV without decomposition can be misleading because the recent decline is mix-driven, not price erosion.</span>,<span><strong>Decomposición de AOV por duración del plan.</strong> Mostrar AOV blended sin descomposición puede confundir porque la caída reciente es por cambio de mix, no erosión de precio.</span>)}</li>
+          <li>{L(l,<span><strong>Filters by origin, destination, channel, currency, date range</strong>, and a toggle to include or exclude Paid Social traffic.</span>,<span><strong>Filtros por origen, destino, canal, moneda, rango de fechas</strong>, y un toggle para incluir o excluir tráfico de Paid Social.</span>)}</li>
+        </ul>
+        <div style={{fontSize:13,color:T.text,lineHeight:1.6}}>
+          {L(l,"We would like your read on what is feasible, what makes sense in Looker, and what would change if we wanted real-time refresh on some of these slices.","Nos gustaría su lectura sobre qué es factible, qué tiene sentido en Looker, y qué cambiaría si quisiéramos refresh en tiempo real en algunos de estos cortes.")}
+        </div>
+      </Card>
+
+      {/* Q8 — Open round on tables and sources */}
+      <Card accent={T.blue}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q8</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Open round: are there tables or sources we should know about?","Ronda abierta: ¿hay tablas o fuentes que deberíamos conocer?")}</strong>
+          </div>
+          <span className="badge b-info">{L(l,"Data team","Equipo de Data")}</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6,marginBottom:10}}>
+          {L(l,"For your awareness, the BigQuery tables we built all this analysis on are:","Para que estén al tanto, las tablas en BigQuery sobre las que armamos todo este análisis son:")}
+        </div>
+        <ul className="bullet-list" style={{marginBottom:10}}>
+          <li><code style={{fontFamily:M,fontSize:11,color:T.text}}>activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted</code> {L(l,"(sales)","(ventas)")}</li>
+          <li><code style={{fontFamily:M,fontSize:11,color:T.text}}>activaciones-holafly.mdm_delivery.product_purchase_date_gm</code> {L(l,"(gross margin, purchase date)","(margen bruto, fecha de compra)")}</li>
+          <li><code style={{fontFamily:M,fontSize:11,color:T.text}}>activaciones-holafly.mdm_delivery.product_end_date_gm_v2</code> {L(l,"(COGS, Pricing Hub)","(COGS, Pricing Hub)")}</li>
+        </ul>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6,marginBottom:10}}>
+          {L(l,"The most relevant companion sources we use today are: Adobe Analytics, Foundational KPIs (Looker), COGS Hub (Looker), and the Recurrence Cockpit (Oscar).","Las fuentes complementarias más relevantes que usamos hoy son: Adobe Analytics, Foundational KPIs (Looker), COGS Hub (Looker), y el Recurrence Cockpit (Oscar).")}
+        </div>
+        <div style={{fontSize:13,color:T.text,lineHeight:1.6}}>
+          {L(l,"Beyond these, are there tables, views or sources you use for pricing, revenue or margin analysis that we should know about? If there is something we are not seeing and it is relevant for our analysis work, we would like to incorporate it.","Más allá de estas, ¿hay tablas, vistas o fuentes que ustedes usen para análisis de pricing, revenue o margen que deberíamos conocer? Si hay algo que no estamos viendo y es relevante para nuestro trabajo de análisis, nos gustaría incorporarlo.")}
+        </div>
+      </Card>
+
+      {/* Q9 — Operational: refresh, history, access */}
+      <Card accent={T.dim}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+          <div style={{flex:1}}>
+            <span style={{fontFamily:M,fontSize:11,color:T.accent,fontWeight:700,marginRight:8}}>Q9</span>
+            <strong style={{fontSize:14,color:T.text}}>{L(l,"Operational topics: refresh frequency, historical depth, and access","Temas operativos: frecuencia de refresh, histórico y acceso")}</strong>
+          </div>
+          <span className="badge b-info">{L(l,"Data team","Equipo de Data")}</span>
+        </div>
+        <div style={{fontSize:13,color:T.dim,lineHeight:1.6,marginBottom:10}}>
+          {L(l,"Three operational things we would like to align on, since you handle them better than we do:","Tres cosas operativas que nos gustaría alinear, ya que ustedes las manejan mejor que nosotros:")}
+        </div>
+        <ul className="bullet-list">
+          <li>{L(l,<span><strong>Refresh frequency.</strong> Some of our analysis benefits from daily refresh; other things can be weekly. What cadences are typical in your dashboards without blowing up BigQuery costs?</span>,<span><strong>Frecuencia de actualización.</strong> Algunos de nuestros análisis se benefician de refresh diario; otras cosas pueden ser semanales. ¿Qué cadencias son típicas en sus dashboards sin disparar costos en BigQuery?</span>)}</li>
+          <li>{L(l,<span><strong>Historical depth.</strong> For some analyses we need a year or more of history. How far back do you typically load in your dashboards?</span>,<span><strong>Histórico cargado.</strong> Para algunos análisis necesitamos un año o más de historia. ¿Hasta cuándo suelen cargar ustedes en sus dashboards?</span>)}</li>
+          <li>{L(l,<span><strong>Access.</strong> Pricing is small today, but the dashboard could be useful for Growth, Finance, and leadership. There is sensitive data (margin by destination, B2B). How do you typically handle permissions across the company?</span>,<span><strong>Acceso.</strong> En Pricing somos pocos hoy, pero el dashboard puede ser útil para Growth, Finance y leadership. Hay data sensible (margen por destino, B2B). ¿Cómo manejan permisos típicamente a nivel compañía?</span>)}</li>
+        </ul>
+      </Card>
+    </Sec>}
+
+    {/* ACTION PLAN — all views */}
+    <Sec id="act">
+      <Coll title={L(l,"Action plan","Plan de acción")} color={T.accent} hint={L(l,"3 workstreams: definitions, dashboard build, validations","3 líneas: definiciones, build dashboard, validaciones")}>
+        {[
+          {t:{en:"1. Agree on definitions with Data team",es:"1. Acordar definiciones con el equipo de Data"},
+            intro:{en:"Three things must be settled before any dashboard is built. They block the rest of the work:",es:"Tres cosas tienen que cerrarse antes de construir cualquier dashboard. Bloquean al resto del trabajo:"},
+            bullets:[
+              {en:"Which BigQuery field equals Finance revenue.",es:"Qué campo de BigQuery iguala al revenue de Finance."},
+              {en:"Which mapping table classifies discounts (the Recurrence Cockpit one).",es:"Qué tabla de mapping clasifica los descuentos (la del Recurrence Cockpit)."},
+              {en:"Which path delivers ARPU without depending on Adobe sessions.",es:"Qué camino entrega ARPU sin depender de sessions de Adobe."},
+            ],
+            who:{en:"Pricing and Data · Thursday meeting",es:"Pricing y Data · Reunión del jueves"},c:T.accent},
+
+          {t:{en:"2. Build the SSoT dashboard",es:"2. Construir el dashboard SSoT"},
+            intro:{en:"17 metrics mapped, 10 already buildable from BigQuery. Pricing brings the queries and the spec; Data dimensions the build effort. The dashboard should cover:",es:"17 métricas mapeadas, 10 ya construibles desde BigQuery. Pricing trae las queries y el spec; Data dimensiona el esfuerzo de build. El dashboard debe cubrir:"},
+            bullets:[
+              {en:"Price, AOV, orders, GM and discount penetration.",es:"Precio, AOV, órdenes, GM y penetración de descuentos."},
+              {en:"Broken down by origin, destination and channel (Web vs App).",es:"Desglosado por origen, destino y canal (Web vs App)."},
+              {en:"With monthly trends and the standard set of filters.",es:"Con tendencias mensuales y el set estándar de filtros."},
+            ],
+            who:{en:"Data team builds, Pricing specifies · Post-meeting",es:"Data construye, Pricing especifica · Post-reunión"},c:T.blue},
+
+          {t:{en:"3. Run pending validations",es:"3. Correr validaciones pendientes"},
+            intro:{en:"Diagnostics on our side, then closed loop with Data:",es:"Diagnósticos de nuestro lado, después loop cerrado con Data:"},
+            bullets:[
+              {en:"Confirm customer_id consistency across web and app.",es:"Confirmar consistencia de customer_id entre web y app."},
+              {en:"Share the destination mismatch list with Data so the GM table can be updated.",es:"Compartir la lista de diferencias de destinos con Data para que la tabla GM se actualice."},
+              {en:"Filter AON and Freemium products out of pricing analysis going forward.",es:"Filtrar productos AON y Freemium del análisis de pricing hacia adelante."},
+            ],
+            who:{en:"Pricing runs diagnostics, Data confirms · This week",es:"Pricing corre diagnósticos, Data confirma · Esta semana"},c:T.green},
+        ].map((a,i)=>
+          <Card key={i} accent={a.c}>
+            <strong style={{fontSize:14,color:T.text}}>{V(a.t,l)}</strong>
+            <div style={{fontSize:13,color:T.dim,lineHeight:1.6,margin:"6px 0 8px"}}>{V(a.intro,l)}</div>
+            <ul className="bullet-list" style={{marginBottom:8}}>
+              {a.bullets.map((b,j)=><li key={j}>{V(b,l)}</li>)}
+            </ul>
+            <div style={{fontSize:11,color:T.muted,fontWeight:600}}>{V(a.who,l)}</div>
+          </Card>
+        )}
+      </Coll>
+    </Sec>
+
+    {/* APPENDIX: queries reference + dashboard links — Full only */}
+    {full&&<Sec id="ref">
+      <Coll title={L(l,"Queries reference (internal note)","Referencia de queries (nota interna)")} color={T.dim} count={13} hint={L(l,"Internal traceability of the analysis. Not for external audience.","Trazabilidad interna del análisis. No para audiencia externa.")}>
+        <div style={{fontSize:11,color:T.muted,marginBottom:8,fontStyle:"italic"}}>
+          {L(l,"This list is for internal reference only. When discussing assumptions or findings with stakeholders, refer to the data and tables, not to query numbers (the Data team is not familiar with our query labels).","Esta lista es solo para referencia interna. Cuando se discutan asunciones o hallazgos con stakeholders, referirse a los datos y tablas, no a números de query (el equipo de Data no conoce nuestras etiquetas de queries).")}
+        </div>
+        <table className="dt"><thead><tr>
+          <th>ID</th>
+          <th>{L(l,"Query","Query")}</th>
+          <th>{L(l,"Period","Período")}</th>
+          <th>{L(l,"Result summary","Resumen de resultado")}</th>
+        </tr></thead><tbody>
+          {[
+            {id:"Q1",n:"Schema discovery",p:{en:"Full table",es:"Tabla completa"},d:{en:"Identified sales_channel, app_platform, discount_code, days_of_product",es:"Identificados sales_channel, app_platform, discount_code, days_of_product"}},
+            {id:"Q2",n:{en:"AOV decomposition",es:"Descomposición de AOV"},p:"Apr 2025 - Mar 2026",d:{en:"Monthly AOV split by clean vs discount, short vs long",es:"AOV mensual dividido por limpio vs descuento, corto vs largo"}},
+            {id:"Q3",n:{en:"Discount penetration",es:"Penetración de descuentos"},p:"Apr 2025 - Mar 2026",d:{en:"Discount type breakdown. Revealed pattern matching does not work",es:"Desglose por tipo de descuento. Reveló que el pattern matching no funciona"}},
+            {id:"Q4",n:{en:"Plan duration mix",es:"Mix de duración de planes"},p:"Apr 2025 - Mar 2026",d:{en:"Buckets from 1d to 90d+, share of orders and revenue",es:"Buckets de 1d a 90d+, share de órdenes y revenue"}},
+            {id:"Q5",n:{en:"Repeat purchase",es:"Recompra"},p:"Jan 2025 - Mar 2026",d:{en:"Cohort repeat and triple-purchase rates by maturity",es:"Tasas de recompra y triple compra por madurez de cohort"}},
+            {id:"Q6",n:{en:"Top 30 destinations + GM",es:"Top 30 destinos + GM"},p:{en:"Last 90 days",es:"Últimos 90 días"},d:{en:"Destination profitability with GM table join",es:"Rentabilidad por destino con join a tabla GM"}},
+            {id:"Q7",n:{en:"Growth metrics",es:"Métricas de crecimiento"},p:"Apr 2025 - Mar 2026",d:{en:"Orders, revenue, customers, currencies year over year",es:"Órdenes, revenue, clientes, monedas año contra año"}},
+            {id:"Q8",n:"Web vs App",p:"Oct 2025 - Mar 2026",d:{en:"Channel split by AOV, short plan share, discount usage",es:"Split por canal por AOV, share de planes cortos, uso de descuentos"}},
+            {id:"Q9",n:{en:"Destination naming check",es:"Check de naming de destinos"},p:{en:"All time",es:"Histórico"},d:{en:"37 sales-only and 54 GM-only destinations identified",es:"37 destinos solo en ventas y 54 solo en GM identificados"}},
+            {id:"Q10",n:{en:"Zero-price orders",es:"Órdenes a precio cero"},p:"Q1 2026",d:{en:"57.8K AON/Freemium without code, plus influencer codes on cheap plans",es:"57.8K AON/Freemium sin código, más códigos de influencer en planes baratos"}},
+            {id:"Q11",n:{en:"B2B identification",es:"Identificación de B2B"},p:"Q1 2026",d:{en:"No B2B sales channel field, lives in destination names",es:"No hay campo de canal de ventas B2B, vive en nombres de destino"}},
+            {id:"Q12",n:{en:"Plan types by duration",es:"Tipos de plan por duración"},p:"Oct 2025 - Mar 2026",d:{en:"1d largest at 1.06M orders. 30d at 18.5K, 90d at 21.5K",es:"1d el mayor con 1.06M órdenes. 30d con 18.5K, 90d con 21.5K"}},
+            {id:"Q13",n:{en:"GM by sales channel",es:"GM por canal de ventas"},p:"Q1 2026",d:{en:"Join broken (cartesian product). Approach needs revision.",es:"Join roto (producto cartesiano). Approach necesita revisión."}},
+          ].map((q,i)=>
+            <tr key={i}>
+              <td style={{fontFamily:M,fontWeight:700,color:T.accent,fontSize:12}}>{q.id}</td>
+              <td><strong>{V(q.n,l)}</strong></td>
+              <td style={{fontSize:11,color:T.muted}}>{V(q.p,l)}</td>
+              <td style={{fontSize:11,color:T.dim}}>{V(q.d,l)}</td>
+            </tr>
+          )}
+        </tbody></table>
+      </Coll>
+      <Coll title={L(l,"Dashboard links","Links a dashboards")} color={T.blue} count={8}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:8}}>
+          {[
+            {n:"Adobe Analytics",h:URLS.adobe},
+            {n:"Foundational KPIs",h:URLS.foundational},
+            {n:"COGS Hub",h:URLS.cogs},
+            {n:"Recurrence Cockpit",h:URLS.recurrence},
+            {n:L(l,"Experiment Tracker","Tracker de experimentos"),h:URLS.tracker},
+            {n:"Dani LTV model",h:URLS.ltvDani},
+            {n:"Holafly Travel Club",h:URLS.travelClub},
+            {n:L(l,"Subscription plans (public)","Planes de suscripción (público)"),h:URLS.plansEsim},
+          ].map((x,i)=>
+            <a key={i} href={x.h} target="_blank" rel="noreferrer" style={{background:T.card,borderRadius:6,border:`1px solid ${T.border}`,padding:"10px 12px",textDecoration:"none",fontSize:12,fontWeight:600,color:T.text,display:"block"}}>{x.n}</a>
+          )}
+        </div>
+      </Coll>
+    </Sec>}
+
+    {/* FOOTER */}
+    <div style={{padding:"14px 0",borderTop:`1px solid ${T.border}`,fontSize:10,color:T.muted,lineHeight:1.6}}>
+      <strong style={{color:T.dim}}>{L(l,"Sources","Fuentes")}:</strong> BigQuery (int_shopify_sales_with_vat_adjusted, mdm_delivery.product_purchase_date_gm) · Adobe Analytics · Looker Studio (Foundational KPIs, COGS, Recurrence Cockpit) · Holafly All Hands Q1 2026 · Holafly public site (Travel Club, plans). 13 BigQuery queries and supporting CSVs archived for traceability.
+    </div>
+  </div>
+}
+
+ReactDOM.render(<App/>,document.getElementById("root"));
+</script>
+</body>
+</html>

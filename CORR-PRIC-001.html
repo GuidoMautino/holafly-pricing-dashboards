@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORR-PRIC-001 — D+7 Update</title>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Mulish,sans-serif}table{border-spacing:0}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState}=React;
+const MN="JetBrains Mono,Consolas,monospace";
+const tx=(l,en,es)=>l==="es"?es:en;
+const TH={
+  light:{bg:"#FFFFFF",card:"#F8FAFC",border:"#E2E4E8",text:"#1E293B",dim:"#64748B",muted:"#94A3B8",accent:"#E6485C",
+    green:"#15803D",gBg:"#F0FDF4",gBdr:"#BBF7D0",yellow:"#A16207",yBg:"#FEFCE8",yBdr:"#FDE68A",red:"#B91C1C",rBg:"#FEF2F2",rBdr:"#FECACA",
+    purple:"#6D28D9",pBg:"#F5F3FF",pBdr:"#DDD6FE",blue:"#1D4ED8",bBg:"#EFF6FF",bBdr:"#BFDBFE"},
+  dark:{bg:"#0F172A",card:"#1E293B",border:"#334155",text:"#F1F5F9",dim:"#94A3B8",muted:"#475569",accent:"#E6485C",
+    green:"#4ADE80",gBg:"#052e16",gBdr:"#14532d",yellow:"#FACC15",yBg:"#1a1505",yBdr:"#713f12",red:"#F87171",rBg:"#1a0505",rBdr:"#7f1d1d",
+    purple:"#A78BFA",pBg:"#1a1530",pBdr:"#2e1065",blue:"#60A5FA",bBg:"#0c1524",bBdr:"#1e3a5f"},
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// DATA — Baselines blended (all orders, no discount-code filter)
+//        Post = Apr 1-7, 7 clean days excluding contaminated D+0
+// ═══════════════════════════════════════════════════════════════════
+const PRICES=[
+  {b:{en:"1 day",es:"1 día"},old:"¥1,090",nu:"¥690",d:"-36.7%"},
+  {b:{en:"2 days",es:"2 días"},old:"¥1,590",nu:"¥1,390",d:"-12.6%"},
+  {b:{en:"3 days",es:"3 días"},old:"¥2,090",nu:"¥1,990",d:"-4.8%"},
+];
+
+const SK={flag:"🇰🇷",en:"South Korea",es:"Corea del Sur",jpyPct:"46.8%",
+  // Baseline 90d blended (all orders)
+  base:{d1:{opd:10.7,aov:5.98},d2:{opd:18.6,aov:8.88},d3:{opd:73.6,aov:11.54},d47:{opd:47.7,aov:16.02}},
+  arpu90:3.15,cr90:19.05,uv90:37916,rb:2.84,gm13:"85.97%",
+  b90s:{opd:102.9,rev:1078},b90l:{opd:52.2,rev:951},
+  // Post-launch Apr 1-7 (7 clean days)
+  post:{d1:{opd:11.6,aov:4.58},d2:{opd:22.9,aov:8.12},d3:{opd:68.6,aov:11.58},d47:{opd:37.1,aov:16.92}},
+  arpuPost:3.02,crPost:21.71,uvPost:2409,
+  // 7d totals (Apr 1-7)
+  total7d:1007,treated7d:721,
+  // MDE deltas
+  cr_delta:"+2.66pp",vol1d_delta:"+8.4%",vol2d_delta:"+23.1%",vol4_delta:"-22.2%",
+  // Daily Apr 1-7 (from archive 16)
+  daily:[
+    {day:"Apr 1",dt:"D+1",o1:12,a1:5.26,o2:14,a2:7.47,o3:48,a3:11.88,o47:29,a47:16.65},
+    {day:"Apr 2",dt:"D+2",o1:12,a1:6.51,o2:13,a2:8.14,o3:58,a3:12.24,o47:24,a47:16.55},
+    {day:"Apr 3",dt:"D+3 🐣",o1:6,a1:4.27,o2:20,a2:7.93,o3:64,a3:11.82,o47:25,a47:18.11},
+    {day:"Apr 4",dt:"D+4",o1:8,a1:5.08,o2:22,a2:8.25,o3:37,a3:10.91,o47:20,a47:17.83},
+    {day:"Apr 5",dt:"D+5",o1:4,a1:3.75,o2:15,a2:9.07,o3:45,a3:11.02,o47:21,a47:17.65},
+    {day:"Apr 6",dt:"D+6",o1:10,a1:4.05,o2:15,a2:7.46,o3:40,a3:11.84,o47:22,a47:17.29},
+    {day:"Apr 7",dt:"D+7",o1:8,a1:5.14,o2:12,a2:12.56,o3:16,a3:12.14,o47:14,a47:17.21},
+  ],
+  impl:{d1:{ok:22,old:1,oth:4},d2:{ok:18,old:5,oth:4},d3:{ok:65,old:8,oth:11}},
+};
+
+const TW={flag:"🇹🇼",en:"Taiwan",es:"Taiwán",jpyPct:"45.9%",
+  base:{d1:{opd:4.8,aov:6.55},d2:{opd:3.9,aov:8.55},d3:{opd:20.8,aov:11.82},d47:{opd:31.4,aov:16.70}},
+  arpu90:2.82,cr90:15.90,uv90:19793,rb:2.54,gm13:"84.36%",
+  b90s:{opd:29.5,rev:311},b90l:{opd:34.7,rev:661},
+  post:{d1:{opd:2.0,aov:3.76},d2:{opd:4.1,aov:7.75},d3:{opd:16.7,aov:12.20},d47:{opd:20.3,aov:18.16}},
+  arpuPost:3.46,crPost:18.29,uvPost:1055,
+  total7d:328,treated7d:160,
+  cr_delta:"+2.39pp",vol1d_delta:"-58.3%",vol2d_delta:"+5.1%",vol4_delta:"-35.4%",
+  daily:[
+    {day:"Apr 1",dt:"D+1",o1:1,a1:3.76,o2:2,a2:7.57,o3:11,a3:13.78,o47:11,a47:21.46},
+    {day:"Apr 2",dt:"D+2",o1:0,a1:null,o2:5,a2:10.58,o3:15,a3:11.54,o47:20,a47:21.10},
+    {day:"Apr 3",dt:"D+3 🐣",o1:2,a1:3.75,o2:4,a2:7.22,o3:13,a3:10.81,o47:11,a47:17.78},
+    {day:"Apr 4",dt:"D+4",o1:1,a1:3.75,o2:3,a2:7.56,o3:9,a3:10.82,o47:16,a47:19.27},
+    {day:"Apr 5",dt:"D+5",o1:3,a1:3.75,o2:1,a2:7.56,o3:7,a3:10.82,o47:13,a47:17.26},
+    {day:"Apr 6",dt:"D+6",o1:2,a1:5.63,o2:2,a2:7.54,o3:15,a3:11.53,o47:11,a47:16.63},
+    {day:"Apr 7",dt:"D+7",o1:0,a1:null,o2:3,a2:7.53,o3:5,a3:12.95,o47:2,a47:21.86},
+  ],
+  impl:{d1:{ok:4,old:1,oth:2},d2:{ok:3,old:0,oth:0},d3:{ok:18,old:5,oth:5}},
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// COMPONENTS
+// ═══════════════════════════════════════════════════════════════════
+const Xp=({title,open:defO=false,children,t,left})=>{
+  const[o,setO]=useState(defO);
+  return(
+    <div style={{background:t.card,border:`1px solid ${t.border}`,borderLeft:left?`4px solid ${left}`:`1px solid ${t.border}`,borderRadius:10,marginBottom:14,overflow:"hidden"}}>
+      <div onClick={()=>setO(!o)} style={{padding:"14px 20px",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",userSelect:"none"}}>
+        <span style={{fontWeight:700,fontSize:15,lineHeight:1.3}}>{title}</span>
+        <span style={{fontFamily:MN,fontSize:10,color:t.dim,transform:o?"rotate(90deg)":"none",transition:"transform 0.15s",flexShrink:0,marginLeft:10}}>▶</span>
+      </div>
+      {o&&<div style={{padding:"0 20px 18px",borderTop:`1px solid ${t.border}`}}>{children}</div>}
+    </div>
+  );
+};
+
+const MC=({label,value,sub,c,t})=>{
+  const col=({green:t.green,yellow:t.yellow,red:t.red,accent:t.accent,purple:t.purple,blue:t.blue})[c]||t.dim;
+  const bg=({green:t.gBg,yellow:t.yBg,red:t.rBg,accent:t.bBg,purple:t.pBg,blue:t.bBg})[c]||t.card;
+  const bd=({green:t.gBdr,yellow:t.yBdr,red:t.rBdr,accent:t.bBdr,purple:t.pBdr,blue:t.bBdr})[c]||t.border;
+  return(
+    <div style={{background:bg,border:`1px solid ${bd}`,borderLeft:`4px solid ${col}`,borderRadius:8,padding:"12px 14px"}}>
+      <div style={{fontFamily:MN,fontSize:9,fontWeight:700,color:t.dim,letterSpacing:"0.6px",textTransform:"uppercase",marginBottom:4}}>{label}</div>
+      <div style={{fontFamily:MN,fontSize:19,fontWeight:700,color:col,lineHeight:1.1,marginBottom:4}}>{value}</div>
+      <div style={{fontSize:11,color:t.dim,lineHeight:1.4}}>{sub}</div>
+    </div>
+  );
+};
+
+const Pill=({s,t})=>{
+  const m={
+    met:[t.green,"MET"],
+    notmet:[t.red,"NOT MET"],
+    ok:[t.green,"OK"],
+    flag:[t.yellow,"FLAG"],
+    breached:[t.red,"BREACHED"]
+  };
+  const[col,lab]=m[s]||[t.dim,s];
+  return <span style={{background:`${col}15`,color:col,fontFamily:MN,fontSize:9,fontWeight:700,padding:"2px 8px",borderRadius:4,letterSpacing:"0.4px"}}>{lab}</span>;
+};
+
+const Lnk=({href,children,t})=><a href={href} target="_blank" rel="noopener" style={{color:t.accent,fontFamily:MN,fontSize:11,textDecoration:"none",borderBottom:`1px dashed ${t.accent}40`}}>{children}</a>;
+
+const Bar=({ok,old,oth,label,t})=>{
+  const tot=ok+old+oth;
+  if(!tot)return null;
+  return(
+    <div style={{marginBottom:6}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontFamily:MN,fontSize:10,marginBottom:2}}>
+        <span style={{fontWeight:600}}>{label}</span>
+        <span>
+          <span style={{color:t.green,fontWeight:700}}>{ok}</span>
+          {old>0&&<span style={{color:t.red}}> · {old} old</span>}
+          {oth>0&&<span style={{color:t.dim}}> · {oth} other</span>}
+        </span>
+      </div>
+      <div style={{height:5,background:t.border,borderRadius:3,overflow:"hidden"}}>
+        <div style={{height:"100%",width:`${Math.round(ok/tot*100)}%`,background:t.green,borderRadius:3}}/>
+      </div>
+    </div>
+  );
+};
+
+const DailyTable=({d,lang,t})=>(
+  <div style={{overflowX:"auto"}}>
+    <table style={{width:"100%",borderCollapse:"collapse",fontFamily:MN,fontSize:11}}>
+      <thead>
+        <tr style={{background:`${t.dim}06`}}>
+          {["",tx(lang,"day","día"),tx(lang,"1d ord","1d ord"),tx(lang,"1d AOV","1d AOV"),tx(lang,"2d ord","2d ord"),tx(lang,"2d AOV","2d AOV"),tx(lang,"3d ord","3d ord"),tx(lang,"3d AOV","3d AOV"),tx(lang,"4-7d ord","4-7d ord"),tx(lang,"4-7d AOV","4-7d AOV")]
+            .map((h,i)=><th key={i} style={{padding:"8px 6px",textAlign:i<2?"left":"right",fontWeight:600,color:t.dim,fontSize:9,borderBottom:`1px solid ${t.border}`,whiteSpace:"nowrap"}}>{h}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        <tr style={{color:t.muted,borderBottom:`1px solid ${t.border}`,background:`${t.dim}04`}}>
+          <td style={{padding:"7px 6px",fontWeight:700,fontSize:10}}>90d</td>
+          <td style={{padding:"7px 6px",fontSize:9}}>baseline</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.base.d1.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.base.d1.aov}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.base.d2.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.base.d2.aov}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.base.d3.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.base.d3.aov}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.base.d47.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.base.d47.aov}</td>
+        </tr>
+        {d.daily.map((r,i)=>(
+          <tr key={i} style={{borderBottom:`1px solid ${t.border}`}}>
+            <td style={{padding:"7px 6px",fontWeight:700,fontSize:11}}>{r.day}</td>
+            <td style={{padding:"7px 6px",fontSize:9,color:t.dim}}>{r.dt}</td>
+            <td style={{padding:"7px 6px",textAlign:"right"}}>{r.o1}</td>
+            <td style={{padding:"7px 6px",textAlign:"right",fontWeight:700,color:r.a1!==null&&r.a1<5?t.green:t.text}}>{r.a1!==null?`€${r.a1.toFixed(2)}`:"—"}</td>
+            <td style={{padding:"7px 6px",textAlign:"right"}}>{r.o2}</td>
+            <td style={{padding:"7px 6px",textAlign:"right",fontWeight:600}}>€{r.a2.toFixed(2)}</td>
+            <td style={{padding:"7px 6px",textAlign:"right"}}>{r.o3}</td>
+            <td style={{padding:"7px 6px",textAlign:"right",fontWeight:600}}>€{r.a3.toFixed(2)}</td>
+            <td style={{padding:"7px 6px",textAlign:"right"}}>{r.o47}</td>
+            <td style={{padding:"7px 6px",textAlign:"right",fontWeight:600}}>€{r.a47.toFixed(2)}</td>
+          </tr>
+        ))}
+        <tr style={{color:t.accent,borderBottom:`1px solid ${t.border}`,background:`${t.accent}06`,fontWeight:700}}>
+          <td style={{padding:"7px 6px",fontSize:10}}>{tx(lang,"7d avg","Prom 7d")}</td>
+          <td style={{padding:"7px 6px",fontSize:9}}>post</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.post.d1.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.post.d1.aov}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.post.d2.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.post.d2.aov}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.post.d3.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.post.d3.aov}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>{d.post.d47.opd}</td>
+          <td style={{padding:"7px 6px",textAlign:"right"}}>€{d.post.d47.aov}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+);
+
+const DestSection=({d,lang,t})=>{
+  const n=tx(lang,d.en,d.es);
+  const arpuColor=d.arpuPost>=d.rb?"green":"red";
+  const vol1Color=d.post.d1.opd>=d.base.d1.opd*1.5?"green":d.post.d1.opd<d.base.d1.opd*0.5?"red":"yellow";
+  return(
+    <Xp title={`${d.flag} ${n} — JPY ${tx(lang,"buyers","compradores")} (${d.jpyPct} ${tx(lang,"of orders","de órdenes")})`} open={false} t={t} left={t.accent}>
+
+      {/* Headline cards */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(145px,1fr))",gap:8,margin:"12px 0 16px"}}>
+        <MC label={tx(lang,"CR (Adobe)","CR (Adobe)")} value={`${d.crPost}%`} sub={`90d ${d.cr90}% · ${d.cr_delta} ✓`} c="green" t={t}/>
+        <MC label="ARPU JPY" value={`€${d.arpuPost}`} sub={`${tx(lang,"floor","floor")} €${d.rb}${arpuColor==="green"?" ✓":" ⚠️"}`} c={arpuColor} t={t}/>
+        <MC label={tx(lang,"1-day vol Δ","Vol 1d Δ")} value={d.vol1d_delta} sub={tx(lang,"target +50%","target +50%")} c={vol1Color} t={t}/>
+        <MC label={tx(lang,"2-day vol Δ","Vol 2d Δ")} value={d.vol2d_delta} sub={tx(lang,"directional","direccional")} c={d.post.d2.opd>d.base.d2.opd?"green":"yellow"} t={t}/>
+      </div>
+
+      <div style={{fontWeight:700,fontSize:13,marginBottom:8}}>{tx(lang,"Daily tracking (Apr 1–7) vs 90d baseline","Tracking diario (Abr 1–7) vs baseline 90d")}</div>
+      <DailyTable d={d} lang={lang} t={t}/>
+      <div style={{fontSize:10,color:t.dim,marginTop:8,fontStyle:"italic"}}>
+        {tx(lang,
+          `4-7d bucket has no price change. Volume drop (${d.vol4_delta}) reflects Easter, not treatment.`,
+          `El bucket 4-7d no tiene cambio de precio. La caída de volumen (${d.vol4_delta}) refleja Easter, no el tratamiento.`)}
+      </div>
+
+      <div style={{fontWeight:700,fontSize:13,margin:"18px 0 8px"}}>{tx(lang,"Implementation check (Apr 1)","Verificación de implementación (Abr 1)")}</div>
+      <Bar ok={d.impl.d1.ok} old={d.impl.d1.old} oth={d.impl.d1.oth} label="1d → ¥690" t={t}/>
+      <Bar ok={d.impl.d2.ok} old={d.impl.d2.old} oth={d.impl.d2.oth} label="2d → ¥1,390" t={t}/>
+      <Bar ok={d.impl.d3.ok} old={d.impl.d3.old} oth={d.impl.d3.oth} label="3d → ¥1,990" t={t}/>
+      <div style={{fontSize:9,color:t.dim,marginTop:5,fontFamily:MN}}>
+        {tx(lang,"New price live and charging correctly. Old-price residual is from D+0 mid-day implementation.",
+          "Precio nuevo activo y cobrándose correctamente. El residual de precio viejo es del D+0 mid-day.")}
+      </div>
+
+      <details style={{marginTop:16}}>
+        <summary style={{fontSize:11,fontWeight:700,color:t.dim,cursor:"pointer"}}>{tx(lang,"📊 Reference: 90d baseline & sources","📊 Referencia: baseline 90d y fuentes")}</summary>
+        <div style={{fontFamily:MN,fontSize:10,color:t.dim,lineHeight:2.2,marginTop:8,paddingLeft:4}}>
+          <strong>BQ JPY 90d ({tx(lang,"all orders, no discount-code filter","todas las órdenes, sin filtro de discount-code")}):</strong><br/>
+          {tx(lang,"Short 1-3d","Cortos 1-3d")}: {d.b90s.opd}/{tx(lang,"day","día")} · €{d.b90s.rev}/{tx(lang,"day","día")}<br/>
+          {tx(lang,"Long 4+ (untouched)","Largos 4+ (sin tratamiento)")}: {d.b90l.opd}/{tx(lang,"day","día")} · €{d.b90l.rev}/{tx(lang,"day","día")}<br/>
+          <strong>Adobe JPY 90d:</strong> ARPU €{d.arpu90} · CR {d.cr90}% · UV {d.uv90.toLocaleString()}<br/>
+          <strong>Adobe JPY post (Apr 1-7):</strong> ARPU €{d.arpuPost} · CR {d.crPost}% · UV {d.uvPost.toLocaleString()}<br/>
+          <strong>GM COGS 1-3d:</strong> {d.gm13} ({tx(lang,"healthy","sano")})<br/>
+          <strong>Rollback floor:</strong> ARPU €{d.rb}
+        </div>
+      </details>
+    </Xp>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// APP
+// ═══════════════════════════════════════════════════════════════════
+const App=()=>{
+  const[dark,setDark]=useState(false);
+  const[lang,setLang]=useState("en");
+  const t=dark?TH.dark:TH.light;
+  return(
+    <div style={{background:t.bg,color:t.text,minHeight:"100vh",width:"100%",transition:"all 0.2s"}}>
+    <div style={{maxWidth:960,margin:"0 auto",padding:"24px 28px"}}>
+
+      {/* HEADER */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:10,marginBottom:18}}>
+        <div style={{flex:1,minWidth:260}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:5}}>
+            <span style={{fontSize:24}}>🇹🇼🇰🇷</span>
+            <span style={{fontFamily:MN,fontWeight:700,fontSize:18,color:t.accent}}>CORR-PRIC-001</span>
+            <span style={{background:`${t.green}20`,color:t.green,fontFamily:MN,fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:4}}>D+7 · MAINTAIN</span>
+          </div>
+          <div style={{fontSize:16,fontWeight:700,marginBottom:6}}>
+            {tx(lang,"JPY Price Alignment — Taiwan + South Korea","Alineamiento Precios JPY — Taiwán + Corea del Sur")}
+          </div>
+          <div style={{fontFamily:MN,fontSize:10,color:t.dim,display:"flex",gap:10,flexWrap:"wrap"}}>
+            <span>{tx(lang,"Parent","Padre")}: Exp-005 (JPY) SCALE</span><span>·</span>
+            <span>{tx(lang,"Days 1-3 · JPY only · ~132 orders/day","Días 1-3 · Solo JPY · ~132 órdenes/día")}</span><span>·</span>
+            <Lnk href="https://www.notion.so/33beea72a18881db8504d6b37107250f" t={t}>Notion brief v2</Lnk>
+            <Lnk href="https://holaflyers.atlassian.net/browse/PA-346" t={t}>PA-346</Lnk>
+          </div>
+        </div>
+        <div style={{display:"flex",gap:5}}>
+          <button onClick={()=>setLang(lang==="en"?"es":"en")} style={{background:t.card,border:`1px solid ${t.border}`,borderRadius:6,padding:"6px 12px",fontFamily:MN,fontSize:11,fontWeight:700,color:t.accent,cursor:"pointer"}}>{lang==="en"?"ES":"EN"}</button>
+          <button onClick={()=>setDark(!dark)} style={{background:t.card,border:`1px solid ${t.border}`,borderRadius:6,padding:"6px 12px",fontFamily:MN,fontSize:12,color:t.dim,cursor:"pointer"}}>{dark?"☀️":"🌙"}</button>
+        </div>
+      </div>
+
+      {/* TIMELINE */}
+      <div style={{background:t.card,border:`1px solid ${t.border}`,borderRadius:8,padding:"10px 16px",marginBottom:20,display:"flex",alignItems:"center",overflowX:"auto"}}>
+        {[
+          {l:tx(lang,"Implemented","Implementado"),d:"Mar 31",done:true},
+          {l:"D+1",d:"Apr 1",done:true},
+          {l:"Easter 🐣",d:"Apr 2-6",done:true,m:true},
+          {l:"D+7",d:"Apr 7",done:true,active:true},
+          {l:"D+14",d:"Apr 14"}
+        ].map((s,i,a)=>(
+          <React.Fragment key={i}>
+            <div style={{textAlign:"center",flex:1,minWidth:64}}>
+              <div style={{width:10,height:10,borderRadius:"50%",background:s.active?t.accent:s.done?t.green:t.border,margin:"0 auto 3px",border:s.active?`2px solid ${t.accent}`:"none"}}/>
+              <div style={{fontFamily:MN,fontSize:9,fontWeight:700,color:s.active?t.accent:s.done?t.green:t.dim,whiteSpace:"nowrap"}}>{s.l}</div>
+              <div style={{fontFamily:MN,fontSize:8,color:t.muted}}>{s.d}</div>
+            </div>
+            {i<a.length-1&&<div style={{flex:0.5,height:2,background:s.done?t.green:t.border,marginTop:-12}}/>}
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+         STRATEGIC OVERVIEW — F-pattern read, scannable in 30 seconds
+         ══════════════════════════════════════════════════════════ */}
+      <div style={{background:t.card,border:`1px solid ${t.border}`,borderLeft:`4px solid ${t.green}`,borderRadius:12,padding:"22px 24px",marginBottom:22}}>
+
+        {/* Eyebrow */}
+        <div style={{fontFamily:MN,fontSize:10,fontWeight:700,color:t.green,letterSpacing:"0.5px",marginBottom:8,textTransform:"uppercase"}}>
+          {tx(lang,"D+7 Status — Recommendation: MAINTAIN","Estado D+7 — Recomendación: MANTENER")}
+        </div>
+
+        {/* H1 — top horizontal stroke */}
+        <div style={{fontSize:18,fontWeight:800,lineHeight:1.4,marginBottom:18}}>
+          {tx(lang,
+            <>Prices stay live. Re-evaluate at <span style={{color:t.accent}}>D+14 (Apr 14)</span> with a clean post-Easter window.</>,
+            <>Los precios siguen vivos. Re-evaluamos a <span style={{color:t.accent}}>D+14 (14 de abril)</span> con ventana post-Easter limpia.</>
+          )}
+        </div>
+
+        {/* Stats row — second horizontal stroke */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:8,marginBottom:18}}>
+          <div style={{background:t.bg,border:`1px solid ${t.border}`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontFamily:MN,fontSize:9,color:t.dim,fontWeight:700,letterSpacing:"0.5px",marginBottom:3}}>{tx(lang,"MDE STRICT","MDE ESTRICTO")}</div>
+            <div style={{fontFamily:MN,fontSize:18,fontWeight:700,color:t.text}}>1<span style={{color:t.dim,fontSize:14}}> / 3</span></div>
+            <div style={{fontSize:10,color:t.dim,marginTop:2}}>{tx(lang,"CR met both","CR cumple ambos")}</div>
+          </div>
+          <div style={{background:t.bg,border:`1px solid ${t.border}`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontFamily:MN,fontSize:9,color:t.dim,fontWeight:700,letterSpacing:"0.5px",marginBottom:3}}>SK · 7d</div>
+            <div style={{fontFamily:MN,fontSize:18,fontWeight:700,color:t.text}}>{SK.total7d.toLocaleString()}</div>
+            <div style={{fontSize:10,color:t.dim,marginTop:2}}>{tx(lang,`${SK.treated7d} treated · 1-3d`,`${SK.treated7d} tratadas · 1-3d`)}</div>
+          </div>
+          <div style={{background:t.bg,border:`1px solid ${t.border}`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontFamily:MN,fontSize:9,color:t.dim,fontWeight:700,letterSpacing:"0.5px",marginBottom:3}}>TW · 7d</div>
+            <div style={{fontFamily:MN,fontSize:18,fontWeight:700,color:t.text}}>{TW.total7d.toLocaleString()}</div>
+            <div style={{fontSize:10,color:t.dim,marginTop:2}}>{tx(lang,`${TW.treated7d} treated · 1-3d`,`${TW.treated7d} tratadas · 1-3d`)}</div>
+          </div>
+          <div style={{background:t.bg,border:`1px solid ${t.border}`,borderRadius:8,padding:"10px 12px"}}>
+            <div style={{fontFamily:MN,fontSize:9,color:t.dim,fontWeight:700,letterSpacing:"0.5px",marginBottom:3}}>{tx(lang,"TREATED · DAY","TRATADAS · DÍA")}</div>
+            <div style={{fontFamily:MN,fontSize:18,fontWeight:700,color:t.text}}>~126</div>
+            <div style={{fontSize:10,color:t.dim,marginTop:2}}>{tx(lang,"~€507K/yr scope","~€507K/año scope")}</div>
+          </div>
+        </div>
+
+        {/* Why maintain — left vertical scan, short bullets */}
+        <div style={{marginBottom:14}}>
+          <div style={{fontFamily:MN,fontSize:10,fontWeight:700,color:t.dim,letterSpacing:"0.5px",marginBottom:8,textTransform:"uppercase"}}>
+            {tx(lang,"Why maintain","Por qué mantener")}
+          </div>
+          <div style={{fontSize:13,lineHeight:1.9}}>
+            <div><span style={{color:t.green,fontWeight:700,marginRight:6}}>✓</span><strong>MDE-1 CR preservation</strong> — {tx(lang,"SK +2.66pp / TW +2.39pp. Both up.","SK +2.66pp / TW +2.39pp. Suben en ambos.")}</div>
+            <div><span style={{color:t.red,fontWeight:700,marginRight:6}}>✗</span><strong>MDE-2 AOV target</strong> — {tx(lang,
+              <>Threshold unreachable from design. ¥690 = €3.75 in BQ; the €4.00–4.50 range was wrong, not the implementation.</>,
+              <>Threshold inalcanzable desde el diseño. ¥690 = €3.75 en BQ; el rango €4.00–4.50 estaba mal, no la implementación.</>
+            )}</div>
+            <div><span style={{color:t.red,fontWeight:700,marginRight:6}}>✗</span><strong>MDE-3 1-day volume</strong> — {tx(lang,
+              <>Easter contamination. Untouched 4-7d fell <strong>−22% (SK) / −35% (TW)</strong> in the same window. Treatment effect can't be isolated from holiday.</>,
+              <>Contaminación por Easter. Los 4-7d sin tratamiento cayeron <strong>−22% (SK) / −35% (TW)</strong> en la misma ventana. No se puede aislar el efecto del tratamiento del holiday.</>
+            )}</div>
+            <div><span style={{color:t.green,fontWeight:700,marginRight:6}}>✓</span><strong>{tx(lang,"Guardrails","Guardrails")}</strong> — {tx(lang,
+              <>ARPU floors respected (SK €3.02 / floor €2.84, TW €3.46 / floor €2.54). No formal guardrail breached.</>,
+              <>Floors de ARPU respetados (SK €3.02 / floor €2.84, TW €3.46 / floor €2.54). Ningún guardrail formal disparó.</>
+            )}</div>
+          </div>
+        </div>
+
+        {/* Two callouts side-by-side */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:10,marginBottom:14}}>
+          <div style={{background:`${t.blue}06`,border:`1px solid ${t.bBdr}`,borderRadius:8,padding:"10px 14px"}}>
+            <div style={{fontFamily:MN,fontSize:9,fontWeight:700,color:t.blue,marginBottom:4,letterSpacing:"0.4px"}}>↗ {tx(lang,"WATCH","SEGUIR")}</div>
+            <div style={{fontSize:12,lineHeight:1.5}}>
+              {tx(lang,
+                <><strong>SK 2-day +23.1% volume</strong> while untouched 4-7d fell −22%. Consistent with the Exp-005 2-day elasticity (e=−5.47). Weak alone, worth confirming at D+14.</>,
+                <><strong>SK 2-day +23.1% en volumen</strong> mientras el 4-7d sin tratamiento cayó −22%. Consistente con la elasticidad 2-day de Exp-005 (e=−5.47). Débil aislado, vale confirmar a D+14.</>
+              )}
+            </div>
+          </div>
+          <div style={{background:`${t.yellow}08`,border:`1px solid ${t.yBdr}`,borderRadius:8,padding:"10px 14px"}}>
+            <div style={{fontFamily:MN,fontSize:9,fontWeight:700,color:t.yellow,marginBottom:4,letterSpacing:"0.4px"}}>⚠ {tx(lang,"DON'T MISREAD","NO LEER MAL")}</div>
+            <div style={{fontSize:12,lineHeight:1.5}}>
+              {tx(lang,
+                <><strong>TW ARPU +22.7% is NOT treatment.</strong> It's composition: short buckets lost orders, mix shifted to longer plans (more days at the same per-day price). The treated buckets are exactly the ones that lost volume.</>,
+                <><strong>El ARPU TW +22.7% NO es tratamiento.</strong> Es composition: los buckets cortos perdieron órdenes, la mezcla se desplazó a planes de más días (mismo precio por día). Los buckets tratados son exactamente los que perdieron volumen.</>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* D+14 plan — bottom */}
+        <div style={{fontSize:12,color:t.dim,lineHeight:1.6,paddingTop:12,borderTop:`1px solid ${t.border}`}}>
+          <strong style={{color:t.text}}>{tx(lang,"D+14 plan","Plan D+14")}:</strong> {tx(lang,
+            "same 3 MDEs, same 90d baseline, clean window Apr 8–14. Inconclusive → external counterfactual sanity check. Clearly negative → rollback. No baseline movement, no post-hoc rescue.",
+            "mismos 3 MDEs, mismo baseline 90d, ventana limpia Abr 8–14. Inconclusivo → sanity check contrafactual externo. Claramente negativo → rollback. Sin movimiento del baseline, sin rescate post-hoc.")}
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+         EVERYTHING BELOW IS COLLAPSED
+         ═══════════════════════════════════════════════════════════ */}
+
+      {/* MDE TABLE */}
+      <Xp title={`📋 ${tx(lang,"MDE Status & Decision Rule","Estado MDE y Regla de Decisión")}`} open={false} t={t} left={t.blue}>
+        <div style={{overflowX:"auto",marginTop:12}}>
+          <table style={{width:"100%",borderCollapse:"collapse",fontFamily:MN,fontSize:11}}>
+            <thead>
+              <tr style={{background:`${t.dim}06`}}>
+                {["#",tx(lang,"Criterion","Criterio"),tx(lang,"Threshold","Umbral"),tx(lang,"Source","Fuente"),"SK","TW",tx(lang,"Status","Estado")].map(h=>
+                  <th key={h} style={{padding:"10px 8px",textAlign:"left",fontWeight:600,color:t.dim,fontSize:9,borderBottom:`2px solid ${t.border}`}}>{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{borderBottom:`1px solid ${t.border}`,background:`${t.green}06`}}>
+                <td style={{padding:"10px 8px",fontWeight:700}}>1</td>
+                <td style={{padding:"10px 8px",fontWeight:700}}>{tx(lang,"CR preservation","Preservación CR")}</td>
+                <td style={{padding:"10px 8px"}}>{tx(lang,"No decline >1.5pp vs 90d","No cae >1.5pp vs 90d")}<br/><span style={{fontSize:9,color:t.dim}}>SK ≥17.55% · TW ≥14.40%</span></td>
+                <td style={{padding:"10px 8px",color:t.dim}}>Adobe JPY</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>21.71% (+2.66pp)</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>18.29% (+2.39pp)</td>
+                <td style={{padding:"10px 8px"}}><Pill s="met" t={t}/></td>
+              </tr>
+              <tr style={{borderBottom:`1px solid ${t.border}`}}>
+                <td style={{padding:"10px 8px",fontWeight:700}}>2</td>
+                <td style={{padding:"10px 8px",fontWeight:700}}>{tx(lang,"AOV 1-day mechanic","Mecánica AOV 1d")}</td>
+                <td style={{padding:"10px 8px"}}>{tx(lang,"Drops to €4.00-4.50","Cae a €4.00-4.50")}<br/><span style={{fontSize:9,color:t.red}}>{tx(lang,"⚠ unreachable from design","⚠ inalcanzable desde el diseño")}</span></td>
+                <td style={{padding:"10px 8px",color:t.dim}}>BQ JPY</td>
+                <td style={{padding:"10px 8px",color:t.red,fontWeight:700}}>€4.58</td>
+                <td style={{padding:"10px 8px",color:t.red,fontWeight:700}}>€3.76</td>
+                <td style={{padding:"10px 8px"}}><Pill s="notmet" t={t}/></td>
+              </tr>
+              <tr style={{borderBottom:`1px solid ${t.border}`}}>
+                <td style={{padding:"10px 8px",fontWeight:700}}>3</td>
+                <td style={{padding:"10px 8px",fontWeight:700}}>{tx(lang,"1-day volume","Volumen 1d")}</td>
+                <td style={{padding:"10px 8px"}}>{tx(lang,"Up >50% vs 90d","Sube >50% vs 90d")}<br/><span style={{fontSize:9,color:t.yellow}}>{tx(lang,"⚠ Easter contamination","⚠ contaminado por Easter")}</span></td>
+                <td style={{padding:"10px 8px",color:t.dim}}>BQ JPY</td>
+                <td style={{padding:"10px 8px",color:t.red,fontWeight:700}}>+8.4%</td>
+                <td style={{padding:"10px 8px",color:t.red,fontWeight:700}}>−58.3%</td>
+                <td style={{padding:"10px 8px"}}><Pill s="notmet" t={t}/></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style={{padding:"12px 16px",background:`${t.yellow}08`,border:`1px solid ${t.yBdr}`,borderRadius:8,fontSize:12,lineHeight:1.5,marginTop:14}}>
+          <strong>{tx(lang,"Decision rule (literal from brief)","Regla de decisión (literal del brief)")}:</strong>{" "}
+          {tx(lang,
+            "Maintain if 2/3 MDE met AND ARPU JPY not down >10%. Rollback if guardrail breached or AOV unchanged. At D+7: 1/3 MDE strictly met, no formal gate reached. Decision is human: maintain to D+14 based on the documented rationale above.",
+            "Mantener si 2/3 MDE cumplidos Y ARPU JPY no cae >10%. Rollback si guardrail violado o AOV sin cambio. A D+7: 1/3 MDE estrictamente cumplido, ninguna puerta formal alcanzada. La decisión es humana: mantener a D+14 según el razonamiento documentado arriba.")}
+        </div>
+      </Xp>
+
+      {/* HYPOTHESIS */}
+      <Xp title={`💡 ${tx(lang,"Hypothesis","Hipótesis")}`} open={false} t={t} left={t.purple}>
+        <div style={{fontSize:13,lineHeight:1.9,margin:"12px 0 16px"}}>
+          <strong>IF</strong> {tx(lang,"we lower JPY prices for 1-3 day plans of Taiwan and South Korea to €3.79/day,","bajamos los precios JPY de planes 1-3 días de TW y SK al estándar €3.79/día,")}
+          <br/><strong>THEN</strong> {tx(lang,"JPY buyer volume increases (especially 1-day and 2-day),","el volumen de compradores JPY aumenta (especialmente 1 y 2 días),")}
+          <br/><strong>BECAUSE</strong> {tx(lang,"the elasticity validated in Japan (Exp-005) replicates where ~47% of demand is Japanese buyers.","la elasticidad validada en Japón (Exp-005) se replica donde ~47% de la demanda es de compradores japoneses.")}
+        </div>
+        <div style={{background:`${t.purple}08`,border:`1px solid ${t.pBdr}`,borderRadius:8,padding:"12px 16px",fontSize:12,lineHeight:1.7}}>
+          <div style={{fontFamily:MN,fontSize:10,fontWeight:700,color:t.purple,marginBottom:6}}>{tx(lang,"FROM EXP-005 JAPAN","DE EXP-005 JAPÓN")}</div>
+          <strong>1-day (e = −1.93):</strong> {tx(lang,"Volume driver at revenue break-even.","Driver de volumen en equilibrio de revenue.")}
+          <br/><strong>2-day (e = −5.47):</strong> {tx(lang,"Real revenue driver. Revenue DID +14.3pp incremental.","Verdadero driver de revenue. Revenue DID +14.3pp incremental.")}
+          <br/><strong>3-day:</strong> {tx(lang,"Marginal price change (-4.8%). Should normalize the bucket anomaly.","Cambio marginal de precio (-4.8%). Debería normalizar la anomalía del bucket.")}
+        </div>
+      </Xp>
+
+      {/* PRICE CHANGES */}
+      <Xp title={`💴 ${tx(lang,"Price Changes (JPY)","Cambios de Precio (JPY)")}`} open={false} t={t}>
+        <div style={{overflowX:"auto",marginTop:10}}>
+          <table style={{width:"100%",borderCollapse:"collapse",fontFamily:MN,fontSize:12}}>
+            <thead>
+              <tr>
+                {[tx(lang,"Duration","Duración"),tx(lang,"Old","Anterior"),tx(lang,"New","Nuevo"),tx(lang,"Change","Cambio")].map(h=>
+                  <th key={h} style={{padding:"8px 10px",textAlign:"left",fontWeight:600,color:t.dim,fontSize:10,borderBottom:`1px solid ${t.border}`}}>{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {PRICES.map((r,i)=>(
+                <tr key={i} style={{borderBottom:`1px solid ${t.border}`}}>
+                  <td style={{padding:"8px 10px",fontWeight:700}}>{tx(lang,r.b.en,r.b.es)}</td>
+                  <td style={{padding:"8px 10px",color:t.dim,textDecoration:"line-through"}}>{r.old}</td>
+                  <td style={{padding:"8px 10px",fontWeight:700,color:t.green}}>{r.nu}</td>
+                  <td style={{padding:"8px 10px",color:t.accent,fontWeight:700}}>{r.d}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div style={{fontSize:10,color:t.dim,marginTop:8}}>{tx(lang,"Days 4+ unchanged (already aligned to Japan). Only JPY buyers (~47% of volume).","Días 4+ sin cambio (ya alineados con Japan). Solo compradores JPY (~47% volumen).")}</div>
+      </Xp>
+
+      {/* DESTINATIONS */}
+      <DestSection d={SK} lang={lang} t={t}/>
+      <DestSection d={TW} lang={lang} t={t}/>
+
+      {/* GUARDRAILS */}
+      <Xp title={`🛡️ ${tx(lang,"Guardrails","Guardrails")}`} open={false} t={t}>
+        <div style={{overflowX:"auto",marginTop:10}}>
+          <table style={{width:"100%",borderCollapse:"collapse",fontFamily:MN,fontSize:11}}>
+            <thead>
+              <tr style={{background:`${t.dim}06`}}>
+                {[tx(lang,"Guardrail","Guardrail"),tx(lang,"Threshold","Umbral"),"SK","TW",tx(lang,"Status","Estado")].map(h=>
+                  <th key={h} style={{padding:"10px 8px",textAlign:"left",fontWeight:600,color:t.dim,fontSize:9,borderBottom:`2px solid ${t.border}`}}>{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{borderBottom:`1px solid ${t.border}`}}>
+                <td style={{padding:"10px 8px",fontWeight:700}}>ARPU JPY</td>
+                <td style={{padding:"10px 8px"}}>{tx(lang,"Not down >10% vs 90d","No cae >10% vs 90d")}</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>€3.02 (floor €2.84)</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>€3.46 (floor €2.54)</td>
+                <td style={{padding:"10px 8px"}}><Pill s="ok" t={t}/></td>
+              </tr>
+              <tr style={{borderBottom:`1px solid ${t.border}`}}>
+                <td style={{padding:"10px 8px",fontWeight:700}}>{tx(lang,"AOV 1-day moved","AOV 1d se movió")}</td>
+                <td style={{padding:"10px 8px"}}>{tx(lang,"Drop toward target","Cae hacia target")}</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>€5.98→€4.58</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>€6.55→€3.76</td>
+                <td style={{padding:"10px 8px"}}><Pill s="ok" t={t}/></td>
+              </tr>
+              <tr style={{borderBottom:`1px solid ${t.border}`}}>
+                <td style={{padding:"10px 8px",fontWeight:700}}>{tx(lang,"4+ AOV stability","Estabilidad AOV 4+")}</td>
+                <td style={{padding:"10px 8px"}}>{tx(lang,"Within ±15% of baseline","Dentro de ±15% del baseline")}</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>+5.6%</td>
+                <td style={{padding:"10px 8px",color:t.green,fontWeight:700}}>+8.7%</td>
+                <td style={{padding:"10px 8px"}}><Pill s="ok" t={t}/></td>
+              </tr>
+              <tr style={{borderBottom:`1px solid ${t.border}`,background:`${t.yellow}06`}}>
+                <td style={{padding:"10px 8px",fontWeight:700}}>{tx(lang,"4+ volume stability","Estabilidad vol 4+")}</td>
+                <td style={{padding:"10px 8px"}}>{tx(lang,"Within ±15% of baseline","Dentro de ±15% del baseline")}</td>
+                <td style={{padding:"10px 8px",color:t.yellow,fontWeight:700}}>−22.2%</td>
+                <td style={{padding:"10px 8px",color:t.yellow,fontWeight:700}}>−35.4%</td>
+                <td style={{padding:"10px 8px"}}><Pill s="flag" t={t}/></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style={{fontSize:11,color:t.dim,lineHeight:1.6,marginTop:12,fontStyle:"italic"}}>
+          {tx(lang,
+            "The 4+ volume flag is attributable to Easter, not to treatment. The 4+ buckets received no price change, so any movement reflects external demand conditions. This does not trigger rollback.",
+            "El flag del volumen 4+ es atribuible a Easter, no al tratamiento. Los buckets 4+ no recibieron cambio de precio, así que cualquier movimiento refleja condiciones externas de demanda. No dispara rollback.")}
+        </div>
+      </Xp>
+
+      {/* DATA NOTES */}
+      <Xp title={`📐 ${tx(lang,"Data conventions & sources","Convenciones de datos y fuentes")}`} open={false} t={t}>
+        <div style={{fontSize:11,color:t.dim,lineHeight:1.8,marginTop:10}}>
+          <strong style={{color:t.text}}>{tx(lang,"BQ baselines","Baselines BQ")}</strong>: {tx(lang,
+            "all orders, no discount-code filter. Period: Nov 26 2025 – Feb 24 2026 (91 days).",
+            "todas las órdenes, sin filtro de discount-code. Período: Nov 26 2025 – Feb 24 2026 (91 días).")}<br/>
+          <strong style={{color:t.text}}>{tx(lang,"BQ post-launch","BQ post-launch")}</strong>: {tx(lang,
+            "Apr 1–7 2026 (7 clean days, D+0 excluded due to mid-day implementation).",
+            "Abr 1–7 2026 (7 días limpios, D+0 excluido por implementación mid-day).")}<br/>
+          <strong style={{color:t.text}}>{tx(lang,"FX","FX")}</strong>: {tx(lang,
+            "BQ records current_total_price in EUR at Shopify market FX (~184 JPY/EUR), not Holafly's internal rate (175). All baselines use the same BQ source. ¥690 ≈ €3.75 in BQ.",
+            "BQ registra current_total_price en EUR a FX Shopify (~184 JPY/EUR), no la tasa interna (175). Todos los baselines usan la misma fuente BQ. ¥690 ≈ €3.75 en BQ.")}<br/>
+          <strong style={{color:t.text}}>{tx(lang,"Source separation","Separación de fuentes")}</strong>: {tx(lang,
+            "Adobe JPY-filtered for CR, ARPU, UV. BQ JPY for volume, AOV, revenue. No cross-source comparisons within the same metric.",
+            "Adobe JPY-filtered para CR, ARPU, UV. BQ JPY para volumen, AOV, revenue. Sin cruces de fuentes en la misma métrica.")}<br/>
+          <strong style={{color:t.text}}>{tx(lang,"Revenue scope","Scope de revenue")}</strong>: {tx(lang,
+            "JPY 1-3d annualized ≈ €507K (SK ~€394K + TW ~€113K).",
+            "JPY 1-3d anualizado ≈ €507K (SK ~€394K + TW ~€113K).")}
+        </div>
+      </Xp>
+
+      {/* FOOTER */}
+      <div style={{textAlign:"center",fontFamily:MN,fontSize:9,color:t.muted,padding:"20px 0 12px",borderTop:`1px solid ${t.border}`,marginTop:8}}>
+        CORR-PRIC-001 D+7 Update v7 · {tx(lang,"Logged","Registrado")} Apr 7, 2026 · {tx(lang,"Next","Próximo")}: D+14 Apr 14<br/>
+        Pricing Experiment System · Holafly Growth
+      </div>
+    </div></div>
+  );
+};
+ReactDOM.render(<App/>,document.getElementById("root"));
+</script>
+</body>
+</html>

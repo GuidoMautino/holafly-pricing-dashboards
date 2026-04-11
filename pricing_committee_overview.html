@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Holafly · Pricing Committee — April 14, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Mulish',sans-serif;background:#FFF;color:#292B2E;font-size:14px;line-height:1.65}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .25s ease both}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CCD0D7;border-radius:3px}
+@media(max-width:640px){body{font-size:13px}}
+
+.hero{background:linear-gradient(135deg,#FDE8EB 0%,#FFF 60%);border-bottom:1px solid #E4E6EA;padding:36px 24px 32px}
+.hero-inner{max-width:1100px;margin:0 auto}
+.hero-eyebrow{font-size:11px;font-weight:800;color:#E6485C;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+.hero h1{font-size:30px;font-weight:900;color:#292B2E;line-height:1.2;margin-bottom:8px;letter-spacing:-0.5px}
+.hero .subtitle{font-size:15px;color:#475569;font-weight:500;max-width:720px}
+.hero-meta{display:flex;gap:20px;margin-top:18px;flex-wrap:wrap;font-size:12px;color:#94A3B8}
+.hero-meta span strong{color:#292B2E;font-weight:700}
+
+.section{max-width:1100px;margin:0 auto;padding:32px 24px}
+.section h2{font-size:18px;font-weight:800;color:#292B2E;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section h2::before{content:"";width:3px;height:18px;background:#E6485C;border-radius:2px}
+.section-sub{font-size:13px;color:#475569;margin-bottom:20px;max-width:820px;line-height:1.6}
+
+.headline-card{background:#FFF;border:1px solid #E4E6EA;border-radius:12px;padding:24px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+.headline-total{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding-bottom:18px;border-bottom:1px solid #E4E6EA;margin-bottom:18px}
+.headline-total .lbl{font-size:11px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.headline-total .val{font-size:34px;font-weight:900;color:#292B2E;font-family:'JetBrains Mono',monospace;letter-spacing:-1px}
+.headline-total .val .accent{color:#E6485C}
+.headline-total .mid{font-size:12px;color:#475569;margin-top:6px}
+.headline-total .right{text-align:right}
+.headline-total .right .chip{display:inline-block;background:#FDE8EB;color:#E6485C;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;margin-bottom:6px}
+
+.opps-table{width:100%;border-collapse:collapse;font-size:13px}
+.opps-table th{text-align:left;font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.8px;padding:10px 12px;border-bottom:1px solid #E4E6EA}
+.opps-table th.r{text-align:right}
+.opps-table td{padding:14px 12px;border-bottom:1px solid #F1F5F9;vertical-align:top}
+.opps-table td.r{text-align:right}
+.opps-table tr:last-child td{border-bottom:none}
+.opps-table .num{font-family:'JetBrains Mono',monospace;font-weight:700;color:#292B2E;font-size:14px}
+.opps-table .opp-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:#FDE8EB;color:#E6485C;font-weight:800;font-size:12px;margin-right:10px;flex-shrink:0}
+.opps-table .opp-title{display:flex;align-items:center;gap:0;font-weight:700;color:#292B2E;font-size:14px}
+.opps-table .opp-anchor{font-size:11px;color:#94A3B8;margin-top:3px;padding-left:36px}
+.opps-table tr:hover{background:#FAFBFC}
+
+.interaction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+@media(max-width:720px){.interaction-grid{grid-template-columns:1fr}}
+.int-card{background:#F8FAFC;border:1px solid #E4E6EA;border-radius:8px;padding:14px}
+.int-card .int-title{font-size:11px;font-weight:800;color:#E6485C;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.int-card .int-body{font-size:12px;color:#475569;line-height:1.55}
+
+/* Gantt */
+.gantt{background:#FFF;border:1px solid #E4E6EA;border-radius:12px;overflow:hidden}
+.gantt-header{display:grid;grid-template-columns:220px repeat(9,1fr);background:#FAFBFC;border-bottom:1px solid #E4E6EA}
+.gantt-header .g-cell{padding:12px 8px;font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;text-align:center;border-right:1px solid #E4E6EA}
+.gantt-header .g-cell:last-child{border-right:none}
+.gantt-header .g-opp-lbl{text-align:left;padding-left:16px;color:#94A3B8}
+.gantt-row{display:grid;grid-template-columns:220px repeat(9,1fr);border-bottom:1px solid #F1F5F9;align-items:stretch}
+.gantt-row:last-child{border-bottom:none}
+.gantt-row:hover{background:#FAFBFC}
+.gantt-opp{padding:16px;border-right:1px solid #E4E6EA;display:flex;flex-direction:column;justify-content:center}
+.gantt-opp .title{font-size:13px;font-weight:700;color:#292B2E}
+.gantt-opp .sub{font-size:11px;color:#94A3B8;margin-top:2px}
+.gantt-cell{border-right:1px solid #F1F5F9;display:flex;align-items:center;justify-content:center;padding:14px 4px;position:relative}
+.gantt-cell:last-child{border-right:none}
+.gantt-bar{height:16px;border-radius:3px;width:75%;max-width:60px}
+.g-low{background:#F1F5F9;border:1px dashed #CBD5E1}
+.g-med{background:#F9B4BC}
+.g-high{background:#E6485C}
+.gantt-legend{padding:14px 16px;background:#FAFBFC;border-top:1px solid #E4E6EA;display:flex;gap:22px;flex-wrap:wrap;font-size:11px;color:#475569}
+.gantt-legend .lg{display:flex;align-items:center;gap:7px}
+.gantt-legend .swatch{width:16px;height:10px;border-radius:2px}
+.gantt-note{font-size:12px;color:#475569;padding:14px 16px;background:#FAFBFC;border-top:1px solid #E4E6EA;line-height:1.6}
+.gantt-note strong{color:#292B2E;font-weight:700}
+
+/* Accordion */
+.accordion-list{display:flex;flex-direction:column;gap:10px}
+.acc-item{background:#FFF;border:1px solid #E4E6EA;border-radius:10px;overflow:hidden;transition:box-shadow .15s ease}
+.acc-item.open{box-shadow:0 2px 10px rgba(230,72,92,0.08);border-color:#F9B4BC}
+.acc-head{padding:18px 20px;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;user-select:none}
+.acc-head:hover{background:#FAFBFC}
+.acc-item.open .acc-head{background:#FDE8EB}
+.acc-num{width:32px;height:32px;border-radius:8px;background:#FDE8EB;color:#E6485C;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.acc-item.open .acc-num{background:#E6485C;color:#FFF}
+.acc-title{font-size:15px;font-weight:700;color:#292B2E}
+.acc-desc{font-size:12px;color:#475569;margin-top:3px;font-weight:400}
+.acc-val{font-family:'JetBrains Mono',monospace;font-weight:700;color:#292B2E;font-size:14px;text-align:right;white-space:nowrap}
+.acc-val .v-lbl{display:block;font-size:9px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.acc-chev{width:24px;height:24px;color:#94A3B8;transition:transform .2s ease}
+.acc-item.open .acc-chev{transform:rotate(180deg);color:#E6485C}
+.acc-body{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease}
+.acc-item.open .acc-body{padding:4px 20px 24px 20px;max-height:5000px}
+.acc-body-inner{border-top:1px solid #E4E6EA;padding-top:18px}
+.acc-body h3{font-size:13px;font-weight:800;color:#292B2E;margin:14px 0 6px 0}
+.acc-body h3:first-child{margin-top:0}
+.acc-body p{font-size:13px;color:#475569;line-height:1.65;margin-bottom:8px}
+.acc-body p strong{color:#292B2E;font-weight:700}
+.acc-body .anchor-note{background:#F8FAFC;border-left:3px solid #E6485C;padding:10px 14px;margin:10px 0;font-size:12px;color:#475569;line-height:1.55;border-radius:0 6px 6px 0}
+.acc-body .anchor-note em{font-style:italic;color:#475569}
+.acc-body .acc-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px}
+.acc-body .acc-table th{text-align:left;font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid #E4E6EA}
+.acc-body .acc-table th.r{text-align:right}
+.acc-body .acc-table td{padding:10px;border-bottom:1px solid #F1F5F9}
+.acc-body .acc-table td.r{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:#292B2E}
+.acc-body .acc-table tr:last-child td{border-bottom:none}
+.acc-body .acc-table tr.total td{background:#FAFBFC;font-weight:800;border-top:2px solid #E4E6EA}
+.acc-body .flag-note{display:flex;gap:10px;align-items:flex-start;background:#F8FAFC;border-left:3px solid #E6485C;padding:12px 14px;margin:14px 0 4px 0;border-radius:0 6px 6px 0}
+.acc-body .flag-note .flag-icon{flex-shrink:0;color:#E6485C;font-weight:800;font-size:10px;letter-spacing:.5px;text-transform:uppercase;margin-top:2px;white-space:nowrap}
+.acc-body .flag-note .flag-body{font-size:12px;color:#475569;line-height:1.6}
+.acc-body .flag-note .flag-body strong{color:#292B2E;font-weight:700}
+
+/* Drive footer */
+.drive-footer{background:#F8FAFC;border:1px solid #E4E6EA;border-radius:12px;padding:22px;margin-top:24px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+@media(max-width:720px){.drive-footer{grid-template-columns:1fr;text-align:center}}
+.drive-icon{width:48px;height:48px;background:#FDE8EB;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.drive-footer .df-title{font-size:14px;font-weight:800;color:#292B2E;margin-bottom:4px}
+.drive-footer .df-desc{font-size:12px;color:#475569;line-height:1.55}
+.drive-btn{background:#E6485C;color:#FFF;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;display:inline-block;transition:background .15s ease;white-space:nowrap}
+.drive-btn:hover{background:#D13949}
+
+.page-footer{max-width:1100px;margin:40px auto 24px auto;padding:20px 24px;border-top:1px solid #E4E6EA;font-size:11px;color:#94A3B8;text-align:center}
+.page-footer strong{color:#475569}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const {useState} = React;
+
+const T={bg:"#FFF",card:"#F8FAFC",text:"#292B2E",dim:"#475569",muted:"#94A3B8",border:"#E4E6EA",accent:"#E6485C",accentL:"#FDE8EB"};
+
+const DRIVE_URL = "https://drive.google.com/drive/folders/13WkyYkeM4KI7vsDcIrDuJakhQ0hjlkTR?usp=sharing";
+
+const PORTFOLIO = {
+  totalRange: "€3.2M – €6.9M",
+  midpoint: "~€5M",
+  gapToCover: "€35M",
+  bauTrajectory: "€435M",
+  target2026: "€470M"
+};
+
+const OPPS = [
+  {
+    num: 1,
+    title: "Gross margin floor on material below-floor destinations",
+    shortDesc: "Recovering gross margin on 9 material destinations sitting below the 30% floor, co-led with Carriers and Operations.",
+    range: "€1.5M – €2.6M",
+    anchor: "9 destinations, 84% of below-floor revenue",
+    body: {
+      context: "Holafly targets a 30 percent gross margin floor with an aspirational band of 65 to 85 percent. Most of the catalogue is comfortably above the floor: 99 destinations at 65 percent or better hold 76 percent of revenue. The tail below the floor has 50 destinations but only 9 are materially sized. Morocco is the largest and most actionable case: €2.99M in Q1 revenue at 18.2 percent aggregated gross margin, already on a positive trajectory.",
+      whatPricingBrings: "A focused workstream on the 9 material below-floor destinations, co-led with Carriers and Operations. Pricing delivers three things no other team is currently owning: economic dimensioning per destination with ceiling and priority by impact, proposals of pricing-side levers where the opportunity justifies the work (bundles, recurrence, charming, reclustering), and a monitoring framework with explicit triggers for scale-up, review, or de-prioritisation of each case. Cost-side levers like Core migration remain with Carriers and Operations.",
+      when: "Morocco is already trending: gross margin moved from 8.6 percent in January to 26.0 percent in March, driven by revenue per gigabyte improvement rather than cost reduction. At this pace Morocco approaches the floor in Q2 without additional intervention. April is focused on gathering remaining data points for prioritisation. First operational working session with Carriers and Operations opens in early May.",
+      dependencies: "Carriers and Operations as co-leads for Core migration and cost-side work. Product as a contributor on bundles and recurrence mechanics. The SSoT dashboard in development by the Data team covers the monitoring layer.",
+      risk: "Three assumptions to validate: the sustainability of Morocco's current trend, the real effectiveness of Core migration on destinations where it is deployed, and the structural recoverability of each of the 9 material destinations.",
+      strategicUpside: "A below-floor recovery playbook applicable to future destinations that drift below the floor, and a clean cross-functional working rhythm with Carriers and Operations on gross margin management.",
+      anchorNote: "Anchored on real gross margin data from the aggregated Carriers COGS export for January to March 2026. The 9 material destinations concentrate 84 percent of the revenue in the below-floor pool."
+    }
+  },
+  {
+    num: 2,
+    title: "PIM-enabled pricing corrections",
+    shortDesc: "Validation and measurement of new clustered pricing models deployed through the PIM migration, co-led with Product Hackers.",
+    range: "€500K – €1.7M",
+    anchor: "€234M candidate universe (30-80% GM band)",
+    body: {
+      context: "Holafly is migrating its pricing configuration to PIM/Strapi. Product Hackers is designing new clustered pricing models, reducing from 21 existing clusters to 10 to 15, based on current site prices, charming conventions, foreign exchange rates, and recent gross margin data. The PIM migration itself is the vehicle that deploys these new models.",
+      whatPricingBrings: "A focused workstream on the validation, phase-by-phase sign-off, and post-migration measurement of the new clustered models. Three concrete deliverables: economic dimensioning of the candidate universe and the expected impact range per phase, the validation criteria applied before each phase goes live including sanity checks on charming, rounding, and price-ladder coherence within each cluster, and a monitoring framework with explicit triggers for scale-up, hold, or rollback per destination group once the new models are live.",
+      when: "Phase 0 is planned for April 22 as a technical validation on 20 low-materiality destinations. The Product Hackers working session takes place the following week. Progressive rollout during the PIM migration through May and early June, with full migration completion targeted for late June. From July onward, the focus shifts from deployment to impact measurement and selective iteration.",
+      dependencies: "Product Hackers lead the model design and delta analysis per cluster. Engineering (Iñigo) owns the rollout pipeline. Carriers and Operations contributes on cost-side validation. The SSoT dashboard covers the monitoring layer.",
+      risk: "The range depends on preliminary parameters for the per-destination uplift, to be calibrated post-session with Product Hackers. Model quality depends on the clustering methodology. PIM migration delays could push the measurement phase into the second half, compressing the 2026 capture window.",
+      strategicUpside: "A clean pricing baseline under PIM and a structured governance model for pricing changes under the new system. Every subsequent pricing experiment sits on top of this baseline.",
+      flag: "The range reflects the current stage of the analysis. The candidate universe (€234M) is anchored in real data, and the three parameters that convert it to contribution (how much of the candidate is affected, capture rate per destination, how much lands in 2026) will be calibrated in the joint working session with Product Hackers next week, once the per-destination delta is on the table. The range can tighten up or down from there, which is expected and part of the workflow we agreed with the team.",
+      anchorNote: "Anchored on a candidate universe of €234M in annual revenue across 123 destinations in the 30 to 80 percent gross margin band, excluding already-optimized destinations (≥80% GM) and broken destinations (<30% GM, which belong to Opp 1)."
+    }
+  },
+  {
+    num: 3,
+    title: "Web vs App pricing gap",
+    shortDesc: "Conservative capture of a validated systematic gap where Web charges more per day than App for the same destination, duration and currency. Greenfield on the App channel.",
+    range: "€400K – €1M",
+    anchor: "300 granular combinations, 92% show Web more expensive",
+    body: {
+      context: "The blended AOV gap between Web and App is 19.8 percent (Web €30.43, App €24.20 in Q1 2026). Granular validation controlling for destination, exact days and currency confirms the gap is real at the pricing-per-day level: 92 percent of 300 validated combinations show Web price per day higher than App, with a volume-weighted gap of 7.3 percent. Two destinations show extraordinarily consistent patterns: Morocco EUR with a gap between 6.6 and 9.4 percent across days 2 through 11, and United States EUR with a gap between 6.8 and 13.2 percent across days 1 through 15.",
+      whatPricingBrings: "Opp 3 is greenfield on the App channel. Four concrete deliverables in the pre-launch phase: the validated economic dimensioning of the gap with granular anchoring, a framework of hypotheses about the underlying causes to be investigated, an A/B experimentation setup ready for day-one post-launch, and a priority list of the first experiments starting with Morocco EUR and United States EUR as the cleanest cases. Post-launch, Pricing leads the experimentation workstream on the App channel.",
+      causesNote: "The gap exists but the mechanism is not yet identified. Working hypotheses to investigate: different clusters in the pricing models between channels, charming price rules applied differently by channel, default plan shown per destination, discount code mechanics. Investigation is explicitly part of the workstream and the conservative sizing reflects this uncertainty.",
+      interactionOpp2: "A significant portion of the price-per-day gap is expected to resolve naturally once the PIM migration stabilises the clustered pricing models. Opp 3 sizes the residual capture after Opp 2 has done its work, not the full gap.",
+      when: "Pre-launch preparation from April, no operational footprint in April. First experiments go live the month after the new App launches. The 2026 range assumes a mid-year launch with meaningful capture in H2. Opp 3 is a preparation year in 2026 and becomes a meaningful P&L contributor from 2027 onward.",
+      dependencies: "New App launch, timing not yet confirmed. Opp 2 progress, since the interaction effect means Opp 3's effective scope depends on what Opp 2 captures first. Coordination with the Data team on unified Web and App attribution.",
+      flag: "The 2026 contribution of Opp 3 is tied to the launch timing of the new App, which the Product team owns. The current range assumes a mid-year launch and Pricing is using the pre-launch months to prepare the experimentation setup end-to-end so we are ready on day one. As the launch date firms up, we refine the range together with Product and share the updated read.",
+      anchorNote: "Anchored on Q1 2026 granular data, controlled for destination, exact duration and presentment currency. Sample: 300 combinations with at least 100 orders per channel, covering 45 percent of App orders. Sizing is deliberately conservative because the underlying mechanisms are not yet identified. Scope can be revised upward as causes are mapped and as the PIM migration advances."
+    }
+  },
+  {
+    num: 4,
+    title: "FX-driven pricing project",
+    shortDesc: "Active pipeline of 10 to 15 currency-level experiments testing how much of each fixed-versus-market rate gap the market absorbs.",
+    range: "€800K – €1.6M",
+    anchor: "10-15 cases in motion, validated against internal reporting",
+    body: {
+      context: "Holafly's pricing is static by design. Several currencies show gaps between the fixed rate used internally and the current market rate, adding up to around €8.7M of annual arithmetic misalignment on the underpriced side. Pricing runs targeted experiments and corrections in select markets to test how much of each gap the market absorbs before customers push back.",
+      whatPricingBrings: "A focused workstream on identification, prioritisation, experimental validation and rollout of FX corrections. Three concrete deliverables: economic dimensioning of the FX exposure per currency with annual revenue impact, design of per-currency experiments with guardrails and rollback thresholds before any correction goes live, and a monitoring framework that tracks captured revenue versus theoretical gap on each deployed case. Execution on the pricing engine stays with Sebas in Content.",
+      when: "The pipeline is already in motion, with several cases deployed and under monitoring. PIM migration completing in late June will accelerate the cadence. Target cadence: one new case incorporated every three to four weeks within the FX project.",
+      dependencies: "Sebas for pricing engine configuration, currently delivering on cadence. Analyst capacity for the volume of cases running in parallel, since the per-case rigour required is non-trivial for a single-person team at this cadence.",
+      risk: "The 2026 range assumes around half of each case's theoretical gap is captured. The rest is offset by some customers not buying at the higher local-currency price. Per-currency guardrails with automatic rollback at minus 15 percent sustained volume drop.",
+      scopeB: "The fixed USD rate (1.08 vs current market 1.17) represents around €6.8M of annual exposure under the current decision to keep USD static. This is not a proposal to change policy. It is visibility for leadership to weigh the cost when the topic surfaces in the strategic conversation.",
+      strategicUpside: "An elasticity playbook per market, which enables evidence-backed pricing decisions from 2027 onward and informs the USD strategic conversation.",
+      flag: "Holding the per-case rigour at this cadence (10 to 15 cases through the year, each with its own baseline, guardrails, and post-launch reading) is the part that scales with team size. A second analyst joining the team in the coming weeks allows us to run more cases in parallel and build the elasticity playbook faster, which is the compound benefit beyond the direct 2026 contribution.",
+      anchorNote: "Based on Q1 2026 data from BigQuery, validated against internal reporting. Once fully deployed, the project reaches an annual run-rate approaching €1.5M at steady state."
+    }
+  }
+];
+
+// Gantt intensity data: Apr-Dec (9 months) x 4 opps
+const GANTT = [
+  {opp: "Opp 1 — GM floor", sub: "9 material destinations", cells: ["low","med","med","med","med","high","med","med","high"]},
+  {opp: "Opp 2 — PIM corrections", sub: "123 destinations (30-80% GM)", cells: ["med","med","med","high","high","high","med","med","high"]},
+  {opp: "Opp 3 — Web vs App", sub: "Greenfield, launch-dependent", cells: ["low","low","med","med","med","high","high","med","med"]},
+  {opp: "Opp 4 — FX project", sub: "10-15 cases in motion", cells: ["high","high","high","high","high","high","high","high","high"]},
+];
+const MONTHS = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+function Hero(){
+  return (
+    <div className="hero">
+      <div className="hero-inner">
+        <div className="hero-eyebrow">Holafly · Growth Pricing</div>
+        <h1>Pricing portfolio — Q2 to Q4 2026</h1>
+        <div className="subtitle">Four pricing opportunities sized with data anchoring, structured to cover the main dimensions of pricing action Holafly has today: FX alignment, gross margin floor recovery, structural model corrections through PIM, and cross-channel pricing consistency.</div>
+        <div className="hero-meta">
+          <span><strong>For</strong> Pricing Committee</span>
+          <span><strong>Date</strong> April 14, 2026</span>
+          <span><strong>Owner</strong> Growth Pricing</span>
+          <span><strong>BAU target 2026</strong> €470M · gap to cover €35M</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ImpactSummary(){
+  return (
+    <div className="section">
+      <h2>Combined impact summary</h2>
+      <div className="section-sub">Four opportunities with a combined 2026 contribution range between the conservative floor of each and the upper bound if all four land at their optimistic end simultaneously. The realistic read is the middle of each range summed, giving approximately <strong>€5M of combined 2026 contribution</strong> if execution goes reasonably.</div>
+
+      <div className="headline-card">
+        <div className="headline-total">
+          <div>
+            <div className="lbl">Portfolio 2026 contribution range</div>
+            <div className="val"><span className="accent">{PORTFOLIO.totalRange}</span></div>
+            <div className="mid">Realistic midpoint sum: <strong>{PORTFOLIO.midpoint}</strong> · 9 effective months (Apr–Dec)</div>
+          </div>
+          <div className="right">
+            <div className="chip">Context</div>
+            <div style={{fontSize:'12px',color:'#475569',lineHeight:'1.5'}}>BAU trajectory <strong style={{color:'#292B2E'}}>{PORTFOLIO.bauTrajectory}</strong><br/>Target <strong style={{color:'#292B2E'}}>{PORTFOLIO.target2026}</strong> · gap to cover <strong style={{color:'#E6485C'}}>{PORTFOLIO.gapToCover}</strong></div>
+          </div>
+        </div>
+
+        <table className="opps-table">
+          <thead>
+            <tr>
+              <th>Opportunity</th>
+              <th className="r">2026 contribution</th>
+            </tr>
+          </thead>
+          <tbody>
+            {OPPS.map(o => (
+              <tr key={o.num}>
+                <td>
+                  <div className="opp-title"><span className="opp-num">{o.num}</span>{o.title}</div>
+                  <div className="opp-anchor">{o.anchor}</div>
+                </td>
+                <td className="r num">{o.range}</td>
+              </tr>
+            ))}
+            <tr style={{borderTop:'2px solid #E4E6EA'}}>
+              <td style={{fontWeight:800,color:'#292B2E',paddingTop:'18px'}}>Portfolio total range</td>
+              <td className="r num" style={{fontSize:'16px',color:'#E6485C',paddingTop:'18px'}}>{PORTFOLIO.totalRange}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function Interactions(){
+  return (
+    <div className="section">
+      <h2>How the opportunities interact</h2>
+      <div className="section-sub">The four opportunities work on different surfaces but two pairs interact and one is fully orthogonal. Understanding the interactions is key to reading the portfolio total correctly.</div>
+
+      <div className="interaction-grid">
+        <div className="int-card">
+          <div className="int-title">Opp 1 ↔ Opp 2</div>
+          <div className="int-body">Mutually exclusive by construction. Opp 1 covers destinations below 30% GM (9 material). Opp 2 covers 30–80% GM band (123 destinations). No destination appears in both.</div>
+        </div>
+        <div className="int-card">
+          <div className="int-title">Opp 3 ↔ Opp 2</div>
+          <div className="int-body">Overlapping surfaces. A significant portion of the Web vs App gap resolves naturally when PIM unifies clusters across channels. Opp 3 sizes the residual capture after Opp 2.</div>
+        </div>
+        <div className="int-card">
+          <div className="int-title">Opp 4 is orthogonal</div>
+          <div className="int-body">FX works on currency alignment across all destinations, regardless of GM band or channel. Its contribution is independent and does not overlap with the others.</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Gantt(){
+  return (
+    <div className="section">
+      <h2>Capacity Gantt</h2>
+      <div className="section-sub">Relative workload distribution by month across the four opportunities. Not hours, intensity. September is the peak of the year and requires a second analyst for rigour by opportunity to hold. October to December eases with space for consolidation and year-end report.</div>
+
+      <div className="gantt">
+        <div className="gantt-header">
+          <div className="g-cell g-opp-lbl">Opportunity</div>
+          {MONTHS.map(m => <div key={m} className="g-cell">{m}</div>)}
+        </div>
+        {GANTT.map(row => (
+          <div key={row.opp} className="gantt-row">
+            <div className="gantt-opp">
+              <div className="title">{row.opp}</div>
+              <div className="sub">{row.sub}</div>
+            </div>
+            {row.cells.map((lvl, i) => (
+              <div key={i} className="gantt-cell">
+                <div className={`gantt-bar g-${lvl}`}></div>
+              </div>
+            ))}
+          </div>
+        ))}
+        <div className="gantt-legend">
+          <div className="lg"><span className="swatch g-low"></span>Low or none — preparation, reading, attending other teams' meetings</div>
+          <div className="lg"><span className="swatch g-med"></span>Medium — active work, coordinable with other opps</div>
+          <div className="lg"><span className="swatch g-high"></span>High — main focus of the month, sustained analytical work</div>
+        </div>
+        <div className="gantt-note">
+          <strong>Capacity flag.</strong> April to June is manageable with the current one-person team. July to September is the peak with sustained high load across three of the four opps (Opp 2 measurement, Opp 3 post-launch, Opp 4 cadence). <strong>Mitigation: a second analyst onboarding by mid-May</strong>, taking ownership of the Opp 2 measurement protocol from July. Without that hire, Opp 3 is the natural deceleration candidate given its conservative sizing and dependence on external launch timing.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OppAccordion(){
+  const [open, setOpen] = useState(1);
+  const toggle = (n) => setOpen(open === n ? null : n);
+
+  return (
+    <div className="section">
+      <h2>Opportunity details</h2>
+      <div className="section-sub">Each opportunity with its executive summary. Opp 1 is expanded by default as the largest 2026 contributor. Expand the others for full context. For the underlying analysis, data anchoring, queries and spreadsheets, see the Drive folder linked below.</div>
+
+      <div className="accordion-list">
+        {OPPS.map(o => {
+          const isOpen = open === o.num;
+          return (
+            <div key={o.num} className={`acc-item ${isOpen ? 'open' : ''}`}>
+              <div className="acc-head" onClick={() => toggle(o.num)}>
+                <div className="acc-num">{o.num}</div>
+                <div>
+                  <div className="acc-title">{o.title}</div>
+                  <div className="acc-desc">{o.shortDesc}</div>
+                </div>
+                <div className="acc-val">
+                  <span className="v-lbl">2026</span>
+                  {o.range}
+                </div>
+                <svg className="acc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+              <div className="acc-body">
+                <div className="acc-body-inner">
+                  <div className="anchor-note"><em>{o.body.anchorNote}</em></div>
+
+                  <h3>Context</h3>
+                  <p>{o.body.context}</p>
+
+                  <h3>What Pricing brings</h3>
+                  <p>{o.body.whatPricingBrings}</p>
+
+                  {o.body.causesNote && (<>
+                    <h3>The causes are mapped but not yet confirmed</h3>
+                    <p>{o.body.causesNote}</p>
+                  </>)}
+
+                  {o.body.interactionOpp2 && (<>
+                    <h3>Interaction with Opp 2 (PIM migration)</h3>
+                    <p>{o.body.interactionOpp2}</p>
+                  </>)}
+
+                  <h3>When</h3>
+                  <p>{o.body.when}</p>
+
+                  <h3>Dependencies</h3>
+                  <p>{o.body.dependencies}</p>
+
+                  {o.body.risk && (<>
+                    <h3>Risk</h3>
+                    <p>{o.body.risk}</p>
+                  </>)}
+
+                  {o.body.flag && (
+                    <div className="flag-note">
+                      <div className="flag-icon">Note to<br/>committee</div>
+                      <div className="flag-body">{o.body.flag}</div>
+                    </div>
+                  )}
+
+                  {o.body.scopeB && (<>
+                    <h3>Scope B — USD exposure (flagged, not a proposal)</h3>
+                    <p>{o.body.scopeB}</p>
+                  </>)}
+
+                  {o.body.strategicUpside && (<>
+                    <h3>Strategic upside</h3>
+                    <p>{o.body.strategicUpside}</p>
+                  </>)}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function DriveFooter(){
+  return (
+    <div className="section">
+      <div className="drive-footer">
+        <div className="drive-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E6485C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        </div>
+        <div>
+          <div className="df-title">Rationale, fuentes y detalles por oportunidad</div>
+          <div className="df-desc">Every opportunity has a dedicated folder on Drive with the full internal template, reproducibility documentation, analysis spreadsheet, source CSVs and the data behind every number in this overview. Organised by opportunity.</div>
+        </div>
+        <a href={DRIVE_URL} target="_blank" rel="noopener noreferrer" className="drive-btn">Open Drive folder →</a>
+      </div>
+    </div>
+  );
+}
+
+function Footer(){
+  return (
+    <div className="page-footer">
+      <strong>Holafly · Growth Pricing</strong> · Prepared for Pricing Committee, April 14, 2026 · Figures anchored on Q1 2026 data and validated against internal reporting
+    </div>
+  );
+}
+
+function App(){
+  return (
+    <div className="anim">
+      <Hero />
+      <ImpactSummary />
+      <OppAccordion />
+      <Interactions />
+      <Gantt />
+      <DriveFooter />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

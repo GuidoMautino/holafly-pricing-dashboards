@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXP-PRIC-011 V2 · USD FX Correction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --pink: #E6485C;
+    --pink-deep: #C13447;
+    --pink-soft: rgba(230, 72, 92, 0.08);
+    --pink-wash: #FDEEF0;
+    --pastel-yellow: #FFF0AB;
+    --pastel-blue: #BFEBFF;
+    --green-deep: #15803D;
+    --green-soft: rgba(21, 128, 61, 0.08);
+    --warning: #B45309;
+    --warning-soft: rgba(180, 83, 9, 0.08);
+    --charcoal: #292B2E;
+    --charcoal-soft: #4A4D52;
+    --gray-mid: #64748B;
+    --gray: #8A9099;
+    --gray-pale: #CCD0D7;
+    --border: #E4E6EA;
+    --paper: #FAFAFB;
+    --paper-warm: #F5F4F1;
+    --white: #FFFFFF;
+    --rule: rgba(41, 43, 46, 0.10);
+    --rule-soft: rgba(41, 43, 46, 0.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Mulish', -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--charcoal);
+    line-height: 1.55;
+    font-weight: 400;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+::selection { background: var(--pink); color: var(--white); }
+
+/* ============ HEADER ============ */
+.header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 56px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(250, 250, 251, 0.85);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s ease;
+}
+.header.scrolled { border-bottom-color: var(--rule); }
+.header-brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+    width: 8px; height: 8px;
+    background: var(--pink);
+    border-radius: 50%;
+}
+.brand-text {
+    font-size: 16px; font-weight: 800;
+    color: var(--charcoal);
+    letter-spacing: -0.02em;
+}
+.brand-divider {
+    width: 1px; height: 14px;
+    background: var(--rule);
+    margin: 0 4px;
+}
+.brand-context {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    color: var(--gray-mid);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+.header-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    color: var(--gray-mid);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+/* ============ SECTION BASE ============ */
+section {
+    padding: 110px 56px;
+    max-width: 1320px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.section-marker {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 36px;
+}
+.section-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 7px 14px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--charcoal);
+}
+.section-pill .num {
+    font-weight: 800;
+    color: var(--pink);
+    font-family: 'JetBrains Mono', monospace;
+}
+.section-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--pink);
+}
+
+.section-headline {
+    font-size: clamp(34px, 4.4vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+    max-width: 1100px;
+    color: var(--charcoal);
+}
+.section-headline .accent {
+    color: var(--pink);
+    font-weight: 900;
+}
+.section-headline .underline {
+    background-image: linear-gradient(120deg, var(--pastel-yellow) 0%, var(--pastel-yellow) 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 35%;
+    background-position: 0 88%;
+    padding: 0 4px;
+}
+
+/* ============ HERO ============ */
+.hero {
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 60px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.hero-meta {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 36px;
+    align-items: center;
+}
+.hero-meta .pink-dot {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--pink); font-weight: 700;
+}
+.hero-meta .pink-dot::before {
+    content: ''; width: 7px; height: 7px;
+    border-radius: 50%; background: var(--pink);
+}
+.hero-meta .divider { width: 1px; height: 12px; background: var(--rule); }
+
+.hero-title {
+    font-size: clamp(56px, 8vw, 110px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    margin-bottom: 32px;
+    color: var(--charcoal);
+}
+.hero-title .pink {
+    color: var(--pink);
+    background-image: linear-gradient(120deg, var(--pastel-yellow) 0%, var(--pastel-yellow) 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 22%;
+    background-position: 0 92%;
+    padding: 0 0.05em;
+}
+
+.hero-deck {
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.55;
+    color: var(--charcoal-soft);
+    max-width: 640px;
+    margin-bottom: 36px;
+}
+.hero-deck strong { color: var(--charcoal); font-weight: 700; }
+.hero-deck .pink { color: var(--pink); font-weight: 700; }
+
+.hero-tldr {
+    display: flex;
+    flex-direction: column;
+    max-width: 720px;
+}
+.hero-tldr-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 22px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+}
+.hero-tldr-row:last-child { border-bottom: 1px solid var(--rule); }
+.hero-tldr-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gray-mid);
+}
+.hero-tldr-text {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--charcoal-soft);
+}
+.hero-tldr-text strong { color: var(--charcoal); font-weight: 700; }
+.hero-tldr-text strong.pink { color: var(--pink); }
+
+/* Hero side card */
+.hero-card {
+    background: var(--white);
+    border-radius: 28px;
+    padding: 38px 34px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 2px rgba(41, 43, 46, 0.04), 0 30px 60px -30px rgba(41, 43, 46, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+.hero-card::before {
+    content: '011';
+    position: absolute;
+    top: -28px; right: -12px;
+    font-size: 200px;
+    font-weight: 900;
+    color: var(--pink-soft);
+    line-height: 1;
+    letter-spacing: -0.06em;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+.hero-card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 26px;
+    position: relative; z-index: 1;
+}
+.hero-card-stats {
+    display: flex; flex-direction: column; gap: 24px;
+    position: relative; z-index: 1;
+}
+.hero-card-stat { display: flex; flex-direction: column; gap: 4px; }
+.hero-card-stat-label {
+    font-size: 12px; font-weight: 600;
+    color: var(--gray-mid);
+    letter-spacing: 0.02em;
+}
+.hero-card-stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--charcoal);
+    font-feature-settings: "tnum";
+}
+.hero-card-stat-value.pink { color: var(--pink); }
+.hero-card-stat-sub {
+    font-size: 12px;
+    color: var(--charcoal-soft);
+    margin-top: 4px;
+    line-height: 1.45;
+}
+
+/* ============ REVEAL ============ */
+.reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.stagger > * {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+.stagger.visible > * { opacity: 1; transform: translateY(0); }
+.stagger.visible > *:nth-child(1) { transition-delay: 0.05s; }
+.stagger.visible > *:nth-child(2) { transition-delay: 0.13s; }
+.stagger.visible > *:nth-child(3) { transition-delay: 0.21s; }
+.stagger.visible > *:nth-child(4) { transition-delay: 0.29s; }
+.stagger.visible > *:nth-child(5) { transition-delay: 0.37s; }
+
+/* ============ OPPORTUNITY (Section 01) ============ */
+.opportunity-section { background: var(--paper); }
+.opp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.gap-visual {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 44px 40px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 2px rgba(41,43,46,0.04), 0 30px 60px -40px rgba(41,43,46,0.1);
+}
+.gap-visual-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 14px;
+}
+.gap-visual-title {
+    font-size: 20px; font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 56px;
+    letter-spacing: -0.015em;
+}
+.gap-visual-title em { font-style: normal; color: var(--pink); }
+
+.gap-axis {
+    position: relative;
+    height: 180px;
+    margin: 12px 0;
+}
+.gap-track {
+    position: absolute; top: 50%; left: 0; right: 0;
+    height: 5px; border-radius: 3px;
+    background: var(--gray-pale);
+    transform: translateY(-50%);
+}
+.gap-fill {
+    position: absolute; top: 50%; left: 0;
+    height: 5px; border-radius: 3px;
+    background: var(--pink);
+    transform: translateY(-50%);
+    width: 0;
+    transition: width 2s cubic-bezier(0.22,1,0.36,1) 0.4s;
+}
+.gap-fill.animate { width: 77.8%; }
+
+.gap-marker {
+    position: absolute; top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+}
+.gap-marker .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--white);
+    border: 3px solid var(--charcoal);
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(41,43,46,0.12);
+}
+.gap-marker.target .dot {
+    background: var(--pink); border-color: var(--pink);
+    width: 20px; height: 20px;
+    box-shadow: 0 0 0 6px rgba(230, 72, 92, 0.15);
+}
+.gap-marker.market .dot { border-color: var(--gray); }
+
+.gap-marker-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 6px;
+}
+.gap-marker-value {
+    font-size: 28px; font-weight: 800;
+    color: var(--charcoal);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    font-feature-settings: "tnum";
+}
+.gap-marker.target .gap-marker-value { color: var(--pink); }
+.gap-marker.market .gap-marker-value { color: var(--gray); }
+
+.gap-marker.current { left: 0%; }
+.gap-marker.target {
+    left: 77.8%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+    transition: opacity 0.6s ease 1.6s, transform 0.6s cubic-bezier(0.22,1,0.36,1) 1.6s;
+}
+.gap-marker.target.show {
+    opacity: 1; transform: translate(-50%, -50%) scale(1);
+}
+.gap-marker.market { left: 100%; }
+
+.gap-bracket {
+    position: absolute; top: -8px; left: 0;
+    width: 77.8%;
+    border-top: 1.5px dashed var(--pink);
+    padding-top: 8px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--pink);
+    opacity: 0;
+    transition: opacity 0.6s ease 1.9s;
+}
+.gap-bracket.show { opacity: 1; }
+.gap-bracket::before, .gap-bracket::after {
+    content: '';
+    position: absolute; top: 0;
+    width: 1.5px; height: 8px;
+    background: var(--pink);
+}
+.gap-bracket::before { left: 0; }
+.gap-bracket::after { right: 0; }
+
+.opp-text {
+    position: relative;
+}
+.opp-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+}
+.opp-eyebrow::before {
+    content: ''; width: 22px; height: 2px;
+    background: var(--pink);
+    border-radius: 2px;
+}
+
+.exposure-num {
+    font-size: clamp(72px, 9vw, 124px);
+    font-weight: 900;
+    color: var(--pink);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    margin-bottom: 22px;
+    font-feature-settings: "tnum";
+    display: flex; align-items: baseline; gap: 4px;
+}
+.exposure-num .currency {
+    font-size: 0.4em;
+    color: var(--charcoal);
+    font-weight: 800;
+    align-self: flex-start;
+    margin-top: 0.35em;
+}
+
+.opp-body {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--charcoal-soft);
+    margin-bottom: 24px;
+    max-width: 460px;
+}
+.opp-body strong { color: var(--charcoal); font-weight: 700; }
+.opp-body em { font-style: normal; color: var(--pink); font-weight: 700; }
+
+.opp-aside {
+    padding: 16px 20px;
+    background: var(--pink-wash);
+    border-radius: 14px;
+    font-size: 14px;
+    color: var(--charcoal-soft);
+    line-height: 1.6;
+    max-width: 460px;
+    border-left: 3px solid var(--pink);
+}
+
+/* ============ PROPOSAL (Section 02) ============ */
+.proposal-section { background: var(--paper-warm); }
+.proposal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+}
+.rate-stack { display: flex; flex-direction: column; gap: 12px; }
+.rate-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 24px 28px;
+    border: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease;
+}
+.rate-card.proposed {
+    border-color: var(--pink);
+    background: linear-gradient(135deg, var(--white) 0%, var(--pink-wash) 100%);
+    box-shadow: 0 1px 2px rgba(230,72,92,0.04), 0 30px 60px -40px rgba(230,72,92,0.25);
+}
+.rate-card.market { opacity: 0.55; }
+.rate-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--gray-mid);
+    min-width: 80px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: var(--paper);
+    text-align: center;
+}
+.rate-card.proposed .rate-tag {
+    color: var(--white); background: var(--pink);
+}
+.rate-value-row {
+    display: flex; align-items: baseline; gap: 22px;
+    flex-wrap: wrap;
+}
+.rate-num {
+    font-size: clamp(44px, 5.5vw, 70px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: var(--charcoal);
+    font-feature-settings: "tnum";
+}
+.rate-card.proposed .rate-num { color: var(--pink); }
+.rate-meta {
+    font-size: 13px;
+    color: var(--charcoal-soft);
+    line-height: 1.5;
+    max-width: 200px;
+}
+.rate-meta .delta {
+    color: var(--pink);
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.proposal-text { padding-top: 8px; }
+.proposal-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 14px;
+}
+.proposal-body {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--charcoal);
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+}
+.proposal-body em { font-style: normal; color: var(--pink); font-weight: 700; }
+
+.proposal-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 24px;
+}
+.proposal-stat {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 18px 20px;
+}
+.proposal-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 8px;
+}
+.proposal-stat-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--charcoal);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    font-feature-settings: "tnum";
+}
+.proposal-stat-value.pink { color: var(--pink); }
+
+/* ============ TREATMENT (Section 03) ============ */
+.treatment-section { background: var(--paper); }
+
+.treatment-table-wrap {
+    overflow-x: auto;
+    border-radius: 20px;
+    border: 1px solid var(--rule);
+    background: var(--white);
+}
+.treatment-table {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    min-width: 760px;
+}
+.tr-row {
+    display: grid;
+    grid-template-columns: 44px 1.4fr 1fr 1.1fr 0.7fr 100px;
+    gap: 14px;
+    align-items: center;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--rule-soft);
+    transition: background 0.3s ease;
+}
+.tr-row:last-of-type { border-bottom: none; }
+.tr-row.thead {
+    background: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gray-mid);
+    border-bottom: 1px solid var(--rule);
+}
+.tr-row.thead .tr-flag,
+.tr-row.thead .tr-role { font-size: 10px; }
+.tr-row:not(.thead):hover { background: var(--paper); }
+.tr-row.control {
+    background: var(--pink-wash);
+    border-top: 2px solid var(--pink);
+}
+.tr-row.control:hover { background: var(--pink-wash); }
+.tr-row.total {
+    background: var(--pastel-yellow);
+    font-weight: 700;
+    border-top: 2px solid var(--charcoal);
+    border-bottom: 2px solid var(--charcoal);
+}
+.tr-flag { font-size: 22px; }
+.tr-name {
+    font-size: 16px; font-weight: 700;
+    color: var(--charcoal);
+    letter-spacing: -0.01em;
+}
+.tr-row.thead .tr-name {
+    font-size: 10px; font-weight: 700;
+    color: var(--gray-mid);
+}
+.tr-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    color: var(--charcoal);
+    letter-spacing: 0.02em;
+    font-feature-settings: "tnum";
+}
+.tr-row.thead .tr-num {
+    font-weight: 700; color: var(--gray-mid);
+}
+.tr-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--gray-pale);
+    color: var(--charcoal-soft);
+    text-align: center;
+}
+.tr-row.control .tr-role {
+    background: var(--pink); color: var(--white);
+}
+
+.treatment-foot {
+    margin-top: 24px;
+    padding: 26px 30px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+}
+.treatment-foot-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 18px;
+}
+.treatment-foot-list {
+    list-style: none;
+    display: flex; flex-direction: column;
+    gap: 12px;
+}
+.treatment-foot-list li {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--charcoal-soft);
+    padding-left: 22px;
+    position: relative;
+}
+.treatment-foot-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 9px;
+    width: 8px; height: 1px;
+    background: var(--pink);
+}
+.treatment-foot-list li strong {
+    color: var(--charcoal); font-weight: 700;
+}
+.treatment-foot-list li em {
+    font-style: normal; color: var(--pink); font-weight: 700;
+}
+.treatment-foot-note {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-mid);
+    letter-spacing: 0.02em;
+}
+
+/* ============ MEASURE (Section 04) ============ */
+.measure-section { background: var(--paper-warm); }
+.measure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+.metric-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 40px 36px;
+    border: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease;
+}
+.metric-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 5px;
+}
+.metric-card.success::before { background: var(--pink); }
+.metric-card.guardrail::before { background: var(--pastel-yellow); }
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1px 2px rgba(41,43,46,0.04), 0 30px 60px -30px rgba(41,43,46,0.15);
+}
+
+.metric-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 22px;
+}
+.metric-card.success .metric-tag {
+    color: var(--white); background: var(--pink);
+}
+.metric-card.guardrail .metric-tag {
+    color: var(--charcoal); background: var(--pastel-yellow);
+}
+
+.metric-name {
+    font-size: clamp(32px, 3.4vw, 42px);
+    font-weight: 800;
+    color: var(--charcoal);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    margin-bottom: 18px;
+}
+.metric-name em { font-style: normal; color: var(--pink); }
+
+.metric-rule {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--charcoal);
+    margin-bottom: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+.metric-rule strong { color: var(--pink); font-weight: 800; }
+
+.metric-detail {
+    padding: 16px 20px;
+    background: var(--paper);
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--charcoal-soft);
+    border-left: 3px solid var(--pink);
+}
+.metric-card.guardrail .metric-detail {
+    border-left-color: var(--warning);
+}
+.metric-detail strong { color: var(--charcoal); font-weight: 700; }
+
+/* ============ SCENARIOS (Section 05) ============ */
+.scenarios-section { background: var(--paper); }
+
+.scenarios-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+}
+.scenario-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 30px 26px 32px;
+    border: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease;
+}
+.scenario-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 5px;
+}
+.scenario-card.scale::before { background: var(--green-deep); }
+.scenario-card.iterate::before { background: var(--warning); }
+.scenario-card.rollback::before { background: var(--pink); }
+.scenario-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1px 2px rgba(41,43,46,0.04), 0 30px 60px -30px rgba(41,43,46,0.15);
+}
+
+.scenario-verdict {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 18px;
+}
+.scenario-card.scale .scenario-verdict {
+    color: var(--green-deep);
+    background: var(--green-soft);
+}
+.scenario-card.iterate .scenario-verdict {
+    color: var(--warning);
+    background: var(--warning-soft);
+}
+.scenario-card.rollback .scenario-verdict {
+    color: var(--pink);
+    background: var(--pink-wash);
+}
+
+.scenario-condition {
+    font-size: 17px; font-weight: 700;
+    color: var(--charcoal);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+}
+.scenario-condition em { font-style: normal; color: var(--pink); }
+
+.scenario-action {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--charcoal-soft);
+}
+.scenario-action strong { color: var(--charcoal); font-weight: 700; }
+
+/* Upside band */
+.upside-band {
+    background: var(--charcoal);
+    color: var(--white);
+    border-radius: 24px;
+    padding: 40px 44px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.upside-band::before {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 50%;
+    background: radial-gradient(ellipse at right, rgba(230,72,92,0.18), transparent 60%);
+    pointer-events: none;
+}
+.upside-band-text {
+    position: relative; z-index: 1;
+}
+.upside-band-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 14px;
+}
+.upside-band-title {
+    font-size: 26px; font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+}
+.upside-band-sub {
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.7);
+}
+.upside-range {
+    position: relative; z-index: 1;
+    text-align: right;
+}
+.upside-range-num {
+    font-size: clamp(48px, 5.5vw, 72px);
+    font-weight: 900;
+    color: var(--pink);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    font-feature-settings: "tnum";
+    margin-bottom: 8px;
+}
+.upside-range-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+}
+
+/* ============ LEARNING (Section 06) ============ */
+.learning-section { background: var(--paper-warm); }
+
+.learning-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.learning-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 36px 32px;
+    border: 1px solid var(--rule);
+}
+.learning-card.now {
+    border-color: var(--pink);
+    background: linear-gradient(135deg, var(--white) 0%, var(--pink-wash) 100%);
+}
+.learning-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+    background: var(--paper);
+    color: var(--gray-mid);
+}
+.learning-card.now .learning-tag {
+    background: var(--pink); color: var(--white);
+}
+.learning-headline {
+    font-size: 22px; font-weight: 700;
+    color: var(--charcoal);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+}
+.learning-headline em { font-style: normal; color: var(--pink); }
+
+.learning-body {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--charcoal-soft);
+}
+.learning-body strong { color: var(--charcoal); font-weight: 700; }
+.learning-body em { font-style: normal; color: var(--pink); font-weight: 700; }
+
+/* ============ NEXT (Section 07) ============ */
+.next-section { background: var(--charcoal); color: var(--white); }
+.next-section .section-pill {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.12);
+    color: var(--white);
+}
+.next-section .section-pill .num { color: var(--pink); }
+.next-section .section-headline { color: var(--white); }
+.next-section .section-headline .accent { color: var(--pink); }
+
+.timeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+    position: relative;
+}
+.timeline::before {
+    content: '';
+    position: absolute; top: 18px; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right,
+        var(--pink) 0%,
+        var(--pink) 20%,
+        rgba(255,255,255,0.15) 20%,
+        rgba(255,255,255,0.15) 100%
+    );
+}
+.timeline-step {
+    text-align: center;
+    position: relative; z-index: 1;
+}
+.timeline-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--charcoal);
+    border: 3px solid var(--pink);
+    margin: 12px auto 14px;
+}
+.timeline-step.future .timeline-dot {
+    border-color: rgba(255,255,255,0.3);
+}
+.timeline-step.now .timeline-dot {
+    background: var(--pink);
+    box-shadow: 0 0 0 5px rgba(230,72,92,0.2);
+}
+.timeline-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    color: var(--pink);
+    letter-spacing: 0.14em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+.timeline-step.future .timeline-label {
+    color: rgba(255,255,255,0.4);
+}
+.timeline-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.45;
+}
+.timeline-step.future .timeline-text {
+    color: rgba(255,255,255,0.4);
+}
+
+.next-after {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 30px 36px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 28px;
+    align-items: center;
+}
+.next-after-icon {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--pink);
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+.next-after-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+}
+.next-after-text strong { color: var(--white); font-weight: 700; }
+.next-after-text em { font-style: normal; color: var(--pink); font-weight: 700; }
+
+/* ============ FOOTER ============ */
+.footer {
+    background: var(--charcoal);
+    color: rgba(255,255,255,0.5);
+    padding: 36px 56px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+}
+.footer-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+    section { padding: 80px 28px; }
+    .header { padding: 14px 24px; }
+    .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 100px; }
+    .opp-grid { grid-template-columns: 1fr; gap: 56px; }
+    .proposal-grid { grid-template-columns: 1fr; gap: 56px; }
+    .measure-grid { grid-template-columns: 1fr; }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .learning-grid { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: 1fr; gap: 14px; }
+    .timeline::before { display: none; }
+    .upside-band { grid-template-columns: 1fr; gap: 24px; padding: 28px 32px; }
+    .upside-range { text-align: left; }
+    .next-after { padding: 24px 28px; gap: 20px; }
+    .tr-row {
+        grid-template-columns: auto 1fr auto;
+        gap: 12px;
+    }
+    .tr-row .tr-num:nth-child(3),
+    .tr-row .tr-num:nth-child(4) { display: none; }
+    .header-meta { display: none; }
+}
+@media (max-width: 600px) {
+    .proposal-stats { grid-template-columns: 1fr; }
+    .hero-tldr-row { grid-template-columns: 1fr; gap: 4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+    <div class="header-brand">
+        <span class="brand-mark"></span>
+        <span class="brand-text">Holafly</span>
+        <span class="brand-divider"></span>
+        <span class="brand-context">Pricing</span>
+    </div>
+    <div class="header-meta">EXP-PRIC-011 V2 · Apr 2026</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div>
+        <div class="hero-meta">
+            <span class="pink-dot">USD FX Correction</span>
+            <span class="divider"></span>
+            <span>1.08 → 1.15</span>
+            <span class="divider"></span>
+            <span>Draft V2</span>
+        </div>
+
+        <h1 class="hero-title">
+            Closing the<br>
+            <span class="pink">USD gap.</span>
+        </h1>
+
+        <p class="hero-deck">
+            We've been pricing in USD at <strong>1.08</strong> while market sits at <strong>1.17</strong>. That gap projects <strong class="pink">~€6.8M of annual exposure</strong>. This experiment validates how much of it we can actually recover.
+        </p>
+
+        <div class="hero-tldr">
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label">What</span>
+                <span class="hero-tldr-text">Move the internal USD rate <strong>1.08 → 1.15</strong>, closing <strong class="pink">77.8% of the gap</strong>. Price increase to the customer: <strong>+6.48%</strong>.</span>
+            </div>
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label">Where</span>
+                <span class="hero-tldr-text">Four destinations: <strong>Colombia, Spain, Italy, Brazil</strong>. <strong>Mexico</strong> as control. ~€7.5M of annualized USD revenue.</span>
+            </div>
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label">Upside</span>
+                <span class="hero-tldr-text"><strong class="pink">+€20K to +€330K/year</strong> on this experiment alone (realistic band). If validated, scales to the rest of the USD market.</span>
+            </div>
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label">Risk</span>
+                <span class="hero-tldr-text">Bounded. Two clear metrics, rollback if either breaks. <strong>Tentative launch May 5.</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-card">
+        <div class="hero-card-label">Impact at a glance</div>
+        <div class="hero-card-stats">
+            <div class="hero-card-stat">
+                <div class="hero-card-stat-label">USD annual exposure</div>
+                <div class="hero-card-stat-value">~€6.8M</div>
+                <div class="hero-card-stat-sub">Full USD market, current run-rate</div>
+            </div>
+            <div class="hero-card-stat">
+                <div class="hero-card-stat-label">Treatment scope</div>
+                <div class="hero-card-stat-value">€7.5M</div>
+                <div class="hero-card-stat-sub">4 destinations, annualized</div>
+            </div>
+            <div class="hero-card-stat">
+                <div class="hero-card-stat-label">Direct upside</div>
+                <div class="hero-card-stat-value pink">+€20–330K</div>
+                <div class="hero-card-stat-sub">Annualized, realistic band</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 01 OPPORTUNITY -->
+<section class="opportunity-section">
+    <div class="section-marker reveal">
+        <div class="section-pill">
+            <span class="dot"></span>
+            <span class="num">01</span>
+            <span>The opportunity</span>
+        </div>
+    </div>
+
+    <h2 class="section-headline reveal">
+        For every <span class="accent">€100</span> of service we deliver, we collect about <span class="underline">€93</span>.
+    </h2>
+
+    <div class="opp-grid">
+        <div class="reveal">
+            <div class="gap-visual">
+                <div class="gap-visual-eyebrow">Internal rate vs market</div>
+                <div class="gap-visual-title">8.33% gap. We close <em>77.8%</em> of it.</div>
+
+                <div class="gap-axis" id="gap-axis">
+                    <div class="gap-track"></div>
+                    <div class="gap-fill" id="gap-fill"></div>
+                    <div class="gap-bracket" id="gap-bracket">77.8% closed</div>
+                    <div class="gap-marker current">
+                        <div class="gap-marker-label">Now</div>
+                        <div class="dot"></div>
+                        <div class="gap-marker-value">1.08</div>
+                    </div>
+                    <div class="gap-marker target" id="gap-target">
+                        <div class="gap-marker-label">Proposed</div>
+                        <div class="dot"></div>
+                        <div class="gap-marker-value">1.15</div>
+                    </div>
+                    <div class="gap-marker market">
+                        <div class="gap-marker-label">Market</div>
+                        <div class="dot"></div>
+                        <div class="gap-marker-value">1.17</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="opp-text reveal">
+            <div class="opp-eyebrow">Annual exposure at run-rate</div>
+            <div class="exposure-num">
+                <span class="currency">~€</span>6.8M
+            </div>
+            <p class="opp-body">
+                We fix USD prices from an internal rate of <strong>1.08</strong>, while market sits at <strong>1.17</strong>. The <em>8.33% gap</em> means USD customers pay prices that correspond to a weaker euro than the actual market value.
+            </p>
+            <div class="opp-aside">
+                Source: opp4 FX analysis, April 2026. Largest single-currency exposure across the portfolio.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 02 PROPOSAL -->
+<section class="proposal-section">
+    <div class="section-marker reveal">
+        <div class="section-pill">
+            <span class="dot"></span>
+            <span class="num">02</span>
+            <span>The proposal</span>
+        </div>
+    </div>
+
+    <h2 class="section-headline reveal">
+        Move to <span class="accent">1.15</span>. Close most of the gap. Keep a small <span class="underline">buffer</span>.
+    </h2>
+
+    <div class="proposal-grid">
+        <div class="rate-stack reveal stagger">
+            <div class="rate-card current">
+                <div class="rate-tag">Now</div>
+                <div class="rate-value-row">
+                    <div class="rate-num">1.08</div>
+                    <div class="rate-meta">
+                        Internal fixed rate.<br>Misaligned vs market.
+                    </div>
+                </div>
+            </div>
+            <div class="rate-card proposed">
+                <div class="rate-tag">Proposed</div>
+                <div class="rate-value-row">
+                    <div class="rate-num">1.15</div>
+                    <div class="rate-meta">
+                        <span class="delta">+6.48%</span> price move.<br>1.74% remaining gap.
+                    </div>
+                </div>
+            </div>
+            <div class="rate-card market">
+                <div class="rate-tag">Market</div>
+                <div class="rate-value-row">
+                    <div class="rate-num">1.17</div>
+                    <div class="rate-meta">
+                        Reference rate.<br>April 23, 2026.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="proposal-text reveal">
+            <div class="proposal-eyebrow">Why not all the way to 1.17</div>
+            <p class="proposal-body">
+                Going all the way to market closes 100% of the gap, but leaves us <em>exposed if the rate moves</em>. FX rates fluctuate week to week. <strong>1.15 closes 77.8% of the gap and keeps a 1.74% buffer</strong> for the rate moving back toward us.
+            </p>
+            <p class="proposal-body" style="font-size: 16px; color: var(--charcoal-soft);">
+                Charm-adjusted to ending .90 in catalog, consistent with current pricing convention.
+            </p>
+
+            <div class="proposal-stats">
+                <div class="proposal-stat">
+                    <div class="proposal-stat-label">Gap closed</div>
+                    <div class="proposal-stat-value pink">77.8%</div>
+                </div>
+                <div class="proposal-stat">
+                    <div class="proposal-stat-label">Price to customer</div>
+                    <div class="proposal-stat-value">+6.48%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 03 TREATMENT -->
+<section class="treatment-section">
+    <div class="section-marker reveal">
+        <div class="section-pill">
+            <span class="dot"></span>
+            <span class="num">03</span>
+            <span>Where we test</span>
+        </div>
+    </div>
+
+    <h2 class="section-headline reveal">
+        Four destinations. <span class="underline">One control.</span> Geographic and behavioral diversity.
+    </h2>
+
+    <div class="reveal">
+        <div class="treatment-table-wrap">
+        <div class="treatment-table">
+            <div class="tr-row thead">
+                <div></div>
+                <div class="tr-name">Destination</div>
+                <div class="tr-num">Orders</div>
+                <div class="tr-num">Revenue</div>
+                <div class="tr-num">AOV</div>
+                <div class="tr-role">Role</div>
+            </div>
+            <div class="tr-row">
+                <div class="tr-flag">🇨🇴</div>
+                <div class="tr-name">Colombia</div>
+                <div class="tr-num">58,749</div>
+                <div class="tr-num">€1,153,540</div>
+                <div class="tr-num">€19.64</div>
+                <div class="tr-role">Treatment</div>
+            </div>
+            <div class="tr-row">
+                <div class="tr-flag">🇪🇸</div>
+                <div class="tr-name">Spain</div>
+                <div class="tr-num">40,993</div>
+                <div class="tr-num">€815,242</div>
+                <div class="tr-num">€19.89</div>
+                <div class="tr-role">Treatment</div>
+            </div>
+            <div class="tr-row">
+                <div class="tr-flag">🇮🇹</div>
+                <div class="tr-name">Italy</div>
+                <div class="tr-num">20,442</div>
+                <div class="tr-num">€432,941</div>
+                <div class="tr-num">€21.18</div>
+                <div class="tr-role">Treatment</div>
+            </div>
+            <div class="tr-row">
+                <div class="tr-flag">🇧🇷</div>
+                <div class="tr-name">Brazil</div>
+                <div class="tr-num">49,112</div>
+                <div class="tr-num">€1,148,687</div>
+                <div class="tr-num">€23.39</div>
+                <div class="tr-role">Treatment</div>
+            </div>
+            <div class="tr-row total">
+                <div></div>
+                <div class="tr-name">Total treatment</div>
+                <div class="tr-num">169,296</div>
+                <div class="tr-num">€3,550,410</div>
+                <div class="tr-num">€20.97</div>
+                <div></div>
+            </div>
+            <div class="tr-row control">
+                <div class="tr-flag">🇲🇽</div>
+                <div class="tr-name">Mexico</div>
+                <div class="tr-num">64,594</div>
+                <div class="tr-num">€1,324,153</div>
+                <div class="tr-num">€20.50</div>
+                <div class="tr-role">Control</div>
+            </div>
+        </div>
+        </div>
+
+        <div class="treatment-foot">
+            <div class="treatment-foot-title">Why these destinations</div>
+            <ul class="treatment-foot-list">
+                <li><strong>Two regions covered.</strong> Europe South (Spain, Italy) + LatAm (Colombia, Brazil) for behavioral diversity.</li>
+                <li><strong>€3.5M of revenue</strong> over the validation window. Annualized run-rate: <strong>€7.5M / year</strong> across the four destinations.</li>
+                <li><strong>Mexico as control.</strong> Similar AOV (€20.50 vs treatment €20.97) and stable behavior with the treatment series across the period.</li>
+                <li><em>USA was excluded by design</em>. Too much exposure to commit before establishing evidence on a controlled subset.</li>
+            </ul>
+            <div class="treatment-foot-note">Window: November 1, 2025 → April 22, 2026 (173 days). Source: BigQuery, all USD-paid orders.</div>
+        </div>
+    </div>
+</section>
+
+<!-- 04 MEASURE -->
+<section class="measure-section">
+    <div class="section-marker reveal">
+        <div class="section-pill">
+            <span class="dot"></span>
+            <span class="num">04</span>
+            <span>How we measure success</span>
+        </div>
+    </div>
+
+    <h2 class="section-headline reveal">
+        Two metrics. <span class="underline">One success</span>, one guardrail.
+    </h2>
+
+    <div class="measure-grid">
+        <div class="metric-card success reveal">
+            <div class="metric-tag">Success metric</div>
+            <div class="metric-name">ARPU</div>
+            <div class="metric-rule">
+                Holds steady or <strong>grows</strong> vs counterfactual.
+            </div>
+            <div class="metric-detail">
+                <strong>What it tells us.</strong> If ARPU holds, it means we captured the price increase without losing the demand that justified it. The price aligned to market, the customer kept buying. That's the win.
+            </div>
+        </div>
+
+        <div class="metric-card guardrail reveal">
+            <div class="metric-tag">Guardrail</div>
+            <div class="metric-name">Gross <em>Margin</em></div>
+            <div class="metric-rule">
+                Does not <strong>drop</strong> below baseline.
+            </div>
+            <div class="metric-detail">
+                <strong>What it tells us.</strong> If GM drops sustainedly on any treated destination, the price is eroding margin instead of capturing it. That triggers a rollback. We don't expect this to happen, but it's the line we won't cross.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 05 SCENARIOS -->
+<section class="scenarios-section">
+    <div class="section-marker reveal">
+        <div class="section-pill">
+            <span class="dot"></span>
+            <span class="num">05</span>
+            <span>What happens after D+14</span>
+        </div>
+    </div>
+
+    <h2 class="section-headline reveal">
+        Three possible outcomes. Each one has a clear <span class="underline">next step</span>.
+    </h2>
+
+    <div class="scenarios-grid stagger reveal">
+        <div class="scenario-card scale">
+            <div class="scenario-verdict">Scale</div>
+            <div class="scenario-condition">ARPU holds. <em>GM stable.</em></div>
+            <p class="scenario-action">
+                The price absorbed well. Apply the rate to the next currency batch and consider a second step toward 1.17.
+            </p>
+        </div>
+        <div class="scenario-card iterate">
+            <div class="scenario-verdict">Iterate</div>
+            <div class="scenario-condition">Mixed signals.</div>
+            <p class="scenario-action">
+                ARPU holds but GM compresses near tolerance. Hold the rate, investigate, review before advancing further.
+            </p>
+        </div>
+        <div class="scenario-card rollback">
+            <div class="scenario-verdict">Rollback</div>
+            <div class="scenario-condition">ARPU drops. <em>Or GM breaks.</em></div>
+            <p class="scenario-action">
+                The price did not absorb. Revert to 1.08 across all treated destinations. Lesson logged.
+            </p>
+        </div>
+    </div>
+
+    <div class="upside-band reveal">
+        <div class="upside-band-text">
+            <div class="upside-band-eyebrow">Realistic upside band on this experiment</div>
+            <div class="upside-band-title">+€20K to +€330K annualized</div>
+            <div class="upside-band-sub">
+                Depending on observed price absorption. Best-case upside reaches +€485K. <strong>This is just from the four destinations tested</strong>; the playbook scales from here.
+            </div>
+        </div>
+        <div class="upside-range">
+            <div class="upside-range-num">€20–330K</div>
+            <div class="upside-range-label">Per year, this experiment</div>
+        </div>
+    </div>
+</section>
+
+<!-- 06 LEARNING -->
+<section class="learning-section">
+    <div class="section-marker reveal">
+        <div class="section-pill">
+            <span class="dot"></span>
+            <span class="num">06</span>
+            <span>What we learned from EXP-001</span>
+        </div>
+    </div>
+
+    <h2 class="section-headline reveal">
+        Last year's USD attempt taught us <span class="underline">two things</span>.
+    </h2>
+
+    <div class="learning-grid">
+        <div class="learning-card past reveal">
+            <div class="learning-tag">May 2025</div>
+            <h3 class="learning-headline">A +10% move with limited controls</h3>
+            <p class="learning-body">
+                The actual gap at the time was <strong>6.55%</strong>; the experiment moved <strong>+10%</strong>. With today's lens, that move was larger than the gap justified. AOV was the primary read and held steady, but the broader effect on customer behavior wasn't centered in the verdict.
+            </p>
+        </div>
+        <div class="learning-card now reveal">
+            <div class="learning-tag">May 2026</div>
+            <h3 class="learning-headline">A measured move, with the right metric</h3>
+            <p class="learning-body">
+                <strong>+6.48%</strong> on a real <strong>8.33% gap</strong>. Smaller, deliberately conservative. <em>ARPU as the success metric</em>, capturing price, conversion and mix together. A clean control. If something doesn't work, we know within 14 days.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- 07 NEXT -->
+<section class="next-section">
+    <div class="section-marker reveal">
+        <div class="section-pill">
+            <span class="dot"></span>
+            <span class="num">07</span>
+            <span>What's next</span>
+        </div>
+    </div>
+
+    <h2 class="section-headline reveal">
+        Tentative launch <span class="accent">May 5</span>. Verdict in <span class="underline">14 days</span>.
+    </h2>
+
+    <div class="timeline reveal">
+        <div class="timeline-step now">
+            <div class="timeline-label">May 5</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">Launch<br>Rate goes live</div>
+        </div>
+        <div class="timeline-step future">
+            <div class="timeline-label">D+1</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">Sanity check<br>Price landing</div>
+        </div>
+        <div class="timeline-step future">
+            <div class="timeline-label">D+7</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">Preliminary<br>read</div>
+        </div>
+        <div class="timeline-step future">
+            <div class="timeline-label">D+14</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">Verdict<br>Scale / Iterate / Rollback</div>
+        </div>
+        <div class="timeline-step future">
+            <div class="timeline-label">D+30</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-text">GM reconciliation<br>with consumption</div>
+        </div>
+    </div>
+
+    <div class="next-after reveal">
+        <div class="next-after-icon">→</div>
+        <div class="next-after-text">
+            <strong>If validated</strong>, the same logic applies to the rest of the USD market. The €6.8M exposure becomes a <em>portfolio of corrections</em>, sequenced by destination, with measured evidence at each step. <strong>This experiment is the proof point that unlocks the playbook</strong>, not the end of it.
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-meta">EXP-PRIC-011 V2 · Pricing · April 2026</div>
+</footer>
+
+<script>
+// Header scroll
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// Reveal observer
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            if (entry.target.contains(document.getElementById('gap-fill'))) {
+                document.getElementById('gap-fill').classList.add('animate');
+                setTimeout(() => {
+                    document.getElementById('gap-target').classList.add('show');
+                    document.getElementById('gap-bracket').classList.add('show');
+                }, 200);
+            }
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+document.querySelectorAll('.reveal, .stagger').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>

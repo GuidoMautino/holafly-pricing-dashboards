@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing Performance Matrix v2 · Holafly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --pink: #E6485C; --pink-deep: #C13447; --pink-soft: rgba(230,72,92,0.08);
+    --pink-wash: #FDEEF0; --pink-shadow: rgba(230,72,92,0.15);
+    --pastel-yellow: #FFF0AB; --pastel-blue: #BFEBFF; --pastel-orange: #FFCCB0;
+    --green: #48EC86; --green-deep: #15803D; --green-light: #34D399; --green-wash: rgba(21,128,61,0.06);
+    --warning: #B45309; --warning-wash: rgba(180,83,9,0.06); --danger: #DC2626;
+    --redesign: #1D4ED8; --redesign-wash: rgba(29,78,216,0.06);
+    --charcoal: #292B2E; --charcoal-soft: #4A4D52; --gray-mid: #64748B;
+    --gray: #8A9099; --gray-light: #94A3B8; --gray-pale: #CCD0D7;
+    --border: #E4E6EA; --card: #F8FAFC; --paper: #FAFAFB; --paper-warm: #F5F4F1;
+    --white: #FFFFFF; --rule: rgba(41,43,46,0.10); --rule-soft: rgba(41,43,46,0.06);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Mulish',-apple-system,sans-serif; background:var(--paper); color:var(--charcoal); line-height:1.55; font-weight:400; -webkit-font-smoothing:antialiased; }
+::selection { background:var(--pink); color:var(--white); }
+
+/* Lang toggle */
+[data-lang="es"], [data-lang="en"] { display:none; }
+body.lang-en [data-lang="en"] { display:revert; }
+body.lang-es [data-lang="es"] { display:revert; }
+body.lang-en span[data-lang="en"], body.lang-en em[data-lang="en"], body.lang-en strong[data-lang="en"] { display:inline; }
+body.lang-es span[data-lang="es"], body.lang-es em[data-lang="es"], body.lang-es strong[data-lang="es"] { display:inline; }
+
+/* Header */
+.header { position:fixed; top:0; left:0; right:0; z-index:100; padding:18px 56px; display:flex; justify-content:space-between; align-items:center; background:rgba(250,250,251,0.85); backdrop-filter:blur(20px) saturate(140%); -webkit-backdrop-filter:blur(20px) saturate(140%); border-bottom:1px solid transparent; transition:border-color 0.4s; }
+.header.scrolled { border-bottom-color:var(--rule); }
+.header-brand { display:flex; align-items:center; gap:10px; }
+.brand-mark { width:8px; height:8px; background:var(--pink); border-radius:50%; }
+.brand-text { font-size:16px; font-weight:800; color:var(--charcoal); letter-spacing:-0.02em; }
+.brand-divider { width:1px; height:14px; background:var(--rule); margin:0 4px; }
+.brand-context { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--gray-mid); letter-spacing:0.16em; text-transform:uppercase; }
+.header-nav { display:flex; gap:24px; align-items:center; font-size:13px; font-weight:600; }
+.header-nav a { color:var(--charcoal-soft); text-decoration:none; transition:color 0.3s; }
+.header-nav a:hover { color:var(--pink); }
+.lang-toggle { display:flex; gap:0; border:1px solid var(--rule); border-radius:999px; overflow:hidden; }
+.lang-toggle button { background:transparent; border:none; padding:6px 12px; font-family:inherit; font-size:11px; font-weight:700; color:var(--gray-mid); cursor:pointer; letter-spacing:0.1em; transition:all 0.3s; }
+.lang-toggle button.active { background:var(--charcoal); color:var(--white); }
+
+/* Sections */
+section { padding:120px 56px; max-width:1480px; margin:0 auto; }
+.section-marker { display:flex; align-items:center; gap:20px; margin-bottom:48px; flex-wrap:wrap; }
+.section-pill { display:inline-flex; align-items:center; gap:10px; padding:8px 16px; background:var(--white); border:1px solid var(--rule); border-radius:999px; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--charcoal); }
+.section-pill .num { font-weight:800; color:var(--pink); font-family:'JetBrains Mono',monospace; }
+.section-pill .dot { width:6px; height:6px; border-radius:50%; background:var(--pink); animation:pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} }
+.section-meta { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--gray-mid); }
+.section-headline { font-size:clamp(34px,4.8vw,64px); font-weight:800; line-height:1.05; letter-spacing:-0.035em; margin-bottom:48px; max-width:1200px; color:var(--charcoal); }
+.section-headline .accent { color:var(--pink); font-weight:900; }
+.section-headline .underline { background-image:linear-gradient(120deg,var(--pastel-yellow) 0%,var(--pastel-yellow) 100%); background-repeat:no-repeat; background-size:100% 35%; background-position:0 88%; padding:0 4px; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+
+/* Reveal animation */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity 1s cubic-bezier(0.22,1,0.36,1),transform 1s cubic-bezier(0.22,1,0.36,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.stagger > * { opacity:0; transform:translateY(20px); transition:opacity 0.7s ease,transform 0.7s ease; }
+.stagger.visible > * { opacity:1; transform:translateY(0); }
+.stagger.visible > *:nth-child(1) { transition-delay:0.05s; }
+.stagger.visible > *:nth-child(2) { transition-delay:0.13s; }
+.stagger.visible > *:nth-child(3) { transition-delay:0.21s; }
+.stagger.visible > *:nth-child(4) { transition-delay:0.29s; }
+.stagger.visible > *:nth-child(5) { transition-delay:0.37s; }
+.stagger.visible > *:nth-child(6) { transition-delay:0.45s; }
+.stagger.visible > *:nth-child(7) { transition-delay:0.53s; }
+.stagger.visible > *:nth-child(8) { transition-delay:0.61s; }
+
+/* HERO */
+.hero { min-height:100vh; padding-top:120px; padding-bottom:80px; display:grid; grid-template-columns:1.4fr 1fr; gap:72px; align-items:center; }
+.hero-meta { display:flex; gap:16px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--gray-mid); margin-bottom:40px; align-items:center; }
+.hero-meta .status { display:inline-flex; align-items:center; gap:8px; color:var(--pink); font-weight:700; }
+.hero-meta .status .dot { width:7px; height:7px; border-radius:50%; background:var(--pink); animation:pulse 2.4s ease-in-out infinite; }
+.hero-meta .divider { width:1px; height:12px; background:var(--rule); }
+.hero-title { font-size:clamp(40px,6vw,80px); font-weight:800; line-height:0.98; letter-spacing:-0.045em; margin-bottom:32px; }
+.hero-title .pink { color:var(--pink); }
+.hero-title .underline { background-image:linear-gradient(120deg,var(--pastel-yellow) 0%,var(--pastel-yellow) 100%); background-repeat:no-repeat; background-size:100% 32%; background-position:0 90%; padding:0 4px; }
+.hero-deck { font-size:clamp(16px,1.4vw,19px); line-height:1.6; color:var(--charcoal-soft); max-width:680px; margin-bottom:32px; }
+.hero-deck strong { font-weight:700; color:var(--charcoal); }
+
+.hero-tldr { background:var(--white); border:1px solid var(--rule); border-radius:18px; padding:24px 28px; max-width:680px; box-shadow:0 1px 2px rgba(41,43,46,0.04); }
+.hero-tldr-row { display:grid; grid-template-columns:90px 1fr; gap:20px; padding:11px 0; align-items:start; font-size:13px; line-height:1.55; }
+.hero-tldr-row + .hero-tldr-row { border-top:1px solid var(--rule-soft); }
+.hero-tldr-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--pink); padding-top:2px; }
+.hero-tldr-text { color:var(--charcoal-soft); }
+.hero-tldr-text strong { color:var(--charcoal); font-weight:700; }
+.hero-tldr-text strong.pink { color:var(--pink); }
+
+.hero-card { background:var(--white); border-radius:24px; padding:36px 32px; border:1px solid var(--rule); box-shadow:0 1px 2px rgba(41,43,46,0.04),0 30px 60px -30px rgba(41,43,46,0.10); position:relative; overflow:hidden; }
+.hero-card::before { content:'V2'; position:absolute; top:-32px; right:-8px; font-size:180px; font-weight:900; color:var(--pink-soft); line-height:1; letter-spacing:-0.06em; pointer-events:none; user-select:none; z-index:0; font-family:'JetBrains Mono',monospace; }
+.hero-card-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gray-mid); margin-bottom:24px; position:relative; z-index:1; }
+.hero-card-stats { display:flex; flex-direction:column; gap:22px; position:relative; z-index:1; }
+.hero-card-stat { display:flex; flex-direction:column; gap:4px; }
+.hero-card-stat-label { font-size:12px; font-weight:600; color:var(--gray-mid); }
+.hero-card-stat-value { font-size:30px; font-weight:800; line-height:1; letter-spacing:-0.03em; color:var(--charcoal); font-feature-settings:"tnum"; }
+.hero-card-stat-value.pink { color:var(--pink); }
+.hero-card-stat-value.green { color:var(--green-deep); }
+.hero-card-stat-sub { font-size:12px; color:var(--charcoal-soft); margin-top:4px; }
+
+/* Body content */
+.body-text { font-size:17px; line-height:1.65; color:var(--charcoal-soft); max-width:820px; margin-bottom:24px; }
+.body-text strong { color:var(--charcoal); font-weight:700; }
+.body-text em { font-style:normal; color:var(--pink); font-weight:700; }
+.body-text + .body-text { margin-top:0; }
+
+.aside { padding:18px 22px; background:var(--pink-wash); border-radius:14px; font-size:13px; font-weight:500; color:var(--charcoal-soft); line-height:1.65; max-width:820px; border-left:3px solid var(--pink); margin:24px 0; }
+.aside strong { color:var(--charcoal); }
+
+/* Verdict cards (the 5) */
+.verdicts-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:48px; }
+.verdict-card { background:var(--white); border:1px solid var(--rule); border-radius:16px; padding:22px 20px; position:relative; overflow:hidden; transition:transform 0.3s,box-shadow 0.3s; cursor:default; }
+.verdict-card:hover { transform:translateY(-3px); box-shadow:0 20px 40px -25px rgba(41,43,46,0.15); }
+.verdict-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+.verdict-card.redesign::before { background:var(--redesign); }
+.verdict-card.fix-now::before { background:var(--danger); }
+.verdict-card.test::before { background:var(--warning); }
+.verdict-card.defend::before { background:var(--green-deep); }
+.verdict-card.monitor::before { background:var(--gray); }
+.verdict-tag { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; margin-bottom:14px; }
+.verdict-card.redesign .verdict-tag { color:var(--redesign); }
+.verdict-card.fix-now .verdict-tag { color:var(--danger); }
+.verdict-card.test .verdict-tag { color:var(--warning); }
+.verdict-card.defend .verdict-tag { color:var(--green-deep); }
+.verdict-card.monitor .verdict-tag { color:var(--gray-mid); }
+.verdict-name { font-size:18px; font-weight:800; color:var(--charcoal); letter-spacing:-0.015em; margin-bottom:10px; }
+.verdict-desc { font-size:13px; line-height:1.5; color:var(--charcoal-soft); margin-bottom:14px; }
+.verdict-meta { display:flex; flex-direction:column; gap:6px; padding-top:12px; border-top:1px solid var(--rule-soft); font-size:11px; }
+.verdict-meta-row { display:flex; gap:8px; }
+.verdict-meta-label { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--gray-mid); min-width:64px; }
+.verdict-meta-val { color:var(--charcoal); font-weight:600; }
+
+/* Threshold explorer (interactive) */
+.thresh-explorer { background:var(--white); border:1px solid var(--rule); border-radius:24px; padding:36px; margin:48px 0; box-shadow:0 1px 2px rgba(41,43,46,0.04),0 30px 60px -30px rgba(41,43,46,0.08); }
+.thresh-head { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; margin-bottom:28px; flex-wrap:wrap; }
+.thresh-eyebrow { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink); margin-bottom:6px; }
+.thresh-title { font-size:22px; font-weight:800; color:var(--charcoal); letter-spacing:-0.02em; line-height:1.25; }
+.thresh-controls { display:flex; gap:8px; flex-wrap:wrap; }
+.thresh-btn { background:var(--white); border:1px solid var(--rule); padding:8px 16px; border-radius:999px; font-family:inherit; font-size:12px; font-weight:700; color:var(--charcoal-soft); cursor:pointer; letter-spacing:0.05em; transition:all 0.3s; }
+.thresh-btn:hover { border-color:var(--pink); color:var(--pink); }
+.thresh-btn.active { background:var(--charcoal); color:var(--white); border-color:var(--charcoal); }
+
+.thresh-body { display:grid; grid-template-columns:1.2fr 1fr; gap:32px; }
+.thresh-narrative { font-size:15px; line-height:1.65; color:var(--charcoal-soft); }
+.thresh-narrative strong { color:var(--charcoal); font-weight:700; }
+.thresh-narrative .accent { color:var(--pink); font-weight:700; }
+.thresh-narrative h4 { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--gray-mid); margin:18px 0 8px; }
+.thresh-narrative h4:first-child { margin-top:0; }
+
+.thresh-stats { display:flex; flex-direction:column; gap:12px; }
+.thresh-stat { background:var(--card); border-radius:14px; padding:18px 20px; border:1px solid var(--rule-soft); }
+.thresh-stat-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--gray-mid); margin-bottom:8px; }
+.thresh-stat-value { font-size:24px; font-weight:800; color:var(--charcoal); letter-spacing:-0.02em; line-height:1.1; font-feature-settings:"tnum"; margin-bottom:4px; }
+.thresh-stat-value.pink { color:var(--pink); }
+.thresh-stat-sub { font-size:12px; color:var(--charcoal-soft); }
+
+/* Threshold card (static narrative) */
+.thresh-card { background:var(--white); border:1px solid var(--rule); border-radius:18px; padding:28px 26px; margin-bottom:18px; box-shadow:0 1px 2px rgba(41,43,46,0.03); }
+.thresh-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:14px; flex-wrap:wrap; }
+.thresh-card-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--pink); margin-bottom:6px; }
+.thresh-card-title { font-size:20px; font-weight:800; color:var(--charcoal); letter-spacing:-0.018em; line-height:1.25; }
+.thresh-card-rule { background:var(--charcoal); color:var(--white); padding:10px 16px; border-radius:10px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.02em; flex-shrink:0; max-width:380px; line-height:1.4; }
+.thresh-card-body { font-size:15px; line-height:1.65; color:var(--charcoal-soft); }
+.thresh-card-body strong { color:var(--charcoal); font-weight:700; }
+.thresh-card-body em { font-style:normal; color:var(--pink); font-weight:700; }
+.thresh-card-body p + p { margin-top:12px; }
+.thresh-card-foot { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px; padding-top:18px; border-top:1px solid var(--rule-soft); }
+.thresh-card-foot-block { font-size:13px; }
+.thresh-card-foot-label { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--gray-mid); margin-bottom:5px; }
+.thresh-card-foot-text { color:var(--charcoal-soft); line-height:1.5; }
+.thresh-card-foot-text strong { color:var(--charcoal); }
+
+/* Confounder drawer pattern */
+.conf-section-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
+.conf-section-title { font-size:18px; font-weight:700; color:var(--charcoal); letter-spacing:-0.015em; }
+.conf-section-tag { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink); }
+
+.conf-matrix { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.conf-tile { background:var(--white); border:1px solid var(--rule); border-radius:16px; padding:24px 22px; cursor:pointer; transition:all 0.3s cubic-bezier(0.22,1,0.36,1); position:relative; overflow:hidden; }
+.conf-tile:hover { transform:translateY(-3px); box-shadow:0 16px 32px -20px rgba(41,43,46,0.18); }
+.conf-tile-glyph { font-size:28px; line-height:1; margin-bottom:18px; color:var(--accent,var(--pink)); font-weight:300; }
+.conf-tile-name { font-size:14px; font-weight:800; color:var(--charcoal); letter-spacing:-0.01em; margin-bottom:8px; line-height:1.3; }
+.conf-tile-action { font-size:12px; line-height:1.5; color:var(--charcoal-soft); }
+.conf-tile-action strong { display:block; color:var(--accent,var(--pink)); font-size:11px; font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.06em; }
+
+.conf-drawer { background:var(--white); border:1px solid var(--rule); border-radius:20px; margin-top:24px; max-height:0; overflow:hidden; transition:max-height 0.6s cubic-bezier(0.22,1,0.36,1); }
+.conf-drawer.open { max-height:800px; }
+.conf-drawer-inner { padding:36px 40px; display:grid; grid-template-columns:1.2fr 1fr; gap:48px; }
+.conf-drawer-head { display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+.conf-drawer-glyph { font-size:34px; color:var(--drawer-accent,var(--pink)); font-weight:300; line-height:1; }
+.conf-drawer-name { font-size:22px; font-weight:800; color:var(--charcoal); letter-spacing:-0.018em; }
+.conf-drawer-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--gray-mid); margin-bottom:10px; display:block; }
+.conf-drawer-text { font-size:14px; line-height:1.65; color:var(--charcoal-soft); }
+.conf-drawer-text strong { color:var(--charcoal); font-weight:700; }
+.conf-drawer-how-label { background:var(--drawer-accent,var(--pink)); color:var(--white); padding:6px 12px; border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; display:inline-block; margin-bottom:12px; }
+.conf-drawer-how-text { font-size:14px; line-height:1.65; color:var(--charcoal-soft); }
+.conf-drawer-how-text strong { color:var(--charcoal); font-weight:700; }
+
+/* Alerts table */
+.alerts-table { width:100%; border-collapse:collapse; background:var(--white); border-radius:18px; overflow:hidden; border:1px solid var(--rule); margin-top:24px; }
+.alerts-table th { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--gray-mid); padding:18px 20px; text-align:left; background:var(--card); border-bottom:1px solid var(--rule); }
+.alerts-table td { padding:18px 20px; border-bottom:1px solid var(--rule-soft); color:var(--charcoal-soft); font-size:14px; line-height:1.5; vertical-align:top; }
+.alerts-table tr:last-child td { border-bottom:none; }
+.alerts-table .priority-cell { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:800; }
+.alerts-table .priority-p0 { color:var(--danger); }
+.alerts-table .priority-p1 { color:var(--warning); }
+.alerts-table .priority-p2 { color:var(--charcoal); }
+.alerts-table .priority-p3 { color:var(--gray-mid); }
+.alerts-table .alert-name { font-weight:700; color:var(--charcoal); }
+.alerts-table strong { color:var(--charcoal); font-weight:700; }
+
+/* Old vs New comparison */
+.compare-section { background:var(--charcoal); color:var(--white); border-radius:0; padding:120px 56px; margin:0; max-width:none; position:relative; overflow:hidden; }
+.compare-section .container { max-width:1480px; margin:0 auto; }
+.compare-section .section-pill { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.12); color:var(--white); }
+.compare-section .section-pill .num { color:var(--pink); }
+.compare-section .section-meta { color:var(--gray-light); }
+.compare-section .section-headline { color:var(--white); }
+.compare-section .section-headline .accent { color:var(--pink); }
+.compare-section .section-headline .underline { background-image:linear-gradient(120deg,rgba(255,240,171,0.2) 0%,rgba(255,240,171,0.2) 100%); }
+.compare-section .body-text { color:rgba(255,255,255,0.78); }
+.compare-section .body-text strong { color:var(--white); }
+.compare-section .aside { background:rgba(230,72,92,0.1); color:rgba(255,255,255,0.85); }
+.compare-section .aside strong { color:var(--white); }
+
+.compare-row { display:grid; grid-template-columns:1.5fr 1.5fr 0.5fr 1.5fr; gap:20px; padding:24px 0; border-bottom:1px solid rgba(255,255,255,0.08); align-items:start; }
+.compare-row.head { padding:14px 0 18px; border-bottom:1px solid rgba(255,255,255,0.18); }
+.compare-row.head > div { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--gray-light); }
+.compare-rule { font-size:14px; font-weight:700; color:var(--white); letter-spacing:-0.01em; line-height:1.3; }
+.compare-old { font-size:13px; line-height:1.55; color:rgba(255,255,255,0.62); }
+.compare-old strong { color:var(--white); font-weight:700; }
+.compare-decision { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; padding:4px 10px; border-radius:4px; display:inline-block; }
+.compare-decision.keep { background:var(--green-deep); color:var(--white); }
+.compare-decision.modify { background:var(--warning); color:var(--white); }
+.compare-decision.replace { background:var(--danger); color:var(--white); }
+.compare-decision.add { background:var(--redesign); color:var(--white); }
+.compare-decision.watch { background:#7C3AED; color:var(--white); }
+.compare-new { font-size:13px; line-height:1.55; color:rgba(255,255,255,0.85); }
+.compare-new strong { color:var(--pink); font-weight:700; }
+
+/* Deep toggle */
+.deep-toggle-wrap { padding:48px 56px 0; max-width:1480px; margin:0 auto; }
+.deep-toggle { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:28px 32px; cursor:pointer; border:1px solid var(--rule); background:linear-gradient(135deg,var(--white) 0%,var(--pink-wash) 100%); font-family:inherit; font-size:17px; font-weight:700; color:var(--charcoal); letter-spacing:-0.015em; width:100%; text-align:left; transition:all 0.4s cubic-bezier(0.22,1,0.36,1); border-radius:18px; box-shadow:0 1px 2px rgba(41,43,46,0.04),0 20px 40px -25px rgba(230,72,92,0.2); position:relative; overflow:hidden; }
+.deep-toggle::before { content:''; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--pink); }
+.deep-toggle:hover { transform:translateY(-2px); box-shadow:0 1px 2px rgba(41,43,46,0.04),0 30px 50px -25px rgba(230,72,92,0.35); border-color:var(--pink-shadow); }
+.deep-toggle-content { display:flex; flex-direction:column; gap:6px; }
+.deep-toggle-label { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--pink); }
+.deep-toggle-title { font-size:18px; font-weight:800; color:var(--charcoal); letter-spacing:-0.018em; line-height:1.3; }
+.deep-toggle-sub { font-size:13px; font-weight:500; color:var(--charcoal-soft); margin-top:2px; }
+.deep-toggle-icon { width:42px; height:42px; border-radius:50%; background:var(--pink); color:var(--white); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; transition:transform 0.4s cubic-bezier(0.22,1,0.36,1); flex-shrink:0; box-shadow:0 8px 20px -8px rgba(230,72,92,0.5); }
+.deep-toggle.open .deep-toggle-icon { transform:rotate(90deg); }
+.deep-content { max-height:0; overflow:hidden; transition:max-height 0.8s cubic-bezier(0.22,1,0.36,1); }
+.deep-content.open { max-height:5000px; }
+
+/* Subflag table */
+.subflag-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:24px; }
+.subflag-card { background:var(--white); border:1px solid var(--rule); border-radius:14px; padding:22px 22px; }
+.subflag-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.subflag-tag { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--pink); padding:3px 9px; background:var(--pink-soft); border-radius:5px; }
+.subflag-name { font-size:15px; font-weight:700; color:var(--charcoal); letter-spacing:-0.012em; }
+.subflag-desc { font-size:13px; line-height:1.55; color:var(--charcoal-soft); }
+.subflag-desc strong { color:var(--charcoal); }
+
+/* Closing */
+.closing { padding:120px 56px; background:linear-gradient(180deg,var(--paper) 0%,var(--paper-warm) 100%); }
+.closing-recap { background:var(--white); border-radius:24px; padding:48px 56px; max-width:1100px; margin:48px auto 0; box-shadow:0 1px 2px rgba(41,43,46,0.04),0 40px 80px -40px rgba(41,43,46,0.12); }
+.recap-row { display:grid; grid-template-columns:60px 1fr; gap:24px; padding:20px 0; align-items:start; }
+.recap-row + .recap-row { border-top:1px solid var(--rule-soft); }
+.recap-num { font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:800; color:var(--pink); letter-spacing:-0.04em; line-height:1; }
+.recap-text { font-size:16px; line-height:1.65; color:var(--charcoal-soft); }
+.recap-text strong { color:var(--charcoal); font-weight:700; }
+.closing-sig { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; letter-spacing:0.12em; color:var(--gray-mid); text-align:right; margin-top:32px; max-width:1100px; margin-left:auto; margin-right:auto; }
+.closing-sig .pink { color:var(--pink); }
+
+/* Anexo links */
+.anexos-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:32px; }
+.anexo-card { background:var(--white); border:1px solid var(--rule); border-radius:18px; padding:28px 28px; transition:all 0.3s; cursor:default; }
+.anexo-card:hover { border-color:var(--pink); transform:translateY(-2px); box-shadow:0 20px 40px -25px rgba(41,43,46,0.18); }
+.anexo-tag { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--pink); margin-bottom:10px; }
+.anexo-title { font-size:18px; font-weight:800; color:var(--charcoal); letter-spacing:-0.018em; margin-bottom:8px; }
+.anexo-desc { font-size:13px; line-height:1.55; color:var(--charcoal-soft); }
+
+/* Responsive */
+@media (max-width:1100px) {
+    .hero { grid-template-columns:1fr; gap:48px; }
+    .conf-matrix { grid-template-columns:repeat(2,1fr); }
+    .conf-drawer-inner { grid-template-columns:1fr; gap:24px; }
+    .verdicts-grid { grid-template-columns:repeat(2,1fr); }
+    .thresh-body { grid-template-columns:1fr; }
+    .compare-row { grid-template-columns:1fr; gap:8px; padding:18px 0; }
+    .compare-row.head { display:none; }
+    .compare-decision { margin:6px 0; }
+    .subflag-grid { grid-template-columns:1fr; }
+    .anexos-grid { grid-template-columns:1fr; }
+}
+@media (max-width:720px) {
+    .header { padding:14px 24px; }
+    .header-nav { display:none; }
+    section { padding:80px 24px; }
+    .deep-toggle-wrap { padding:32px 24px 0; }
+    .closing { padding:80px 24px; }
+    .compare-section { padding:80px 24px; }
+    .verdicts-grid { grid-template-columns:1fr; }
+    .conf-matrix { grid-template-columns:1fr; }
+    .thresh-card-head { flex-direction:column; }
+    .thresh-card-rule { max-width:100%; }
+    .thresh-card-foot { grid-template-columns:1fr; }
+    .hero-tldr-row { grid-template-columns:1fr; gap:6px; }
+}
+</style>
+</head>
+<body class="lang-es">
+
+<!-- HEADER -->
+<header class="header" id="header">
+    <div class="header-brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">Pricing Performance Matrix</div>
+        <div class="brand-divider"></div>
+        <span class="brand-context" data-lang="en">v2 Proposal</span>
+        <span class="brand-context" data-lang="es">Propuesta v2</span>
+    </div>
+    <nav class="header-nav">
+        <a href="#problem" data-lang="en">Problem</a>
+        <a href="#problem" data-lang="es">Problema</a>
+        <a href="#verdicts" data-lang="en">Verdicts</a>
+        <a href="#verdicts" data-lang="es">Veredictos</a>
+        <a href="#thresholds" data-lang="en">Thresholds</a>
+        <a href="#thresholds" data-lang="es">Thresholds</a>
+        <a href="#confounders" data-lang="en">Confounders</a>
+        <a href="#confounders" data-lang="es">Confounders</a>
+        <a href="#alerts" data-lang="en">Alerts</a>
+        <a href="#alerts" data-lang="es">Alertas</a>
+        <a href="#compare" data-lang="en">Old vs New</a>
+        <a href="#compare" data-lang="es">Vs Nuno</a>
+        <div class="lang-toggle">
+            <button id="btn-en">EN</button>
+            <button id="btn-es" class="active">ES</button>
+        </div>
+    </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div>
+        <div class="hero-meta">
+            <span class="status"><span class="dot"></span>Pricing Performance Matrix</span>
+            <span class="divider"></span>
+            <span data-lang="en">v2 Proposal · Internal review</span>
+            <span data-lang="es">Propuesta v2 · Revisión interna</span>
+            <span class="divider"></span>
+            <span data-lang="en">April 2026</span>
+            <span data-lang="es">Abril 2026</span>
+            <span class="divider"></span>
+            <span>Guido</span>
+        </div>
+
+        <h1 class="hero-title">
+            <span data-lang="en">A weekly verdict per destination, <span class="pink underline">without the noise.</span></span>
+            <span data-lang="es">Un veredicto semanal por destino, <span class="pink underline">sin el ruido.</span></span>
+        </h1>
+
+        <p class="hero-deck">
+            <span data-lang="en">Five buckets — <strong>REDESIGN, FIX NOW, TEST, DEFEND, MONITOR</strong> — each with a clear action, an owner, and an annualized euro impact. The thresholds below are designed to catch real signal and stay quiet on noise. This document explains what they are, where they come from, and why they are not the ones we have today.</span>
+            <span data-lang="es">Cinco buckets — <strong>REDESIGN, FIX NOW, TEST, DEFEND, MONITOR</strong> — cada uno con una acción clara, un owner, y un impacto en euros anualizado. Los thresholds que siguen están diseñados para capturar señal real y quedarse callados frente al ruido. Este documento explica cuáles son, de dónde salen, y por qué no son los que tenemos hoy.</span>
+        </p>
+
+        <div class="hero-tldr">
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label" data-lang="en">Problem</span>
+                <span class="hero-tldr-label" data-lang="es">Problema</span>
+                <span class="hero-tldr-text" data-lang="en">The current matrix uses fixed thresholds and snapshot verdicts. A destination can flip between FIX NOW and DEFEND each week. <strong>Real signal gets buried in noise.</strong></span>
+                <span class="hero-tldr-text" data-lang="es">La matrix actual usa thresholds fijos y veredictos snapshot. Un destino puede oscilar entre FIX NOW y DEFEND cada semana. <strong>La señal real queda enterrada bajo ruido.</strong></span>
+            </div>
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label" data-lang="en">Approach</span>
+                <span class="hero-tldr-label" data-lang="es">Approach</span>
+                <span class="hero-tldr-text" data-lang="en"><strong class="pink">Robust statistics + persistence + peer-group benchmarking.</strong> No fixed numbers across destinations. The matrix learns what 'normal' looks like for each duration × region combination.</span>
+                <span class="hero-tldr-text" data-lang="es"><strong class="pink">Estadística robusta + persistencia + peer groups.</strong> Sin números fijos transversales. La matrix aprende qué es 'normal' para cada combinación duración × región.</span>
+            </div>
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label" data-lang="en">Continuity</span>
+                <span class="hero-tldr-label" data-lang="es">Continuidad</span>
+                <span class="hero-tldr-text" data-lang="en">Five-bucket taxonomy and target GM% scale come from Nuno's v1. Persistence, peer groups, refund-adjusted GM and platform breakout are added on top.</span>
+                <span class="hero-tldr-text" data-lang="es">La taxonomía de cinco buckets y la escala de target GM% vienen de la v1 de Nuno. Persistencia, peer groups, GM ajustado por refund y apertura por plataforma se suman encima.</span>
+            </div>
+            <div class="hero-tldr-row">
+                <span class="hero-tldr-label" data-lang="en">Asks</span>
+                <span class="hero-tldr-label" data-lang="es">Pedidos</span>
+                <span class="hero-tldr-text" data-lang="en">Data team builds the input layer (granularity, freshness, sub-flags). Pricing owns the verdict logic on top.</span>
+                <span class="hero-tldr-text" data-lang="es">El equipo de Data construye la capa de inputs (granularidad, frescura, sub-flags). Pricing es dueño de la lógica del veredicto sobre eso.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-card">
+        <div class="hero-card-label">
+            <span data-lang="en">What this delivers</span>
+            <span data-lang="es">Qué entrega esto</span>
+        </div>
+        <div class="hero-card-stats">
+            <div class="hero-card-stat">
+                <div class="hero-card-stat-label">
+                    <span data-lang="en">Verdict cadence</span>
+                    <span data-lang="es">Cadencia de veredicto</span>
+                </div>
+                <div class="hero-card-stat-value">Weekly</div>
+                <div class="hero-card-stat-sub">
+                    <span data-lang="en">Daily data, decisions on weekly persistence</span>
+                    <span data-lang="es">Datos diarios, decisiones por persistencia semanal</span>
+                </div>
+            </div>
+            <div class="hero-card-stat">
+                <div class="hero-card-stat-label">
+                    <span data-lang="en">Estimated alert reduction</span>
+                    <span data-lang="es">Reducción estimada de alertas</span>
+                </div>
+                <div class="hero-card-stat-value pink">60–80%</div>
+                <div class="hero-card-stat-sub">
+                    <span data-lang="en">From persistence rules + peer normalization</span>
+                    <span data-lang="es">Por persistencia + normalización por peer group</span>
+                </div>
+            </div>
+            <div class="hero-card-stat">
+                <div class="hero-card-stat-label">
+                    <span data-lang="en">Coverage</span>
+                    <span data-lang="es">Cobertura</span>
+                </div>
+                <div class="hero-card-stat-value">~200 × 8 × 2</div>
+                <div class="hero-card-stat-sub">
+                    <span data-lang="en">Destinations × variants × platforms (App / Web)</span>
+                    <span data-lang="es">Destinos × variantes × plataformas (App / Web)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CHAPTER 0: THE PROBLEM -->
+<section id="problem">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">00</span><span data-lang="en">The problem</span><span data-lang="es">El problema</span></div>
+        <span class="section-meta" data-lang="en">Why we are rebuilding it</span>
+        <span class="section-meta" data-lang="es">Por qué la estamos reconstruyendo</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">A destination with <span class="accent">8 orders and 1 refund</span> looks identical, on paper, to a destination with <span class="underline">800 orders and 100 refunds</span>.</span>
+        <span data-lang="es">Un destino con <span class="accent">8 órdenes y 1 refund</span> se ve igual, en el papel, que un destino con <span class="underline">800 órdenes y 100 refunds</span>.</span>
+    </h2>
+
+    <p class="body-text reveal">
+        <span data-lang="en">Both have a 12.5% refund rate. Both will trigger the same alert if we threshold on "refund rate above 10%". But the first one is a single unlucky customer and would show 0% the next month with one fewer refund. The second is a sustained pattern that should have triggered three weeks ago.</span>
+        <span data-lang="es">Los dos tienen un 12.5% de refund rate. Los dos disparan la misma alerta si el threshold es "refund rate por encima del 10%". Pero el primero es un cliente con mala suerte y mostraría 0% el mes siguiente con un refund menos. El segundo es un patrón sostenido que tendríamos que haber visto hace tres semanas.</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en">The current matrix cannot tell them apart. It uses single fixed thresholds across the entire portfolio, calculates verdicts on a snapshot, and treats a 1-day plan in MEA the same way as a 30-day plan in Europe. The result is a system that <em>over-fires on the long tail and under-fires on the destinations that move the company.</em></span>
+        <span data-lang="es">La matrix actual no los puede distinguir. Usa thresholds fijos transversales para todo el portfolio, calcula veredictos sobre snapshots, y trata un plan de 1 día en MEA igual que un plan de 30 días en Europa. El resultado es un sistema que <em>sobre-dispara en la cola larga y sub-dispara en los destinos que mueven la compañía.</em></span>
+    </p>
+
+    <div class="aside reveal">
+        <strong data-lang="en">This is not a critique of Nuno's work.</strong>
+        <strong data-lang="es">Esto no es una crítica al trabajo de Nuno.</strong>
+        <span data-lang="en"> The v1 matrix put structure where there was none — five buckets, target GM% by category, an explicit decision tree. We keep the chassis. What we change is what feeds into it: the way we calculate "normal", the way we decide when something has actually moved, and the way we open the data so the verdict is meaningful at the level where the action is taken.</span>
+        <span data-lang="es"> La v1 puso estructura donde no había nada — cinco buckets, target GM% por categoría, un árbol de decisión explícito. El chasis se mantiene. Lo que cambia es lo que entra: cómo calculamos "lo normal", cómo decidimos cuándo algo realmente se movió, y cómo abrimos los datos para que el veredicto sea relevante al nivel en que se toma la acción.</span>
+    </div>
+
+    <p class="body-text reveal">
+        <span data-lang="en">Three problems in the current setup that we are fixing:</span>
+        <span data-lang="es">Tres problemas del setup actual que estamos resolviendo:</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en"><strong>One.</strong> Thresholds are absolute, not relative to the peer group. A 30% gross margin floor applied to every destination ignores that 1-day plans need higher margin to absorb refund risk and that MEA carrier costs are structurally higher than Europe's.</span>
+        <span data-lang="es"><strong>Uno.</strong> Los thresholds son absolutos, no relativos al peer group. Un floor de 30% de margen aplicado a todos los destinos ignora que los planes de 1 día necesitan más margen para absorber riesgo de refund y que los costos de carrier en MEA son estructuralmente más altos que en Europa.</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en"><strong>Two.</strong> The verdict is a snapshot. There is no concept of "this destination has been broken for three weeks" versus "this destination had one bad day". A single noisy week flips the verdict and resets the team's attention.</span>
+        <span data-lang="es"><strong>Dos.</strong> El veredicto es un snapshot. No hay concepto de "este destino lleva tres semanas roto" versus "este destino tuvo un mal día". Una semana ruidosa flipa el veredicto y resetea la atención del equipo.</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en"><strong>Three.</strong> The matrix collapses dimensions that move independently. App and Web have different effective prices because Hola Coins redeem more easily in the App. iOS revenue carries a 30% Apple fee that web doesn't. New customer cohorts behave differently from recurring ones because of the AON cost floor. Aggregating these together hides the signal we are trying to find.</span>
+        <span data-lang="es"><strong>Tres.</strong> La matrix colapsa dimensiones que se mueven por separado. App y Web tienen precios efectivos distintos porque las Hola Coins se canjean más en la App. El revenue de iOS lleva un fee de Apple del 30% que la web no tiene. Las cohortes de cliente nuevo se comportan distinto que las recurrentes por el floor de costo de AON. Agregar todo esto esconde la señal que estamos buscando.</span>
+    </p>
+</section>
+
+<!-- CHAPTER 1: THE FIVE VERDICTS -->
+<section id="verdicts">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">01</span><span data-lang="en">The five verdicts</span><span data-lang="es">Los cinco veredictos</span></div>
+        <span class="section-meta" data-lang="en">As a contract</span>
+        <span class="section-meta" data-lang="es">Como contrato</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">Every destination, every week, lands in <span class="accent">one of these five buckets.</span></span>
+        <span data-lang="es">Cada destino, cada semana, cae en <span class="accent">uno de estos cinco buckets.</span></span>
+    </h2>
+
+    <p class="body-text reveal">
+        <span data-lang="en">A bucket is not a description. It is a commitment to an action, an owner, and an annualized euro impact. If a destination is in REDESIGN, someone is having a conversation with Carriers this week. If it is in TEST, an experiment is going into the queue. The verdict is the start of the work, not the end of an analysis.</span>
+        <span data-lang="es">Un bucket no es una descripción. Es un compromiso con una acción, un owner, y un impacto en euros anualizado. Si un destino está en REDESIGN, alguien tiene una conversación con Carriers esta semana. Si está en TEST, un experimento entra a la cola. El veredicto es el inicio del trabajo, no el final de un análisis.</span>
+    </p>
+
+    <div class="verdicts-grid stagger reveal">
+        <div class="verdict-card redesign">
+            <div class="verdict-tag">REDESIGN</div>
+            <div class="verdict-name" data-lang="en">Structural cost problem</div>
+            <div class="verdict-name" data-lang="es">Problema estructural de costo</div>
+            <div class="verdict-desc" data-lang="en">Carrier cost makes pricing irrelevant. No price increase will fix this — the cost structure has to be renegotiated.</div>
+            <div class="verdict-desc" data-lang="es">El costo de carrier vuelve irrelevante el pricing. Ningún aumento de precio lo va a arreglar — la estructura de costo se tiene que renegociar.</div>
+            <div class="verdict-meta">
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Action</span><span class="verdict-meta-val" data-lang="en">Escalate to Carriers</span><span class="verdict-meta-val" data-lang="es">Escalar a Carriers</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Owner</span><span class="verdict-meta-val">Pricing → Josy</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label" data-lang="en">Impact</span><span class="verdict-meta-label" data-lang="es">Impacto</span><span class="verdict-meta-val" data-lang="en">Loss avoided</span><span class="verdict-meta-val" data-lang="es">Pérdida evitada</span></div>
+            </div>
+        </div>
+
+        <div class="verdict-card fix-now">
+            <div class="verdict-tag">FIX NOW</div>
+            <div class="verdict-name" data-lang="en">Margin bleeding</div>
+            <div class="verdict-name" data-lang="es">Sangrado de margen</div>
+            <div class="verdict-desc" data-lang="en">Refund-adjusted margin is negative or in the danger zone. Each order costs us money. Action is mandatory and the timer is running.</div>
+            <div class="verdict-desc" data-lang="es">El margen ajustado por refund es negativo o está en zona peligrosa. Cada orden nos cuesta plata. La acción es obligatoria y el reloj corre.</div>
+            <div class="verdict-meta">
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Action</span><span class="verdict-meta-val" data-lang="en">Raise price or fix cost</span><span class="verdict-meta-val" data-lang="es">Subir precio o fix costo</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Owner</span><span class="verdict-meta-val">Pricing → Sebas</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label" data-lang="en">Impact</span><span class="verdict-meta-label" data-lang="es">Impacto</span><span class="verdict-meta-val" data-lang="en">Bleed stopped</span><span class="verdict-meta-val" data-lang="es">Sangría detenida</span></div>
+            </div>
+        </div>
+
+        <div class="verdict-card test">
+            <div class="verdict-tag">TEST</div>
+            <div class="verdict-name" data-lang="en">Pricing upside candidate</div>
+            <div class="verdict-name" data-lang="es">Candidato de upside</div>
+            <div class="verdict-desc" data-lang="en">Healthy margin, strong demand. Customers are absorbing the price comfortably. There is room to test a price increase.</div>
+            <div class="verdict-desc" data-lang="es">Margen sano, demanda fuerte. Los clientes absorben el precio cómodos. Hay espacio para testear un aumento.</div>
+            <div class="verdict-meta">
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Action</span><span class="verdict-meta-val" data-lang="en">Run pricing experiment</span><span class="verdict-meta-val" data-lang="es">Correr experimento</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Owner</span><span class="verdict-meta-val">Pricing → Joan</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label" data-lang="en">Impact</span><span class="verdict-meta-label" data-lang="es">Impacto</span><span class="verdict-meta-val" data-lang="en">Annualized upside</span><span class="verdict-meta-val" data-lang="es">Upside anualizado</span></div>
+            </div>
+        </div>
+
+        <div class="verdict-card defend">
+            <div class="verdict-tag">DEFEND</div>
+            <div class="verdict-name" data-lang="en">Healthy and stable</div>
+            <div class="verdict-name" data-lang="es">Sano y estable</div>
+            <div class="verdict-desc" data-lang="en">Margin at target, conversion above peer median, daily margin positive. Nothing to do here other than watch competitors.</div>
+            <div class="verdict-desc" data-lang="es">Margen en target, conversión sobre la mediana del peer group, margen diario positivo. Nada que hacer salvo mirar competidores.</div>
+            <div class="verdict-meta">
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Action</span><span class="verdict-meta-val" data-lang="en">Hold, monitor competition</span><span class="verdict-meta-val" data-lang="es">Sostener, monitorear competencia</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Owner</span><span class="verdict-meta-val">Pricing</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label" data-lang="en">Impact</span><span class="verdict-meta-label" data-lang="es">Impacto</span><span class="verdict-meta-val" data-lang="en">Risk if competitor cuts</span><span class="verdict-meta-val" data-lang="es">Riesgo si compete corta</span></div>
+            </div>
+        </div>
+
+        <div class="verdict-card monitor">
+            <div class="verdict-tag">MONITOR</div>
+            <div class="verdict-name" data-lang="en">Watch with sub-flag</div>
+            <div class="verdict-name" data-lang="es">Watch con sub-flag</div>
+            <div class="verdict-desc" data-lang="en">Default state plus a reason. Low volume, mid-migration, mix shifting, no clear signal. Each MONITOR carries an explicit sub-flag — the bucket is not silent.</div>
+            <div class="verdict-desc" data-lang="es">Estado por default con un motivo. Bajo volumen, migración en curso, mix cambiando, sin señal clara. Cada MONITOR lleva sub-flag explícito — el bucket no es mudo.</div>
+            <div class="verdict-meta">
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Action</span><span class="verdict-meta-val" data-lang="en">Track + investigate sub-flag</span><span class="verdict-meta-val" data-lang="es">Trackear + investigar sub-flag</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label">Owner</span><span class="verdict-meta-val">Pricing</span></div>
+                <div class="verdict-meta-row"><span class="verdict-meta-label" data-lang="en">Impact</span><span class="verdict-meta-label" data-lang="es">Impacto</span><span class="verdict-meta-val" data-lang="en">Opportunity cost</span><span class="verdict-meta-val" data-lang="es">Costo de oportunidad</span></div>
+            </div>
+        </div>
+    </div>
+
+    <p class="body-text reveal" style="margin-top:48px;">
+        <span data-lang="en">Two notes on this taxonomy. First, <strong>five buckets is intentional.</strong> Three is too few — REDESIGN and FIX NOW solve different problems with different teams, and TEST and DEFEND require very different capacity allocations. Seven is too many — every additional bucket dilutes the team's ability to remember what to do with it. Five is the working number that came out of Nuno's v1, and it stays.</span>
+        <span data-lang="es">Dos notas sobre esta taxonomía. Primero, <strong>cinco buckets es intencional.</strong> Tres son pocos — REDESIGN y FIX NOW resuelven problemas distintos con equipos distintos, y TEST y DEFEND requieren asignaciones de capacidad muy diferentes. Siete son demasiados — cada bucket adicional diluye la capacidad del equipo para recordar qué hacer con él. Cinco es el número que salió de la v1 de Nuno, y se mantiene.</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en">Second, <strong>MONITOR is the most important change.</strong> In the v1, MONITOR was the silent default — the bucket where a destination ended up when nothing else fit. In v2, every MONITOR carries an explicit sub-flag explaining why. Low volume. Mid-migration. Mix shifting. No clear signal. Data quality issue. The sub-flag is what makes MONITOR informative instead of lazy. Section 04 covers them in detail.</span>
+        <span data-lang="es">Segundo, <strong>MONITOR es el cambio más importante.</strong> En la v1, MONITOR era el default silencioso — el bucket donde caía un destino cuando nada más le encajaba. En v2, cada MONITOR lleva un sub-flag explícito explicando por qué. Bajo volumen. Migración en curso. Mix cambiando. Sin señal clara. Problema de data quality. El sub-flag es lo que hace que MONITOR sea informativo en vez de perezoso. La sección 04 los cubre en detalle.</span>
+    </p>
+</section>
+
+<!-- CHAPTER 2: THRESHOLDS -->
+<section id="thresholds">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">02</span><span data-lang="en">The thresholds</span><span data-lang="es">Los thresholds</span></div>
+        <span class="section-meta" data-lang="en">Where the numbers come from</span>
+        <span class="section-meta" data-lang="es">De dónde salen los números</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">Each threshold answers <span class="accent">three questions</span>: what triggers it, what noise does it avoid, what happens if we move it.</span>
+        <span data-lang="es">Cada threshold responde <span class="accent">tres preguntas</span>: qué lo dispara, qué ruido evita, qué pasa si lo movemos.</span>
+    </h2>
+
+    <p class="body-text reveal">
+        <span data-lang="en">The numbers below are not arbitrary. They come from three places. <strong>One,</strong> published statistical practice — Iglewicz and Hoaglin's 1993 cutoff for outlier detection, Roberts' EWMA control chart from 1959, Page's CUSUM from 1954. <strong>Two,</strong> applied production patterns — Google SRE's multi-window alerting, McKinsey's pocket-price waterfall, IDeaS hotel revenue management. <strong>Three,</strong> Holafly-specific calibration — what we know about volume distribution, refund rates, and the AON cost floor.</span>
+        <span data-lang="es">Los números que siguen no son arbitrarios. Vienen de tres lados. <strong>Uno,</strong> práctica estadística publicada — el cutoff de Iglewicz y Hoaglin de 1993 para detectar outliers, el control chart EWMA de Roberts de 1959, el CUSUM de Page de 1954. <strong>Dos,</strong> patrones aplicados en producción — el alerting multi-ventana de Google SRE, el pocket-price waterfall de McKinsey, el revenue management de IDeaS para hoteles. <strong>Tres,</strong> calibración específica a Holafly — lo que sabemos de la distribución de volumen, refund rates, y el floor de costo de AON.</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en">When the number is engineering judgment, we say so. When it is published, we cite where. When we have to choose between two values that both have evidence, we explain the trade-off.</span>
+        <span data-lang="es">Cuando el número es engineering judgment, lo decimos. Cuando es publicado, citamos de dónde. Cuando hay que elegir entre dos valores que ambos tienen evidencia, explicamos el trade-off.</span>
+    </p>
+
+    <!-- Threshold 1: Volume gate -->
+    <div class="thresh-card reveal">
+        <div class="thresh-card-head">
+            <div>
+                <div class="thresh-card-num" data-lang="en">Threshold 01 · Entry gate</div>
+                <div class="thresh-card-num" data-lang="es">Threshold 01 · Puerta de entrada</div>
+                <div class="thresh-card-title" data-lang="en">Volume floor before any verdict</div>
+                <div class="thresh-card-title" data-lang="es">Volumen mínimo antes de cualquier veredicto</div>
+            </div>
+            <div class="thresh-card-rule" data-lang="en">orders_30d ≥ 30 → enter system<br>orders_30d &lt; 30 → MONITOR · Low Volume</div>
+            <div class="thresh-card-rule" data-lang="es">orders_30d ≥ 30 → entra al sistema<br>orders_30d &lt; 30 → MONITOR · Low Volume</div>
+        </div>
+        <div class="thresh-card-body">
+            <p data-lang="en"><strong>Why this number.</strong> Below 30 orders per month, the coefficient of variation of any rate-based metric — refund rate, conversion rate, percentage of orders with promo — exceeds 30% just from binomial noise. A destination with 8 orders and 1 refund shows 12.5%. The same destination with 0 refunds shows 0%. The 12.5pp swing is one customer, not a pattern.</p>
+            <p data-lang="es"><strong>Por qué este número.</strong> Por debajo de 30 órdenes al mes, el coeficiente de variación de cualquier métrica de tasa — refund, conversión, % de órdenes con promo — supera el 30% solo por ruido binomial. Un destino con 8 órdenes y 1 refund muestra 12.5%. El mismo destino sin refunds muestra 0%. El swing de 12.5 puntos es un cliente, no un patrón.</p>
+            <p data-lang="en"><strong>What this avoids.</strong> Alerts on the long tail that are pure noise. The current matrix uses "less than 10% of variant average" — that fires when an obscure destination has 30 orders and the variant average is 350. Same destination, same statistical noise, gets routed to MONITOR with a subjective threshold instead of an absolute one.</p>
+            <p data-lang="es"><strong>Qué evita.</strong> Alertas en la cola larga que son ruido puro. La matrix actual usa "menos del 10% del promedio del variant" — eso dispara cuando un destino oscuro tiene 30 órdenes y el promedio del variant es 350. Mismo destino, mismo ruido estadístico, ruteado a MONITOR con threshold subjetivo en vez de absoluto.</p>
+        </div>
+        <div class="thresh-card-foot">
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">If we lower it to 10</div>
+                <div class="thresh-card-foot-label" data-lang="es">Si lo bajamos a 10</div>
+                <div class="thresh-card-foot-text" data-lang="en">False positives in the long tail rise roughly <strong>+25%</strong>, based on MAD-based simulations of small samples.</div>
+                <div class="thresh-card-foot-text" data-lang="es">Los falsos positivos en la cola larga suben aproximadamente <strong>+25%</strong>, según simulaciones MAD para muestras chicas.</div>
+            </div>
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">If we raise it to 100</div>
+                <div class="thresh-card-foot-label" data-lang="es">Si lo subimos a 100</div>
+                <div class="thresh-card-foot-text" data-lang="en">We lose visibility on roughly <strong>40% of the catalog</strong> — the long tail still informs the peer group statistics but never gets a verdict.</div>
+                <div class="thresh-card-foot-text" data-lang="es">Perdemos visibilidad sobre aproximadamente <strong>40% del catálogo</strong> — la cola larga sigue informando los stats del peer group pero nunca tiene veredicto.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threshold 2: REDESIGN -->
+    <div class="thresh-card reveal">
+        <div class="thresh-card-head">
+            <div>
+                <div class="thresh-card-num" data-lang="en">Threshold 02 · REDESIGN</div>
+                <div class="thresh-card-num" data-lang="es">Threshold 02 · REDESIGN</div>
+                <div class="thresh-card-title" data-lang="en">Cost-per-GB anomaly vs peer group</div>
+                <div class="thresh-card-title" data-lang="es">Costo por GB anómalo vs peer group</div>
+            </div>
+            <div class="thresh-card-rule">cost_per_gb ≥ 2 × peer_median<br>(variant × region)</div>
+        </div>
+        <div class="thresh-card-body">
+            <p data-lang="en"><strong>Why median, not mean.</strong> The current matrix uses 2× the variant <em>average</em>. The problem with averages is that three expensive outlier destinations inflate the bar for everyone else. If MEA destinations include three small countries with extreme carrier rates, the average for the variant spikes and a genuinely problematic destination in Europe sits below the threshold. Median is invariant to that contamination — it moves only if half of the peer group moves.</p>
+            <p data-lang="es"><strong>Por qué mediana, no promedio.</strong> La matrix actual usa 2× el <em>promedio</em> del variant. El problema con el promedio es que tres destinos outlier caros inflan la vara para el resto. Si MEA incluye tres países chicos con rates extremos, el promedio del variant se dispara y un destino genuinamente problemático en Europa queda debajo del threshold. La mediana es invariante a esa contaminación — se mueve solo si la mitad del peer group se mueve.</p>
+            <p data-lang="en"><strong>Why 2× and not another multiple.</strong> This is the only Nuno number we keep. 2× is conservative enough to avoid false positives — a destination only enters REDESIGN if its carrier cost is genuinely outside the operational range, not just on the high end of normal. Iglewicz-Hoaglin's modified z-score with cutoff 3.5 gives a similar threshold mathematically (around 2.3× MAD-scaled), so 2× is consistent with the published literature.</p>
+            <p data-lang="es"><strong>Por qué 2× y no otro múltiplo.</strong> Este es el único número de Nuno que mantenemos. 2× es lo suficientemente conservador como para evitar falsos positivos — un destino entra a REDESIGN solo si su costo de carrier está genuinamente fuera del rango operativo, no apenas en el extremo alto de lo normal. El z-score modificado de Iglewicz-Hoaglin con cutoff 3.5 da un threshold matemáticamente similar (alrededor de 2.3× MAD-scaled), así que 2× es consistente con la literatura publicada.</p>
+        </div>
+        <div class="thresh-card-foot">
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Persistence required</div>
+                <div class="thresh-card-foot-label" data-lang="es">Persistencia requerida</div>
+                <div class="thresh-card-foot-text" data-lang="en"><strong>4 weeks consecutive.</strong> Carrier costs are contractual — they don't fluctuate week to week. A single-week trigger means an imputation problem on COGS, not a real cost spike.</div>
+                <div class="thresh-card-foot-text" data-lang="es"><strong>4 semanas consecutivas.</strong> Los costos de carrier son contractuales — no fluctúan semana a semana. Un trigger de una sola semana es problema de imputación de COGS, no un spike real.</div>
+            </div>
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Reference</div>
+                <div class="thresh-card-foot-label" data-lang="es">Referencia</div>
+                <div class="thresh-card-foot-text" data-lang="en">Iglewicz, B. &amp; Hoaglin, D.C. (1993). <em>How to Detect and Handle Outliers</em>. ASQC.</div>
+                <div class="thresh-card-foot-text" data-lang="es">Iglewicz, B. y Hoaglin, D.C. (1993). <em>How to Detect and Handle Outliers</em>. ASQC.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threshold 3: FIX NOW -->
+    <div class="thresh-card reveal">
+        <div class="thresh-card-head">
+            <div>
+                <div class="thresh-card-num" data-lang="en">Threshold 03 · FIX NOW</div>
+                <div class="thresh-card-num" data-lang="es">Threshold 03 · FIX NOW</div>
+                <div class="thresh-card-title" data-lang="en">Refund-adjusted margin in the danger zone</div>
+                <div class="thresh-card-title" data-lang="es">Margen ajustado por refund en zona peligrosa</div>
+            </div>
+            <div class="thresh-card-rule">GM_adj &lt; 0% (severe) OR<br>0% ≤ GM_adj &lt; 15% (danger)<br>persisted 3 of last 4 weeks</div>
+        </div>
+        <div class="thresh-card-body">
+            <p data-lang="en"><strong>Why refund-adjusted, not nominal margin.</strong> A 1-day plan with €4 revenue, €1 cost, and a 25% refund rate looks like 75% margin. After refunds, real margin is closer to break-even. The current matrix tracks refund rate as a separate guardrail — but a margin-bleeding destination can still pass that guardrail individually if the refund rate is "only" 22%. The fix is to bake refunds into the metric itself.</p>
+            <p data-lang="es"><strong>Por qué ajustado por refund y no margen nominal.</strong> Un plan de 1 día con €4 de revenue, €1 de costo, y 25% de refund rate parece 75% de margen. Después de refunds, el margen real está cerca de break-even. La matrix actual trackea refund rate como guardrail separado — pero un destino que sangra margen puede pasar ese guardrail individualmente si el refund rate es "apenas" 22%. La cura es meter refunds en la métrica misma.</p>
+            <p data-lang="en"><strong>Formula.</strong> GM_adj = GM% × (1 − refund_rate). This is the same logic as ARPAR (Adjusted Revenue Per Available Room) in hotel revenue management — published worked examples show two hotels with identical RevPAR €50 but ARPAR of €40 vs €45 because variable costs differ. The pattern is well-tested in operations research.</p>
+            <p data-lang="es"><strong>Fórmula.</strong> GM_adj = GM% × (1 − refund_rate). Es la misma lógica que ARPAR (Adjusted Revenue Per Available Room) en revenue management hotelero — ejemplos publicados muestran dos hoteles con RevPAR idéntico de €50 pero ARPAR de €40 vs €45 porque difieren en costos variables. El patrón está testeado en operations research.</p>
+            <p data-lang="en"><strong>Why two zones.</strong> Negative margin is a different problem from thin-but-positive margin. Negative requires immediate intervention — every order is a direct loss. Positive but under 15% is a structural fragility — there is no buffer for a cost shock, a refund spike, or marketing inefficiency. Same bucket (FIX NOW), but the action and urgency differ. The sub-flag distinguishes them.</p>
+            <p data-lang="es"><strong>Por qué dos zonas.</strong> Margen negativo es un problema distinto que margen positivo pero fino. Negativo requiere intervención inmediata — cada orden es pérdida directa. Positivo bajo 15% es fragilidad estructural — no hay buffer para un shock de costo, un spike de refunds, o ineficiencia de marketing. Mismo bucket (FIX NOW), pero la acción y urgencia difieren. El sub-flag los distingue.</p>
+        </div>
+        <div class="thresh-card-foot">
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Why 3 of 4, not 4 of 4</div>
+                <div class="thresh-card-foot-label" data-lang="es">Por qué 3 de 4, no 4 de 4</div>
+                <div class="thresh-card-foot-text" data-lang="en">Strict 4-of-4 means a single noisy week resets the alert window. We would lose the alert for an additional 4 weeks while the bleeding continues. The 3-of-4 rule absorbs one bad-data week without losing the signal.</div>
+                <div class="thresh-card-foot-text" data-lang="es">Estricto 4-de-4 significa que una sola semana ruidosa resetea la ventana de alerta. Perderíamos la alerta 4 semanas adicionales mientras el sangrado sigue. La regla 3-de-4 absorbe una semana de mala data sin perder la señal.</div>
+            </div>
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Why 4 weeks, not 8</div>
+                <div class="thresh-card-foot-label" data-lang="es">Por qué 4 semanas, no 8</div>
+                <div class="thresh-card-foot-text" data-lang="en">Each additional week of waiting is real margin loss. 4 weeks is the trade-off point between catching real signal and not bleeding for two months before reacting.</div>
+                <div class="thresh-card-foot-text" data-lang="es">Cada semana adicional de espera es pérdida real de margen. 4 semanas es el punto de trade-off entre capturar señal real y no sangrar dos meses antes de reaccionar.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threshold 4: TEST -->
+    <div class="thresh-card reveal">
+        <div class="thresh-card-head">
+            <div>
+                <div class="thresh-card-num" data-lang="en">Threshold 04 · TEST</div>
+                <div class="thresh-card-num" data-lang="es">Threshold 04 · TEST</div>
+                <div class="thresh-card-title" data-lang="en">Healthy margin, healthy demand, big enough to matter</div>
+                <div class="thresh-card-title" data-lang="es">Margen sano, demanda sana, lo suficientemente grande</div>
+            </div>
+            <div class="thresh-card-rule">GM% &gt; target + 5pp AND<br>CR ≥ peer_median CR AND<br>orders_30d ≥ 100 AND<br>annualized upside ≥ €100k</div>
+        </div>
+        <div class="thresh-card-body">
+            <p data-lang="en"><strong>Two hard rules and a capacity rule.</strong> The first two — margin above target plus 5 percentage points and conversion above peer median — are the substantive conditions. They mean the customer is absorbing the price comfortably and we have margin headroom. The third rule (orders ≥ 100, upside ≥ €100k) is operational — we can run roughly 55 experiments a year and we cannot waste them on destinations where the upside is too small to be worth designing a test for.</p>
+            <p data-lang="es"><strong>Dos reglas duras y una de capacidad.</strong> Las dos primeras — margen sobre target más 5 puntos porcentuales y conversión sobre la mediana del peer group — son las condiciones sustantivas. Significan que el cliente absorbe el precio cómodo y tenemos cushion de margen. La tercera regla (órdenes ≥ 100, upside ≥ €100k) es operativa — corremos ~55 experimentos al año y no podemos gastarlos en destinos donde el upside es muy chico para diseñar un test.</p>
+            <p data-lang="en"><strong>Where the +5pp comes from.</strong> Above target is not enough — the destination has to be clearly above target so that a price increase still leaves it within the healthy range. 5 points is roughly half of the typical destination GM% spread within a peer group. It means we are testing on destinations that have <em>real</em> headroom, not destinations sitting on the line.</p>
+            <p data-lang="es"><strong>De dónde sale el +5pp.</strong> Sobre target no alcanza — el destino tiene que estar claramente sobre target para que un aumento de precio lo deje todavía en rango sano. 5 puntos es aproximadamente la mitad del spread típico de GM% destino dentro de un peer group. Significa testear en destinos con headroom <em>real</em>, no en destinos parados sobre la línea.</p>
+            <p data-lang="en"><strong>What this fixes from v1.</strong> Nuno's v1 fires TEST on destinations with low volume relative to the variant average. That is exactly backwards — low volume means low statistical power for the experiment, and low absolute upside even if the test wins. v2 fires TEST on high volume + high margin + high conversion. That is where pricing experimentation moves the company.</p>
+            <p data-lang="es"><strong>Qué arregla esto de la v1.</strong> La v1 de Nuno dispara TEST en destinos con bajo volumen relativo al promedio del variant. Eso es exactamente al revés — bajo volumen significa bajo poder estadístico para el experimento, y bajo upside absoluto aunque el test gane. v2 dispara TEST con alto volumen + alto margen + alta conversión. Ahí es donde el experimento de pricing mueve la compañía.</p>
+        </div>
+        <div class="thresh-card-foot">
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Persistence required</div>
+                <div class="thresh-card-foot-label" data-lang="es">Persistencia requerida</div>
+                <div class="thresh-card-foot-text" data-lang="en"><strong>4 weeks consecutive</strong> in opportunity state before promotion to TEST queue. We don't trigger an experiment design on a single good week.</div>
+                <div class="thresh-card-foot-text" data-lang="es"><strong>4 semanas consecutivas</strong> en estado de oportunidad antes de promover a la cola de TEST. No disparamos diseño de experimento por una semana buena.</div>
+            </div>
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Capacity floor</div>
+                <div class="thresh-card-foot-label" data-lang="es">Floor de capacidad</div>
+                <div class="thresh-card-foot-text" data-lang="en"><strong>€100k/year upside floor</strong> roughly maps to top 30% of portfolio destinations by revenue. Adjustable as Statsig comes online and per-test cost drops.</div>
+                <div class="thresh-card-foot-text" data-lang="es"><strong>Floor de €100k/año</strong> mapea aproximadamente al top 30% del portfolio por revenue. Ajustable cuando Statsig esté online y baje el costo por test.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threshold 5: DEFEND -->
+    <div class="thresh-card reveal">
+        <div class="thresh-card-head">
+            <div>
+                <div class="thresh-card-num" data-lang="en">Threshold 05 · DEFEND</div>
+                <div class="thresh-card-num" data-lang="es">Threshold 05 · DEFEND</div>
+                <div class="thresh-card-title" data-lang="en">Stable, profitable, in demand — and proven over time</div>
+                <div class="thresh-card-title" data-lang="es">Estable, rentable, con demanda — y probado en el tiempo</div>
+            </div>
+            <div class="thresh-card-rule">GM% ≥ target AND<br>GM/day &gt; 0 AND<br>CR ≥ peer_median CR<br>persisted 8 weeks consecutive</div>
+        </div>
+        <div class="thresh-card-body">
+            <p data-lang="en"><strong>The CR check is the change from v1.</strong> Without it, "DEFEND" includes destinations with healthy margin but dead conversion — and that is not defending, it is ignoring a demand problem. A destination nobody is buying is not a destination worth holding price on; it is a destination worth investigating why nobody is buying.</p>
+            <p data-lang="es"><strong>El check de CR es el cambio respecto de v1.</strong> Sin eso, "DEFEND" incluye destinos con margen sano pero conversión muerta — y eso no es defender, es ignorar un problema de demanda. Un destino que nadie está comprando no es un destino que valga la pena defender en precio; es un destino que vale la pena investigar por qué nadie compra.</p>
+            <p data-lang="en"><strong>Why 8 weeks.</strong> DEFEND is the steady state. It is the bucket where we say "this destination is fine, we know it, leave it alone". For that claim to be honest, we need 8 weeks of evidence — two months of stability. A destination that has been DEFEND-eligible for two weeks could easily slip back into TEST or FIX NOW; eight weeks is the point where the noise has burned off.</p>
+            <p data-lang="es"><strong>Por qué 8 semanas.</strong> DEFEND es el estado estable. Es el bucket donde decimos "este destino está bien, lo conocemos, no lo toques". Para que esa afirmación sea honesta, necesitamos 8 semanas de evidencia — dos meses de estabilidad. Un destino DEFEND-elegible hace dos semanas podría caer de nuevo a TEST o FIX NOW fácil; ocho semanas es el punto donde el ruido se quemó.</p>
+        </div>
+        <div class="thresh-card-foot">
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Asymmetric exit</div>
+                <div class="thresh-card-foot-label" data-lang="es">Salida asimétrica</div>
+                <div class="thresh-card-foot-text" data-lang="en"><strong>2 weeks below criteria</strong> exits DEFEND. Easier to leave than to enter — that's hysteresis, the SPC standard pattern to prevent oscillation.</div>
+                <div class="thresh-card-foot-text" data-lang="es"><strong>2 semanas por debajo</strong> sale de DEFEND. Más fácil salir que entrar — eso es hysteresis, el patrón SPC estándar para prevenir oscilación.</div>
+            </div>
+            <div class="thresh-card-foot-block">
+                <div class="thresh-card-foot-label" data-lang="en">Reference</div>
+                <div class="thresh-card-foot-label" data-lang="es">Referencia</div>
+                <div class="thresh-card-foot-text" data-lang="en">Western Electric Rules · Statistical Process Control. Hysteresis bands as anti-oscillation pattern.</div>
+                <div class="thresh-card-foot-text" data-lang="es">Western Electric Rules · Statistical Process Control. Bandas de hysteresis como patrón anti-oscilación.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DEEP TOGGLE: persistence and shrinkage -->
+<div class="deep-toggle-wrap">
+    <button class="deep-toggle reveal" id="deep-toggle-1">
+        <div class="deep-toggle-content">
+            <span class="deep-toggle-label" data-lang="en">Optional · For data team and methodology</span>
+            <span class="deep-toggle-label" data-lang="es">Opcional · Para data team y metodología</span>
+            <span class="deep-toggle-title" data-lang="en">Persistence and shrinkage, in plain language</span>
+            <span class="deep-toggle-title" data-lang="es">Persistencia y shrinkage, en lenguaje claro</span>
+            <span class="deep-toggle-sub" data-lang="en">The two ideas that quietly do most of the noise reduction.</span>
+            <span class="deep-toggle-sub" data-lang="es">Las dos ideas que hacen la mayor parte de la reducción de ruido.</span>
+        </div>
+        <div class="deep-toggle-icon">→</div>
+    </button>
+</div>
+
+<div class="deep-content" id="deep-content-1">
+    <section style="padding-top:48px; padding-bottom:48px;">
+        <h3 style="font-size:24px; font-weight:800; color:var(--charcoal); letter-spacing:-0.02em; margin-bottom:18px;">
+            <span data-lang="en">Persistence: signals that survive a noisy week</span>
+            <span data-lang="es">Persistencia: señales que sobreviven una semana ruidosa</span>
+        </h3>
+        <p class="body-text">
+            <span data-lang="en">Data lands daily. Verdicts move weekly. The reason is that a single day's metrics fluctuate too much to be a basis for action. A destination with 12% gross margin on Tuesday and 32% on Wednesday is not a destination that changed — it is a destination with a noisy day.</span>
+            <span data-lang="es">Los datos llegan diarios. Los veredictos se mueven semanalmente. La razón es que las métricas de un solo día fluctúan demasiado como para ser base de acción. Un destino con 12% de margen el martes y 32% el miércoles no es un destino que cambió — es un destino con un día ruidoso.</span>
+        </p>
+        <p class="body-text">
+            <span data-lang="en">Persistence asks a sharper question: <em>has this been true for long enough that it is real?</em> A destination enters FIX NOW only when the condition has held for 3 of the last 4 weeks. It enters DEFEND only after 8 consecutive weeks of stability. The two numbers are different because the costs of being wrong are different — being late on FIX NOW means margin loss, being early on DEFEND means we declare a destination "safe" before it is.</span>
+            <span data-lang="es">La persistencia hace una pregunta más afilada: <em>¿esto fue verdad por suficiente tiempo como para que sea real?</em> Un destino entra a FIX NOW solo cuando la condición se mantuvo 3 de las últimas 4 semanas. Entra a DEFEND solo después de 8 semanas consecutivas de estabilidad. Los dos números son distintos porque el costo de equivocarse es distinto — llegar tarde a FIX NOW es pérdida de margen, llegar temprano a DEFEND es declarar un destino "seguro" antes de tiempo.</span>
+        </p>
+        <p class="body-text">
+            <span data-lang="en">There is a second mechanism at play, called <em>hysteresis</em>. Entering a state requires more evidence than leaving it. To enter DEFEND, 8 consecutive weeks. To leave DEFEND, 2 weeks below criteria. The asymmetry is what prevents the verdict from oscillating between two close states each week. It is the same logic as a thermostat that doesn't turn the air conditioner on and off at every tenth of a degree.</span>
+            <span data-lang="es">Hay un segundo mecanismo en juego, llamado <em>hysteresis</em>. Entrar a un estado pide más evidencia que salir. Para entrar a DEFEND, 8 semanas consecutivas. Para salir, 2 semanas debajo de los criterios. La asimetría es lo que evita que el veredicto oscile entre dos estados cercanos cada semana. Es la misma lógica del termostato que no prende y apaga el aire a cada décima de grado.</span>
+        </p>
+
+        <h3 style="font-size:24px; font-weight:800; color:var(--charcoal); letter-spacing:-0.02em; margin:32px 0 18px;">
+            <span data-lang="en">Shrinkage: handling low-volume destinations honestly</span>
+            <span data-lang="es">Shrinkage: tratar destinos de bajo volumen con honestidad</span>
+        </h3>
+        <p class="body-text">
+            <span data-lang="en">A destination with 30 orders sits in an awkward zone. It has enough volume to be in the system, but not enough that its own data is trustworthy on its own. The naive approach is to treat the destination's metric as if it were ground truth — but with 30 orders, a single bad week swings the metric by 5 percentage points.</span>
+            <span data-lang="es">Un destino con 30 órdenes está en una zona incómoda. Tiene suficiente volumen para estar en el sistema, pero no tanto como para que su propia data sea confiable por sí sola. El approach naive es tratar la métrica del destino como ground truth — pero con 30 órdenes, una sola semana mala mueve la métrica 5 puntos porcentuales.</span>
+        </p>
+        <p class="body-text">
+            <span data-lang="en">Shrinkage is the cure. The destination's metric is "pulled" toward the median of its peer group, in proportion to how little data it has. With 30 orders, the metric is roughly 60% peer + 40% destination. With 1000 orders, it is 5% peer + 95% destination. With 10 orders, the destination doesn't trigger anything — it just sits in MONITOR with the Low Volume sub-flag.</span>
+            <span data-lang="es">Shrinkage es la cura. La métrica del destino se "tira" hacia la mediana del peer group, en proporción a cuán poca data tiene. Con 30 órdenes, la métrica es aproximadamente 60% peer + 40% destino. Con 1000 órdenes, es 5% peer + 95% destino. Con 10 órdenes, el destino no dispara nada — queda en MONITOR con sub-flag Low Volume.</span>
+        </p>
+        <p class="body-text">
+            <span data-lang="en">The peer group is <strong>variant duration × region</strong>. Western Europe 1-day plans share a peer group, MEA 30-day plans share another. We do not compare a Spain 1-day to a USA 30-day — they have different cost structures, different demand curves, different seasonality. The peer-group choice is technical and doesn't need product input.</span>
+            <span data-lang="es">El peer group es <strong>variante de duración × región</strong>. Los planes de 1 día de Europa Occidental comparten peer group, los de 30 días de MEA comparten otro. No comparamos un Spain 1d con un USA 30d — tienen estructuras de costo, curvas de demanda y estacionalidad distintas. La elección del peer group es técnica y no requiere input de producto.</span>
+        </p>
+        <p class="body-text">
+            <span data-lang="en">The two ideas working together are what eliminates the alert oscillation that the current matrix produces. Persistence catches "this is a noisy week, don't flip the verdict". Shrinkage catches "this is a low-volume destination, don't read its number as if it were a top destination". Most of the 60-80% reduction in alert volume comes from these two mechanisms quietly running in the background.</span>
+            <span data-lang="es">Las dos ideas funcionando juntas son lo que elimina la oscilación de alertas que produce la matrix actual. La persistencia captura "esta semana es ruidosa, no flipees el veredicto". El shrinkage captura "este destino tiene bajo volumen, no leas su número como si fuera un destino top". La mayor parte de la reducción del 60-80% en volumen de alertas viene de estos dos mecanismos corriendo de fondo.</span>
+        </p>
+    </section>
+</div>
+
+<!-- CHAPTER 3: CONFOUNDERS & FILTERS -->
+<section id="confounders">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">03</span><span data-lang="en">Confounders &amp; data hygiene</span><span data-lang="es">Confounders e higiene de data</span></div>
+        <span class="section-meta" data-lang="en">What we filter, what we flag, what we keep</span>
+        <span class="section-meta" data-lang="es">Qué filtramos, qué flaggeamos, qué guardamos</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">The same eight categories of confounders we already use for experiments — <span class="underline">applied to the matrix.</span></span>
+        <span data-lang="es">Las mismas ocho categorías de confounders que ya usamos para experimentos — <span class="underline">aplicadas a la matrix.</span></span>
+    </h2>
+
+    <p class="body-text reveal">
+        <span data-lang="en">The pricing experimentation framework is built around eight named confounders, each with a specific protocol. The matrix has the same problem to solve — separating real signal from noise — and the same eight categories apply, with different mitigations because the matrix is descriptive and the experiments are interventional.</span>
+        <span data-lang="es">El framework de experimentación de pricing se construyó alrededor de ocho confounders nombrados, cada uno con un protocolo específico. La matrix tiene el mismo problema a resolver — separar señal real de ruido — y aplican las mismas ocho categorías, con mitigaciones distintas porque la matrix es descriptiva y los experimentos son intervencionales.</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en">Click any tile to see the detail.</span>
+        <span data-lang="es">Click cualquier tile para ver el detalle.</span>
+    </p>
+
+    <div class="conf-section-head reveal">
+        <span class="conf-section-title" data-lang="en">The eight confounders, mapped to matrix protocols</span>
+        <span class="conf-section-title" data-lang="es">Los ocho confounders, mapeados a protocolos de matrix</span>
+        <span class="conf-section-tag" data-lang="en">Click to inspect</span>
+        <span class="conf-section-tag" data-lang="es">Click para inspeccionar</span>
+    </div>
+
+    <div class="conf-matrix reveal" id="confMatrix">
+        <div class="conf-tile" data-tile="seasonality" style="--accent:#E6485C;">
+            <div class="conf-tile-glyph">✦</div>
+            <div class="conf-tile-name" data-lang="en">Cultural seasonality</div>
+            <div class="conf-tile-name" data-lang="es">Estacionalidad cultural</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">STL decomposition</strong>
+                <strong data-lang="es">Descomposición STL</strong>
+                <span data-lang="en">Verdict runs on the residual, not the raw weekly metric.</span>
+                <span data-lang="es">El veredicto corre sobre el residual, no la métrica cruda.</span>
+            </div>
+        </div>
+
+        <div class="conf-tile" data-tile="marketing" style="--accent:#C13447;">
+            <div class="conf-tile-glyph">✳</div>
+            <div class="conf-tile-name" data-lang="en">Marketing campaigns</div>
+            <div class="conf-tile-name" data-lang="es">Campañas de marketing</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">Sub-flag in MONITOR</strong>
+                <strong data-lang="es">Sub-flag en MONITOR</strong>
+                <span data-lang="en">Volume spike during paid push doesn't trigger TEST.</span>
+                <span data-lang="es">El spike de volumen durante un push pago no dispara TEST.</span>
+            </div>
+        </div>
+
+        <div class="conf-tile" data-tile="competitor" style="--accent:#B45309;">
+            <div class="conf-tile-glyph">◊</div>
+            <div class="conf-tile-name" data-lang="en">Competitor moves</div>
+            <div class="conf-tile-name" data-lang="es">Movimientos de competencia</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">Manual flag for now</strong>
+                <strong data-lang="es">Flag manual por ahora</strong>
+                <span data-lang="en">Roadmap: weekly automated competitor scrape.</span>
+                <span data-lang="es">Roadmap: scraping automático semanal.</span>
+            </div>
+        </div>
+
+        <div class="conf-tile" data-tile="costs" style="--accent:#643560;">
+            <div class="conf-tile-glyph">◯</div>
+            <div class="conf-tile-name" data-lang="en">Parallel cost changes</div>
+            <div class="conf-tile-name" data-lang="es">Cambios paralelos de costos</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">Migration sub-flag</strong>
+                <strong data-lang="es">Sub-flag migrating</strong>
+                <span data-lang="en">Destinations in carrier migration are suspended from peer stats.</span>
+                <span data-lang="es">Destinos en migración se suspenden de los stats del peer group.</span>
+            </div>
+        </div>
+
+        <div class="conf-tile" data-tile="holacoins" style="--accent:#E6485C;">
+            <div class="conf-tile-glyph">▽</div>
+            <div class="conf-tile-name" data-lang="en">Hola Coins asymmetry</div>
+            <div class="conf-tile-name" data-lang="es">Asimetría Hola Coins</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">Platform breakout</strong>
+                <strong data-lang="es">Apertura por plataforma</strong>
+                <span data-lang="en">Effective price differs App vs Web. Verdict opens by platform.</span>
+                <span data-lang="es">El precio efectivo difiere App vs Web. Veredicto se abre por plataforma.</span>
+            </div>
+        </div>
+
+        <div class="conf-tile" data-tile="shopifyfx" style="--accent:#15803D;">
+            <div class="conf-tile-glyph">△</div>
+            <div class="conf-tile-name" data-lang="en">Shopify FX</div>
+            <div class="conf-tile-name" data-lang="es">FX de Shopify</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">EUR-only verdict</strong>
+                <strong data-lang="es">Veredicto sólo en EUR</strong>
+                <span data-lang="en">Local currency view is informative, not actionable.</span>
+                <span data-lang="es">La vista en moneda local es informativa, no accionable.</span>
+            </div>
+        </div>
+
+        <div class="conf-tile" data-tile="promomix" style="--accent:#B45309;">
+            <div class="conf-tile-glyph">⬡</div>
+            <div class="conf-tile-name" data-lang="en">Promo mix shift</div>
+            <div class="conf-tile-name" data-lang="es">Cambio de mix de promos</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">By discount type</strong>
+                <strong data-lang="es">Por tipo de descuento</strong>
+                <span data-lang="en">Five categories tracked separately, not just "discount yes/no".</span>
+                <span data-lang="es">Cinco categorías trackeadas separadas, no "descuento sí/no".</span>
+            </div>
+        </div>
+
+        <div class="conf-tile" data-tile="geopol" style="--accent:#292B2E;">
+            <div class="conf-tile-glyph">✕</div>
+            <div class="conf-tile-name" data-lang="en">Geopolitical shocks</div>
+            <div class="conf-tile-name" data-lang="es">Shocks geopolíticos</div>
+            <div class="conf-tile-action">
+                <strong data-lang="en">Force MONITOR</strong>
+                <strong data-lang="es">Forzar MONITOR</strong>
+                <span data-lang="en">Affected destinations exit verdict logic until volume stabilizes.</span>
+                <span data-lang="es">Destinos afectados salen de la lógica hasta que estabilice volumen.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawer -->
+    <div class="conf-drawer" id="confDrawer">
+        <div class="conf-drawer-inner">
+            <div class="conf-drawer-what">
+                <div class="conf-drawer-head">
+                    <span class="conf-drawer-glyph" id="drawerGlyph">✦</span>
+                    <span class="conf-drawer-name" id="drawerName"></span>
+                </div>
+                <span class="conf-drawer-label" data-lang="en">What it is</span>
+                <span class="conf-drawer-label" data-lang="es">Qué es</span>
+                <p class="conf-drawer-text" id="drawerWhat"></p>
+            </div>
+            <div class="conf-drawer-how">
+                <div class="conf-drawer-how-label" data-lang="en">Matrix protocol</div>
+                <div class="conf-drawer-how-label" data-lang="es">Protocolo en matrix</div>
+                <p class="conf-drawer-how-text" id="drawerHow"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter view vs exclusion -->
+    <div class="aside reveal" style="margin-top:48px;">
+        <strong data-lang="en">Filter views, not exclusions.</strong>
+        <strong data-lang="es">Vistas filtradas, no exclusiones.</strong>
+        <span data-lang="en"> AON, Freemium, B2B and discounted orders are not removed from the data — they are tagged so we can see the matrix three ways: <em>core</em> (organic full-price orders, the verdict default), <em>with promos</em> (effective price view), and <em>with B2B</em> (full revenue view). Excluding loses the information about how big each segment is and how it moves over time. Filtering keeps it.</span>
+        <span data-lang="es"> AON, Freemium, B2B y las órdenes con descuento no se eliminan de la data — se taggean para que podamos ver la matrix de tres formas: <em>core</em> (órdenes orgánicas a precio lleno, el default del veredicto), <em>with promos</em> (vista de precio efectivo), y <em>with B2B</em> (vista de revenue completo). Excluir pierde la información sobre cuán grande es cada segmento y cómo se mueve. Filtrar la guarda.</span>
+    </div>
+</section>
+
+<!-- CHAPTER 4: SUB-FLAGS AND DIMENSIONS -->
+<section id="dimensions">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">04</span><span data-lang="en">Sub-flags &amp; dimensions</span><span data-lang="es">Sub-flags y dimensiones</span></div>
+        <span class="section-meta" data-lang="en">How we open the data</span>
+        <span class="section-meta" data-lang="es">Cómo abrimos la data</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">A blended view <span class="accent">hides composition.</span> The matrix opens by platform, by cohort, by discount type.</span>
+        <span data-lang="es">Una vista blended <span class="accent">esconde la composición.</span> La matrix se abre por plataforma, por cohorte, por tipo de descuento.</span>
+    </h2>
+
+    <p class="body-text reveal">
+        <span data-lang="en">The full granularity of the matrix is <strong>destination × variant × platform</strong>, with sub-dimensions overlaid as filters: cohort (new vs recurring), discount type, and a handful of operational flags. The aggregated destination view we use for portfolio-level decisions is computed from this granular base, not stored independently.</span>
+        <span data-lang="es">La granularidad completa de la matrix es <strong>destino × variante × plataforma</strong>, con sub-dimensiones overlaid como filtros: cohorte (nuevo vs recurrente), tipo de descuento, y un grupo de flags operativas. La vista agregada por destino que usamos para decisiones a nivel portfolio se calcula desde esta base granular, no se guarda por separado.</span>
+    </p>
+
+    <h3 style="font-size:18px; font-weight:800; color:var(--charcoal); letter-spacing:-0.018em; margin:32px 0 12px;" class="reveal">
+        <span data-lang="en">Sub-flags exposed by Data team</span>
+        <span data-lang="es">Sub-flags expuestos por Data</span>
+    </h3>
+    <p class="body-text reveal">
+        <span data-lang="en">Each sub-flag is a column on the per-day per-cell row. They drive routing within the verdict logic and explain why a MONITOR is a MONITOR.</span>
+        <span data-lang="es">Cada sub-flag es una columna en la fila por celda por día. Rutean dentro de la lógica del veredicto y explican por qué un MONITOR es MONITOR.</span>
+    </p>
+
+    <div class="subflag-grid stagger reveal">
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">low_volume</span>
+                <span class="subflag-name" data-lang="en">Below the entry gate</span>
+                <span class="subflag-name" data-lang="es">Debajo de la puerta de entrada</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">Less than 30 orders in the last 30 days. Verdict is forced to MONITOR · Low Volume. Destination contributes to peer-group statistics but never gets its own verdict.</div>
+            <div class="subflag-desc" data-lang="es">Menos de 30 órdenes en los últimos 30 días. El veredicto se fuerza a MONITOR · Low Volume. El destino contribuye a los stats del peer group pero nunca tiene veredicto propio.</div>
+        </div>
+
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">migrating_carrier</span>
+                <span class="subflag-name" data-lang="en">Mid-migration</span>
+                <span class="subflag-name" data-lang="es">En migración</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">Destination is currently in PIM/Strapi or Core migration. COGS is unstable. Verdict is forced to MONITOR · Migrating until 4 consecutive weeks of stable post-migration COGS.</div>
+            <div class="subflag-desc" data-lang="es">Destino actualmente en migración PIM/Strapi o Core. El COGS es inestable. El veredicto se fuerza a MONITOR · Migrating hasta 4 semanas consecutivas de COGS post-migración estable.</div>
+        </div>
+
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">seasonality_residual_high</span>
+                <span class="subflag-name" data-lang="en">Inside an expected peak</span>
+                <span class="subflag-name" data-lang="es">Dentro de un peak esperado</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">Q1 Asia, Q3 Europe, Cherry Blossom, Easter, Black Friday. STL decomposition residual is more than 2σ above trend, but expected. Verdict considers the residual, not the raw value.</div>
+            <div class="subflag-desc" data-lang="es">Q1 Asia, Q3 Europa, Cherry Blossom, Easter, Black Friday. El residual de la descomposición STL está más de 2σ sobre la tendencia, pero esperado. El veredicto mira el residual, no el valor crudo.</div>
+        </div>
+
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">geopolitical_shock</span>
+                <span class="subflag-name" data-lang="en">Exogenous event</span>
+                <span class="subflag-name" data-lang="es">Evento exógeno</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">Conflict, travel restriction, border closure. Manual flag. Forces MONITOR for 8 weeks following the event, with peer group exclusion until volume stabilizes.</div>
+            <div class="subflag-desc" data-lang="es">Conflicto, restricción de viaje, cierre de frontera. Flag manual. Fuerza MONITOR por 8 semanas siguientes al evento, con exclusión del peer group hasta que se estabilice volumen.</div>
+        </div>
+
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">data_quality_issue</span>
+                <span class="subflag-name" data-lang="en">Source disagreement</span>
+                <span class="subflag-name" data-lang="es">Fuentes en desacuerdo</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">GA4 sessions and BigQuery orders disagree by more than a configurable threshold. CR-based rules are suppressed for that destination until investigated.</div>
+            <div class="subflag-desc" data-lang="es">Las sesiones de GA4 y las órdenes de BigQuery difieren más de un threshold configurable. Las reglas que dependen de CR se suprimen para ese destino hasta investigar.</div>
+        </div>
+
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">discount_mix_shifted</span>
+                <span class="subflag-name" data-lang="en">Promo composition changed</span>
+                <span class="subflag-name" data-lang="es">Composición de promo cambió</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">Penetration of any discount type — Hola Coins, referrals, affiliate codes, B2B, CX comp — shifted by more than 5 percentage points vs prior month. Effective-price calculations need a redo before the verdict is trusted.</div>
+            <div class="subflag-desc" data-lang="es">La penetración de cualquier tipo de descuento — Hola Coins, referidos, códigos de afiliado, B2B, comp de CX — se movió más de 5 puntos porcentuales vs mes anterior. Los cálculos de precio efectivo necesitan rehacerse antes de confiar en el veredicto.</div>
+        </div>
+
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">marketing_push_active</span>
+                <span class="subflag-name" data-lang="en">Paid push during the window</span>
+                <span class="subflag-name" data-lang="es">Push pago durante la ventana</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">A coordinated paid media push is active on the destination during the verdict window. Volume spikes are filtered out of TEST eligibility checks. Comes from Paid Media coordination, not from the data itself.</div>
+            <div class="subflag-desc" data-lang="es">Hay un push pago coordinado activo en el destino durante la ventana del veredicto. Los spikes de volumen se filtran de los checks de elegibilidad para TEST. Viene de la coordinación con Paid Media, no de la data en sí.</div>
+        </div>
+
+        <div class="subflag-card">
+            <div class="subflag-card-head">
+                <span class="subflag-tag">cohort_skew</span>
+                <span class="subflag-name" data-lang="en">Recurring vs new mix</span>
+                <span class="subflag-name" data-lang="es">Mix recurrente vs nuevo</span>
+            </div>
+            <div class="subflag-desc" data-lang="en">When the recurring share moves more than 10 percentage points vs the prior 90 days, the AON cost floor (the 1 GB free) shifts the destination's blended COGS without anything else changing. Verdict opens by cohort.</div>
+            <div class="subflag-desc" data-lang="es">Cuando el share recurrente se mueve más de 10 puntos porcentuales vs los 90 días anteriores, el floor de costo de AON (el 1 GB gratis) cambia el COGS blendeado del destino sin que nada más se mueva. El veredicto se abre por cohorte.</div>
+        </div>
+    </div>
+
+    <h3 style="font-size:18px; font-weight:800; color:var(--charcoal); letter-spacing:-0.018em; margin:48px 0 12px;" class="reveal">
+        <span data-lang="en">Discount taxonomy — five categories, not one</span>
+        <span data-lang="es">Taxonomía de descuento — cinco categorías, no una</span>
+    </h3>
+    <p class="body-text reveal">
+        <span data-lang="en">"Discount applied yes/no" is the wrong granularity. Each discount type has different economics and tells a different story about the destination. The matrix needs to see them as five separate streams.</span>
+        <span data-lang="es">"Descuento sí/no" es la granularidad incorrecta. Cada tipo de descuento tiene economía distinta y cuenta historia distinta sobre el destino. La matrix necesita verlos como cinco streams separados.</span>
+    </p>
+
+    <table class="alerts-table reveal">
+        <thead>
+            <tr>
+                <th data-lang="en" style="width:160px;">Code pattern</th>
+                <th data-lang="es" style="width:160px;">Patrón de código</th>
+                <th data-lang="en">What it really is</th>
+                <th data-lang="es">Qué es en realidad</th>
+                <th data-lang="en" style="width:280px;">Why it matters for the verdict</th>
+                <th data-lang="es" style="width:280px;">Por qué importa para el veredicto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="alert-name">ALY*</span> · Hola Coins</td>
+                <td data-lang="en">ARPU from recurring customers — loyalty redemption.</td>
+                <td data-lang="es">ARPU de clientes recurrentes — redención de loyalty.</td>
+                <td data-lang="en"><strong>Don't subtract from price.</strong> This is value returned to a customer who already paid us once. Affects effective price but not acquisition economics.</td>
+                <td data-lang="es"><strong>No restar del precio.</strong> Es valor devuelto a un cliente que ya pagó. Afecta precio efectivo pero no la economía de adquisición.</td>
+            </tr>
+            <tr>
+                <td><span class="alert-name">HFREF*</span> · Referrals</td>
+                <td data-lang="en">CAC in disguise — paying for a new customer.</td>
+                <td data-lang="es">CAC disfrazado — pagar por un cliente nuevo.</td>
+                <td data-lang="en"><strong>Treat as marketing cost,</strong> not as price discount. Destination doesn't have a margin problem; we paid to acquire. Filter out of pure pricing GM%.</td>
+                <td data-lang="es"><strong>Tratar como costo de marketing,</strong> no descuento de precio. El destino no tiene problema de margen; pagamos por adquirir. Filtrar del GM% puro de pricing.</td>
+            </tr>
+            <tr>
+                <td><span class="alert-name">Affiliate / Influencer</span></td>
+                <td data-lang="en">Channel commission, not customer discount.</td>
+                <td data-lang="es">Comisión de canal, no descuento al cliente.</td>
+                <td data-lang="en">Counts against channel margin, not destination margin. If the affiliate margin is too low, the answer is on the affiliate contract, not the price catalog.</td>
+                <td data-lang="es">Cuenta contra margen del canal, no del destino. Si el margen del afiliado es muy bajo, la solución es el contrato del afiliado, no el catálogo de precios.</td>
+            </tr>
+            <tr>
+                <td><span class="alert-name">B2B / Business</span></td>
+                <td data-lang="en">Different business model. Different elasticity.</td>
+                <td data-lang="es">Modelo de negocio distinto. Elasticidad distinta.</td>
+                <td data-lang="en">Should not be in this matrix. Goes to a separate B2B matrix. Detection is by code prefix or by product (Global B2B, Business Traveler).</td>
+                <td data-lang="es">No debería estar en esta matrix. Va a una matrix B2B aparte. Detección por prefijo o por producto (Global B2B, Business Traveler).</td>
+            </tr>
+            <tr>
+                <td><span class="alert-name">CX comp</span></td>
+                <td data-lang="en">Refund in disguise — quality compensation.</td>
+                <td data-lang="es">Refund disfrazado — compensación por calidad.</td>
+                <td data-lang="en">Quality guardrail, not pricing signal. If CX comp rate spikes, the underlying issue is service quality (carrier, support, app), not price. Track separately.</td>
+                <td data-lang="es">Guardrail de calidad, no señal de pricing. Si la tasa de comp CX sube, el problema de fondo es calidad de servicio (carrier, soporte, app), no precio. Trackear aparte.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="aside reveal" style="margin-top:32px;">
+        <strong data-lang="en">The Apple fee question, in a single line.</strong>
+        <strong data-lang="es">El tema del Apple fee, en una línea.</strong>
+        <span data-lang="en"> iOS = 44% of volume. Apple charges 30% on IAP at our revenue scale (Small Business Program does not apply over $1M). A 35% nominal margin is roughly 22% post-fee on iOS-heavy destinations. <strong>v1 of the matrix shows a "GM Post-Apple Estimated" column for awareness but does not apply it to the verdict.</strong> Pending confirmation with Finance whether this is already reflected in COGS today. If it isn't, we move it into the verdict in v1.1.</span>
+        <span data-lang="es"> iOS = 44% del volumen. Apple cobra 30% en IAP a nuestra escala de revenue (Small Business Program no aplica sobre $1M). Un margen nominal de 35% es aproximadamente 22% post-fee en destinos iOS-pesados. <strong>La v1 de la matrix muestra una columna "GM Post-Apple Estimado" para visibilidad pero no la aplica al veredicto.</strong> Pendiente confirmar con Finance si esto ya está reflejado en COGS hoy. Si no lo está, lo subimos al veredicto en v1.1.</span>
+    </div>
+</section>
+
+<!-- CHAPTER 5: ALERTS -->
+<section id="alerts">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">05</span><span data-lang="en">Operational alerts</span><span data-lang="es">Alertas operativas</span></div>
+        <span class="section-meta" data-lang="en">Six alerts, four priority tiers</span>
+        <span class="section-meta" data-lang="es">Seis alertas, cuatro tiers de prioridad</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">Not all alerts are equal. <span class="accent">P0 stops a meeting.</span> P3 goes in a weekly digest.</span>
+        <span data-lang="es">No todas las alertas son iguales. <span class="accent">P0 detiene una reunión.</span> P3 va al digest semanal.</span>
+    </h2>
+
+    <p class="body-text reveal">
+        <span data-lang="en">The current setup has six core alerts described in the SSoT, with four candidates listed for v2. They are all useful, but treated as a flat list they generate alert fatigue — Slack notifications that everyone learns to ignore. Below they are reorganized by priority tier with the rationale for each threshold.</span>
+        <span data-lang="es">El setup actual tiene seis alertas core descritas en el SSoT, con cuatro candidatas listadas para v2. Todas son útiles, pero tratadas como lista plana generan fatiga de alertas — notificaciones de Slack que todos aprenden a ignorar. Abajo están reorganizadas por tier de prioridad con el racional de cada threshold.</span>
+    </p>
+
+    <p class="body-text reveal">
+        <span data-lang="en">The priority comes from two questions. <strong>How fast does inaction destroy value?</strong> A negative-margin destination bleeds money every order — that is P0. A discount penetration shift is informational and can wait — that is P3. <strong>How reversible is the action?</strong> Pulling a destination out of the catalog is reversible; renegotiating with a carrier is a multi-month engagement. Reversibility brings urgency.</span>
+        <span data-lang="es">La prioridad sale de dos preguntas. <strong>¿Cuán rápido la inacción destruye valor?</strong> Un destino con margen negativo sangra cada orden — eso es P0. Un cambio de penetración de descuento es informativo y puede esperar — eso es P3. <strong>¿Cuán reversible es la acción?</strong> Sacar un destino del catálogo es reversible; renegociar con un carrier es un compromiso de meses. La reversibilidad trae urgencia.</span>
+    </p>
+
+    <table class="alerts-table reveal">
+        <thead>
+            <tr>
+                <th data-lang="en">Tier</th>
+                <th data-lang="es">Tier</th>
+                <th data-lang="en">Alert</th>
+                <th data-lang="es">Alerta</th>
+                <th data-lang="en">Trigger</th>
+                <th data-lang="es">Trigger</th>
+                <th data-lang="en">Why this threshold</th>
+                <th data-lang="es">Por qué este threshold</th>
+                <th data-lang="en">Action</th>
+                <th data-lang="es">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="priority-cell priority-p0">P0</td>
+                <td>
+                    <span class="alert-name" data-lang="en">Refund-adj GM% negative</span>
+                    <span class="alert-name" data-lang="es">GM% ajustado por refund negativo</span>
+                </td>
+                <td>
+                    <span data-lang="en">GM_adj &lt; 0% for 3 of 4 weeks, on a destination with ≥ 30 orders/30d</span>
+                    <span data-lang="es">GM_adj &lt; 0% durante 3 de 4 semanas, en un destino con ≥ 30 órdenes/30d</span>
+                </td>
+                <td>
+                    <span data-lang="en"><strong>3 of 4, not 4 of 4</strong> so a single noisy week doesn't reset the alert. Negative real margin is direct loss every order.</span>
+                    <span data-lang="es"><strong>3 de 4, no 4 de 4</strong> para que una semana ruidosa no resetee la alerta. Margen real negativo es pérdida directa cada orden.</span>
+                </td>
+                <td>
+                    <span data-lang="en">DM Xabi same day. Triage within 48h. Either price intervention or carrier escalation.</span>
+                    <span data-lang="es">DM Xabi el mismo día. Triage en 48h. Intervención de precio o escalado a carrier.</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="priority-cell priority-p0">P0</td>
+                <td>
+                    <span class="alert-name" data-lang="en">Cost-per-GB anomaly persists</span>
+                    <span class="alert-name" data-lang="es">Anomalía de costo por GB persistente</span>
+                </td>
+                <td>
+                    <span data-lang="en">cost_per_gb ≥ 2× peer median for 4 consecutive weeks</span>
+                    <span data-lang="es">cost_per_gb ≥ 2× mediana del peer group por 4 semanas consecutivas</span>
+                </td>
+                <td>
+                    <span data-lang="en"><strong>4 weeks consecutive</strong> because carrier costs are contractual; anything shorter is COGS imputation noise. The 2× median is the same threshold from REDESIGN logic — when this alert fires, the verdict is already REDESIGN.</span>
+                    <span data-lang="es"><strong>4 semanas consecutivas</strong> porque los costos de carrier son contractuales; algo más corto es ruido de imputación de COGS. El 2× mediana es el mismo threshold de la lógica REDESIGN — cuando esta alerta dispara, el veredicto ya es REDESIGN.</span>
+                </td>
+                <td>
+                    <span data-lang="en">Trigger Carriers conversation (Josy). No price change.</span>
+                    <span data-lang="es">Disparar conversación con Carriers (Josy). Sin cambio de precio.</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="priority-cell priority-p1">P1</td>
+                <td>
+                    <span class="alert-name" data-lang="en">Refund rate doubles</span>
+                    <span class="alert-name" data-lang="es">Refund rate se duplica</span>
+                </td>
+                <td>
+                    <span data-lang="en">refund_rate &gt; 2× rolling 90-day average for the (destination × variant)</span>
+                    <span data-lang="es">refund_rate &gt; 2× promedio rolling de 90 días para (destino × variante)</span>
+                </td>
+                <td>
+                    <span data-lang="en"><strong>2× the destination's own baseline,</strong> not a flat industry rate. A doubling is a sharp jump indicating a carrier release problem, network issue, or a sudden mismatch between expectation and delivery. Always investigate before pricing action.</span>
+                    <span data-lang="es"><strong>2× el baseline del propio destino,</strong> no una tasa industrial fija. Una duplicación es un salto agudo que indica problema en release de carrier, issue de red, o mismatch entre expectativa y entrega. Siempre investigar antes de tocar precio.</span>
+                </td>
+                <td>
+                    <span data-lang="en">Investigate root cause first; only then consider matrix verdict.</span>
+                    <span data-lang="es">Investigar causa raíz primero; recién después considerar veredicto.</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="priority-cell priority-p1">P1</td>
+                <td>
+                    <span class="alert-name" data-lang="en">Daily revenue drop on top-10</span>
+                    <span class="alert-name" data-lang="es">Caída de revenue diario en top-10</span>
+                </td>
+                <td>
+                    <span data-lang="en">daily_revenue &lt; 75% of trailing-quarter average for any top-10 destination by revenue</span>
+                    <span data-lang="es">daily_revenue &lt; 75% del promedio del trimestre rolling para cualquier top-10 destino por revenue</span>
+                </td>
+                <td>
+                    <span data-lang="en">A 25% drop on a top-10 destination is roughly two standard deviations below the seasonal-adjusted norm. The combination of <strong>top-10 + 25% drop</strong> rules out small-sample noise and forces an inspection. Most often a tracking issue or a carrier outage, not a pricing event.</span>
+                    <span data-lang="es">Una caída de 25% en un top-10 es aproximadamente dos desvíos por debajo de la norma ajustada por estacionalidad. La combinación <strong>top-10 + 25% drop</strong> elimina ruido de muestra chica y fuerza una inspección. La mayoría de las veces es problema de tracking o caída de carrier, no un evento de pricing.</span>
+                </td>
+                <td>
+                    <span data-lang="en">Diagnostic ping in #pricing within 24h. Cross-check carrier ops.</span>
+                    <span data-lang="es">Ping de diagnóstico en #pricing en 24h. Cross-check con carrier ops.</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="priority-cell priority-p2">P2</td>
+                <td>
+                    <span class="alert-name" data-lang="en">GM% under 30% floor on top-30</span>
+                    <span class="alert-name" data-lang="es">GM% bajo el floor de 30% en top-30</span>
+                </td>
+                <td>
+                    <span data-lang="en">GM_adj &lt; 30% for 7 consecutive days on any top-30 destination by revenue</span>
+                    <span data-lang="es">GM_adj &lt; 30% durante 7 días consecutivos en cualquier top-30 destino por revenue</span>
+                </td>
+                <td>
+                    <span data-lang="en">The 30% floor comes from Holafly's commercial committee target. <strong>7 consecutive days</strong> filters one-day blips. <strong>Top-30 only</strong> is a capacity choice — we cannot review every destination weekly, and if it is below top-30 it should already be MONITOR-watched.</span>
+                    <span data-lang="es">El floor de 30% viene del target de comité comercial de Holafly. <strong>7 días consecutivos</strong> filtra spikes de un día. <strong>Sólo top-30</strong> es elección de capacidad — no podemos revisar todo destino semanalmente, y si está debajo del top-30 ya debería estar bajo MONITOR.</span>
+                </td>
+                <td>
+                    <span data-lang="en">Weekly review queue. Triage within 7 days.</span>
+                    <span data-lang="es">Cola de revisión semanal. Triage en 7 días.</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="priority-cell priority-p3">P3</td>
+                <td>
+                    <span class="alert-name" data-lang="en">Discount penetration shift</span>
+                    <span class="alert-name" data-lang="es">Cambio de penetración de descuento</span>
+                </td>
+                <td>
+                    <span data-lang="en">share of orders with any specific discount type shifts &gt; 5pp vs prior month</span>
+                    <span data-lang="es">share de órdenes con un tipo específico de descuento se mueve &gt; 5pp vs mes anterior</span>
+                </td>
+                <td>
+                    <span data-lang="en"><strong>Per discount type,</strong> not aggregated. Hola Coins penetration moving 5pp tells a story about loyalty engagement; HFREF moving 5pp tells a story about referral campaigns; affiliate moving 5pp tells a story about channel push. Each is informational and can wait a week.</span>
+                    <span data-lang="es"><strong>Por tipo de descuento,</strong> no agregado. Hola Coins moviéndose 5pp cuenta una historia de engagement de loyalty; HFREF moviéndose 5pp cuenta una historia de campañas de referidos; afiliados moviéndose 5pp cuenta una historia de push de canal. Cada uno es informativo y puede esperar una semana.</span>
+                </td>
+                <td>
+                    <span data-lang="en">Weekly digest. Cross-reference with marketing calendar.</span>
+                    <span data-lang="es">Digest semanal. Cross-reference con calendario de marketing.</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="body-text reveal" style="margin-top:32px;">
+        <span data-lang="en">Two operational notes. <strong>Pricing owns the verdict.</strong> Data team is asked to expose the underlying inputs cleanly — granularity, freshness, sub-flags. The persistence rules, the shrinkage, and the priority tiering all run on Pricing's side over the daily data Looker exposes. <strong>The 60-80% reduction in alert volume</strong> the SSoT references comes from this priority structure plus persistence — a single FIX NOW alert at P0 replaces what would have been 4-6 alerts in the current setup (one per metric, one per week of oscillation).</span>
+        <span data-lang="es">Dos notas operativas. <strong>Pricing es dueño del veredicto.</strong> Le pedimos a Data que exponga los inputs subyacentes limpios — granularidad, frescura, sub-flags. Las reglas de persistencia, el shrinkage, y el tiering de prioridad corren del lado de Pricing sobre la data diaria que Looker expone. <strong>La reducción del 60-80% en volumen de alertas</strong> que cita el SSoT viene de esta estructura de prioridad más persistencia — una alerta FIX NOW única en P0 reemplaza lo que serían 4-6 alertas en el setup actual (una por métrica, una por semana de oscilación).</span>
+    </p>
+</section>
+
+<!-- CHAPTER 6: OLD VS NEW (dark section) -->
+<section id="compare" class="compare-section">
+    <div class="container">
+        <div class="section-marker reveal">
+            <div class="section-pill"><span class="num">06</span><span data-lang="en">v1 vs v2</span><span data-lang="es">v1 vs v2</span></div>
+            <span class="section-meta" data-lang="en">What stays from Nuno's work, what changes, why</span>
+            <span class="section-meta" data-lang="es">Qué queda del trabajo de Nuno, qué cambia, por qué</span>
+        </div>
+
+        <h2 class="section-headline reveal">
+            <span data-lang="en">Nuno built the <span class="underline">first version of this matrix.</span> v2 is not a replacement — it is what the next operator inherits.</span>
+            <span data-lang="es">Nuno construyó la <span class="underline">primera versión de esta matrix.</span> v2 no es un reemplazo — es lo que hereda el siguiente operador.</span>
+        </h2>
+
+        <p class="body-text reveal">
+            <span data-lang="en">Before this document gets read by anyone who wasn't on the original conversations, two things have to be said clearly. Nuno's v1 did the hardest work: it imposed a structure on a problem that didn't have one. The five buckets, the target margins by category, the explicit decision tree — all of that came from v1, and all of that stays.</span>
+            <span data-lang="es">Antes de que este documento lo lea alguien que no estuvo en las conversaciones originales, hay que decir dos cosas con claridad. La v1 de Nuno hizo el trabajo más difícil: imponer una estructura a un problema que no la tenía. Los cinco buckets, los target de margen por categoría, el árbol de decisión explícito — todo eso vino de la v1, y todo eso se mantiene.</span>
+        </p>
+
+        <p class="body-text reveal">
+            <span data-lang="en">What changes is what feeds into that structure. We have learned things since v1 was built — how the pricing experimentation framework treats confounders, what the SSoT investigation revealed about data quality and dimension coupling, what the published literature on alert design says about persistence and peer groups. The changes below absorb those learnings without throwing away the chassis.</span>
+            <span data-lang="es">Lo que cambia es lo que alimenta esa estructura. Aprendimos cosas desde que la v1 se construyó — cómo el framework de experimentación de pricing trata los confounders, qué reveló la investigación del SSoT sobre data quality y acople de dimensiones, qué dice la literatura publicada sobre diseño de alertas en cuanto a persistencia y peer groups. Los cambios abajo absorben esos aprendizajes sin tirar el chasis.</span>
+        </p>
+
+        <div class="aside reveal">
+            <strong data-lang="en">A reading guide for this table.</strong>
+            <strong data-lang="es">Una guía para leer esta tabla.</strong>
+            <span data-lang="en"> "KEEP" means we use Nuno's rule as it stands. "MODIFY" means same direction, refined number or scope. "REPLACE" means the underlying assumption changed and we replaced the rule. "ADD (NEW)" means v1 didn't address this — we are adding it now.</span>
+            <span data-lang="es"> "KEEP" significa que usamos la regla de Nuno como está. "MODIFY" significa misma dirección, número o alcance refinado. "REPLACE" significa que la suposición de fondo cambió y reemplazamos la regla. "ADD (NEW)" significa que la v1 no cubría esto — lo sumamos ahora.</span>
+        </div>
+
+        <div class="reveal" style="margin-top:48px;">
+            <div class="compare-row head">
+                <div data-lang="en">Rule / concept</div>
+                <div data-lang="es">Regla / concepto</div>
+                <div data-lang="en">Nuno's v1</div>
+                <div data-lang="es">v1 de Nuno</div>
+                <div data-lang="en">Decision</div>
+                <div data-lang="es">Decisión</div>
+                <div data-lang="en">v2 + reasoning</div>
+                <div data-lang="es">v2 + razonamiento</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Five verdict categories</div>
+                <div class="compare-rule" data-lang="es">Cinco categorías de veredicto</div>
+                <div class="compare-old" data-lang="en">REDESIGN / FIX NOW / TEST / DEFEND / MONITOR. Each tied to a specific action and owner.</div>
+                <div class="compare-old" data-lang="es">REDESIGN / FIX NOW / TEST / DEFEND / MONITOR. Cada uno atado a una acción y owner específicos.</div>
+                <div><span class="compare-decision keep">KEEP</span></div>
+                <div class="compare-new" data-lang="en">Same five buckets. The taxonomy is sound — three is too few to separate carrier renegotiation from price intervention; seven dilutes attention. <strong>v2 inherits exactly.</strong></div>
+                <div class="compare-new" data-lang="es">Mismos cinco buckets. La taxonomía es sólida — tres son pocos para separar renegociación de carrier de intervención de precio; siete diluyen atención. <strong>v2 hereda exactamente.</strong></div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Target GM% scale</div>
+                <div class="compare-rule" data-lang="es">Escala de target GM%</div>
+                <div class="compare-old" data-lang="en">Flagship 30-40%, High-cost 35-45%, Low-usage / short-stay 45-60%. Manual classification per destination.</div>
+                <div class="compare-old" data-lang="es">Flagship 30-40%, High-cost 35-45%, Low-usage / short-stay 45-60%. Clasificación manual por destino.</div>
+                <div><span class="compare-decision keep">KEEP (refined)</span></div>
+                <div class="compare-new" data-lang="en">Same scale. v2 maps targets explicitly to variant duration: <strong>1d=45%, 3-7d=40%, 15-90d=30%.</strong> Removes the manual classification step. Consistent with literature on short-stay needing higher margin to absorb refund risk.</div>
+                <div class="compare-new" data-lang="es">Misma escala. v2 mapea targets explícitamente a duración de variante: <strong>1d=45%, 3-7d=40%, 15-90d=30%.</strong> Saca el paso manual de clasificación. Consistente con la literatura sobre que short-stay necesita margen mayor para absorber riesgo de refund.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Cost-per-GB anomaly threshold</div>
+                <div class="compare-rule" data-lang="es">Threshold de anomalía de cost-per-GB</div>
+                <div class="compare-old" data-lang="en">Cost/GB &gt; 2× variant <em>average</em>.</div>
+                <div class="compare-old" data-lang="es">Cost/GB &gt; 2× <em>promedio</em> del variant.</div>
+                <div><span class="compare-decision modify">MODIFY</span></div>
+                <div class="compare-new" data-lang="en">Same direction, more robust. v2 uses 2× <strong>peer-group median</strong> (variant × region). Median is invariant to outliers — three expensive destinations stop inflating the bar for everyone else. Also adds the regional dimension, which prevents comparing Europe vs MEA on cost structure.</div>
+                <div class="compare-new" data-lang="es">Misma dirección, más robusto. v2 usa 2× <strong>mediana del peer group</strong> (variant × región). La mediana es invariante a outliers — tres destinos caros dejan de inflar la vara para el resto. También suma la dimensión regional, que evita comparar Europa vs MEA en estructura de costos.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Volume gate</div>
+                <div class="compare-rule" data-lang="es">Puerta de entrada por volumen</div>
+                <div class="compare-old" data-lang="en">Orders &lt; 10% of variant average → MONITOR.</div>
+                <div class="compare-old" data-lang="es">Orders &lt; 10% del promedio del variant → MONITOR.</div>
+                <div><span class="compare-decision replace">REPLACE</span></div>
+                <div class="compare-new" data-lang="en">Absolute floor of <strong>30 orders / 30 days,</strong> with <strong>shrinkage in the 30-100 band.</strong> Subjective relative thresholds (10% of an average) depend on the average being meaningful. Absolute volume + Bayesian shrinkage in the middle band is the published statistical pattern, removes the silent-failure mode of low-volume destinations.</div>
+                <div class="compare-new" data-lang="es">Floor absoluto de <strong>30 órdenes / 30 días,</strong> con <strong>shrinkage en la banda 30-100.</strong> Los thresholds relativos subjetivos (10% de un promedio) dependen de que el promedio sea relevante. Volumen absoluto + shrinkage bayesiano en la banda intermedia es el patrón estadístico publicado, elimina el modo de silent-failure de destinos de bajo volumen.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">FIX NOW trigger</div>
+                <div class="compare-rule" data-lang="es">Trigger de FIX NOW</div>
+                <div class="compare-old" data-lang="en">GM/Day &lt; 0 AND volume &gt; 10% of variant average.</div>
+                <div class="compare-old" data-lang="es">GM/Day &lt; 0 AND volumen &gt; 10% del promedio del variant.</div>
+                <div><span class="compare-decision replace">REPLACE</span></div>
+                <div class="compare-new" data-lang="en"><strong>Refund-adjusted GM% &lt; 0 (severe) OR 0% ≤ GM_adj &lt; 15% (danger zone)</strong> persisted 3 of last 4 weeks. v1 misses iOS-loaded destinations because Apple fee isn't applied. v1 also ignores refunds — a 1-day plan with 75% nominal GM and 25% refund looks healthy but bleeds. v2 uses realized economics.</div>
+                <div class="compare-new" data-lang="es"><strong>GM% ajustado por refund &lt; 0 (severe) O 0% ≤ GM_adj &lt; 15% (zona peligrosa)</strong> persistido 3 de las últimas 4 semanas. v1 se pierde destinos iOS-pesados porque no aplica el Apple fee. v1 también ignora refunds — un plan de 1d con 75% de GM nominal y 25% de refund parece sano pero sangra. v2 usa economía realizada.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">TEST trigger</div>
+                <div class="compare-rule" data-lang="es">Trigger de TEST</div>
+                <div class="compare-old" data-lang="en">GM% &lt; target AND CR &gt; avg AND <strong>orders &lt; avg</strong> (Excel formula).</div>
+                <div class="compare-old" data-lang="es">GM% &lt; target AND CR &gt; promedio AND <strong>orders &lt; promedio</strong> (fórmula Excel).</div>
+                <div><span class="compare-decision replace">REPLACE</span></div>
+                <div class="compare-new" data-lang="en"><strong>GM% &gt; target+5pp AND CR ≥ peer median AND orders ≥ 100 AND upside ≥ €100k.</strong> v1 fires on LOW volume — that is exactly backwards. Low volume means low statistical power and low absolute upside. v2 fires on high volume + healthy margin, where pricing experiments actually move the company. Adds capacity floor — we have ~55 experiments/year, can't waste them on small destinations.</div>
+                <div class="compare-new" data-lang="es"><strong>GM% &gt; target+5pp AND CR ≥ mediana peer AND orders ≥ 100 AND upside ≥ €100k.</strong> v1 dispara con volumen BAJO — eso es exactamente al revés. Bajo volumen significa bajo poder estadístico y bajo upside absoluto. v2 dispara con alto volumen + margen sano, donde los experimentos de pricing efectivamente mueven la compañía. Suma floor de capacidad — tenemos ~55 experimentos/año, no podemos gastarlos en destinos chicos.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">DEFEND trigger</div>
+                <div class="compare-rule" data-lang="es">Trigger de DEFEND</div>
+                <div class="compare-old" data-lang="en">GM% ≥ target AND GM/Day &gt; 0.</div>
+                <div class="compare-old" data-lang="es">GM% ≥ target AND GM/Day &gt; 0.</div>
+                <div><span class="compare-decision modify">MODIFY</span></div>
+                <div class="compare-new" data-lang="en">Adds <strong>CR ≥ peer median CR + 8 weeks consecutive</strong>. Without the CR check, v1 puts destinations with healthy margin but dead conversion in DEFEND — that is not defending, that is ignoring a demand problem. The persistence requirement forces "stable for two months" before the destination is declared safe.</div>
+                <div class="compare-new" data-lang="es">Suma <strong>CR ≥ mediana peer CR + 8 semanas consecutivas</strong>. Sin el check de CR, v1 mete destinos con margen sano pero conversión muerta en DEFEND — eso no es defender, es ignorar un problema de demanda. El requisito de persistencia fuerza "estable por dos meses" antes de declarar el destino seguro.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">MONITOR fallback</div>
+                <div class="compare-rule" data-lang="es">Fallback MONITOR</div>
+                <div class="compare-old" data-lang="en">Silent default. Anything that doesn't match other rules.</div>
+                <div class="compare-old" data-lang="es">Default silencioso. Lo que no matchea otras reglas.</div>
+                <div><span class="compare-decision modify">MODIFY</span></div>
+                <div class="compare-new" data-lang="en">Every MONITOR carries an explicit <strong>sub-flag</strong> explaining why: low_volume, migrating_carrier, seasonality_residual_high, geopolitical_shock, data_quality_issue, discount_mix_shifted, marketing_push_active, cohort_skew. MONITOR stops being lazy and becomes informative.</div>
+                <div class="compare-new" data-lang="es">Cada MONITOR lleva un <strong>sub-flag</strong> explícito explicando por qué: low_volume, migrating_carrier, seasonality_residual_high, geopolitical_shock, data_quality_issue, discount_mix_shifted, marketing_push_active, cohort_skew. MONITOR deja de ser perezoso y pasa a ser informativo.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Persistence rule</div>
+                <div class="compare-rule" data-lang="es">Regla de persistencia</div>
+                <div class="compare-old" data-lang="en">None — verdict is a snapshot per period.</div>
+                <div class="compare-old" data-lang="es">Ninguna — el veredicto es un snapshot por período.</div>
+                <div><span class="compare-decision add">ADD (NEW)</span></div>
+                <div class="compare-new" data-lang="en"><strong>Multi-week persistence with hysteresis.</strong> 4 consecutive weeks for REDESIGN. 3 of 4 for FIX NOW. 4 consecutive for TEST entry. 8 consecutive for DEFEND. Asymmetric exit (2 weeks below criteria) prevents oscillation. Standard SPC pattern, eliminates the documented "alert fatigue" anti-pattern.</div>
+                <div class="compare-new" data-lang="es"><strong>Persistencia multi-semana con hysteresis.</strong> 4 semanas consecutivas para REDESIGN. 3 de 4 para FIX NOW. 4 consecutivas para entrar a TEST. 8 consecutivas para DEFEND. Salida asimétrica (2 semanas bajo criterio) evita oscilación. Patrón SPC estándar, elimina el antipatrón documentado de "alert fatigue".</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Refund rate</div>
+                <div class="compare-rule" data-lang="es">Refund rate</div>
+                <div class="compare-old" data-lang="en">Tracked separately as a guardrail.</div>
+                <div class="compare-old" data-lang="es">Trackeado por separado como guardrail.</div>
+                <div><span class="compare-decision replace">REPLACE</span></div>
+                <div class="compare-new" data-lang="en"><strong>Refund-adjusted GM% IS the verdict input.</strong> Treating refunds as a separate guardrail let margin-bleeding destinations look healthy. Now refunds are baked into the metric the verdict uses (ARPAR pattern from hotel RM).</div>
+                <div class="compare-new" data-lang="es"><strong>El GM% ajustado por refund ES el input del veredicto.</strong> Tratar los refunds como guardrail separado dejaba a destinos sangrando aparecer sanos. Ahora los refunds están en la métrica que el veredicto usa (patrón ARPAR de revenue management hotelero).</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Platform breakout (App / Web)</div>
+                <div class="compare-rule" data-lang="es">Apertura por plataforma (App / Web)</div>
+                <div class="compare-old" data-lang="en">Not addressed.</div>
+                <div class="compare-old" data-lang="es">No abordado.</div>
+                <div><span class="compare-decision add">ADD (NEW)</span></div>
+                <div class="compare-new" data-lang="en">Verdict opens by platform. <strong>Effective price differs</strong> (Hola Coins redeem more in App). <strong>Apple fee applies only on iOS App.</strong> <strong>CR differs significantly.</strong> Destination-level decisions still happen — they aggregate from the granular base.</div>
+                <div class="compare-new" data-lang="es">El veredicto se abre por plataforma. <strong>El precio efectivo difiere</strong> (Hola Coins se canjean más en App). <strong>El Apple fee aplica sólo en App iOS.</strong> <strong>La CR difiere significativamente.</strong> Las decisiones a nivel destino siguen pasando — agregan desde la base granular.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Discount taxonomy</div>
+                <div class="compare-rule" data-lang="es">Taxonomía de descuento</div>
+                <div class="compare-old" data-lang="en">"Discount applied: yes/no".</div>
+                <div class="compare-old" data-lang="es">"Discount applied: sí/no".</div>
+                <div><span class="compare-decision add">ADD (NEW)</span></div>
+                <div class="compare-new" data-lang="en">Five categories: <strong>Hola Coins</strong> (recurring loyalty), <strong>HFREF referrals</strong> (CAC), <strong>affiliate / influencer</strong> (channel commission), <strong>B2B</strong> (separate matrix), <strong>CX comp</strong> (refund proxy). Each affects margin differently and tells a different story about the destination.</div>
+                <div class="compare-new" data-lang="es">Cinco categorías: <strong>Hola Coins</strong> (loyalty recurrente), <strong>HFREF referidos</strong> (CAC), <strong>afiliado / influencer</strong> (comisión de canal), <strong>B2B</strong> (matrix aparte), <strong>comp CX</strong> (proxy de refund). Cada uno afecta el margen distinto y cuenta historia distinta sobre el destino.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Apple App Store fee</div>
+                <div class="compare-rule" data-lang="es">Apple App Store fee</div>
+                <div class="compare-old" data-lang="en">Not addressed.</div>
+                <div class="compare-old" data-lang="es">No abordado.</div>
+                <div><span class="compare-decision watch">ADD AS WATCH</span></div>
+                <div class="compare-new" data-lang="en">Informative column only — pending Finance confirmation whether the 30% iOS fee is already in COGS today. iOS = 44% of volume; if the fee isn't in COGS, the matrix systematically under-fires on iOS-heavy destinations. Moves into the verdict in v1.1.</div>
+                <div class="compare-new" data-lang="es">Sólo columna informativa — pendiente confirmar con Finance si el fee del 30% iOS ya está en COGS hoy. iOS = 44% del volumen; si el fee no está en COGS, la matrix sub-dispara sistemáticamente en destinos iOS-pesados. Sube al veredicto en v1.1.</div>
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-rule" data-lang="en">Aggregation to destination level</div>
+                <div class="compare-rule" data-lang="es">Agregación a nivel destino</div>
+                <div class="compare-old" data-lang="en">Not present — only per-variant.</div>
+                <div class="compare-old" data-lang="es">No presente — sólo por variante.</div>
+                <div><span class="compare-decision add">ADD (NEW)</span></div>
+                <div class="compare-new" data-lang="en">Volume-weighted destination verdict + variant counts. Pricing decisions often happen at destination level (one-shot price update covers all variants). Need a destination view that says "majority of this destination's volume is in trouble" — separate from the variant detail.</div>
+                <div class="compare-new" data-lang="es">Veredicto por destino ponderado por volumen + counts de variantes. Las decisiones de pricing muchas veces pasan a nivel destino (una sola actualización cubre todas las variantes). Hace falta una vista de destino que diga "la mayoría del volumen de este destino está en problemas" — separada del detalle por variante.</div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CLOSING: how this works in 4 lines -->
+<section class="closing">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">07</span><span data-lang="en">How this works</span><span data-lang="es">Cómo funciona</span></div>
+        <span class="section-meta" data-lang="en">In four lines</span>
+        <span class="section-meta" data-lang="es">En cuatro líneas</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">If you remember <span class="underline">four things</span> from this document, let it be these.</span>
+        <span data-lang="es">Si te quedás con <span class="underline">cuatro cosas</span> de este documento, que sean estas.</span>
+    </h2>
+
+    <div class="closing-recap reveal">
+        <div class="recap-row">
+            <div class="recap-num">01</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>Verdicts run on persistence, not snapshots.</strong> A destination earns its label by holding it across weeks. One bad week doesn't flip a verdict. One good week doesn't earn DEFEND. The discipline is what kills the alert fatigue.</span>
+                <span data-lang="es"><strong>Los veredictos corren sobre persistencia, no snapshots.</strong> Un destino se gana su etiqueta sosteniéndola en el tiempo. Una semana mala no flipa un veredicto. Una semana buena no gana DEFEND. La disciplina es lo que mata la fatiga de alertas.</span>
+            </div>
+        </div>
+        <div class="recap-row">
+            <div class="recap-num">02</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>Thresholds are relative to peer groups, not absolute.</strong> A 30% margin floor applied to every destination ignores that 1-day plans need higher margin and MEA carriers cost more. Peer median per (variant duration × region) is the new reference.</span>
+                <span data-lang="es"><strong>Los thresholds son relativos al peer group, no absolutos.</strong> Un floor de 30% aplicado a todo destino ignora que los planes de 1 día necesitan más margen y que los carriers de MEA cuestan más. La mediana por (variante × región) es la nueva referencia.</span>
+            </div>
+        </div>
+        <div class="recap-row">
+            <div class="recap-num">03</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>The matrix opens by platform, by cohort, by discount type.</strong> Blended views hide composition. App and Web have different effective prices, iOS carries a 30% Apple fee, recurring customers absorb costs differently than new ones, and five discount types tell five different stories.</span>
+                <span data-lang="es"><strong>La matrix se abre por plataforma, por cohorte, por tipo de descuento.</strong> Las vistas blended esconden composición. App y Web tienen precios efectivos distintos, iOS lleva un fee de Apple del 30%, los recurrentes absorben costos distinto que los nuevos, y cinco tipos de descuento cuentan cinco historias distintas.</span>
+            </div>
+        </div>
+        <div class="recap-row">
+            <div class="recap-num">04</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>Pricing owns the verdict; Data owns the inputs.</strong> The thresholds, persistence rules, peer groups and tier assignments live on Pricing's side. Data team builds the granular daily layer, exposes the sub-flags, and answers a focused list of questions. The split is in the Data team request that ships with this document.</span>
+                <span data-lang="es"><strong>Pricing es dueño del veredicto; Data es dueño de los inputs.</strong> Los thresholds, reglas de persistencia, peer groups y asignación de tiers viven del lado de Pricing. El equipo de Data construye la capa granular diaria, expone los sub-flags, y responde una lista enfocada de preguntas. El split está en el data team request que viaja con este documento.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anexos -->
+    <h3 style="font-size:18px; font-weight:800; color:var(--charcoal); letter-spacing:-0.018em; margin:64px 0 12px;" class="reveal">
+        <span data-lang="en">Annexes</span>
+        <span data-lang="es">Anexos</span>
+    </h3>
+    <p class="body-text reveal">
+        <span data-lang="en">Three documents travel with this proposal: the Data team request (English and Spanish versions), and the prototype matrix as an Excel workbook with the verdict logic formulated and editable.</span>
+        <span data-lang="es">Tres documentos viajan con esta propuesta: el data team request (versiones en inglés y español), y la matrix prototipo como workbook de Excel con la lógica del veredicto formulada y editable.</span>
+    </p>
+
+    <div class="anexos-grid reveal">
+        <div class="anexo-card">
+            <div class="anexo-tag">ANNEX A · DATA TEAM</div>
+            <div class="anexo-title" data-lang="en">Data team request — English</div>
+            <div class="anexo-title" data-lang="es">Data team request — Inglés</div>
+            <div class="anexo-desc" data-lang="en">The structured ask to the Data team: granularity, freshness, sub-flags, discount taxonomy, filter views vs exclusions, GA4-driven measurement, platform breakout. Designed to be readable end-to-end without context.</div>
+            <div class="anexo-desc" data-lang="es">El pedido estructurado al equipo de Data: granularidad, frescura, sub-flags, taxonomía de descuento, filter views vs exclusiones, medición sobre GA4, apertura por plataforma. Diseñado para leerse end-to-end sin contexto.</div>
+        </div>
+
+        <div class="anexo-card">
+            <div class="anexo-tag">ANNEX B · DATA TEAM</div>
+            <div class="anexo-title" data-lang="en">Data team request — Spanish</div>
+            <div class="anexo-title" data-lang="es">Data team request — Español</div>
+            <div class="anexo-desc" data-lang="en">Same content as Annex A, in Spanish. Same structure, same tables, same examples — adjusted to the team's working language.</div>
+            <div class="anexo-desc" data-lang="es">Mismo contenido que el Anexo A, en castellano. Misma estructura, mismas tablas, mismos ejemplos — ajustado al idioma de trabajo del equipo.</div>
+        </div>
+
+        <div class="anexo-card" style="grid-column:1/-1;">
+            <div class="anexo-tag">ANNEX C · PROTOTYPE</div>
+            <div class="anexo-title" data-lang="en">Pricing Performance Matrix v2 — Prototype workbook</div>
+            <div class="anexo-title" data-lang="es">Pricing Performance Matrix v2 — Workbook prototipo</div>
+            <div class="anexo-desc" data-lang="en">Excel file with synthetic data illustrating the verdict logic in action. Five sheets: README, Matrix Detail (destination × variant × platform with all metrics formulated), Destination Aggregate (volume-weighted rollup), Verdict Logic (auditable per-rule columns), and Old vs New side-by-side. Anything that can be a formula is one — change an input, the verdict recomputes.</div>
+            <div class="anexo-desc" data-lang="es">Archivo Excel con datos sintéticos ilustrando la lógica del veredicto en acción. Cinco hojas: README, Matrix Detail (destino × variante × plataforma con todas las métricas formuladas), Destination Aggregate (rollup ponderado por volumen), Verdict Logic (columnas auditables por regla), y Old vs New en paralelo. Lo que se puede formular, está formulado — cambiás un input y el veredicto recalcula.</div>
+        </div>
+    </div>
+
+    <div class="closing-sig reveal">
+        — Guido <span class="pink">·</span> Pricing
+    </div>
+</section>
+
+<!-- JS -->
+<script>
+// Lang toggle
+const btnEn = document.getElementById('btn-en');
+const btnEs = document.getElementById('btn-es');
+btnEn.addEventListener('click', () => {
+    document.body.classList.remove('lang-es');
+    document.body.classList.add('lang-en');
+    btnEn.classList.add('active');
+    btnEs.classList.remove('active');
+});
+btnEs.addEventListener('click', () => {
+    document.body.classList.remove('lang-en');
+    document.body.classList.add('lang-es');
+    btnEs.classList.add('active');
+    btnEn.classList.remove('active');
+});
+
+// Header scroll
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// Reveal observer
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+document.querySelectorAll('.reveal, .stagger').forEach(el => revealObserver.observe(el));
+
+// Deep toggle
+const deepBtn1 = document.getElementById('deep-toggle-1');
+const deepContent1 = document.getElementById('deep-content-1');
+if (deepBtn1) {
+    deepBtn1.addEventListener('click', () => {
+        deepBtn1.classList.toggle('open');
+        deepContent1.classList.toggle('open');
+        if (deepContent1.classList.contains('open')) {
+            setTimeout(() => {
+                deepContent1.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+    });
+}
+
+// Confounder drawer
+const drawer = document.getElementById('confDrawer');
+const drawerGlyph = document.getElementById('drawerGlyph');
+const drawerName = document.getElementById('drawerName');
+const drawerWhat = document.getElementById('drawerWhat');
+const drawerHow = document.getElementById('drawerHow');
+
+const confDetail = {
+    seasonality: {
+        glyph: '✦', accent: '#E6485C',
+        nameEN: 'Cultural seasonality', nameES: 'Estacionalidad cultural',
+        whatEN: 'Cherry Blossom in Asia, Easter, Songkran, Golden Week, Ramadan, Black Friday, European summer. They move volume and product mix in destination-specific ways. Predictable because they recur every year.',
+        whatES: 'Cherry Blossom en Asia, Easter, Songkran, Golden Week, Ramadan, Black Friday, verano europeo. Mueven volumen y mix de producto de forma específica por destino. Predecibles porque se repiten cada año.',
+        howEN: 'The matrix runs <strong>STL decomposition</strong> on each (destination × variant × platform) series and feeds the residual — not the raw weekly metric — into the verdict logic. A residual that is more than 2σ above the trend during a known seasonal peak gets the <code>seasonality_residual_high</code> sub-flag and does not trigger TEST. Same protocol applied to the matrix as we apply pre-launch on experiments.',
+        howES: 'La matrix corre <strong>descomposición STL</strong> en cada serie (destino × variante × plataforma) y alimenta el residual — no la métrica cruda semanal — a la lógica del veredicto. Un residual más de 2σ sobre la tendencia durante un peak estacional conocido recibe el sub-flag <code>seasonality_residual_high</code> y no dispara TEST. Mismo protocolo aplicado a la matrix que aplicamos pre-launch en experimentos.'
+    },
+    marketing: {
+        glyph: '✳', accent: '#C13447',
+        nameEN: 'Marketing campaigns', nameES: 'Campañas de marketing',
+        whatEN: 'Paid Social budget shifts, promo blasts, influencer pushes targeting a specific destination. They move volume and channel mix without any pricing change. A destination that gets a paid push can look like a TEST candidate when really the volume is purchased.',
+        whatES: 'Shifts de budget en Paid Social, promo blasts, campañas de influencers en un destino específico. Mueven volumen y mix de canal sin cambio de pricing. Un destino que recibe push pago puede verse como candidato a TEST cuando en realidad el volumen está comprado.',
+        howEN: 'Paid Media exposes a calendar of active pushes per (destination × variant). When a destination is in an active push window, the <code>marketing_push_active</code> sub-flag is set and the volume-based TEST eligibility check is suppressed. The destination can still earn FIX NOW or DEFEND on margin and refund metrics, which paid pushes don\'t move.',
+        howES: 'Paid Media expone un calendario de pushes activos por (destino × variante). Cuando un destino está en ventana de push activa, se setea el sub-flag <code>marketing_push_active</code> y el check de elegibilidad de TEST basado en volumen se suprime. El destino puede igualmente ganar FIX NOW o DEFEND sobre métricas de margen y refund, que el push pago no mueve.'
+    },
+    competitor: {
+        glyph: '◊', accent: '#B45309',
+        nameEN: 'Competitor moves', nameES: 'Movimientos de competencia',
+        whatEN: 'Airalo, Saily, undercutting in entry packs, aggressive promos in our active destinations. Move conversion rate and demand without any movement on our side. A CR drop can be us; it can also be them.',
+        whatES: 'Airalo, Saily, undercutting en entry packs, promos agresivas en nuestros destinos activos. Mueven CR y demanda sin que nos movamos. Una caída de CR puede ser nuestra; también puede ser de ellos.',
+        howEN: 'Today this is a <strong>known debt</strong>: we monitor manually and add a <code>competitor_move</code> manual flag when one is detected. The roadmap is weekly automated competitor scraping with alerts. Until then, when CR drops sharply on a destination but margin and refund are stable, we hold the verdict and investigate competitor pricing before changing ours.',
+        howES: 'Hoy es <strong>deuda conocida</strong>: monitoreamos manual y agregamos el flag manual <code>competitor_move</code> cuando se detecta. El roadmap es scraping automático semanal con alertas. Hasta entonces, cuando la CR cae fuerte en un destino pero margen y refund están estables, sostenemos el veredicto e investigamos el pricing del competidor antes de tocar el nuestro.'
+    },
+    costs: {
+        glyph: '◯', accent: '#643560',
+        nameEN: 'Parallel cost changes', nameES: 'Cambios paralelos de costos',
+        whatEN: 'Core Migration, carrier rate renegotiations, FX on COGS due to non-EUR purchases from suppliers, new contracts. They move Gross Margin without our price doing anything. Easy to confuse with "the destination got healthier" when really the cost line dropped.',
+        whatES: 'Core Migration, renegociaciones de carrier, FX en COGS por compras a proveedores en moneda distinta al EUR, contratos nuevos. Mueven Gross Margin sin que el precio se mueva. Fácil de confundir con "el destino se sanó" cuando en realidad la línea de costo bajó.',
+        howEN: 'Carriers + Finance expose a <code>migrating_carrier</code> flag on destinations currently in migration. While the flag is on, the destination is suspended from peer group statistics (so it doesn\'t pull the median around) and forced to MONITOR. The verdict resumes after 4 consecutive weeks of stable post-migration COGS.',
+        howES: 'Carriers + Finance exponen un flag <code>migrating_carrier</code> sobre destinos actualmente en migración. Mientras el flag esté prendido, el destino se suspende de los stats del peer group (para que no arrastre la mediana) y se fuerza a MONITOR. El veredicto se reanuda tras 4 semanas consecutivas de COGS post-migración estable.'
+    },
+    holacoins: {
+        glyph: '▽', accent: '#E6485C',
+        nameEN: 'Hola Coins asymmetry', nameES: 'Asimetría Hola Coins',
+        whatEN: 'Hola Coins work in both channels but redemption is much higher in App because the redemption flow is friendlier in App checkout. Effective price (what the customer actually pays) varies between platforms even when the catalog price is identical.',
+        whatES: 'Las Hola Coins funcionan en ambos canales pero la redención es mucho mayor en App porque el flujo de canje es más friendly en el checkout de la App. El precio efectivo (lo que paga el cliente) varía entre plataformas aunque el precio de catálogo sea idéntico.',
+        howEN: 'The matrix opens by platform — App and Web are separate cells, not a blended row. Effective price (catalog minus Hola Coins minus other discounts) is computed per platform. A destination can be DEFEND on Web and FIX NOW on App. The aggregated destination view weighs both by volume but the granular base is what drives the action.',
+        howES: 'La matrix se abre por plataforma — App y Web son celdas separadas, no una fila blendeada. El precio efectivo (catálogo menos Hola Coins menos otros descuentos) se calcula por plataforma. Un destino puede ser DEFEND en Web y FIX NOW en App. La vista agregada por destino pondera ambos por volumen pero la base granular es la que dispara la acción.'
+    },
+    shopifyfx: {
+        glyph: '△', accent: '#15803D',
+        nameEN: 'Shopify FX', nameES: 'FX de Shopify',
+        whatEN: 'When a purchase is made in a currency other than EUR, Shopify applies its own exchange rate. It can differ from our internal fixed rate and introduces noise when a destination has multiple presentment currencies in its window.',
+        whatES: 'Cuando una compra se hace en moneda distinta al EUR, Shopify aplica su propio tipo de cambio. Puede diferir del fixed rate interno e introduce ruido cuando un destino tiene múltiples monedas de presentación en su ventana.',
+        howEN: 'The verdict runs on EUR-converted figures using the internal fixed rate, consistent with how the experimentation framework handles FX. The local-currency view is available for diagnostic purposes (and is what customers actually pay) but it is informative, not actionable. When a destination spans multiple presentment currencies, the verdict is computed once after EUR conversion.',
+        howES: 'El veredicto corre sobre cifras convertidas a EUR usando el fixed rate interno, consistente con cómo el framework de experimentación trata el FX. La vista en moneda local está disponible para diagnóstico (y es lo que efectivamente paga el cliente) pero es informativa, no accionable. Cuando un destino abarca múltiples monedas de presentación, el veredicto se calcula una vez después de la conversión a EUR.'
+    },
+    promomix: {
+        glyph: '⬡', accent: '#B45309',
+        nameEN: 'Promo mix shift', nameES: 'Cambio de mix de promos',
+        whatEN: 'Hola Coins, referral codes, affiliate promos, B2B contracts, CX comp. If the share of orders with any one of these shifts vs the prior month, the effective price moves without the catalog price moving. The five categories are not interchangeable — each tells a different story.',
+        whatES: 'Hola Coins, códigos de referidos, promos de afiliados, contratos B2B, comp de CX. Si el share de órdenes con cualquiera de éstos se mueve vs el mes anterior, el precio efectivo se mueve sin que el precio de catálogo se mueva. Las cinco categorías no son intercambiables — cada una cuenta historia distinta.',
+        howEN: 'The matrix tracks penetration of each discount type as a separate column. When any single category shifts more than 5pp vs prior month, the <code>discount_mix_shifted</code> sub-flag fires and the verdict is suppressed for that destination until the effective-price calculation is reviewed. Per-type tracking distinguishes "loyalty engagement is up" (Hola Coins) from "we ran a referral campaign" (HFREF) from "an affiliate is pushing harder" (affiliate codes).',
+        howES: 'La matrix trackea la penetración de cada tipo de descuento como columna separada. Cuando una sola categoría se mueve más de 5pp vs mes anterior, dispara el sub-flag <code>discount_mix_shifted</code> y el veredicto se suprime para ese destino hasta revisar el cálculo de precio efectivo. El tracking por tipo distingue "subió el engagement de loyalty" (Hola Coins) de "corrimos una campaña de referidos" (HFREF) de "un afiliado empuja más fuerte" (códigos de afiliado).'
+    },
+    geopol: {
+        glyph: '✕', accent: '#292B2E',
+        nameEN: 'Geopolitical shocks', nameES: 'Shocks geopolíticos',
+        whatEN: 'Regional conflicts, travel restrictions, border closures, sudden visa policy changes. Rare but high-impact: they can cut a destination volume overnight, breaking the trend and contaminating the metrics for weeks afterward. Trying to read a verdict on a war-affected destination is asking the wrong question.',
+        whatES: 'Conflictos regionales, restricciones de viaje, cierres de frontera, cambios súbitos de política de visa. Raros pero de alto impacto: pueden cortar volumen de un destino del día a la noche, rompiendo la tendencia y contaminando las métricas semanas después. Intentar leer un veredicto sobre un destino afectado por guerra es hacer la pregunta equivocada.',
+        howEN: 'Manual flag <code>geopolitical_shock</code> applied at the destination level. Forces MONITOR for at least 8 weeks following the event, with peer group exclusion until volume stabilizes (4 consecutive weeks within ±25% of pre-event baseline). Resuming the verdict requires explicit removal of the flag — it does not auto-clear. Same protocol as Gulf destinations EXP-010 today.',
+        howES: 'Flag manual <code>geopolitical_shock</code> aplicado a nivel destino. Fuerza MONITOR por al menos 8 semanas siguientes al evento, con exclusión del peer group hasta que se estabilice volumen (4 semanas consecutivas dentro de ±25% del baseline pre-evento). Reanudar el veredicto requiere remoción explícita del flag — no se auto-limpia. Mismo protocolo que destinos del Golfo EXP-010 hoy.'
+    }
+};
+
+let activeTile = null;
+document.querySelectorAll('.conf-tile').forEach(tile => {
+    tile.addEventListener('click', () => {
+        const key = tile.dataset.tile;
+        const detail = confDetail[key];
+        if (!detail) return;
+        if (activeTile === tile) {
+            drawer.classList.remove('open');
+            activeTile = null;
+            document.querySelectorAll('.conf-tile').forEach(t => t.style.borderColor = '');
+            return;
+        }
+        drawerGlyph.textContent = detail.glyph;
+        drawer.style.setProperty('--drawer-accent', detail.accent);
+        drawerName.innerHTML = '<span data-lang="en">' + detail.nameEN + '</span><span data-lang="es">' + detail.nameES + '</span>';
+        drawerWhat.innerHTML = '<span data-lang="en">' + detail.whatEN + '</span><span data-lang="es">' + detail.whatES + '</span>';
+        drawerHow.innerHTML = '<span data-lang="en">' + detail.howEN + '</span><span data-lang="es">' + detail.howES + '</span>';
+        drawer.classList.add('open');
+        document.querySelectorAll('.conf-tile').forEach(t => t.style.borderColor = '');
+        tile.style.borderColor = detail.accent;
+        activeTile = tile;
+        setTimeout(() => {
+            drawer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 200);
+    });
+});
+</script>
+
+</body>
+</html>
+
+<!-- CHAPTER 7: CLOSING / RECAP -->
+<section class="closing">
+    <div class="section-marker reveal" style="max-width:1100px; margin-left:auto; margin-right:auto;">
+        <div class="section-pill"><span class="num">07</span><span data-lang="en">Recap</span><span data-lang="es">Recap</span></div>
+        <span class="section-meta" data-lang="en">The whole thing in four lines</span>
+        <span class="section-meta" data-lang="es">Todo el documento en cuatro líneas</span>
+    </div>
+
+    <h2 class="section-headline reveal" style="max-width:1100px; margin:0 auto 16px;">
+        <span data-lang="en">How v2 works, <span class="underline">in four lines.</span></span>
+        <span data-lang="es">Cómo funciona la v2, <span class="underline">en cuatro líneas.</span></span>
+    </h2>
+
+    <div class="closing-recap reveal">
+        <div class="recap-row">
+            <div class="recap-num">01</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>Five buckets, each with a contract.</strong> REDESIGN, FIX NOW, TEST, DEFEND, MONITOR. Action, owner, annualized euro impact. The verdict is the start of the work, not the end of the analysis. Five buckets stay from Nuno's v1; what changes is what feeds into them.</span>
+                <span data-lang="es"><strong>Cinco buckets, cada uno con un contrato.</strong> REDESIGN, FIX NOW, TEST, DEFEND, MONITOR. Acción, owner, impacto en euros anualizado. El veredicto es el inicio del trabajo, no el final del análisis. Los cinco buckets se mantienen desde la v1 de Nuno; lo que cambia es lo que entra en ellos.</span>
+            </div>
+        </div>
+        <div class="recap-row">
+            <div class="recap-num">02</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>Robust statistics, not absolute thresholds.</strong> Peer-group medians replace portfolio averages. Refund-adjusted GM% replaces nominal margin. Iglewicz-Hoaglin's outlier cutoff backs the 2× rule. The numbers are calibrated, not invented.</span>
+                <span data-lang="es"><strong>Estadística robusta, no thresholds absolutos.</strong> Las medianas de peer group reemplazan promedios de portfolio. El GM% ajustado por refund reemplaza al margen nominal. El cutoff de Iglewicz-Hoaglin respalda la regla 2×. Los números están calibrados, no inventados.</span>
+            </div>
+        </div>
+        <div class="recap-row">
+            <div class="recap-num">03</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>Persistence, not snapshots.</strong> A destination doesn't change verdict because of one noisy week. 4 consecutive weeks for REDESIGN. 3 of 4 for FIX NOW. 8 consecutive for DEFEND. Asymmetric exit prevents oscillation. Most of the 60-80% reduction in alert volume comes from this.</span>
+                <span data-lang="es"><strong>Persistencia, no snapshots.</strong> Un destino no cambia veredicto por una semana ruidosa. 4 semanas consecutivas para REDESIGN. 3 de 4 para FIX NOW. 8 consecutivas para DEFEND. Salida asimétrica evita oscilación. La mayor parte del 60-80% de reducción de alertas viene de acá.</span>
+            </div>
+        </div>
+        <div class="recap-row">
+            <div class="recap-num">04</div>
+            <div class="recap-text">
+                <span data-lang="en"><strong>Granularity that matches the decision.</strong> Destination × variant × platform. Five discount types separated. Sub-flags on every MONITOR. Filter views, not exclusions. The matrix shows what is actually happening at the level where the action is taken.</span>
+                <span data-lang="es"><strong>Granularidad que matchea la decisión.</strong> Destino × variante × plataforma. Cinco tipos de descuento separados. Sub-flags en cada MONITOR. Vistas filtradas, no exclusiones. La matrix muestra lo que está pasando al nivel en que se toma la acción.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="closing-sig reveal">
+        — Guido <span class="pink">·</span> Pricing
+    </div>
+</section>
+
+<!-- ANEXOS -->
+<section id="anexos" style="padding-top:0;">
+    <div class="section-marker reveal">
+        <div class="section-pill"><span class="num">A</span><span data-lang="en">Annexes</span><span data-lang="es">Anexos</span></div>
+        <span class="section-meta" data-lang="en">For Data team and operators</span>
+        <span class="section-meta" data-lang="es">Para Data team y operadores</span>
+    </div>
+
+    <h2 class="section-headline reveal">
+        <span data-lang="en">The two operational documents that <span class="accent">implement this proposal.</span></span>
+        <span data-lang="es">Los dos documentos operativos que <span class="accent">implementan esta propuesta.</span></span>
+    </h2>
+
+    <p class="body-text reveal">
+        <span data-lang="en">This presentation is the rationale. Implementation lives in two artifacts: a request to Data team for the input layer (granularity, freshness, sub-flags), and an Excel prototype showing the verdict logic running on real-shaped synthetic data.</span>
+        <span data-lang="es">Esta presentación es el racional. La implementación vive en dos artefactos: un pedido a Data team por la capa de inputs (granularidad, frescura, sub-flags), y un prototipo en Excel mostrando la lógica del veredicto corriendo sobre data sintética con la forma real.</span>
+    </p>
+
+    <div class="anexos-grid stagger reveal">
+        <div class="anexo-card">
+            <div class="anexo-tag" data-lang="en">Annex A · Data team request</div>
+            <div class="anexo-tag" data-lang="es">Anexo A · Pedido a Data team</div>
+            <div class="anexo-title" data-lang="en">Input layer specification (EN / ES)</div>
+            <div class="anexo-title" data-lang="es">Spec de la capa de inputs (EN / ES)</div>
+            <div class="anexo-desc" data-lang="en">Granularity, refresh cadence, filter views (not exclusions), sub-flag list, GA4 timeline, COGS source, platform breakout, discount taxonomy. <strong>Bilingual deliverable</strong> — same content in English for Data team's working language and in Spanish for internal alignment.</div>
+            <div class="anexo-desc" data-lang="es">Granularidad, cadencia de refresh, vistas filtradas (no exclusiones), lista de sub-flags, timeline de GA4, fuente de COGS, apertura por plataforma, taxonomía de descuento. <strong>Entregable bilingüe</strong> — mismo contenido en inglés para el lenguaje de trabajo del equipo de Data y en español para alineación interna.</div>
+        </div>
+        <div class="anexo-card">
+            <div class="anexo-tag" data-lang="en">Annex B · Excel prototype</div>
+            <div class="anexo-tag" data-lang="es">Anexo B · Prototipo Excel</div>
+            <div class="anexo-title" data-lang="en">Verdict logic on synthetic data</div>
+            <div class="anexo-title" data-lang="es">Lógica del veredicto sobre data sintética</div>
+            <div class="anexo-desc" data-lang="en">5 sheets — README, Matrix Detail (formulated), Destination Aggregate (volume-weighted, formulated), Verdict Logic (auditable IFS structure), Old vs New summary. <strong>All metrics and verdict columns are formulas,</strong> not hardcoded. Change an input, watch the verdict recalculate.</div>
+            <div class="anexo-desc" data-lang="es">5 hojas — README, Matrix Detail (formulada), Destination Aggregate (ponderada por volumen, formulada), Verdict Logic (estructura IFS auditable), Old vs New summary. <strong>Todas las métricas y columnas de veredicto son fórmulas,</strong> no valores hardcodeados. Cambiás un input y el veredicto recalcula.</div>
+        </div>
+    </div>
+</section>
+
+<!-- JS -->
+<script>
+// Lang toggle
+const btnEn = document.getElementById('btn-en');
+const btnEs = document.getElementById('btn-es');
+btnEn.addEventListener('click', () => {
+    document.body.classList.remove('lang-es');
+    document.body.classList.add('lang-en');
+    btnEn.classList.add('active');
+    btnEs.classList.remove('active');
+});
+btnEs.addEventListener('click', () => {
+    document.body.classList.remove('lang-en');
+    document.body.classList.add('lang-es');
+    btnEs.classList.add('active');
+    btnEn.classList.remove('active');
+});
+
+// Header scroll
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// Reveal observer
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+document.querySelectorAll('.reveal, .stagger').forEach(el => revealObserver.observe(el));
+
+// Deep toggle
+const deepBtn = document.getElementById('deep-toggle-1');
+const deepContent = document.getElementById('deep-content-1');
+if (deepBtn) {
+    deepBtn.addEventListener('click', () => {
+        deepBtn.classList.toggle('open');
+        deepContent.classList.toggle('open');
+        if (deepContent.classList.contains('open')) {
+            setTimeout(() => {
+                deepContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+    });
+}
+
+// Confounder drawer
+const drawer = document.getElementById('confDrawer');
+const drawerGlyph = document.getElementById('drawerGlyph');
+const drawerName = document.getElementById('drawerName');
+const drawerWhat = document.getElementById('drawerWhat');
+const drawerHow = document.getElementById('drawerHow');
+
+const confDetail = {
+    seasonality: {
+        glyph: '✦', accent: '#E6485C',
+        nameEN: 'Cultural seasonality', nameES: 'Estacionalidad cultural',
+        whatEN: 'Cherry Blossom in Asia, Easter, Songkran, Golden Week, Ramadan, Black Friday, European summer. They move volume and product mix in destination-specific ways. Predictable because they recur every year, but they make raw weekly metrics unreliable for verdict purposes.',
+        whatES: 'Cherry Blossom en Asia, Easter, Songkran, Golden Week, Ramadan, Black Friday, verano europeo. Mueven volumen y mix de producto de forma específica por destino. Predecibles porque se repiten año tras año, pero hacen que las métricas semanales crudas no sean confiables para veredicto.',
+        howEN: 'STL decomposition of weekly metrics into trend + seasonal + residual. The verdict runs on the residual component, not the raw value. A spike that matches the seasonal pattern doesn\'t move the verdict. A spike that doesn\'t match does. Sub-flag <strong>seasonality_residual_high</strong> is set when the residual is more than 2σ above trend during a known seasonal peak.',
+        howES: 'Descomposición STL de métricas semanales en tendencia + estacional + residual. El veredicto corre sobre el componente residual, no el valor crudo. Un spike que matchea el patrón estacional no mueve el veredicto. Un spike que no matchea sí. El sub-flag <strong>seasonality_residual_high</strong> se setea cuando el residual está más de 2σ sobre la tendencia durante un peak estacional conocido.'
+    },
+    marketing: {
+        glyph: '✳', accent: '#C13447',
+        nameEN: 'Marketing campaigns', nameES: 'Campañas de marketing',
+        whatEN: 'Paid Social budget shifts, promo blasts, influencer pushes targeting a specific destination. They move volume and channel mix without any pricing change. A destination can look like a TEST candidate during a paid push because volume is up — but the volume is bought, not earned.',
+        whatES: 'Shifts de budget en Paid Social, promo blasts, campañas de influencers targeting un destino específico. Mueven volumen y mix de canal sin cambio de pricing. Un destino puede parecer candidato a TEST durante un push pago porque el volumen sube — pero el volumen está comprado, no ganado.',
+        howEN: 'Sub-flag <strong>marketing_push_active</strong> set by Paid Media calendar feed (cross-team coordination). When active, volume spikes are filtered out of TEST eligibility checks. The destination can still enter REDESIGN or FIX NOW based on margin — those are independent of acquisition push.',
+        howES: 'Sub-flag <strong>marketing_push_active</strong> seteado desde el calendario de Paid Media (coordinación cross-team). Cuando está activo, los spikes de volumen se filtran de los checks de elegibilidad para TEST. El destino igual puede entrar a REDESIGN o FIX NOW por margen — eso es independiente del push de adquisición.'
+    },
+    competitor: {
+        glyph: '◊', accent: '#B45309',
+        nameEN: 'Competitor moves', nameES: 'Movimientos de competencia',
+        whatEN: 'Airalo, Saily, entry-pack undercutting, aggressive promos in our active destinations. They move conversion rate and demand without anything changing on our side. A destination dropping out of DEFEND can be us getting worse, or it can be a competitor getting more aggressive.',
+        whatES: 'Airalo, Saily, undercutting en entry packs, promos agresivas en nuestros destinos activos. Mueven CR y demanda sin que nada cambie del lado nuestro. Un destino saliendo de DEFEND puede ser que estemos peor, o puede ser que un competidor se ponga más agresivo.',
+        howEN: 'Today: manual flag, populated reactively when we notice a move. Roadmap: weekly automated competitor scrape with delta alerts. Until automated, the matrix uses CR drop combined with industry signals (Skyscanner trends, app store rankings) as a proxy. <strong>Known debt.</strong>',
+        howES: 'Hoy: flag manual, poblado reactivamente cuando notamos un movimiento. Roadmap: scraping automático semanal de competidores con alertas de delta. Hasta tener automatización, la matrix usa la caída de CR combinada con señales industriales (trends de Skyscanner, rankings de app store) como proxy. <strong>Deuda conocida.</strong>'
+    },
+    costs: {
+        glyph: '◯', accent: '#643560',
+        nameEN: 'Parallel cost changes', nameES: 'Cambios paralelos de costos',
+        whatEN: 'PIM/Strapi or Core migrations, carrier rate changes, FX on COGS due to non-EUR carrier purchases, new contracts. They move Gross Margin without our price having anything to do with it. Easy to confuse with "the experiment improved margin" or "this destination got worse".',
+        whatES: 'Migraciones PIM/Strapi o Core, cambios de rate de carrier, FX en COGS por compras a carriers no-EUR, contratos nuevos. Mueven Gross Margin sin que nuestro precio tenga que ver. Fácil de confundir con "el experimento mejoró el margen" o "este destino empeoró".',
+        howEN: 'Sub-flag <strong>migrating_carrier</strong> populated by Carriers team. While active, the destination is suspended from peer-group statistics (so it doesn\'t pollute the median) and the verdict is forced to MONITOR · Migrating. Released only after 4 consecutive weeks of stable post-migration COGS.',
+        howES: 'Sub-flag <strong>migrating_carrier</strong> poblado por el equipo de Carriers. Mientras esté activo, el destino se suspende de los stats del peer group (para no contaminar la mediana) y el veredicto se fuerza a MONITOR · Migrating. Se libera sólo tras 4 semanas consecutivas de COGS post-migración estable.'
+    },
+    holacoins: {
+        glyph: '▽', accent: '#E6485C',
+        nameEN: 'Hola Coins asymmetry', nameES: 'Asimetría Hola Coins',
+        whatEN: 'Hola Coins work in both channels, but redemption is much higher in App because the redemption flow is friendlier in App checkout. Effective price (what the customer actually pays) varies between channels even when the catalog price is identical. A blended view averages two different realities.',
+        whatES: 'Las Hola Coins funcionan en ambos canales, pero la redención es mucho más alta en App porque el flujo de canje es más friendly en el checkout de App. El precio efectivo (lo que paga el cliente) varía entre canales aunque el precio de catálogo sea idéntico. Una vista blendeada promedia dos realidades distintas.',
+        howEN: 'Verdict opens by <strong>platform (App / Web)</strong>. Effective price (catalog − Hola Coins redeemed) is computed per platform, not blended. Granular base is destination × variant × platform. Destination-level view is volume-weighted from the granular base.',
+        howES: 'El veredicto se abre por <strong>plataforma (App / Web)</strong>. El precio efectivo (catálogo − Hola Coins redimidas) se calcula por plataforma, no blendeado. La base granular es destino × variante × plataforma. La vista a nivel destino se pondera por volumen desde la base granular.'
+    },
+    shopifyfx: {
+        glyph: '△', accent: '#15803D',
+        nameEN: 'Shopify FX', nameES: 'FX de Shopify',
+        whatEN: 'When a purchase is made in a currency other than EUR, Shopify applies its own exchange rate. It can differ from our internal fixed rate and introduces noise when comparing destinations on margin or when comparing month-to-month within a destination that takes multiple currencies.',
+        whatES: 'Cuando una compra se hace en moneda distinta a EUR, Shopify aplica su propio tipo de cambio. Puede diferir del fixed rate interno e introduce ruido al comparar destinos por margen o al comparar mes a mes en un destino que toma múltiples monedas.',
+        howEN: 'The verdict runs on EUR only, using a single fixed rate consistently. The local-currency view is preserved for diagnostic purposes (was the price absorbed or rejected in the customer\'s currency?) but is not actionable on the verdict side. Sub-flag <strong>fx_drift</strong> if internal rate diverges from market rate by more than 3pp.',
+        howES: 'El veredicto corre solo en EUR, usando un fixed rate único de forma consistente. La vista en moneda local se preserva para diagnóstico (¿el precio se absorbió o se rechazó en la moneda del cliente?) pero no es accionable del lado del veredicto. Sub-flag <strong>fx_drift</strong> si el rate interno diverge del rate de mercado más de 3pp.'
+    },
+    promomix: {
+        glyph: '⬡', accent: '#B45309',
+        nameEN: 'Promo mix shift', nameES: 'Cambio de mix de promos',
+        whatEN: 'Hola Coins, HFREF referrals, affiliate codes, B2B prefix codes, CX compensation. If the percentage of orders with any specific discount type shifts vs the prior period, the destination\'s effective economics change without the catalog price moving. Treating "discount yes/no" as one bit hides this entirely.',
+        whatES: 'Hola Coins, referidos HFREF, códigos de afiliado, códigos prefijo B2B, comp de CX. Si el porcentaje de órdenes con un tipo de descuento específico cambia vs el período anterior, la economía efectiva del destino cambia sin que el precio de catálogo se mueva. Tratar "descuento sí/no" como un bit lo esconde por completo.',
+        howEN: 'Five separate columns in the data: hola_coins_share, hfref_share, affiliate_share, b2b_share, cx_comp_share. Each tracked monthly with a 5pp shift threshold. Sub-flag <strong>discount_mix_shifted</strong> on the specific category that moved, not aggregated. Effective price is recomputed per category before the verdict runs.',
+        howES: 'Cinco columnas separadas en la data: hola_coins_share, hfref_share, affiliate_share, b2b_share, cx_comp_share. Cada una trackeada mensualmente con un threshold de 5pp. Sub-flag <strong>discount_mix_shifted</strong> sobre la categoría específica que se movió, no agregado. El precio efectivo se recalcula por categoría antes de correr el veredicto.'
+    },
+    geopol: {
+        glyph: '✕', accent: '#292B2E',
+        nameEN: 'Geopolitical shocks', nameES: 'Shocks geopolíticos',
+        whatEN: 'Regional conflicts, travel restrictions, border closures. Rare but high-impact: they can cut a destination\'s volume overnight, breaking parallel trends and contaminating peer-group statistics. Recent example: Gulf travel volumes that have not yet recovered to pre-conflict levels.',
+        whatES: 'Conflictos regionales, restricciones de viaje, cierres de frontera. Raros pero de alto impacto: pueden cortar el volumen de un destino del día a la noche, rompiendo parallel trends y contaminando los stats del peer group. Ejemplo reciente: los volúmenes de viaje al Golfo que aún no recuperaron niveles pre-conflicto.',
+        howEN: 'Sub-flag <strong>geopolitical_shock</strong> set manually with date range. Forces MONITOR for 8 weeks following the event. Affected destinations are excluded from peer-group statistics until volume returns to ≥80% of pre-event level for 4 consecutive weeks. The exclusion prevents one dropping destination from dragging the median for everyone in the region.',
+        howES: 'Sub-flag <strong>geopolitical_shock</strong> seteado manualmente con rango de fechas. Fuerza MONITOR por 8 semanas tras el evento. Los destinos afectados se excluyen de los stats del peer group hasta que el volumen vuelva a ≥80% del nivel pre-evento durante 4 semanas consecutivas. La exclusión evita que un destino que se cae arrastre la mediana para todos los de la región.'
+    }
+};
+
+let activeTile = null;
+document.querySelectorAll('.conf-tile').forEach(tile => {
+    tile.addEventListener('click', () => {
+        const key = tile.dataset.tile;
+        const detail = confDetail[key];
+        if (!detail) return;
+
+        if (activeTile === tile) {
+            drawer.classList.remove('open');
+            activeTile = null;
+            document.querySelectorAll('.conf-tile').forEach(t => t.style.borderColor = '');
+            return;
+        }
+
+        drawerGlyph.textContent = detail.glyph;
+        drawer.style.setProperty('--drawer-accent', detail.accent);
+        drawerName.innerHTML = '<span data-lang="en">' + detail.nameEN + '</span><span data-lang="es">' + detail.nameES + '</span>';
+        drawerWhat.innerHTML = '<span data-lang="en">' + detail.whatEN + '</span><span data-lang="es">' + detail.whatES + '</span>';
+        drawerHow.innerHTML = '<span data-lang="en">' + detail.howEN + '</span><span data-lang="es">' + detail.howES + '</span>';
+        drawer.classList.add('open');
+
+        document.querySelectorAll('.conf-tile').forEach(t => t.style.borderColor = '');
+        tile.style.borderColor = detail.accent;
+        activeTile = tile;
+
+        setTimeout(() => {
+            drawer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 350);
+    });
+});
+
+// Smooth scroll on nav
+document.querySelectorAll('.header-nav a').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

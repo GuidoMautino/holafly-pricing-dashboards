@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Monotonicidad PPD · Lógica para implementar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --pink: #E6485C;
+    --warning: #B45309;
+    --warning-soft: rgba(180, 83, 9, 0.08);
+    --green-deep: #15803D;
+    --green-soft: rgba(21, 128, 61, 0.08);
+    --blue-deep: #1F4E78;
+    --blue-soft: rgba(31, 78, 120, 0.08);
+    --charcoal: #292B2E;
+    --charcoal-soft: #4A4D52;
+    --gray-mid: #64748B;
+    --gray-pale: #CCD0D7;
+    --paper: #FAFAFB;
+    --white: #FFFFFF;
+    --rule: rgba(41, 43, 46, 0.10);
+    --pastel-yellow: #FFF0AB;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Mulish', sans-serif; background: var(--paper); color: var(--charcoal); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 50px 36px 70px; }
+.title-block { border-bottom: 1px solid var(--rule); padding-bottom: 20px; margin-bottom: 32px; }
+.title-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; }
+h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 10px; }
+.subtitle { font-size: 15px; color: var(--charcoal-soft); }
+.meta { display: flex; gap: 20px; margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: var(--gray-mid); text-transform: uppercase; }
+.meta span strong { color: var(--charcoal); font-weight: 700; }
+h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin: 36px 0 14px 0; display: flex; align-items: center; gap: 10px; }
+h2::before { content: ''; display: inline-block; width: 4px; height: 22px; background: var(--pink); border-radius: 2px; }
+p { font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+p strong { font-weight: 700; }
+p em { font-style: normal; color: var(--pink); font-weight: 700; }
+.formula { background: var(--charcoal); color: var(--white); padding: 14px 18px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px; margin: 12px 0; line-height: 1.7; }
+.formula .key { color: var(--pastel-yellow); }
+.code-block { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; margin: 12px 0; line-height: 1.75; color: var(--charcoal-soft); overflow-x: auto; }
+.code-block .kw { color: var(--blue-deep); font-weight: 700; }
+.code-block .cm { color: var(--gray-mid); }
+.qa-card { background: var(--blue-soft); border-left: 4px solid var(--blue-deep); border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
+.qa-q { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue-deep); margin-bottom: 6px; }
+.qa-question { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.qa-answer { font-size: 15px; line-height: 1.6; }
+.note-card { background: var(--warning-soft); border-left: 4px solid var(--warning); border-radius: 8px; padding: 14px 18px; margin: 16px 0; }
+.note-card .label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--warning); margin-bottom: 6px; }
+.note-card p { font-size: 14.5px; margin-bottom: 8px; }
+.note-card p:last-child { margin-bottom: 0; }
+.callout { background: var(--green-soft); border-left: 4px solid var(--green-deep); border-radius: 8px; padding: 14px 18px; margin: 16px 0; }
+.callout p { font-size: 14.5px; margin-bottom: 0; }
+ul.tight { list-style: none; padding: 0; margin: 8px 0; }
+ul.tight li { font-size: 14.5px; line-height: 1.55; padding: 5px 0 5px 18px; position: relative; }
+ul.tight li::before { content: ''; position: absolute; left: 4px; top: 13px; width: 5px; height: 5px; background: var(--pink); border-radius: 50%; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: var(--paper); padding: 2px 6px; border-radius: 3px; }
+
+.example-box { background: var(--white); border: 1px solid var(--rule); border-radius: 10px; padding: 18px 22px; margin: 16px 0; }
+.example-box .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; }
+.example-box table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0; }
+.example-box th { background: var(--charcoal); color: var(--white); padding: 8px 12px; text-align: center; font-weight: 700; font-size: 12px; }
+.example-box td { padding: 7px 12px; border-bottom: 1px solid var(--rule); text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+.example-box td.bad { color: var(--pink); font-weight: 700; }
+.example-box td.fix { color: var(--green-deep); font-weight: 700; }
+.example-box td.left { text-align: left; font-family: 'Mulish', sans-serif; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="title-block">
+    <div class="title-eyebrow">Documento técnico para Marx</div>
+    <h1>Monotonicidad PPD: lógica de validación post-charming</h1>
+    <div class="subtitle">Después de aplicar la charm rule, hay que validar que el precio por día (PPD) sea siempre menor o igual al del día anterior. Este documento describe la lógica a implementar como servicio encadenado al charming.</div>
+    <div class="meta">
+        <span><strong>De</strong> Guido</span>
+        <span><strong>Para</strong> Marx</span>
+        <span><strong>Mayo 2026</strong></span>
+    </div>
+</div>
+
+<h2>El problema (con ejemplos del catálogo real)</h2>
+
+<p>El modelo en EUR está diseñado para que el PPD sea decreciente día a día. Al aplicar FX × charm rule, la granularidad del redondeo introduce artefactos. Resultado: en algunos pares de días consecutivos el PPD <em>sube</em> en lugar de bajar.</p>
+
+<div class="example-box">
+    <div class="tag">Ejemplo 1 · Spain USD (regla .90/.50)</div>
+    <p style="font-size: 14px; margin-bottom: 10px;">El cliente ve que comprar 12 días <strong>cuesta más por día</strong> que comprar 11 días:</p>
+    <table>
+        <tr><th>Día</th><th>Precio total</th><th>PPD (precio/días)</th><th>Estado</th></tr>
+        <tr><td>d11</td><td>$39.90</td><td>$3.6273</td><td>—</td></tr>
+        <tr><td>d12</td><td>$43.90</td><td class="bad">$3.6583</td><td class="bad">↑ PPD sube +0.86%</td></tr>
+        <tr><td>d13</td><td>$45.90</td><td>$3.5308</td><td>OK</td></tr>
+    </table>
+    <p style="font-size: 13px; color: #64748B; margin-top: 8px;">El precio total sí es creciente ($39.90 → $43.90 → $45.90). Pero el PPD rompe en d12 porque el charm .90 obliga a saltar de $39.90 a $43.90 (no hay un .90 entre ambos que mantenga PPD decreciente).</p>
+</div>
+
+<div class="example-box">
+    <div class="tag">Ejemplo 2 · Spain SAR (regla 4/7/9)</div>
+    <p style="font-size: 14px; margin-bottom: 10px;">Las monedas con ladder más grueso (como el 4/7/9 del Gulf) tienen rupturas más grandes:</p>
+    <table>
+        <tr><th>Día</th><th>Precio total</th><th>PPD</th><th>Estado</th></tr>
+        <tr><td>d6</td><td>SAR 94</td><td>15.67</td><td>—</td></tr>
+        <tr><td>d7</td><td>SAR 114</td><td class="bad">16.29</td><td class="bad">↑ PPD sube +3.95%</td></tr>
+        <tr><td>d8</td><td>SAR 119</td><td>14.88</td><td>OK</td></tr>
+    </table>
+    <p style="font-size: 13px; color: #64748B; margin-top: 8px;">El salto de SAR 94 a SAR 114 (+20 SAR) viene del ladder 4/7/9: después de 94 (termina en 4), el siguiente charm válido es 97 (termina en 7), después 99 (termina en 9), después 104 (termina en 4), etc. El modelo necesita llegar a ~110 SAR en d7 y el charm lo fuerza a 114.</p>
+</div>
+
+<h2>La solución: subir el día anterior</h2>
+
+<p>Para cada día d desde 2 hasta 90, si <code>PPD(d) > PPD(d-1)</code>:</p>
+<div class="formula">
+P(d-1) <span class="key">=</span> MAX(P(d-1), charm_ceil(PPD(d) × (d-1)))
+</div>
+<p><strong>Se sube el precio del día anterior al menor valor charm que haga PPD(d-1) ≥ PPD(d)</strong>. Nunca se baja un precio.</p>
+
+<div class="example-box">
+    <div class="tag">Ejemplo 1 resuelto · Spain USD</div>
+    <table>
+        <tr><th>Día</th><th>Precio original</th><th>Precio corregido</th><th>PPD</th><th>Estado</th></tr>
+        <tr><td>d11</td><td>$39.90</td><td class="fix">$40.50</td><td class="fix">$3.6818</td><td class="fix">Subió $0.60 (+1.5%)</td></tr>
+        <tr><td>d12</td><td>$43.90</td><td>$43.90</td><td>$3.6583</td><td>OK (PPD bajó vs d11)</td></tr>
+    </table>
+    <p style="font-size: 13px; color: #64748B; margin-top: 8px;">El d11 sube de $39.90 a $40.50 (el menor .50 que cumple PPD(11) ≥ PPD(12)). El d12 no cambia. El cliente ahora ve que el PPD siempre baja: $3.68 → $3.66.</p>
+</div>
+
+<div class="example-box">
+    <div class="tag">Ejemplo 2 resuelto · Spain SAR</div>
+    <table>
+        <tr><th>Día</th><th>Precio original</th><th>Precio corregido</th><th>PPD</th><th>Estado</th></tr>
+        <tr><td>d6</td><td>SAR 94</td><td class="fix">SAR 99</td><td class="fix">16.50</td><td class="fix">Subió SAR 5 (+5.3%)</td></tr>
+        <tr><td>d7</td><td>SAR 114</td><td>SAR 114</td><td>16.29</td><td>OK (PPD bajó vs d6)</td></tr>
+    </table>
+    <p style="font-size: 13px; color: #64748B; margin-top: 8px;">El d6 sube de SAR 94 a SAR 99 (siguiente charm 4/7/9 válido: 94→97→99, el menor que cumple PPD ≥ 16.29). El ladder grueso del 4/7/9 genera correcciones más grandes que el .90/.50.</p>
+</div>
+
+<div class="qa-card">
+    <div class="qa-q">La pregunta que quedó pendiente</div>
+    <div class="qa-question">¿Se reaplica charm rule al precio ajustado?</div>
+    <div class="qa-answer">
+        <strong>No.</strong> El MAX elige uno de dos valores que <em>ya cumplen</em> la regla de charming:
+        <ul class="tight" style="margin-top: 8px;">
+            <li><strong>P(d-1) original</strong>: ya pasó por charming.</li>
+            <li><strong>charm_ceil(PPD(d) × (d-1))</strong>: por definición devuelve un valor que cumple la regla.</li>
+        </ul>
+        <p style="margin-top: 8px; margin-bottom: 0;">Sea cual sea el resultado del MAX, ya cumple charm. No hay que volver a aplicarlo.</p>
+    </div>
+</div>
+
+<h2>Pseudocódigo</h2>
+<div class="code-block">
+<span class="kw">function</span> apply_monotonicity(prices, charm_ceil_fn, max_subida_pct = 5.0):
+    fixed = copy(prices)
+    
+    <span class="kw">repeat until</span> no changes:
+        <span class="kw">for</span> d <span class="kw">in</span> 2..90:
+            <span class="kw">if</span> fixed[d]/d > fixed[d-1]/(d-1):
+                target = (fixed[d]/d) * (d-1)
+                candidato = charm_ceil_fn(target)
+                
+                <span class="kw">if</span> candidato > fixed[d-1]:
+                    subida_pct = (candidato - prices[d-1]) / prices[d-1] * 100
+                    <span class="kw">if</span> subida_pct &lt;= max_subida_pct:
+                        fixed[d-1] = candidato
+                    <span class="cm">// si subida supera 5%, dejar la ruptura residual</span>
+    
+    <span class="kw">return</span> fixed
+</div>
+
+<ul class="tight">
+    <li><strong>Iterativo</strong>: subir el d-1 puede romper el d-2 (cascada). Repetir hasta que no haya cambios en toda la curva d1-d90. Converge en 2-5 iteraciones.</li>
+    <li><strong>Salvaguarda 5%</strong>: la subida de cada día se compara contra su precio <em>original</em> (post-charming), no contra el precio ya cascadeado. Esto impide que la cascada acumule subidas. Si el fix requerido supera el 5%, se frena y deja la ruptura residual.</li>
+    <li><strong>charm_ceil_fn</strong>: es la función CEIL de la charm rule de la moneda (documentada en el catálogo de charm rules). Cada moneda tiene su propia función.</li>
+</ul>
+
+<div class="note-card">
+    <div class="label">Salvaguarda: parámetro configurable con tope</div>
+    <p>El <code>max_subida_pct</code> es un parámetro configurable en el servicio. <strong>Valor por defecto: 5%. Tope máximo permitido: 5%.</strong> No debe poder configurarse por encima de este valor.</p>
+    <p>Con 5%, el peor caso observado en el catálogo real (Spain SAR, ladder 4/7/9) produce una cascada de máximo 3 días consecutivos con +0.6% de subida agregada de revenue para esa moneda. Lejos de ser peligroso.</p>
+    <p>Si el threshold se pusiera en 0%, la monotonicidad no se aplicaría (todas las subidas se frenarían). Si se pusiera sin límite, la cascada podría subir precios significativamente en días cortos donde los precios son chicos y el charm tiene más peso relativo.</p>
+</div>
+
+<h2>Casos borde</h2>
+<ul class="tight">
+    <li><strong>Curvas de menos de 90 días</strong>: aplicar dentro del rango disponible.</li>
+    <li><strong>Día 1</strong>: queda como está después del charming.</li>
+    <li><strong>Monedas con ladder grueso</strong> (4/7/9 en Gulf, PLN, ILS): pueden quedar rupturas residuales porque la salvaguarda 5% corta antes. Es comportamiento esperado.</li>
+</ul>
+
+<h2>Impacto en revenue</h2>
+<p>La monotonicidad <strong>siempre sube revenue</strong> (nunca baja precios, solo sube el día anterior). Validado sobre un modelo de referencia con las 26 monedas: entre +0.01% y +1.51% por moneda. Sobre el total del catálogo, el impacto es positivo neto.</p>
+
+<h2>Nota: caso FX correction (existe, es distinto)</h2>
+
+<div class="note-card">
+    <div class="label">Importante para tener mapeado</div>
+    <p>La lógica de arriba es para cuando <strong>se carga un modelo nuevo</strong>. Catálogo recién generado, sin precio previo.</p>
+    <p>Existe un caso distinto: <strong>corrección de FX sobre catálogo ya publicado</strong>. Ya lo enfrentamos: el experimento EXP-PRIC-011 V2 (Spain, Italia, Colombia, Brazil) subió USD/EUR de 1.08 a 1.15. Esa lógica es <em>distinta</em> porque tiene un constraint adicional: <strong>no bajar el precio que el cliente ya está viendo</strong>.</p>
+</div>
+
+<p>En ese caso, para cada SKU se busca el charm más alto que cumpla simultáneamente:</p>
+<ul class="tight">
+    <li><strong>(a)</strong> &gt; current (no bajar precio actual al cliente)</li>
+    <li><strong>(b)</strong> ≤ raw nuevo (no inflar más allá del FX)</li>
+    <li><strong>(c)</strong> PPD ≤ PPD del día anterior</li>
+    <li><strong>(d)</strong> Δ% vs current ≤ 10%</li>
+</ul>
+<p>Si no hay candidato, se relaja en orden: primero (d), después (c), finalmente fallback round-up. <strong>Tolerancia 10%</strong> (vs 5% en monotonicidad normal). Existieron excepciones declaradas en el experimento USD (Italy/Spain D1-D3 con PPD constante, +15.4%, documentadas explícitamente).</p>
+
+<div class="callout">
+    <p><strong>Para Marx</strong>: cuando llegue el momento de implementar FX corrections, vamos a coordinar la segunda lógica. Por ahora, <strong>el alcance es solo la monotonicidad post-charming descrita arriba</strong>.</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1199,6 +1199,31 @@ body.lang-es .layer-card [data-es] { display: inline; }
 </head>
 <body>
 
+    <script>
+const PASSWORD = "holafly123";
+
+const userPassword = prompt("Enter access code");
+
+if (userPassword !== PASSWORD) {
+    document.body.innerHTML = `
+        <div style="
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family:sans-serif;
+            background:#fafafb;
+            color:#292B2E;
+            flex-direction:column;
+        ">
+            <h1>Access denied</h1>
+            <p>Invalid code</p>
+        </div>
+    `;
+    throw new Error("Unauthorized");
+}
+</script>
+    
 <!-- HEADER -->
 <header class="header" id="siteHeader">
     <div class="header-brand">

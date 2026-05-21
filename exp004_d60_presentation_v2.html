@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EXP-004 MXN · D+60 Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+:root {
+  --pink:#E6485C;--pink-soft:rgba(230,72,92,0.08);--pink-border:rgba(230,72,92,0.18);
+  --charcoal:#292B2E;--charcoal-soft:#4A4D52;--gray-mid:#64748B;--gray-light:#94A3B8;
+  --card:#F8FAFC;--white:#FFFFFF;--rule:#E4E6EA;--rule-soft:rgba(41,43,46,0.06);
+  --green:#15803D;--green-bg:#E8F5EE;--warn:#B45309;--warn-bg:#FDF3E7;
+  --blue:#1D4ED8;--blue-bg:#E8EFFD;--purple:#7C3AED;--purple-bg:#F3EEFE;
+  --pastel-yellow:#FFF0AB;--mono:'JetBrains Mono',monospace;--sans:'Mulish',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--white);color:var(--charcoal);line-height:1.65;font-size:14px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--pink);color:var(--white)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CCD0D7;border-radius:3px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.anim-up{animation:fadeUp .4s ease both}.anim-scale{animation:scaleIn .35s ease both}
+
+.top-bar{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:14px 48px;background:rgba(255,255,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:border-color .3s}
+.top-bar.scrolled{border-bottom-color:var(--rule)}
+.top-bar-left{display:flex;align-items:center;gap:10px}
+.top-bar-dot{width:8px;height:8px;background:var(--pink);border-radius:50%}
+.top-bar-brand{font-size:15px;font-weight:800;color:var(--charcoal);letter-spacing:-0.02em}
+.top-bar-divider{width:1px;height:14px;background:var(--rule)}
+.top-bar-context{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--gray-mid);letter-spacing:.08em;text-transform:uppercase}
+.top-bar-badge{background:var(--green);color:var(--white);font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.1em;text-transform:uppercase}
+.lang-toggle{display:flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--rule-soft);padding:3px;gap:2px}
+.lang-toggle button{background:transparent;border:none;padding:6px 14px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gray-mid);cursor:pointer;border-radius:999px;transition:all .25s;letter-spacing:.08em}
+.lang-toggle button.active{background:var(--charcoal);color:var(--white)}
+.top-right{display:flex;align-items:center;gap:10px}
+
+.page{max-width:1100px;margin:0 auto;padding:0 48px 80px}
+.section{padding:40px 0 10px}
+.section-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
+.section h2{font-size:clamp(24px,3vw,34px);font-weight:800;color:var(--charcoal);line-height:1.15;letter-spacing:-0.02em;margin-bottom:10px}
+.section h2 .accent{color:var(--pink)}
+.section h2 .highlight{background-image:linear-gradient(120deg,var(--pastel-yellow) 0%,var(--pastel-yellow) 100%);background-repeat:no-repeat;background-size:100% 26%;background-position:0 88%;padding:0 3px}
+.section-intro{font-size:15px;color:var(--charcoal-soft);max-width:780px;line-height:1.65;margin-bottom:28px}
+.section-intro strong{color:var(--charcoal);font-weight:700}
+.section-divider{border:none;border-top:1px solid var(--rule);margin:48px 0 0}
+
+.hero{padding:64px 0 48px}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--pink);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--pink)}
+.hero h1{font-size:clamp(36px,5vw,56px);font-weight:900;color:var(--charcoal);line-height:1.08;letter-spacing:-0.03em;margin-bottom:18px}
+.hero h1 .accent{color:var(--pink)}
+.hero-deck{font-size:16px;color:var(--charcoal-soft);max-width:750px;line-height:1.65}
+.hero-deck strong{color:var(--charcoal);font-weight:700}
+.hero-meta{display:flex;gap:20px;margin-top:24px;flex-wrap:wrap;font-size:12px;color:var(--gray-light)}
+.hero-meta span strong{color:var(--charcoal);font-weight:700}
+.hero-meta .sep{width:1px;height:12px;background:var(--rule);align-self:center}
+
+.card{background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:22px 24px;margin-bottom:14px}
+.card-accent{border-left:3px solid var(--pink)}
+.card-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px}
+.card p{font-size:14px;color:var(--charcoal-soft);line-height:1.6;margin-bottom:6px}.card p:last-child{margin-bottom:0}.card p strong{color:var(--charcoal);font-weight:700}
+.callout{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--pink);border-radius:0 10px 10px 0;padding:16px 20px;margin:18px 0;font-size:13px;color:var(--charcoal-soft);line-height:1.6}
+.callout strong{color:var(--charcoal);font-weight:700}.callout em{color:var(--pink);font-style:normal;font-weight:700}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.callout.blue{border-left-color:var(--blue);background:var(--blue-bg)}
+.callout.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.metric{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:18px 16px;text-align:center}
+.metric-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px}
+.metric-value{font-family:var(--mono);font-size:28px;font-weight:800;color:var(--charcoal);line-height:1}
+.metric-value .accent{color:var(--pink)}
+.metric-value .green{color:var(--green)}
+.metric-sub{font-size:11px;color:var(--gray-mid);margin-top:6px}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+@media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+.timeline{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.tl-row{display:grid;grid-template-columns:90px 24px 1fr;gap:12px;align-items:start;padding:18px 0;position:relative}
+.tl-row:not(:last-child){border-bottom:1px solid var(--rule-soft)}
+.tl-when{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--gray-mid);padding-top:2px}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--rule);margin-top:4px;justify-self:center;position:relative}
+.tl-dot.active{background:var(--pink)}
+.tl-dot.done{background:var(--green)}
+.tl-content{font-size:14px;color:var(--charcoal-soft);line-height:1.55}
+.tl-content strong{color:var(--charcoal);font-weight:700}
+.tl-content .tl-metric{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--charcoal);display:inline-block;margin-top:4px}
+
+.range-bar{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:20px 24px;margin:18px 0}
+.range-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gray-mid);margin-bottom:8px}
+.range-track{height:8px;background:var(--rule);border-radius:4px;position:relative;overflow:hidden}
+.range-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--pink))}
+.range-note{font-size:12px;color:var(--gray-mid);margin-top:8px;text-align:center}
+.range-note strong{color:var(--charcoal)}
+
+.s-table{width:100%;border-collapse:collapse;margin:16px 0}
+.s-table th{text-align:left;padding:10px 14px;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--gray-light);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--rule)}
+.s-table th:not(:first-child){text-align:right}
+.s-table td{padding:10px 14px;font-size:13px;color:var(--charcoal-soft);border-bottom:1px solid var(--rule-soft)}
+.s-table td:not(:first-child){text-align:right;font-family:var(--mono);font-weight:600}
+.s-table td.highlight{color:var(--charcoal);font-weight:700}
+.s-table td .tag{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px}
+.tag-up{background:var(--green-bg);color:var(--green)}
+.tag-flat{background:var(--card);color:var(--gray-mid)}
+.tag-note{background:var(--warn-bg);color:var(--warn)}
+.s-table tr.total-row td{border-top:2px solid var(--charcoal);font-weight:800;color:var(--charcoal)}
+
+.claims-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:800px){.claims-grid{grid-template-columns:1fr}}
+.claim-card{border-radius:10px;padding:18px 20px}
+.claim-card.yes{background:var(--green-bg);border:1px solid rgba(21,128,61,0.15)}
+.claim-card.no{background:var(--card);border:1px solid var(--rule)}
+.claim-card .claim-header{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.claim-card.yes .claim-header{color:var(--green)}
+.claim-card.no .claim-header{color:var(--gray-mid)}
+.claim-card .claim-item{font-size:13px;color:var(--charcoal-soft);line-height:1.55;padding:4px 0}
+.claim-card .claim-item strong{color:var(--charcoal);font-weight:700}
+
+.page-footer{border-top:1px solid var(--rule);padding:24px 0;margin-top:48px;text-align:center;font-size:11px;color:var(--gray-light)}
+.page-footer strong{color:var(--gray-mid);font-weight:700}
+.page-footer a{color:var(--gray-mid);text-decoration:none;border-bottom:1px solid var(--rule)}
+
+@media(max-width:800px){
+  .top-bar{padding:12px 18px}.page{padding:0 18px 48px}.hero h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ── SVG mini chart ── */
+function DIDChart({en}) {
+  const W=520,H=200,PX=60,PY=30,PB=40,PR=30;
+  const cW=W-PX-PR, cH=H-PY-PB;
+  const labels=["D+14","D+30","D+60"];
+  const did=[4409,9126,9240];
+  const ols=[3541,8019,7888];
+  const maxY=10000;
+  const x=i=>PX+(i/(labels.length-1))*cW;
+  const y=v=>PY+cH-(v/maxY)*cH;
+  const pathD=did.map((v,i)=>`${i===0?"M":"L"}${x(i)},${y(v)}`).join(" ");
+  const pathO=ols.map((v,i)=>`${i===0?"M":"L"}${x(i)},${y(v)}`).join(" ");
+  const areaPath=`M${x(0)},${y(did[0])} L${x(1)},${y(did[1])} L${x(2)},${y(did[2])} L${x(2)},${y(ols[2])} L${x(1)},${y(ols[1])} L${x(0)},${y(ols[0])} Z`;
+  return (
+    <div style={{background:"var(--card)",border:"1px solid var(--rule)",borderRadius:10,padding:"16px 10px",margin:"20px 0",overflowX:"auto"}}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:520,display:"block",margin:"0 auto"}}>
+        {[0,2500,5000,7500,10000].map(v=>(<g key={v}><line x1={PX} y1={y(v)} x2={W-PR} y2={y(v)} stroke="var(--rule)" strokeWidth="1"/><text x={PX-8} y={y(v)+4} textAnchor="end" fill="var(--gray-light)" fontSize="9" fontFamily="var(--mono)">{v===0?"0":`${(v/1000).toFixed(1)}K`}</text></g>))}
+        {labels.map((l,i)=>(<text key={l} x={x(i)} y={H-10} textAnchor="middle" fill="var(--gray-mid)" fontSize="11" fontWeight="700" fontFamily="var(--mono)">{l}</text>))}
+        <path d={areaPath} fill="rgba(29,78,216,0.08)"/>
+        <path d={pathO} fill="none" stroke="var(--blue)" strokeWidth="2" strokeDasharray="6,4"/>
+        <path d={pathD} fill="none" stroke="var(--pink)" strokeWidth="2.5"/>
+        {did.map((v,i)=>(<circle key={`d${i}`} cx={x(i)} cy={y(v)} r="4" fill="var(--pink)"/>))}
+        {ols.map((v,i)=>(<circle key={`o${i}`} cx={x(i)} cy={y(v)} r="3.5" fill="var(--blue)"/>))}
+        {did.map((v,i)=>(<text key={`dl${i}`} x={x(i)} y={y(v)-10} textAnchor="middle" fill="var(--pink)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{"\u20AC"}{v.toLocaleString()}</text>))}
+        {ols.map((v,i)=>(<text key={`ol${i}`} x={x(i)} y={y(v)+16} textAnchor="middle" fill="var(--blue)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{"\u20AC"}{v.toLocaleString()}</text>))}
+        <text x={W-PR} y={PY-6} textAnchor="end" fill="var(--gray-light)" fontSize="9" fontFamily="var(--mono)">EUR/day</text>
+      </svg>
+      <div style={{display:"flex",justifyContent:"center",gap:24,marginTop:10,fontSize:11,color:"var(--gray-mid)"}}>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:14,height:3,background:"var(--pink)",borderRadius:2,display:"inline-block"}}/> DID</span>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:14,height:3,background:"var(--blue)",borderRadius:2,display:"inline-block",borderTop:"2px dashed var(--blue)"}}/> OLS</span>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:14,height:10,background:"rgba(29,78,216,0.08)",border:"1px solid rgba(29,78,216,0.2)",borderRadius:2,display:"inline-block"}}/> {en?"Honest range":"Rango honesto"}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── ARPU sparkline ── */
+function ARPUSparkline({en}) {
+  const W=480,H=160,PX=50,PY=20,PB=40,PR=30;
+  const cW=W-PX-PR,cH=H-PY-PB;
+  const labels=["Pre","D+14","D+30","D+60"];
+  const vals=[7.06,8.76,9.88,6.43];
+  const maxY=11,minY=5;
+  const x=i=>PX+(i/(labels.length-1))*cW;
+  const y=v=>PY+cH-((v-minY)/(maxY-minY))*cH;
+  const path=vals.map((v,i)=>`${i===0?"M":"L"}${x(i)},${y(v)}`).join(" ");
+  return (
+    <div style={{background:"var(--card)",border:"1px solid var(--rule)",borderRadius:10,padding:"16px 10px",margin:"18px 0",overflowX:"auto"}}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:480,display:"block",margin:"0 auto"}}>
+        <line x1={PX} y1={y(7.06)} x2={W-PR} y2={y(7.06)} stroke="var(--rule)" strokeWidth="1" strokeDasharray="4,3"/>
+        <text x={PX-8} y={y(7.06)+4} textAnchor="end" fill="var(--gray-light)" fontSize="9" fontFamily="var(--mono)">{"\u20AC"}7.06</text>
+        {labels.map((l,i)=>(<text key={l} x={x(i)} y={H-8} textAnchor="middle" fill="var(--gray-mid)" fontSize="11" fontWeight="700" fontFamily="var(--mono)">{l}</text>))}
+        <path d={path} fill="none" stroke="var(--pink)" strokeWidth="2.5"/>
+        {vals.map((v,i)=>(<circle key={i} cx={x(i)} cy={y(v)} r="4" fill={i===3?"var(--warn)":"var(--pink)"}/>))}
+        {vals.map((v,i)=>(<text key={`t${i}`} x={x(i)} y={y(v)-(i===3?-18:10)} textAnchor="middle" fill={i===3?"var(--warn)":"var(--charcoal)"} fontSize="11" fontWeight="700" fontFamily="var(--mono)">{"\u20AC"}{v.toFixed(2)}</text>))}
+        <text x={x(3)+4} y={y(6.43)-18} textAnchor="middle" fill="var(--warn)" fontSize="8" fontFamily="var(--mono)" fontWeight="600">AON + Cinco de Mayo</text>
+      </svg>
+    </div>
+  );
+}
+
+function App() {
+  const [lang, setLang] = useState("en");
+  const [scrolled, setScrolled] = useState(false);
+  const en = lang === "en";
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  return (<div>
+    <div className={`top-bar ${scrolled ? "scrolled" : ""}`}>
+      <div className="top-bar-left">
+        <span className="top-bar-dot" />
+        <span className="top-bar-brand">Holafly</span>
+        <span className="top-bar-divider" />
+        <span className="top-bar-context">EXP-004 MXN D+60</span>
+      </div>
+      <div className="top-right">
+        <span className="top-bar-badge">Scale Confirmed</span>
+        <div className="lang-toggle">
+          <button className={en ? "active" : ""} onClick={() => setLang("en")}>EN</button>
+          <button className={!en ? "active" : ""} onClick={() => setLang("es")}>ES</button>
+        </div>
+      </div>
+    </div>
+
+    <div className="page">
+      {/* ═══ 1. HERO ═══ */}
+      <div className="hero anim-up">
+        <div className="hero-eyebrow">EXP-004 Results</div>
+        <h1>{en ? <>MXN pricing correction<span className="accent">.</span> <br/>78 days later.</> : <>Corrección de pricing MXN<span className="accent">.</span> <br/>78 días después.</>}</h1>
+        <div className="hero-deck">{en ? <>On March 2 we corrected the price-per-day on short plans (1-3 days) across 65 MXN destinations to align with the EUR 3.79/day policy. <strong>This is what happened.</strong></> : <>El 2 de marzo corregimos el precio-por-día en planes cortos (1-3 días) en 65 destinos MXN para alinear con la política de EUR 3.79/día. <strong>Esto es lo que pasó.</strong></>}</div>
+        <div className="hero-meta">
+          <span><strong>{en ? "For" : "Para"}</strong> Shravan Kochhar</span>
+          <span className="sep" /><span><strong>{en ? "Date" : "Fecha"}</strong> May 20, 2026</span>
+          <span className="sep" /><span><strong>Owner</strong> Guido Mautino</span>
+          <span className="sep" /><span><strong>Status</strong> D+60 {en ? "validation" : "validación"}</span>
+        </div>
+      </div>
+
+      {/* ═══ 2. VERDICT ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "The Verdict" : "El Veredicto"}</div>
+        <h2>{en ? <>It worked. The effect <span className="highlight">is lasting.</span></> : <>Funcionó. El efecto <span className="highlight">se mantiene.</span></>}</h2>
+        <div className="section-intro">{en ? <>Volume compensated the price cut. Revenue grew. Margins improved. No cannibalization. The effect stabilized between D+30 and D+60. <strong>The D+14 decision to scale holds at 78 days.</strong></> : <>El volumen compensó la baja de precio. El revenue creció. Los márgenes mejoraron. Sin canibalización. El efecto se estabilizó entre D+30 y D+60. <strong>La decisión de escalar en D+14 se sostiene a los 78 días.</strong></>}</div>
+        <div className="metrics-grid">
+          <div className="metric anim-scale"><div className="metric-label">{en ? "Short Plan Net Impact" : "Impacto Neto Planes Cortos"}</div><div className="metric-value">+<span className="accent">EUR 180</span></div><div className="metric-sub">{en ? "per day, direct short plan impact (~EUR 66K/year)" : "por día, impacto directo planes cortos (~EUR 66K/año)"}</div></div>
+          <div className="metric anim-scale" style={{animationDelay:"60ms"}}><div className="metric-label">{en ? "Short Plan Volume (DID)" : "Volumen Planes Cortos (DID)"}</div><div className="metric-value">+<span className="accent">75%</span></div><div className="metric-sub">{en ? "short plan orders attributable to pricing (DID)" : "órdenes planes cortos atribuibles a pricing (DID)"}</div></div>
+          <div className="metric anim-scale" style={{animationDelay:"120ms"}}><div className="metric-label">{en ? "Gross Margin" : "Margen Bruto"}</div><div className="metric-value"><span className="green">85.3%</span></div><div className="metric-sub">{en ? "up from 74.5% pre (not from pricing)" : "sube de 74.5% pre (no por pricing)"}</div></div>
+          <div className="metric anim-scale" style={{animationDelay:"180ms"}}><div className="metric-label">{en ? "Cannibalization" : "Canibalización"}</div><div className="metric-value"><span className="green">{en ? "None" : "Cero"}</span></div><div className="metric-sub">{en ? "short plans did not steal from long" : "planes cortos no le quitaron a largos"}</div></div>
+        </div>
+        <div className="callout">{en
+          ? <><strong>Total DID across all plan durations: +EUR 9,240/day.</strong> This includes long plans (4d+) where prices were not changed. The short plan figure above is the direct, verifiable pricing impact.</>
+          : <><strong>DID total incluyendo todas las duraciones: +EUR 9,240/día.</strong> Esto incluye planes largos (4d+) donde los precios no fueron cambiados. La cifra de planes cortos arriba es el impacto de pricing directo y verificable.</>}</div>
+        <div className="callout green"><strong>{en ? "Conservative estimate:" : "Estimación conservadora:"}</strong> {en ? "A second model (OLS regression, R squared = 0.79) gives a lower total figure: +EUR 7,888/day (+51%). The honest range for total impact is EUR 7,888 to EUR 9,240 per day." : "Un segundo modelo (regresión OLS, R cuadrado = 0.79) da una cifra total menor: +EUR 7,888/día (+51%). El rango honesto para el impacto total es EUR 7,888 a EUR 9,240 por día."}</div>
+      </div>
+
+      {/* ═══ 3. WHAT WE DID ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "The Change" : "El Cambio"}</div>
+        <h2>{en ? <>We corrected the <span className="accent">first price impression.</span></> : <>Corregimos la <span className="accent">primera impresión de precio.</span></>}</h2>
+        <div className="section-intro">{en ? <>Holafly has an approved policy of EUR 3.79/day for short plans across 65 top destinations. This policy was applied in EUR but not in MXN. Mexican buyers saw a higher price-per-day on short plans, which doesn't match how price-sensitive short-trip travelers buy.</> : <>Holafly tiene una política aprobada de EUR 3.79/día para planes cortos en 65 destinos principales. Esta política estaba aplicada en EUR pero no en MXN. Los compradores mexicanos veían un precio-por-día más alto en planes cortos, lo que no coincide con cómo compran los viajeros sensibles al precio en estadías cortas.</>}</div>
+        <table className="s-table">
+          <thead><tr><th>{en ? "Plan duration" : "Duración del plan"}</th><th>{en ? "Price change" : "Cambio de precio"}</th><th>{en ? "What happened" : "Qué pasó"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">1 {en ? "day" : "día"}</td><td>-36%</td><td>{en ? "Largest correction" : "Corrección mayor"}</td></tr>
+            <tr><td className="highlight">2 {en ? "days" : "días"}</td><td>-16%</td><td>{en ? "Moderate correction" : "Corrección moderada"}</td></tr>
+            <tr><td className="highlight">3 {en ? "days" : "días"}</td><td>-5%</td><td>{en ? "Small correction" : "Corrección pequeña"}</td></tr>
+            <tr><td>4+ {en ? "days" : "días"}</td><td>{"<"}1%</td><td>{en ? "Charm pricing only" : "Solo charm pricing"}</td></tr>
+          </tbody>
+        </table>
+        <div className="callout">{en ? <><strong>Brief hypothesis:</strong> correcting the first price-per-day impression improves conversion on short plans. Volume gains should compensate the price reduction. ARPU neutral or positive.</> : <><strong>Hipótesis del brief:</strong> corregir la primera impresión de precio-por-día mejora conversión en planes cortos. El volumen debería compensar la reducción de precio. ARPU neutro o positivo.</>}</div>
+      </div>
+
+      {/* ═══ 4. METHODOLOGY ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Methodology" : "Metodología"}</div>
+        <h2>{en ? <>Two independent models. <span className="highlight">Both agree.</span></> : <>Dos modelos independientes. <span className="highlight">Ambos coinciden.</span></>}</h2>
+        <div className="section-intro">{en ? "We used two approaches to isolate the pricing effect from everything else happening in the market." : "Usamos dos enfoques para aislar el efecto de pricing de todo lo demás que ocurre en el mercado."}</div>
+        <div className="grid-2">
+          <div className="card"><div className="card-label">{en ? "Method 1: Difference-in-Differences" : "Método 1: Diferencia en Diferencias"}</div><p>{en ? <><strong>58 treated destinations vs 116 control destinations</strong> that had no meaningful price change. We compare how both groups changed over time. The difference is the pricing effect.</> : <><strong>58 destinos tratados vs 116 destinos de control</strong> sin cambio de precio significativo. Comparamos cómo cambiaron ambos grupos en el tiempo. La diferencia es el efecto de pricing.</>}</p><p style={{marginTop:8}}>{en ? <>Pre-period stability check: the weekly revenue ratio between treated and control was consistent (CV = 10.3%, threshold: 20%). <strong>The comparison holds.</strong></> : <>Check de estabilidad pre-período: el ratio de revenue semanal entre tratados y control era consistente (CV = 10.3%, umbral: 20%). <strong>La comparación es válida.</strong></>}</p></div>
+          <div className="card"><div className="card-label">{en ? "Method 2: OLS Regression" : "Método 2: Regresión OLS"}</div><p>{en ? <><strong>A statistical model (R squared = 0.79)</strong> that projects what treated revenue would have been without the change, based on control performance and time trends.</> : <><strong>Un modelo estadístico (R cuadrado = 0.79)</strong> que proyecta cuánto revenue habrían generado los destinos tratados sin el cambio, basándose en la performance del control y tendencias temporales.</>}</p><p style={{marginTop:8}}>{en ? <>This method is more conservative because it adjusts for pre-existing growth trends. <strong>It gives the lower bound of the range.</strong></> : <>Este método es más conservador porque ajusta por tendencias de crecimiento preexistentes. <strong>Da el límite inferior del rango.</strong></>}</p></div>
+        </div>
+      </div>
+
+      {/* ═══ 5. EVOLUTION ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Evolution" : "Evolución"}</div>
+        <h2>{en ? <>Growth, then <span className="accent">plateau.</span></> : <>Crecimiento, después <span className="accent">meseta.</span></>}</h2>
+        <div className="section-intro">{en ? "The effect grew through the first month, then stabilized. The pattern is consistent with a lasting structural change, not a temporary spike." : "El efecto creció durante el primer mes, después se estabilizó. El patrón es consistente con un cambio estructural duradero, no un pico temporal."}</div>
+        <DIDChart en={en} />
+        <div className="timeline">
+          <div className="tl-row"><div className="tl-when">D+14</div><div className="tl-dot done" /><div className="tl-content"><strong>{en ? "First full reading. Decision: Scale." : "Primera lectura completa. Decisión: Escalar."}</strong><br/><span className="tl-metric">DID +EUR 4,409/day (+58%)</span><br/>{en ? "ARPU excl Paid Social: EUR 8.76 (+24% vs baseline)" : "ARPU excl Paid Social: EUR 8.76 (+24% vs baseline)"}</div></div>
+          <div className="tl-row"><div className="tl-when">D+30</div><div className="tl-dot done" /><div className="tl-content"><strong>{en ? "Effect doubled. Scale confirmed." : "Efecto se duplicó. Escala confirmada."}</strong><br/><span className="tl-metric">DID +EUR 9,126/day (+121%)</span><br/>{en ? "ARPU excl PS: EUR 9.88 (+40%). GM: 83.5%." : "ARPU excl PS: EUR 9.88 (+40%). GM: 83.5%."}</div></div>
+          <div className="tl-row"><div className="tl-when">D+60</div><div className="tl-dot active" /><div className="tl-content"><strong>{en ? "Stable. No decay." : "Estable. Sin deterioro."}</strong><br/><span className="tl-metric">DID +EUR 9,240/day (+122%)</span><br/>{en ? "OLS: +EUR 7,888/day (+51%). GM: 85.3%." : "OLS: +EUR 7,888/día (+51%). GM: 85.3%."}<br/>{en ? "Practically unchanged from D+30. The pricing effect is holding." : "Prácticamente sin cambio vs D+30. El efecto de pricing se sostiene."}</div></div>
+          <div className="tl-row"><div className="tl-when">D+90</div><div className="tl-dot" /><div className="tl-content" style={{color:"var(--gray-mid)"}}><strong>{en ? "Next checkpoint: June 14, 2026." : "Próximo checkpoint: 14 de junio de 2026."}</strong></div></div>
+        </div>
+        <div className="callout">{en
+          ? <><strong>These DID figures cover all plan durations (1 to 90 days).</strong> The pricing change targeted short plans (1-3 days) specifically. The short plan direct impact is +EUR 180/day. See the Volume section for the decomposition.</>
+          : <><strong>Estas cifras DID cubren todas las duraciones de plan (1 a 90 días).</strong> El cambio de pricing apuntó específicamente a planes cortos (1-3 días). El impacto directo de planes cortos es +EUR 180/día. Ver la sección de Volumen para la descomposición.</>}</div>
+        <div className="callout" style={{borderLeftColor:"var(--blue)",background:"var(--blue-bg)"}}>{en
+          ? <><strong>Note:</strong> D+14 and D+30 values may differ slightly from earlier reports due to a filter adjustment (single-eSIM orders only, applied consistently from D+30 onward). The direction and magnitude are the same.</>
+          : <><strong>Nota:</strong> Los valores D+14 y D+30 pueden diferir levemente de reportes anteriores por un ajuste de filtro (solo órdenes single-eSIM, aplicado consistentemente desde D+30). La dirección y magnitud son las mismas.</>}</div>
+        <div className="range-bar">
+          <div className="range-labels"><span>OLS: EUR 7,888/day</span><span>DID: EUR 9,240/day</span></div>
+          <div className="range-track"><div className="range-fill" style={{width:"100%"}} /></div>
+          <div className="range-note">{en ? <><strong>Two methods, same conclusion.</strong> DID gives the upper bound, OLS the lower. Both say the effect grew in the first month and then stopped growing. The truth is somewhere in this range.</> : <><strong>Dos métodos, misma conclusión.</strong> DID da el límite superior, OLS el inferior. Ambos dicen que el efecto creció el primer mes y después dejó de crecer. La verdad está en algún punto de este rango.</>}</div>
+        </div>
+      </div>
+
+      {/* ═══ 6. ARPU ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Primary Metric" : "Métrica Primaria"}</div>
+        <h2>{en ? <>ARPU rose, then <span className="accent">dropped.</span> Here's why.</> : <>ARPU subió, después <span className="accent">bajó.</span> Esta es la razón.</>}</h2>
+        <div className="section-intro">{en ? "ARPU was declared as the primary metric in the experiment brief. It tells an important but incomplete story at D+60." : "ARPU fue declarado como métrica primaria en el brief del experimento. Cuenta una historia importante pero incompleta en D+60."}</div>
+        <ARPUSparkline en={en} />
+        <table className="s-table">
+          <thead><tr><th>{en ? "Period" : "Período"}</th><th>ARPU excl PS</th><th>{en ? "Signal" : "Señal"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">{en ? "Pre (baseline)" : "Pre (baseline)"}</td><td>EUR 7.06</td><td><span className="tag tag-flat">{en ? "Reference" : "Referencia"}</span></td></tr>
+            <tr><td className="highlight">D+14</td><td>EUR 8.76</td><td><span className="tag tag-up">+24%</span></td></tr>
+            <tr><td className="highlight">D+30</td><td>EUR 9.88</td><td><span className="tag tag-up">+40%</span></td></tr>
+            <tr><td className="highlight">D+60</td><td>EUR 6.43</td><td><span className="tag tag-note">{en ? "See below" : "Ver abajo"}</span></td></tr>
+          </tbody>
+        </table>
+        <div className="callout warn">{en ? <><strong>ARPU dropped at D+60 because unique visitors grew 62% (AON campaign + Cinco de Mayo).</strong> More visitors, similar revenue, lower ARPU. The revenue DID, which does not depend on visitor counts, is stable.</> : <><strong>ARPU bajó en D+60 porque los visitantes únicos crecieron 62% (campaña AON + Cinco de Mayo).</strong> Más visitantes, revenue similar, ARPU más bajo. El DID de revenue, que no depende del conteo de visitantes, está estable.</>}</div>
+        <div className="callout">{en ? <><strong>Note on D+14 values:</strong> D+14 originally reported ARPU excl PS as EUR 8.23. The current EUR 8.76 comes from fresh Adobe aggregates with deduplicated unique visitors. The original snapshot summed daily UV, which counts visitors who return across multiple days more than once. The real lift at D+14 was larger than initially reported.</> : <><strong>Nota sobre valores D+14:</strong> D+14 reportó originalmente ARPU excl PS como EUR 8.23. El actual EUR 8.76 viene de agregados frescos de Adobe con visitantes únicos deduplicados. El snapshot original sumaba UV diarios, lo que cuenta más de una vez a visitantes que vuelven en varios días. El lift real en D+14 era mayor al reportado inicialmente.</>}</div>
+      </div>
+
+      {/* ═══ 7. VOLUME — DECOMPOSITION ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Volume" : "Volumen"}</div>
+        <h2>{en ? <>Short plan orders grew <span className="highlight">+75% from pricing.</span> Revenue within treated grew +136%.</> : <>Las órdenes de planes cortos crecieron <span className="highlight">+75% por pricing.</span> Revenue de tratados creció +136%.</>}</h2>
+        <div className="section-intro">{en ? "The decomposition below isolates the direct short plan impact: how many extra orders the price correction generated, minus the revenue lost from lower prices on existing volume." : "La descomposición de abajo aísla el impacto directo de planes cortos: cuántas órdenes extra generó la corrección de precio, menos el revenue perdido por precios más bajos en el volumen existente."}</div>
+
+        <div className="card-label" style={{marginTop:4}}>{en ? "Short plan revenue decomposition (per day)" : "Descomposición de revenue planes cortos (por día)"}</div>
+        <table className="s-table">
+          <thead><tr>
+            <th></th>
+            <th>{en ? "Day 1" : "Día 1"}</th>
+            <th>{en ? "Day 2" : "Día 2"}</th>
+            <th>{en ? "Day 3" : "Día 3"}</th>
+            <th>Total</th>
+          </tr></thead>
+          <tbody>
+            <tr><td className="highlight">{en ? "Volume gain (extra orders \u00D7 old price)" : "Ganancia volumen (órdenes extra \u00D7 precio viejo)"}</td><td>+EUR 145</td><td>+EUR 59</td><td>+EUR 53</td><td>+EUR 258</td></tr>
+            <tr><td className="highlight">{en ? "Price adjustment (lower price \u00D7 baseline volume)" : "Ajuste precio (precio menor \u00D7 volumen baseline)"}</td><td>-EUR 54</td><td>-EUR 17</td><td>-EUR 8</td><td>-EUR 78</td></tr>
+            <tr className="total-row"><td className="highlight">{en ? "Net direct impact" : "Impacto directo neto"}</td><td>+EUR 91</td><td>+EUR 43</td><td>+EUR 46</td><td>+EUR 180</td></tr>
+          </tbody>
+        </table>
+
+        <div className="callout green">{en
+          ? <><strong>D+14 estimated EUR 38-50K/year for short plans.</strong> This decomposition gives ~EUR 66K/year. The estimate is consistent.</>
+          : <><strong>D+14 estimó EUR 38-50K/año para planes cortos.</strong> Esta descomposición da ~EUR 66K/año. La estimación es consistente.</>}</div>
+
+        <div className="callout warn">{en
+          ? <><strong>Total revenue DID across all durations is +EUR 9,240/day,</strong> but most of it comes from long plans where prices were not changed. Possible drivers: entry-point effect from short plan pricing, differential seasonality, or marketing concentration. This requires further investigation.</>
+          : <><strong>El DID total de revenue incluyendo todas las duraciones es +EUR 9,240/día,</strong> pero la mayor parte viene de planes largos donde los precios no fueron cambiados. Posibles drivers: efecto entry-point desde el pricing de planes cortos, estacionalidad diferencial, o concentración de marketing. Esto requiere investigación adicional.</>}</div>
+
+        <div className="callout blue">{en ? <><strong>New customers:</strong> treated short plans attracted 3.3 percentage points more new customers than control. Consistent with the lower price bringing in buyers who were not purchasing before.</> : <><strong>Clientes nuevos:</strong> los planes cortos tratados atrajeron 3.3 puntos porcentuales más de clientes nuevos que el control. Consistente con que el precio menor trajo compradores que antes no compraban.</>}</div>
+      </div>
+
+      {/* ═══ 8. ELASTICITY ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Elasticity" : "Elasticidad"}</div>
+        <h2>{en ? <>Short MXN plans <span className="accent">responded strongly</span> to the price correction.</> : <>Los planes cortos MXN <span className="accent">respondieron con fuerza</span> a la corrección de precio.</>}</h2>
+        <div className="section-intro">{en ? "Elasticity tells us how much demand responds to a price change. These values are DID-adjusted: market-wide growth has been removed." : "La elasticidad nos dice cuánto responde la demanda a un cambio de precio. Estos valores están ajustados por DID: el crecimiento general del mercado fue removido."}</div>
+        <div className="grid-2">
+          <div className="card card-accent">
+            <div className="card-label">{en ? "Day 1 (price cut -36%)" : "Día 1 (baja -36%)"}</div>
+            <p style={{fontFamily:"var(--mono)",fontSize:28,fontWeight:800,color:"var(--charcoal)",lineHeight:1,marginBottom:8}}>3.8 – 3.9</p>
+            <p>{en ? "We cut Day 1 by 36%. Orders grew 141% more than control. That ratio (3.8 to 3.9) held when we measured it across two different time windows (30 days and 31 days). High consistency." : "Bajamos Día 1 un 36%. Las órdenes crecieron 141% más que el control. Ese ratio (3.8 a 3.9) se mantuvo cuando lo medimos en dos ventanas de tiempo distintas (30 días y 31 días). Alta consistencia."}</p>
+          </div>
+          <div className="card card-accent">
+            <div className="card-label">{en ? "Day 2 (price cut -16%)" : "Día 2 (baja -16%)"}</div>
+            <p style={{fontFamily:"var(--mono)",fontSize:28,fontWeight:800,color:"var(--charcoal)",lineHeight:1,marginBottom:8}}>4.7 – 5.1</p>
+            <p>{en ? "We cut Day 2 by 16%. Orders grew between 74% and 82% more than control depending on the window. That ratio (4.7 to 5.1) makes Day 2 the most responsive variant." : "Bajamos Día 2 un 16%. Las órdenes crecieron entre 74% y 82% más que el control dependiendo de la ventana. Ese ratio (4.7 a 5.1) hace del Día 2 la variante con mayor respuesta."}</p>
+          </div>
+        </div>
+        <div className="callout">{en ? <><strong>Day 3 (price cut -5%):</strong> not reliable. The price change was too small to measure cleanly with this method.</> : <><strong>Día 3 (baja -5%):</strong> no es confiable. El cambio de precio fue demasiado pequeño para medir limpiamente con este método.</>}</div>
+      </div>
+
+      {/* ═══ 9. GUARDRAILS ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Guardrails" : "Guardrails"}</div>
+        <h2>{en ? <>Everything we were <span className="highlight">watching held.</span></> : <>Todo lo que estábamos <span className="highlight">monitoreando se sostuvo.</span></>}</h2>
+        <div className="section-intro">{en ? "Three guardrails were active throughout the experiment. None were breached." : "Tres guardrails estuvieron activos durante todo el experimento. Ninguno fue violado."}</div>
+        <div className="grid-3">
+          <div className="card"><div className="card-label">{en ? "Gross Margin" : "Margen Bruto"}</div><p style={{fontFamily:"var(--mono)",fontSize:24,fontWeight:800,color:"var(--green)",marginBottom:6}}>85.3%</p><p>{en ? <>Up from 74.5% pre-experiment and 83.5% at D+30. Short plans: 74.2% (up from 70.8%). <strong>The improvement comes from Core carrier migration, not pricing.</strong> We track GM as a guardrail, not a success metric for this experiment.</> : <>Sube de 74.5% pre-experimento y 83.5% en D+30. Planes cortos: 74.2% (sube de 70.8%). <strong>La mejora viene de la migración del carrier Core, no de pricing.</strong> GM es un guardrail, no una métrica de éxito para este experimento.</>}</p></div>
+          <div className="card"><div className="card-label">{en ? "Cannibalization" : "Canibalización"}</div><p style={{fontFamily:"var(--mono)",fontSize:24,fontWeight:800,color:"var(--green)",marginBottom:6}}>{en ? "None" : "Cero"}</p><p>{en ? <>Short plans barely shifted in mix (+1.7pp DID). The 4-7 day bucket lost share to 15+ day plans, not to short plans. <strong>Cheaper short plans did not steal from longer, higher-value plans.</strong></> : <>Los planes cortos apenas se movieron en mix (+1.7pp DID). El bucket de 4-7 días perdió share contra planes de 15+ días, no contra cortos. <strong>Los planes cortos más baratos no le quitaron a los planes largos de mayor valor.</strong></>}</p></div>
+          <div className="card"><div className="card-label">{en ? "New Customers" : "Clientes Nuevos"}</div><p style={{fontFamily:"var(--mono)",fontSize:24,fontWeight:800,color:"var(--green)",marginBottom:6}}>+3.3pp</p><p>{en ? <>Treated short plans attracted a higher share of new customers than control. <strong>The market expanded rather than just redistributing existing buyers.</strong></> : <>Los planes cortos tratados atrajeron más clientes nuevos que el control. <strong>El mercado se expandió en vez de solo redistribuir compradores existentes.</strong></>}</p></div>
+        </div>
+      </div>
+
+      {/* ═══ 10. CLAIMS ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Honesty Check" : "Check de Honestidad"}</div>
+        <h2>{en ? <>What we <span style={{color:"var(--green)"}}>claim</span> and what we <span className="accent">don't.</span></> : <>Lo que <span style={{color:"var(--green)"}}>afirmamos</span> y lo que <span className="accent">no.</span></>}</h2>
+        <div className="claims-grid">
+          <div className="claim-card yes">
+            <div className="claim-header">{en ? "We can say" : "Podemos decir"}</div>
+            <div className="claim-item"><strong>{en ? "The short plan pricing correction generated +EUR 180/day net direct impact." : "La corrección de pricing de planes cortos generó +EUR 180/día de impacto directo neto."}</strong> {en ? "Volume gains from additional orders overcame the lower prices on existing volume." : "Las ganancias de volumen por órdenes adicionales superaron los precios menores en el volumen existente."}</div>
+            <div className="claim-item"><strong>{en ? "The effect is lasting." : "El efecto es duradero."}</strong> {en ? "DID at D+60 (+122%) is practically the same as D+30 (+121%). No decay." : "DID en D+60 (+122%) es prácticamente igual al D+30 (+121%). Sin deterioro."}</div>
+            <div className="claim-item"><strong>{en ? "Margins held and improved." : "Los márgenes se mantuvieron y mejoraron."}</strong> {en ? "No segment lost margin." : "Ningún segmento perdió margen."}</div>
+            <div className="claim-item"><strong>{en ? "No cannibalization." : "Sin canibalización."}</strong> {en ? "Short plans did not steal from longer plans." : "Planes cortos no le quitaron a planes largos."}</div>
+            <div className="claim-item"><strong>{en ? "The market expanded." : "El mercado se expandió."}</strong> {en ? "More new customers in treated vs control." : "Más clientes nuevos en tratados vs control."}</div>
+          </div>
+          <div className="claim-card no">
+            <div className="claim-header">{en ? "We cannot say" : "No podemos decir"}</div>
+            <div className="claim-item"><strong>{en ? "The total DID of +EUR 9,240/day is the direct pricing effect." : "El DID total de +EUR 9,240/día es el efecto directo de pricing."}</strong> {en ? "Most of it comes from long plans where we did not change prices. The long plan growth requires further investigation." : "La mayor parte viene de planes largos donde no cambiamos precios. El crecimiento de planes largos requiere investigación adicional."}</div>
+            <div className="claim-item"><strong>{en ? "Day 3 elasticity is reliable." : "La elasticidad de Día 3 es confiable."}</strong> {en ? "The 5% price change was too small to measure cleanly." : "El cambio de 5% fue demasiado pequeño para medir limpiamente."}</div>
+            <div className="claim-item"><strong>{en ? "GM improved because of pricing." : "El GM mejoró por pricing."}</strong> {en ? "The improvement is from Core carrier migration, which affects all currencies equally." : "La mejora es por la migración del carrier Core, que afecta a todas las monedas por igual."}</div>
+            <div className="claim-item"><strong>{en ? "ARPU dropped because of pricing." : "ARPU bajó por pricing."}</strong> {en ? "The drop is from a 62% increase in visitors (AON + Cinco de Mayo), not a pricing reversal." : "La caída es por un aumento del 62% en visitantes (AON + Cinco de Mayo), no una reversión de pricing."}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ 11. CONFOUNDERS ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Confounders" : "Confounders"}</div>
+        <h2>{en ? <>What else was happening <span className="highlight">during the experiment.</span></> : <>Qué más estaba pasando <span className="highlight">durante el experimento.</span></>}</h2>
+        <div className="section-intro">{en ? "Three external factors were active during the D+30 to D+60 window. We've assessed the impact of each." : "Tres factores externos estuvieron activos durante la ventana D+30 a D+60. Evaluamos el impacto de cada uno."}</div>
+        <div className="card" style={{marginBottom:14}}><p><strong>May 1 + Cinco de Mayo (May 5)</strong></p><p>{en ? "Mexico destinations are in the control group (not treated). These holidays inflate control more than treated. The DID is conservative because of this, not inflated." : "Los destinos de México están en el grupo de control (no tratados). Estos feriados inflan el control más que los tratados. El DID es conservador por esto, no inflado."}</p></div>
+        <div className="card" style={{marginBottom:14}}><p><strong>AON {en ? "campaign" : "campaña"} (May 11+)</strong></p><p>{en ? "Explains the ARPU drop at D+60 (more visitors, similar revenue). Does not affect the BQ DID, which measures revenue directly without visitor counts." : "Explica la caída de ARPU en D+60 (más visitantes, revenue similar). No afecta el DID en BQ, que mide revenue directamente sin conteo de visitantes."}</p></div>
+        <div className="card" style={{marginBottom:14}}><p><strong>Core {en ? "carrier migration" : "migración de carrier"}</strong></p><p>{en ? "Ongoing infrastructure change that improves gross margin across all currencies. Not pricing-driven. Affects treated and control equally, so DID captures it correctly." : "Cambio de infraestructura en curso que mejora el margen bruto en todas las monedas. No es de pricing. Afecta a tratados y control por igual, entonces el DID lo captura correctamente."}</p></div>
+        <div className="callout green">{en ? <><strong>Cross-check:</strong> DID Extended period (+122%) is practically the same as the Sustainability period (+121%). No distortion detected from any confounder.</> : <><strong>Cross-check:</strong> DID período Extendido (+122%) es prácticamente igual al período de Sostenibilidad (+121%). No se detectó distorsión por ningún confounder.</>}</div>
+      </div>
+
+      {/* ═══ 12. NEXT ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Next Steps" : "Próximos Pasos"}</div>
+        <h2>{en ? <>D+90 on <span className="accent">June 14.</span></> : <>D+90 el <span className="accent">14 de junio.</span></>}</h2>
+        <div className="section-intro">{en ? "The experiment is in extended monitoring. One checkpoint remains." : "El experimento está en monitoreo extendido. Queda un checkpoint."}</div>
+        <div className="card card-accent">
+          <p><strong>{en ? "D+90 will focus on:" : "D+90 se enfocará en:"}</strong></p>
+          <p>{en ? "Confirming the DID remains stable over a full quarter. Investigating repurchase patterns: do 1-day buyers return for longer plans? Early signals suggest yes, but this needs dedicated analysis at D+90. Validating that no long-term margin erosion has appeared." : "Confirmar que el DID se mantiene estable durante un trimestre completo. Investigar patrones de recompra: ¿los compradores de 1 día vuelven por planes más largos? Las señales tempranas sugieren que sí, pero esto necesita análisis dedicado en D+90. Validar que no apareció erosión de margen a largo plazo."}</p>
+        </div>
+      </div>
+
+      {/* ═══ APPENDIX ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Appendix" : "Apéndice"}</div>
+        <h2>{en ? "Sources and references." : "Fuentes y referencias."}</h2>
+        <div className="card-label" style={{marginTop:20}}>{en ? "Numbers that changed from earlier reports" : "Números que cambiaron respecto a reportes anteriores"}</div>
+        <table className="s-table" style={{marginBottom:24}}>
+          <thead><tr><th>{en ? "What" : "Qué"}</th><th>D+14</th><th>D+60</th><th>{en ? "Why" : "Por qué"}</th></tr></thead>
+          <tbody>
+            <tr><td>ARPU excl PS (pre)</td><td>EUR 7.02</td><td>EUR 7.06</td><td>{en ? "UV dedup correction" : "Corrección dedup UV"}</td></tr>
+            <tr><td>ARPU excl PS (exp)</td><td>EUR 8.23</td><td>EUR 8.76</td><td>{en ? "Same. Real lift was larger." : "Mismo. El lift real era mayor."}</td></tr>
+            <tr><td>AOV 1d baseline</td><td>EUR 9.04</td><td>EUR 7.05</td><td>{en ? "Multi-eSIM filter added" : "Filtro multi-eSIM agregado"}</td></tr>
+          </tbody>
+        </table>
+        <div className="card-label">{en ? "Data sources" : "Fuentes de datos"}</div>
+        <div className="card" style={{marginTop:8}}>
+          <p><strong>{en ? "Revenue and orders:" : "Revenue y órdenes:"}</strong> BigQuery (activaciones-holafly). {en ? "Filters: MXN, paid, no promo, single eSIM, non-zero price. All values in EUR." : "Filtros: MXN, paid, sin promo, eSIM único, precio no-cero. Todos los valores en EUR."} {en ? "EUR is the standard export currency in BQ across all storefronts including MXN. AOV values differ from D+14 report because D+14 did not filter multi-eSIM orders (esim_quantity = 1). D+30 used the same filters as this analysis and matches within 0.2%." : "EUR es la moneda estándar de exportación en BQ para todos los storefronts incluyendo MXN. Los valores de AOV difieren del reporte D+14 porque D+14 no filtraba órdenes multi-eSIM (esim_quantity = 1). D+30 usó los mismos filtros que este análisis y coincide dentro del 0.2%."}</p>
+          <p><strong>ARPU:</strong> Adobe Analytics, {en ? "segment excl Paid Social, currency MXN. Aggregate exports with deduplicated UV." : "segmento excl Paid Social, moneda MXN. Exports agregados con UV deduplicados."}</p>
+          <p><strong>{en ? "Gross margin:" : "Margen bruto:"}</strong> Looker Studio, Foundational KPIs, {en ? "origin MXN." : "origen MXN."}</p>
+          <p style={{marginTop:8}}><strong>{en ? "Workbook:" : "Workbook:"}</strong> <a href="https://docs.google.com/spreadsheets/d/1P37AajxUifMAzQfcdc1wQAUivW63dLqyE45e4AvHDOs/edit?usp=sharing" target="_blank" style={{color:"var(--pink)",textDecoration:"none",borderBottom:"1px solid var(--pink-border)"}}>EXP004_D60 (Google Sheets)</a></p>
+          <p><strong>Brief:</strong> <a href="https://www.notion.so/holafly/312eea72a188801aab58eb71720b7bce" target="_blank" style={{color:"var(--pink)",textDecoration:"none",borderBottom:"1px solid var(--pink-border)"}}>Notion: Exp-Pric-004</a></p>
+          <p><strong>D+60 Notion:</strong> <a href="https://www.notion.so/holafly/D-60-Validation-Effect-Stable-GM-Improving-May-20-2026-367eea72a18881b4985ac6a4442b5ced" target="_blank" style={{color:"var(--pink)",textDecoration:"none",borderBottom:"1px solid var(--pink-border)"}}>D+60 Validation: Effect Stable, GM Improving</a></p>
+          <p><strong>D+14 Dashboard:</strong> <a href="https://guidomautino.github.io/holafly-pricing-dashboards/exp_004_mxn_v5_final.html" target="_blank" style={{color:"var(--pink)",textDecoration:"none",borderBottom:"1px solid var(--pink-border)"}}>Interactive Dashboard</a></p>
+        </div>
+      </div>
+
+      <div className="page-footer">
+        <strong>Holafly</strong> · Growth Pricing · {en ? "EXP-004 D+60 Validation, May 2026" : "EXP-004 Validación D+60, Mayo 2026"} · {en ? "All figures from " : "Todas las cifras de "}<a href="https://docs.google.com/spreadsheets/d/1P37AajxUifMAzQfcdc1wQAUivW63dLqyE45e4AvHDOs/edit?usp=sharing" target="_blank">EXP004_D60</a>
+      </div>
+    </div>
+  </div>);
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

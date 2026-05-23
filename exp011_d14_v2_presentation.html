@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EXP-PRIC-011 V2 · USD FX Correction · D+14 Closing</title>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+:root {
+  --pink:#E6485C;--pink-soft:rgba(230,72,92,0.08);--pink-border:rgba(230,72,92,0.18);
+  --charcoal:#292B2E;--charcoal-soft:#4A4D52;--gray-mid:#64748B;--gray-light:#94A3B8;
+  --card:#F8FAFC;--white:#FFFFFF;--rule:#E4E6EA;--rule-soft:rgba(41,43,46,0.06);
+  --green:#15803D;--green-bg:#E8F5EE;--green-soft:rgba(21,128,61,0.10);
+  --warn:#B45309;--warn-bg:#FDF3E7;
+  --blue:#1D4ED8;--blue-bg:#E8EFFD;
+  --red:#B91C1C;--red-bg:#FDECEC;--red-soft:rgba(185,28,28,0.10);
+  --pastel-yellow:#FFF0AB;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Mulish',-apple-system,sans-serif;
+  --ease-out:cubic-bezier(0.22,1,0.36,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--charcoal);line-height:1.65;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--pink);color:var(--white)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CCD0D7;border-radius:3px}
+
+/* ──── Animations ──── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+@keyframes slideRight { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes highlightSweep { from { background-size: 0% 26%; } to { background-size: 100% 26%; } }
+@keyframes drawBarH { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes drawLine { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(180,83,9,0); } 50% { box-shadow: 0 0 0 4px rgba(180,83,9,0.12); } }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-stagger > * { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+.reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+.reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.15s; }
+.reveal-stagger.visible > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
+.reveal-stagger.visible > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.35s; }
+.reveal-stagger.visible > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.45s; }
+.reveal-stagger.visible > *:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 0.55s; }
+
+/* ──── Top bar ──── */
+.top-bar { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 14px 48px; background: rgba(255,255,255,0.78); backdrop-filter: blur(20px); border-bottom: 1px solid transparent; transition: border-color 0.3s, background 0.3s; }
+.top-bar.scrolled { border-bottom-color: var(--rule); background: rgba(255,255,255,0.92); }
+.top-bar-left { display: flex; align-items: center; gap: 10px; }
+.top-bar-dot { width: 8px; height: 8px; background: var(--pink); border-radius: 50%; box-shadow: 0 0 0 4px var(--pink-soft); }
+.top-bar-brand { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+.top-bar-divider { width: 1px; height: 14px; background: var(--rule); }
+.top-bar-ctx { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--gray-mid); letter-spacing: 0.08em; text-transform: uppercase; }
+.top-bar-badge { background: var(--warn); color: var(--white); font-family: var(--mono); font-size: 9px; font-weight: 700; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+.lang-toggle { display: flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; gap: 2px; background: var(--card); }
+.lang-toggle button { background: transparent; border: none; padding: 6px 14px; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--gray-mid); cursor: pointer; border-radius: 999px; transition: all 0.25s; letter-spacing: 0.08em; }
+.lang-toggle button.active { background: var(--charcoal); color: var(--white); }
+.top-right { display: flex; align-items: center; gap: 12px; }
+
+/* ──── Layout ──── */
+.page { max-width: 1080px; margin: 0 auto; padding: 0 48px 80px; }
+.section { padding: 80px 0 20px; }
+.section-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 8px; }
+.section-label::before { content: ''; width: 18px; height: 1px; background: var(--pink); }
+.section h2 { font-size: clamp(28px, 3.6vw, 42px); font-weight: 800; color: var(--charcoal); line-height: 1.12; letter-spacing: -0.025em; margin-bottom: 16px; max-width: 920px; }
+.section h2 .accent { color: var(--pink); }
+.section h2 .highlight { background-image: linear-gradient(120deg, var(--pastel-yellow) 0%, var(--pastel-yellow) 100%); background-repeat: no-repeat; background-size: 100% 26%; background-position: 0 88%; padding: 0 4px; }
+.section.visible h2 .highlight { animation: highlightSweep 0.9s var(--ease-out) 0.3s both; }
+.section-intro { font-size: 16px; color: var(--charcoal-soft); max-width: 780px; line-height: 1.65; margin-bottom: 32px; }
+.section-intro strong { color: var(--charcoal); font-weight: 700; }
+.section-divider { border: none; border-top: 1px solid var(--rule); margin-top: 0; }
+
+/* ──── Hero ──── */
+.hero { padding: 100px 0 60px; position: relative; }
+.hero::before { content: ''; position: absolute; top: 30px; right: -120px; width: 320px; height: 320px; background: radial-gradient(circle, var(--pink-soft) 0%, transparent 70%); border-radius: 50%; z-index: -1; }
+.hero-eyebrow { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--pink); text-transform: uppercase; letter-spacing: 1.6px; margin-bottom: 18px; display: inline-flex; align-items: center; gap: 10px; animation: slideRight 0.7s var(--ease-out) both; }
+.hero-eyebrow::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--pink); animation: pulse 2.5s infinite; }
+.hero h1 { font-size: clamp(40px, 6.2vw, 68px); font-weight: 900; color: var(--charcoal); line-height: 1.04; letter-spacing: -0.035em; margin-bottom: 24px; animation: fadeUp 0.9s var(--ease-out) 0.15s both; }
+.hero h1 .accent { color: var(--pink); }
+.hero-bigidea { font-size: 18px; color: var(--charcoal); max-width: 800px; line-height: 1.55; font-weight: 500; animation: fadeUp 0.9s var(--ease-out) 0.3s both; }
+.hero-bigidea strong { font-weight: 800; color: var(--charcoal); }
+.hero-bigidea .em-pink { color: var(--pink); font-weight: 700; }
+.hero-bigidea p { margin-bottom: 8px; }
+.hero-bigidea p:last-child { margin-bottom: 0; }
+.hero-meta { display: flex; gap: 22px; margin-top: 32px; flex-wrap: wrap; font-size: 12px; color: var(--gray-light); animation: fadeUp 0.9s var(--ease-out) 0.5s both; }
+.hero-meta span strong { color: var(--charcoal); font-weight: 700; }
+.hero-meta .sep { width: 1px; height: 12px; background: var(--rule); align-self: center; }
+
+/* ──── Stat row ──── */
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 44px; }
+@media (max-width: 800px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: var(--white); border: 1px solid var(--rule); border-radius: 14px; padding: 24px 20px; position: relative; overflow: hidden; transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+.stat:hover { transform: translateY(-4px); box-shadow: 0 16px 40px -12px rgba(41,43,46,0.12); }
+.stat::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--rule); }
+.stat.gain::before { background: var(--green); }
+.stat.loss::before { background: var(--red); }
+.stat.neutral::before { background: var(--charcoal); }
+.stat.guardrail::before { background: var(--green); }
+.stat-label { font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 10px; }
+.stat-value { font-family: var(--mono); font-size: 30px; font-weight: 800; color: var(--charcoal); line-height: 1.05; letter-spacing: -0.02em; }
+.stat-value.gain { color: var(--green); }
+.stat-value.loss { color: var(--red); }
+.stat-sub { font-size: 12px; color: var(--gray-mid); margin-top: 10px; line-height: 1.4; }
+.stat-sub strong { color: var(--charcoal-soft); font-weight: 700; }
+
+/* ──── Two-column layout ──── */
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+@media (max-width: 900px) { .cols-2 { grid-template-columns: 1fr; gap: 24px; } }
+.col-block { padding: 24px; background: var(--card); border-radius: 14px; border: 1px solid var(--rule); }
+.col-block.accent { border-left: 3px solid var(--pink); }
+.col-block-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin-bottom: 12px; }
+.col-block h3 { font-size: 18px; font-weight: 800; color: var(--charcoal); margin-bottom: 8px; letter-spacing: -0.01em; }
+.col-block p { font-size: 14px; color: var(--charcoal-soft); line-height: 1.6; }
+.col-block p strong { color: var(--charcoal); font-weight: 700; }
+.col-block ul { list-style: none; padding: 0; margin-top: 10px; }
+.col-block li { font-size: 13.5px; color: var(--charcoal-soft); padding: 8px 0; border-top: 1px solid var(--rule-soft); display: grid; grid-template-columns: 110px 1fr; gap: 12px; }
+.col-block li:first-child { border-top: none; padding-top: 4px; }
+.col-block li strong { color: var(--charcoal); font-weight: 700; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; padding-top: 1px; }
+
+/* ──── Decision strip ──── */
+.dec-strip { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+.dec-row { display: grid; grid-template-columns: 130px 1fr 130px; gap: 16px; align-items: center; padding: 18px 22px; border-radius: 12px; border: 1px solid var(--rule); background: var(--white); transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+.dec-row:hover { transform: translateX(4px); box-shadow: 0 8px 24px -8px rgba(41,43,46,0.10); }
+.dec-row.maintain { background: var(--green-bg); border-color: var(--green-soft); }
+.dec-row.rollback { background: var(--red-bg); border-color: var(--red-soft); }
+.dec-row.control { background: var(--card); border-color: var(--rule); }
+.dec-name { font-weight: 800; color: var(--charcoal); font-size: 17px; letter-spacing: -0.01em; }
+.dec-detail { font-size: 13.5px; color: var(--charcoal-soft); line-height: 1.5; }
+.dec-detail strong { color: var(--charcoal); font-weight: 700; font-family: var(--mono); font-size: 13px; }
+.dec-action { font-family: var(--mono); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; text-align: center; padding: 8px 14px; border-radius: 8px; }
+.dec-action.maintain { background: var(--green); color: var(--white); }
+.dec-action.rollback { background: var(--red); color: var(--white); }
+.dec-action.control { background: var(--gray-mid); color: var(--white); }
+@media (max-width: 800px) { .dec-row { grid-template-columns: 1fr; } .dec-action { justify-self: start; } }
+
+/* ──── Layer stack ──── */
+.layer-stack { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+.layer-row { display: grid; grid-template-columns: 80px 1fr 140px; gap: 18px; align-items: center; padding: 18px 20px; border-radius: 12px; border: 1px solid var(--rule); background: var(--white); transition: transform 0.4s var(--ease-out); }
+.layer-row:hover { transform: translateX(4px); }
+.layer-tag { font-family: var(--mono); font-size: 11px; font-weight: 800; color: var(--gray-mid); letter-spacing: 0.1em; text-transform: uppercase; }
+.layer-body { font-size: 13.5px; color: var(--charcoal-soft); line-height: 1.55; }
+.layer-body strong { color: var(--charcoal); font-weight: 700; }
+.layer-status { font-family: var(--mono); font-size: 10px; font-weight: 700; text-align: center; padding: 7px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+.layer-status.fail { background: var(--red-bg); color: var(--red); }
+.layer-status.warn { background: var(--warn-bg); color: var(--warn); }
+.layer-status.pending { background: var(--card); color: var(--gray-mid); }
+.layer-status.descriptive { background: var(--card); color: var(--gray-mid); }
+@media (max-width: 800px) { .layer-row { grid-template-columns: 1fr; } .layer-status { justify-self: start; } }
+
+/* ──── Honesty grid ──── */
+.honesty-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; }
+@media (max-width: 800px) { .honesty-grid { grid-template-columns: 1fr; } }
+.honesty-card { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 22px 24px; transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+.honesty-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px -10px rgba(41,43,46,0.10); }
+.honesty-card.no { background: var(--card); }
+.honesty-card-label { font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.honesty-card-label .icon { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; }
+.honesty-card.yes .honesty-card-label { color: var(--green); }
+.honesty-card.yes .honesty-card-label .icon { background: var(--green); color: var(--white); }
+.honesty-card.no .honesty-card-label { color: var(--gray-mid); }
+.honesty-card.no .honesty-card-label .icon { background: var(--gray-mid); color: var(--white); }
+.honesty-card ul { list-style: none; padding: 0; }
+.honesty-card li { font-size: 13.5px; color: var(--charcoal-soft); line-height: 1.55; padding: 9px 0; border-top: 1px solid var(--rule-soft); }
+.honesty-card li:first-child { border-top: none; padding-top: 0; }
+.honesty-card li strong { color: var(--charcoal); font-weight: 700; }
+
+/* ──── Worth-cards ──── */
+.worth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 800px) { .worth-grid { grid-template-columns: 1fr; } }
+.worth-card { padding: 32px 28px; border-radius: 16px; border: 1px solid var(--rule); position: relative; overflow: hidden; transition: transform 0.4s var(--ease-out); }
+.worth-card:hover { transform: translateY(-4px); }
+.worth-card.gain { background: linear-gradient(135deg, var(--green-bg) 0%, rgba(232,245,238,0.4) 100%); border-color: var(--green-soft); }
+.worth-card.loss { background: linear-gradient(135deg, var(--red-bg) 0%, rgba(253,236,236,0.4) 100%); border-color: var(--red-soft); }
+.worth-label { font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
+.worth-card.gain .worth-label { color: var(--green); }
+.worth-card.loss .worth-label { color: var(--red); }
+.worth-value { font-family: var(--mono); font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -0.025em; margin-bottom: 14px; }
+.worth-card.gain .worth-value { color: var(--green); }
+.worth-card.loss .worth-value { color: var(--red); }
+.worth-desc { font-size: 14px; color: var(--charcoal); line-height: 1.55; }
+.worth-desc strong { font-weight: 800; }
+.worth-tag { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 6px; margin-top: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+.worth-card.loss .worth-tag { background: var(--red); color: var(--white); }
+
+/* ──── Callout ──── */
+.callout { background: var(--card); border-left: 3px solid var(--pink); border-radius: 0 12px 12px 0; padding: 18px 24px; margin: 20px 0; font-size: 14px; color: var(--charcoal-soft); line-height: 1.6; }
+.callout strong { color: var(--charcoal); font-weight: 700; }
+.callout.warn { border-left-color: var(--warn); background: var(--warn-bg); }
+
+/* ──── Next steps ──── */
+.next-list { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+.next-item { display: grid; grid-template-columns: 60px 1fr 180px; gap: 18px; align-items: center; padding: 20px 24px; background: var(--white); border: 1px solid var(--rule); border-radius: 12px; transition: all 0.4s var(--ease-out); }
+.next-item:hover { background: var(--card); transform: translateX(6px); }
+.next-num { font-family: var(--mono); font-size: 24px; font-weight: 800; color: var(--pink); letter-spacing: -0.02em; }
+.next-body { font-size: 14.5px; color: var(--charcoal); line-height: 1.5; }
+.next-body strong { font-weight: 800; }
+.next-meta { font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--gray-mid); text-transform: uppercase; letter-spacing: 0.08em; text-align: right; }
+.next-meta a { color: var(--pink); text-decoration: none; border-bottom: 1px solid var(--pink-border); }
+@media (max-width: 800px) { .next-item { grid-template-columns: 40px 1fr; } .next-meta { grid-column: 1 / 3; text-align: left; padding-top: 6px; } }
+
+/* ──── Footer ──── */
+.page-footer { border-top: 1px solid var(--rule); padding: 32px 0; margin-top: 64px; text-align: center; font-size: 11.5px; color: var(--gray-light); }
+.page-footer strong { color: var(--gray-mid); font-weight: 700; }
+.page-footer a { color: var(--gray-mid); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.2s; }
+.page-footer a:hover { color: var(--pink); border-bottom-color: var(--pink); }
+
+@media (max-width: 800px) {
+  .top-bar { padding: 12px 18px; }
+  .page { padding: 0 18px 48px; }
+  .section { padding: 56px 0 16px; }
+  .hero { padding: 60px 0 40px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ──── Custom hooks ──── */
+function useScrollReveal(threshold = 0.15) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        obs.disconnect();
+      }
+    }, { threshold, rootMargin: '0px 0px -10% 0px' });
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+}
+
+function useCountUp(target, duration = 1400, active = true, decimals = 0, prefix = '', suffix = '') {
+  const [val, setVal] = useState(active ? 0 : target);
+  useEffect(() => {
+    if (!active) return;
+    let raf;
+    const start = performance.now();
+    const tick = (now) => {
+      const elapsed = now - start;
+      const p = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(target * eased);
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else setVal(target);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration, active]);
+  const formatted = decimals > 0 ? val.toFixed(decimals) : Math.round(val).toLocaleString();
+  return `${prefix}${formatted}${suffix}`;
+}
+
+/* ──── Per-destination revenue chart with rollback line ──── */
+function DivideChart({ en, active }) {
+  const W = 720, H = 320, PX = 110, PY = 30, PB = 50, PR = 40;
+  const cW = W - PX - PR, cH = H - PY - PB;
+  const data = [
+    { label: 'Italy', val: 9.31, decision: 'maintain' },
+    { label: 'Spain', val: -0.07, decision: 'maintain' },
+    { label: 'Brazil', val: -26.26, decision: 'rollback' },
+    { label: 'Colombia', val: -29.05, decision: 'rollback' },
+    { label: 'Mexico', val: -19.12, decision: 'control' },
+  ];
+  const maxAbs = 32;
+  const zeroX = PX + cW * (maxAbs / (2 * maxAbs));
+  const barH = 30;
+  const gap = 16;
+  const tx = zeroX + (-1.11 / maxAbs) * (cW / 2);
+
+  return (
+    <div style={{ background: 'var(--card)', border: '1px solid var(--rule)', borderRadius: 14, padding: '24px 18px 18px', margin: '28px 0' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', maxWidth: 720, display: 'block', margin: '0 auto' }}>
+        {/* Background grid */}
+        {[-30, -20, -10, 0, 10].map(v => {
+          const x = zeroX + (v / maxAbs) * (cW / 2);
+          return <line key={v} x1={x} y1={PY} x2={x} y2={H - PB} stroke="var(--rule-soft)" strokeWidth="1" strokeDasharray={v === 0 ? '0' : '3,3'} />;
+        })}
+        {[-30, -20, -10, 0, 10].map(v => {
+          const x = zeroX + (v / maxAbs) * (cW / 2);
+          return <text key={`l${v}`} x={x} y={H - PB + 20} textAnchor="middle" fill="var(--gray-light)" fontSize="10" fontFamily="var(--mono)" fontWeight="700">{v > 0 ? '+' : ''}{v}%</text>;
+        })}
+
+        {/* Zero baseline */}
+        <line x1={zeroX} y1={PY - 8} x2={zeroX} y2={H - PB + 4} stroke="var(--charcoal)" strokeWidth="1.5" />
+
+        {/* Rollback line (drawn) */}
+        <line x1={tx} y1={PY - 8} x2={tx} y2={H - PB + 4} stroke="var(--red)" strokeWidth="1.5" strokeDasharray="5,4"
+              style={{ strokeDashoffset: active ? 0 : 400, transition: 'stroke-dashoffset 1s var(--ease-out) 0.4s' }} />
+        <text x={tx - 6} y={PY - 12} textAnchor="end" fill="var(--red)" fontSize="10" fontFamily="var(--mono)" fontWeight="800" letterSpacing="0.04em"
+              style={{ opacity: active ? 1 : 0, transition: 'opacity 0.5s ease 1.2s' }}>
+          {en ? 'ROLLBACK LINE (-1.1%)' : 'LÍNEA ROLLBACK (-1.1%)'}
+        </text>
+
+        {/* Bars */}
+        {data.map((d, i) => {
+          const yPos = PY + 12 + i * (barH + gap);
+          const w = Math.abs(d.val / maxAbs) * (cW / 2);
+          const xPos = d.val >= 0 ? zeroX : zeroX - w;
+          const color = d.decision === 'maintain' ? 'var(--green)' : d.decision === 'rollback' ? 'var(--red)' : 'var(--gray-mid)';
+          const transformOrigin = d.val >= 0 ? `${zeroX}px ${yPos + barH / 2}px` : `${zeroX}px ${yPos + barH / 2}px`;
+          return (
+            <g key={i}>
+              <text x={PX - 12} y={yPos + barH / 2 + 5} textAnchor="end" fill="var(--charcoal)" fontSize="14" fontWeight="800">{d.label}</text>
+              <rect x={xPos} y={yPos} width={w} height={barH} fill={color} rx="4"
+                    style={{
+                      transform: active ? 'scaleX(1)' : 'scaleX(0)',
+                      transformOrigin,
+                      transition: `transform 0.85s var(--ease-out) ${0.2 + i * 0.1}s`,
+                    }} />
+              <text x={d.val >= 0 ? xPos + w + 10 : xPos - 10} y={yPos + barH / 2 + 5}
+                    textAnchor={d.val >= 0 ? 'start' : 'end'} fill={color} fontSize="13" fontWeight="800" fontFamily="var(--mono)"
+                    style={{ opacity: active ? 1 : 0, transition: `opacity 0.5s ease ${0.6 + i * 0.1}s` }}>
+                {d.val > 0 ? '+' : ''}{d.val.toFixed(1)}%
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 28, marginTop: 14, fontSize: 12, color: 'var(--gray-mid)' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ width: 14, height: 14, background: 'var(--green)', borderRadius: 3 }} /> {en ? 'Maintain' : 'Mantener'}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ width: 14, height: 14, background: 'var(--red)', borderRadius: 3 }} /> {en ? 'Rollback' : 'Rollback'}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ width: 14, height: 14, background: 'var(--gray-mid)', borderRadius: 3 }} /> {en ? 'Control' : 'Control'}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ──── Reveal wrapper ──── */
+function Reveal({ children, stagger = false, className = '' }) {
+  const [ref, visible] = useScrollReveal();
+  const cls = `${stagger ? 'reveal-stagger' : 'reveal'} ${visible ? 'visible' : ''} ${className}`;
+  return <div ref={ref} className={cls}>{children}</div>;
+}
+
+function SectionWrap({ children }) {
+  const [ref, visible] = useScrollReveal();
+  return <div ref={ref} className={`section ${visible ? 'visible' : ''}`}>{children}</div>;
+}
+
+/* ──── Stat with count-up ──── */
+function StatCard({ label, value, sub, variant, delay = 0, active, formatValue }) {
+  return (
+    <div className={`stat ${variant || ''}`} style={{ animation: active ? `scaleIn 0.6s var(--ease-out) ${delay}s both` : 'none' }}>
+      <div className="stat-label">{label}</div>
+      <div className={`stat-value ${variant === 'gain' ? 'gain' : variant === 'loss' ? 'loss' : ''}`}>{value}</div>
+      <div className="stat-sub">{sub}</div>
+    </div>
+  );
+}
+
+/* ──── Hero stats with count-up animation ──── */
+function HeroStats({ en, active }) {
+  const ninety = useCountUp(90, 1400, active);
+  const sevenSixtyTwo = useCountUp(762, 1600, active);
+  return (
+    <div className="stat-row">
+      <StatCard variant="neutral" delay={0.65} active={active}
+                label={en ? 'Decision' : 'Decisión'}
+                value={en ? '2 + 2' : '2 + 2'}
+                sub={en ? <><strong>2 maintain</strong> · <strong>2 rollback</strong> by destination</> : <><strong>2 mantener</strong> · <strong>2 rollback</strong> por destino</>} />
+      <StatCard variant="guardrail" delay={0.75} active={active}
+                label={en ? 'GM Guardrail' : 'Guardrail GM'}
+                value={en ? 'Held' : 'OK'}
+                sub={en ? <>No margin erosion <strong>across all four</strong></> : <>Sin erosión de margen <strong>en los cuatro</strong></>} />
+      <StatCard variant="gain" delay={0.85} active={active}
+                label={en ? 'Real annual gain' : 'Ganancia anual real'}
+                value={`+€${ninety}K`}
+                sub={en ? <>From keeping <strong>Spain + Italy</strong></> : <>De mantener <strong>España + Italia</strong></>} />
+      <StatCard variant="loss" delay={0.95} active={active}
+                label={en ? 'Annual loss prevented' : 'Pérdida anual evitada'}
+                value={`€${sevenSixtyTwo}K`}
+                sub={en ? <>Reverting <strong>Brazil + Colombia</strong> · not income</> : <>Revirtiendo <strong>Brasil + Colombia</strong> · no es ingreso</>} />
+    </div>
+  );
+}
+
+function App() {
+  const [lang, setLang] = useState('en');
+  const [scrolled, setScrolled] = useState(false);
+  const [heroActive, setHeroActive] = useState(false);
+  const en = lang === 'en';
+  const [chartRef, chartVisible] = useScrollReveal(0.25);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', fn);
+    const t = setTimeout(() => setHeroActive(true), 300);
+    return () => { window.removeEventListener('scroll', fn); clearTimeout(t); };
+  }, []);
+
+  return (<div>
+    {/* TOP BAR */}
+    <div className={`top-bar ${scrolled ? 'scrolled' : ''}`}>
+      <div className="top-bar-left">
+        <span className="top-bar-dot" />
+        <span className="top-bar-brand">Holafly</span>
+        <span className="top-bar-divider" />
+        <span className="top-bar-ctx">EXP-PRIC-011 V2 · D+14 Closing</span>
+      </div>
+      <div className="top-right">
+        <span className="top-bar-badge">{en ? 'D+14 · Differentiated decision' : 'D+14 · Decisión diferenciada'}</span>
+        <div className="lang-toggle">
+          <button className={en ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
+          <button className={!en ? 'active' : ''} onClick={() => setLang('es')}>ES</button>
+        </div>
+      </div>
+    </div>
+
+    <div className="page">
+
+      {/* ═══ 1. HERO + TL;DR ═══ */}
+      <div className="hero">
+        <div className="hero-eyebrow">EXP-PRIC-011 V2 · D+14 Closing</div>
+        <h1>{en ? <>USD FX correction<span className="accent">.</span><br />14 days later.</> : <>Corrección de FX USD<span className="accent">.</span><br />14 días después.</>}</h1>
+        <div className="hero-bigidea">
+          {en
+            ? <>
+                <p>The primary metric (ARPU vs forecast) came back <strong>inconclusive at D+14</strong>.</p>
+                <p>The brief's <span className="em-pink">pre-declared rollback rule</span> on actual revenue per destination decided: <strong>keep Spain and Italy at the new rate, revert Brazil and Colombia to the old one</strong>.</p>
+              </>
+            : <>
+                <p>La métrica primary (ARPU vs forecast) quedó <strong>inconclusa en D+14</strong>.</p>
+                <p>La <span className="em-pink">regla de rollback pre-declarada del brief</span> sobre revenue real por destino decidió: <strong>mantenemos España e Italia a la nueva tasa, revertimos Brasil y Colombia a la vieja</strong>.</p>
+              </>
+          }
+        </div>
+        <div className="hero-meta">
+          <span><strong>{en ? 'For' : 'Para'}</strong> Alfonso Mata · Xabi Marinelarena</span>
+          <span className="sep" /><span><strong>{en ? 'Date' : 'Fecha'}</strong> May 22, 2026</span>
+          <span className="sep" /><span><strong>Owner</strong> Guido Mautino</span>
+        </div>
+        <HeroStats en={en} active={heroActive} />
+      </div>
+
+      {/* ═══ 2. THE CHANGE + THE RULE ═══ */}
+      <hr className="section-divider" />
+      <SectionWrap>
+        <div className="section-label">{en ? '01 · The setup' : '01 · El setup'}</div>
+        <h2>{en ? <>We aligned USD to market FX. <span className="highlight">The brief wrote the decision rule before launch.</span></> : <>Alineamos USD al FX de mercado. <span className="highlight">El brief escribió la regla de decisión antes del launch.</span></>}</h2>
+        <div className="section-intro">{en ? <>The framing matters because it tells you what kind of decision this was — execution against a pre-written rule, not interpretation after the fact.</> : <>El framing importa porque te dice qué tipo de decisión fue — ejecución contra una regla pre-escrita, no interpretación ex post.</>}</div>
+        <Reveal>
+          <div className="cols-2">
+            <div className="col-block">
+              <div className="col-block-label">{en ? 'What changed' : 'Qué cambió'}</div>
+              <h3>{en ? 'FX 1.08 → 1.15 on 4 USD destinations' : 'FX 1.08 → 1.15 en 4 destinos USD'}</h3>
+              <p>{en ? <>The USD storefront was pinned at 1.08. Market FX had drifted to 1.15. <strong>We were selling at a 6.4% effective discount vs the EUR catalog of record.</strong></> : <>El storefront USD estaba fijado en 1.08. El FX de mercado había drifteado a 1.15. <strong>Estábamos vendiendo con un descuento efectivo del 6.4% vs el catálogo EUR.</strong></>}</p>
+              <ul style={{ marginTop: 14 }}>
+                <li><strong>Treated</strong>Spain, Italy, Brazil, Colombia</li>
+                <li><strong>Control</strong>Mexico (kept at 1.08)</li>
+                <li><strong>Launch</strong>May 5, 2026</li>
+                <li><strong>Window</strong>14 days post vs 93 days pre</li>
+              </ul>
+            </div>
+            <div className="col-block accent">
+              <div className="col-block-label">{en ? "The brief's rule (pre-declared)" : 'La regla del brief (pre-declarada)'}</div>
+              <h3>{en ? 'Four checks. One rollback line. One guardrail.' : 'Cuatro chequeos. Una línea de rollback. Un guardrail.'}</h3>
+              <p>{en ? <>The brief defined ahead of time what we'd check, what would count as a green light, and what would trigger a revert. <strong>The decision rule is the brief's, not ours after the fact.</strong></> : <>El brief definió por anticipado qué chequear, qué contaría como luz verde y qué dispararía una reversión. <strong>La regla de decisión es del brief, no nuestra ex post.</strong></>}</p>
+              <ul style={{ marginTop: 14 }}>
+                <li><strong>Primary</strong>{en ? 'ARPU vs OLS forecast' : 'ARPU vs forecast OLS'}</li>
+                <li><strong>Rollback line</strong>{en ? 'Revenue Δ < -1.1% annual' : 'Δ revenue < -1.1% anual'}</li>
+                <li><strong>4 layers</strong>{en ? 'Forecast · DID · YoY · pre-post' : 'Forecast · DID · YoY · pre-post'}</li>
+                <li><strong>GM guardrail</strong>{en ? '±2pp vs baseline' : '±2pp vs baseline'}</li>
+              </ul>
+            </div>
+          </div>
+        </Reveal>
+      </SectionWrap>
+
+      {/* ═══ 3. THE DIVIDE ═══ */}
+      <hr className="section-divider" />
+      <SectionWrap>
+        <div className="section-label">{en ? '02 · The result' : '02 · El resultado'}</div>
+        <h2>{en ? <>Two destinations absorbed it. <span className="highlight">Two crossed the rollback line.</span></> : <>Dos destinos lo absorbieron. <span className="highlight">Dos cruzaron la línea de rollback.</span></>}</h2>
+        <div className="section-intro">{en ? <>Same change, four destinations, two patterns. <strong>This is the chart that decides the experiment.</strong> Italy stayed above the brief's best case. Spain landed just at break-even. Brazil and Colombia overshot the rollback line by an order of magnitude.</> : <>Mismo cambio, cuatro destinos, dos patrones. <strong>Este es el chart que decide el experimento.</strong> Italia quedó arriba del best case del brief. España justo en break-even. Brasil y Colombia cruzaron la línea de rollback por un orden de magnitud.</>}</div>
+        <div ref={chartRef}>
+          <DivideChart en={en} active={chartVisible} />
+        </div>
+        <Reveal stagger>
+          <div className="dec-strip">
+            <div className="dec-row maintain">
+              <div className="dec-name">Italy</div>
+              <div className="dec-detail"><strong>+9.31% revenue</strong> · {en ? "above the brief's best case (+6.5%)." : "por encima del best case del brief (+6.5%)."}</div>
+              <div className="dec-action maintain">Maintain</div>
+            </div>
+            <div className="dec-row maintain">
+              <div className="dec-name">Spain</div>
+              <div className="dec-detail"><strong>-0.07% revenue</strong> · {en ? "near break-even (-0.4%), inside the brief's acceptable band." : "cerca del break-even (-0.4%), dentro de la banda aceptable."}</div>
+              <div className="dec-action maintain">Maintain</div>
+            </div>
+            <div className="dec-row rollback">
+              <div className="dec-name">Brazil</div>
+              <div className="dec-detail"><strong>-26.26% revenue</strong> · {en ? "24× past the rollback line. Hypothesis didn't hold." : "24× pasada la línea de rollback. La hipótesis no se sostuvo."}</div>
+              <div className="dec-action rollback">Rollback</div>
+            </div>
+            <div className="dec-row rollback">
+              <div className="dec-name">Colombia</div>
+              <div className="dec-detail"><strong>-29.05% revenue</strong> · {en ? "26× past the rollback line. Same pattern as Brazil." : "26× pasada la línea de rollback. Mismo patrón que Brasil."}</div>
+              <div className="dec-action rollback">Rollback</div>
+            </div>
+            <div className="dec-row control">
+              <div className="dec-name">Mexico</div>
+              <div className="dec-detail">{en ? "Control destination, no change applied." : "Destino control, sin cambio aplicado."}</div>
+              <div className="dec-action control">Control</div>
+            </div>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="callout"><strong>{en ? "Why this divide:" : "Por qué este corte:"}</strong> {en ? "in Spain and Italy, customers who did buy chose plans 27-29% longer than before — the ticket went up, revenue held. In Brazil and Colombia, no such migration: the price step landed on a base that didn't shift up, and revenue fell with volume." : "en España e Italia, los clientes que sí compraron eligieron planes 27-29% más largos que antes — el ticket subió, el revenue se sostuvo. En Brasil y Colombia, no hubo esa migración: el paso de precio cayó sobre una base que no se movió y el revenue cayó con el volumen."}</div>
+        </Reveal>
+      </SectionWrap>
+
+      {/* ═══ 4. WHY THE PRIMARY DIDN'T DECIDE ═══ */}
+      <hr className="section-divider" />
+      <SectionWrap>
+        <div className="section-label">{en ? '03 · The primary' : '03 · La primary'}</div>
+        <h2>{en ? <>The statistical primary came back <span className="accent">inconclusive.</span> The brief had a rule for that.</> : <>La primary estadística quedó <span className="accent">inconclusa.</span> El brief tenía una regla para eso.</>}</h2>
+        <div className="section-intro">{en ? <>Two of four checks didn't give a clean reading at D+14. The brief said explicitly what to do when this happens: fall back to actual revenue per destination against the rollback line. That's what section 02 is. The differentiated decision is the brief's protocol executed, not improvisation.</> : <>Dos de cuatro chequeos no dieron lectura limpia en D+14. El brief decía explícitamente qué hacer cuando esto pasa: volver a revenue real por destino contra la línea de rollback. Eso es la sección 02. La decisión diferenciada es el protocolo del brief ejecutado, no improvisación.</>}</div>
+        <Reveal stagger>
+          <div className="layer-stack">
+            <div className="layer-row">
+              <div className="layer-tag">Layer 1</div>
+              <div className="layer-body"><strong>{en ? 'ARPU forecast (the primary).' : 'Forecast de ARPU (la primary).'}</strong> {en ? "Statistical model trained on 93 days pre. Its job: project the ARPU we'd have seen without any change. " : "Modelo estadístico entrenado en 93 días pre. Su trabajo: proyectar el ARPU que veríamos sin cambio. "}<strong>{en ? "It didn't fit the past data well enough — the brief itself set a minimum fit quality (R² ≥ 0.30) which we did not meet (0.226)." : "No ajustó suficientemente bien a los datos previos — el brief mismo definió una calidad mínima (R² ≥ 0.30) que no alcanzamos (0.226)."}</strong></div>
+              <div className="layer-status fail">{en ? 'Fit too weak' : 'Ajuste débil'}</div>
+            </div>
+            <div className="layer-row">
+              <div className="layer-tag">Layer 2</div>
+              <div className="layer-body"><strong>{en ? 'DID vs Mexico (the backup).' : 'DID vs México (el backup).'}</strong> {en ? "Compare how treated destinations changed vs how Mexico changed. Pre-period parallel trends passed — the comparison was set up correctly. " : "Comparar cómo cambiaron los tratados vs cómo cambió México. Parallel trends pre-período pasó — la comparación estaba bien armada. "}<strong>{en ? "But Mexico moved on its own during the post window (GM +6.5pp, CVR +5.2pp) for reasons unrelated to the experiment. Control no longer clean." : "Pero México se movió por su cuenta durante la ventana post (GM +6.5pp, CVR +5.2pp) por razones ajenas al experimento. El control ya no es limpio."}</strong></div>
+              <div className="layer-status warn">{en ? 'Control contaminated' : 'Control contaminado'}</div>
+            </div>
+            <div className="layer-row">
+              <div className="layer-tag">Layer 3</div>
+              <div className="layer-body"><strong>{en ? 'YoY at D+30 (sanity check).' : 'YoY en D+30 (sanity).'}</strong> {en ? 'Same days, May 5-19 2025 vs 2026. Filters out general market seasonality. Available June 4.' : 'Mismos días, 5-19 May 2025 vs 2026. Filtra estacionalidad general de mercado. Disponible 4 de junio.'}</div>
+              <div className="layer-status pending">{en ? 'Pending D+30' : 'Pendiente D+30'}</div>
+            </div>
+            <div className="layer-row">
+              <div className="layer-tag">Layer 4</div>
+              <div className="layer-body"><strong>{en ? 'Pre-post (reference).' : 'Pre-post (referencia).'}</strong> {en ? "Simple before-after average. Doesn't control for outside factors — communicational context only, not part of the formal verdict." : "Promedio simple antes-después. No controla por factores externos — contexto comunicacional solamente, no parte del veredicto formal."}</div>
+              <div className="layer-status descriptive">{en ? 'Reference' : 'Referencia'}</div>
+            </div>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="callout warn"><strong>{en ? "The brief's protocol when layers disagree:" : "Protocolo del brief cuando las capas no convergen:"}</strong> {en ? "fall back to actual revenue change per destination, measured directly from confirmed payments in BigQuery, against the rollback line. That is the cleanest source we have — no model assumptions, no analytics noise. The split decision in section 02 is that protocol executed." : "volver al cambio real de revenue por destino, medido directamente desde pagos confirmados en BigQuery, contra la línea de rollback. Esa es la fuente más limpia que tenemos — sin supuestos de modelo, sin ruido de analytics. La decisión diferenciada de la sección 02 es ese protocolo ejecutado."}</div>
+        </Reveal>
+      </SectionWrap>
+
+      {/* ═══ 5. WHAT THE DECISION IS WORTH ═══ */}
+      <hr className="section-divider" />
+      <SectionWrap>
+        <div className="section-label">{en ? '04 · What it is worth' : '04 · Cuánto vale'}</div>
+        <h2>{en ? <>Two financial pieces. <span className="highlight">Different baselines. Don't add as one number.</span></> : <>Dos piezas financieras. <span className="highlight">Baselines distintos. No sumar como un solo número.</span></>}</h2>
+        <div className="section-intro">{en ? <>Keeping Spain and Italy at the new rate produces a real annual gain. Reverting Brazil and Colombia prevents a much larger annual loss. <strong>These measure different things</strong> — one is gain vs the pre-experiment state, the other is loss avoided vs the alternative of keeping all four at the new rate. Reporting them as one combined figure overstates the gain side.</> : <>Mantener España e Italia a la nueva tasa produce una ganancia anual real. Revertir Brasil y Colombia evita una pérdida anual mucho mayor. <strong>Miden cosas distintas</strong> — uno es ganancia vs el estado pre-experimento, el otro es pérdida evitada vs la alternativa de mantener los cuatro a la nueva tasa. Reportarlos como una cifra combinada sobre-estima el lado de la ganancia.</>}</div>
+        <Reveal>
+          <div className="worth-grid">
+            <div className="worth-card gain">
+              <div className="worth-label">{en ? 'Real annual gain' : 'Ganancia anual real'}</div>
+              <div className="worth-value">+€90K</div>
+              <div className="worth-desc"><strong>{en ? 'From keeping Spain + Italy at 1.15.' : 'De mantener España + Italia a 1.15.'}</strong> {en ? 'Almost entirely from Italy (+€91K). Spain near-zero (-€1K). This is genuine extra annual revenue vs the pre state.' : 'Casi enteramente de Italia (+€91K). España cerca de cero (-€1K). Esto es revenue anual extra genuino vs el estado pre.'}</div>
+            </div>
+            <div className="worth-card loss">
+              <div className="worth-label">{en ? 'Annual loss prevented' : 'Pérdida anual evitada'}</div>
+              <div className="worth-value">€762K</div>
+              <div className="worth-desc"><strong>{en ? 'From reverting Brazil + Colombia to 1.08.' : 'De revertir Brasil + Colombia a 1.08.'}</strong> {en ? 'This is what we stop losing on an annualized basis. The number measures the cost of inaction — what we would lose if we kept the new rate everywhere.' : 'Esto es lo que dejamos de perder en base anualizada. El número mide el costo de no actuar — lo que perderíamos si mantuviéramos la nueva tasa en todos lados.'}</div>
+              <div className="worth-tag">{en ? 'Not income' : 'No es ingreso'}</div>
+            </div>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="callout"><strong>{en ? 'How to read them together.' : 'Cómo leerlos juntos.'}</strong> {en ? "If we held all four destinations at 1.15, the +€90K from Spain and Italy would still happen — but it'd be more than offset by €762K of ongoing losses from Brazil and Colombia. The differentiated decision captures the upside and removes the downside. " : "Si mantuviéramos los cuatro destinos a 1.15, los +€90K de España e Italia seguirían sucediendo — pero quedarían más que compensados por €762K de pérdidas continuas de Brasil y Colombia. La decisión diferenciada captura el upside y elimina el downside. "}<strong>{en ? "Both figures are linear extrapolations from a 14-day window and will narrow at D+30 with double the post-period sample." : "Ambas cifras son extrapolaciones lineales desde una ventana de 14 días y se van a estrechar en D+30 con doble del sample post-período."}</strong></div>
+        </Reveal>
+      </SectionWrap>
+
+      {/* ═══ 6. WHAT WE'RE NOT CLAIMING ═══ */}
+      <hr className="section-divider" />
+      <SectionWrap>
+        <div className="section-label">{en ? '05 · Honesty check' : '05 · Check de honestidad'}</div>
+        <h2>{en ? <>Why the call is "maintain" at D+14, <span className="accent">not "scale".</span></> : <>Por qué la decisión a D+14 es "mantener", <span className="accent">no "escalar".</span></>}</h2>
+        <div className="section-intro">{en ? <>The decision in section 02 follows the brief's rule cleanly, but there are open items we want visible. Maintain means hold the rate while we close them. Scale is a separate call that happens at D+30 with more data.</> : <>La decisión en la sección 02 sigue la regla del brief limpiamente, pero hay items abiertos que queremos visibles. Mantener significa sostener la tasa mientras los cerramos. Escalar es una decisión separada que sucede en D+30 con más datos.</>}</div>
+        <Reveal>
+          <div className="honesty-grid">
+            <div className="honesty-card yes">
+              <div className="honesty-card-label"><span className="icon">✓</span>{en ? 'We can say' : 'Podemos decir'}</div>
+              <ul>
+                <li><strong>{en ? 'Spain and Italy absorbed reasonably.' : 'España e Italia absorbieron razonablemente.'}</strong> {en ? 'Revenue held, ticket went up via mix shift to longer plans, margin clean.' : 'Revenue se sostuvo, ticket subió vía mix shift a planes más largos, margen limpio.'}</li>
+                <li><strong>{en ? "Brazil and Colombia didn't absorb." : 'Brasil y Colombia no absorbieron.'}</strong> {en ? "Revenue fell past the brief's rollback line by 24-26×." : "Revenue cayó pasado la línea de rollback del brief por 24-26×."}</li>
+                <li><strong>{en ? "The decision follows the brief's own rule." : 'La decisión sigue la propia regla del brief.'}</strong> {en ? 'Not a post-hoc judgment call.' : 'No un juicio ex post.'}</li>
+                <li><strong>{en ? 'Margin did not erode.' : 'El margen no se erosionó.'}</strong> {en ? 'All four destinations within the 2pp band.' : 'Los cuatro destinos dentro de la banda de 2pp.'}</li>
+              </ul>
+            </div>
+            <div className="honesty-card no">
+              <div className="honesty-card-label"><span className="icon">!</span>{en ? "What we can't yet say" : 'Lo que aún no podemos decir'}</div>
+              <ul>
+                <li><strong>{en ? 'That ARPU lifted with statistical confidence.' : 'Que ARPU subió con confianza estadística.'}</strong> {en ? "The measured number is positive but the uncertainty is wide enough that we can't rule out zero. We re-check at D+30." : "El número medido es positivo pero la incertidumbre es lo suficientemente amplia que no podemos descartar cero. Re-chequeamos en D+30."}</li>
+                <li><strong>{en ? 'That Mexico is a clean control.' : 'Que México es un control limpio.'}</strong> {en ? 'It moved on its own in the post window; under investigation. Likely carrier-side, not pricing.' : 'Se movió por su cuenta en la ventana post; bajo investigación. Probablemente del lado del carrier, no pricing.'}</li>
+                <li><strong>{en ? 'That GA4 numbers are fully reliable here.' : 'Que los números de GA4 son completamente confiables acá.'}</strong> {en ? 'Sessions -21.8% vs paid orders +3.9% — these should move together. Mati is auditing.' : 'Sesiones -21.8% vs órdenes pagas +3.9% — deberían moverse juntos. Mati está auditando.'}</li>
+                <li><strong>{en ? 'That the €762K is incremental income.' : 'Que los €762K son ingreso incremental.'}</strong> {en ? 'It is a loss prevented, not money earned. The €90K from Spain and Italy is the real gain figure.' : 'Es una pérdida evitada, no plata ganada. Los €90K de España e Italia son la cifra de ganancia real.'}</li>
+              </ul>
+            </div>
+          </div>
+        </Reveal>
+      </SectionWrap>
+
+      {/* ═══ 7. NEXT STEPS ═══ */}
+      <hr className="section-divider" />
+      <SectionWrap>
+        <div className="section-label">{en ? '06 · Next' : '06 · Siguiente'}</div>
+        <h2>{en ? <>Four actions <span className="highlight">out of this closing.</span></> : <>Cuatro acciones <span className="highlight">de este cierre.</span></>}</h2>
+        <Reveal stagger>
+          <div className="next-list">
+            <div className="next-item">
+              <div className="next-num">01</div>
+              <div className="next-body"><strong>{en ? 'Rollback Brazil + Colombia to 1.08.' : 'Rollback Brasil + Colombia a 1.08.'}</strong> {en ? 'Implementation ticket opened with Sebas.' : 'Ticket de implementación abierto con Sebas.'}</div>
+              <div className="next-meta">{en ? 'Within 48h' : 'Dentro de 48h'} · <a href="https://holaflyers.atlassian.net/jira/servicedesk/projects/JSMCO/queues/issue/JSMCO-472" target="_blank">JSMCO-472</a></div>
+            </div>
+            <div className="next-item">
+              <div className="next-num">02</div>
+              <div className="next-body"><strong>{en ? 'Spain + Italy held at 1.15.' : 'España + Italia mantenidos a 1.15.'}</strong> {en ? 'Already in effect, no further action required.' : 'Ya en efecto, sin acción adicional requerida.'}</div>
+              <div className="next-meta">{en ? 'In effect' : 'En efecto'}</div>
+            </div>
+            <div className="next-item">
+              <div className="next-num">03</div>
+              <div className="next-body"><strong>{en ? 'New USD destinations to test.' : 'Nuevos destinos USD a testear.'}</strong> {en ? 'Candidates and test design with Joan and Xabi.' : 'Candidatos y diseño del test con Joan y Xabi.'}</div>
+              <div className="next-meta">{en ? 'Next week' : 'Próxima semana'}</div>
+            </div>
+            <div className="next-item">
+              <div className="next-num">04</div>
+              <div className="next-body"><strong>{en ? 'Formal close on Spain + Italy.' : 'Cierre formal sobre España + Italia.'}</strong> {en ? 'Re-run primary with more data, YoY check, close Mexico and GA4 audits, formal scale decision.' : 'Re-correr la primary con más datos, check YoY, cerrar audits de México y GA4, decisión formal de escalar.'}</div>
+              <div className="next-meta">{en ? 'D+30 · June 4' : 'D+30 · 4 jun'}</div>
+            </div>
+          </div>
+        </Reveal>
+      </SectionWrap>
+
+      <div className="page-footer">
+        <strong>Holafly</strong> · Growth Pricing · {en ? 'EXP-PRIC-011 V2 D+14 Closing, May 2026' : 'EXP-PRIC-011 V2 Cierre D+14, Mayo 2026'}
+        <br />
+        {en ? 'Full methodology, queries, confounder detail, and workbook: ' : 'Metodología completa, queries, detalle de confounders y workbook: '}
+        <a href="https://www.notion.so/holafly/D-14-Closing-May-22-2026-368eea72a18881de86c1c21ff66b4334" target="_blank">{en ? 'Notion closing doc' : 'Doc de cierre en Notion'}</a>
+      </div>
+    </div>
+  </div>);
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

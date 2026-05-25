@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EXP-009 GBP · D+30 Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+:root {
+  --pink:#E6485C;--pink-soft:rgba(230,72,92,0.08);--pink-border:rgba(230,72,92,0.18);
+  --charcoal:#292B2E;--charcoal-soft:#4A4D52;--gray-mid:#64748B;--gray-light:#94A3B8;
+  --card:#F8FAFC;--white:#FFFFFF;--rule:#E4E6EA;--rule-soft:rgba(41,43,46,0.06);
+  --green:#15803D;--green-bg:#E8F5EE;--warn:#B45309;--warn-bg:#FDF3E7;
+  --blue:#1D4ED8;--blue-bg:#E8EFFD;--purple:#7C3AED;--purple-bg:#F3EEFE;
+  --pastel-yellow:#FFF0AB;--pastel-blue:#BFEBFF;--pastel-peach:#FFCCB0;
+  --mono:'JetBrains Mono',monospace;--sans:'Mulish',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--white);color:var(--charcoal);line-height:1.65;font-size:14px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--pink);color:var(--white)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CCD0D7;border-radius:3px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.anim-up{animation:fadeUp .4s ease both}.anim-scale{animation:scaleIn .35s ease both}
+
+.top-bar{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:14px 48px;background:rgba(255,255,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:border-color .3s}
+.top-bar.scrolled{border-bottom-color:var(--rule)}
+.top-bar-left{display:flex;align-items:center;gap:10px}
+.top-bar-dot{width:8px;height:8px;background:var(--pink);border-radius:50%}
+.top-bar-brand{font-size:15px;font-weight:800;color:var(--charcoal);letter-spacing:-0.02em}
+.top-bar-divider{width:1px;height:14px;background:var(--rule)}
+.top-bar-context{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--gray-mid);letter-spacing:.08em;text-transform:uppercase}
+.top-bar-badge{background:var(--green);color:var(--white);font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.1em;text-transform:uppercase}
+.lang-toggle{display:flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;background:var(--rule-soft);padding:3px;gap:2px}
+.lang-toggle button{background:transparent;border:none;padding:6px 14px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gray-mid);cursor:pointer;border-radius:999px;transition:all .25s;letter-spacing:.08em}
+.lang-toggle button.active{background:var(--charcoal);color:var(--white)}
+.top-right{display:flex;align-items:center;gap:10px}
+
+.page{max-width:1100px;margin:0 auto;padding:0 48px 80px}
+.section{padding:40px 0 10px}
+.section-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
+.section h2{font-size:clamp(24px,3vw,34px);font-weight:800;color:var(--charcoal);line-height:1.15;letter-spacing:-0.02em;margin-bottom:10px}
+.section h2 .accent{color:var(--pink)}
+.section h2 .highlight{background-image:linear-gradient(120deg,var(--pastel-yellow) 0%,var(--pastel-yellow) 100%);background-repeat:no-repeat;background-size:100% 26%;background-position:0 88%;padding:0 3px}
+.section-intro{font-size:15px;color:var(--charcoal-soft);max-width:780px;line-height:1.65;margin-bottom:28px}
+.section-intro strong{color:var(--charcoal);font-weight:700}
+.section-divider{border:none;border-top:1px solid var(--rule);margin:48px 0 0}
+
+.hero{padding:64px 0 48px}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--pink);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--pink)}
+.hero h1{font-size:clamp(36px,5vw,56px);font-weight:900;color:var(--charcoal);line-height:1.08;letter-spacing:-0.03em;margin-bottom:18px}
+.hero h1 .accent{color:var(--pink)}
+.hero-deck{font-size:16px;color:var(--charcoal-soft);max-width:750px;line-height:1.65}
+.hero-deck strong{color:var(--charcoal);font-weight:700}
+.hero-meta{display:flex;gap:20px;margin-top:24px;flex-wrap:wrap;font-size:12px;color:var(--gray-light)}
+.hero-meta span strong{color:var(--charcoal);font-weight:700}
+.hero-meta .sep{width:1px;height:12px;background:var(--rule);align-self:center}
+
+.card{background:var(--white);border:1px solid var(--rule);border-radius:12px;padding:22px 24px;margin-bottom:14px}
+.card-accent{border-left:3px solid var(--pink)}
+.card-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px}
+.card p{font-size:14px;color:var(--charcoal-soft);line-height:1.6;margin-bottom:6px}.card p:last-child{margin-bottom:0}.card p strong{color:var(--charcoal);font-weight:700}
+.callout{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--pink);border-radius:0 10px 10px 0;padding:16px 20px;margin:18px 0;font-size:13px;color:var(--charcoal-soft);line-height:1.6}
+.callout strong{color:var(--charcoal);font-weight:700}.callout em{color:var(--pink);font-style:normal;font-weight:700}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.callout.blue{border-left-color:var(--blue);background:var(--blue-bg)}
+.callout.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.metric{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:18px 16px;text-align:center}
+.metric-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px}
+.metric-value{font-family:var(--mono);font-size:26px;font-weight:800;color:var(--charcoal);line-height:1.05}
+.metric-value .accent{color:var(--pink)}
+.metric-value .green{color:var(--green)}
+.metric-value .warn{color:var(--warn)}
+.metric-sub{font-size:11px;color:var(--gray-mid);margin-top:6px;line-height:1.4}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+@media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+.timeline{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.tl-row{display:grid;grid-template-columns:110px 24px 1fr;gap:12px;align-items:start;padding:16px 0;position:relative}
+.tl-row:not(:last-child){border-bottom:1px solid var(--rule-soft)}
+.tl-when{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gray-mid);padding-top:2px}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--rule);margin-top:4px;justify-self:center;position:relative}
+.tl-dot.active{background:var(--pink)}
+.tl-dot.done{background:var(--green)}
+.tl-dot.warn{background:var(--warn)}
+.tl-content{font-size:13.5px;color:var(--charcoal-soft);line-height:1.55}
+.tl-content strong{color:var(--charcoal);font-weight:700}
+.tl-content .tl-metric{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--charcoal);display:inline-block;margin-top:4px}
+
+.range-bar{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:20px 24px;margin:18px 0}
+.range-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gray-mid);margin-bottom:8px}
+.range-track{height:8px;background:var(--rule);border-radius:4px;position:relative;overflow:hidden}
+.range-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--pink))}
+.range-note{font-size:12px;color:var(--gray-mid);margin-top:8px;text-align:center}
+.range-note strong{color:var(--charcoal)}
+
+.s-table{width:100%;border-collapse:collapse;margin:16px 0}
+.s-table th{text-align:left;padding:10px 14px;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--gray-light);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--rule)}
+.s-table th:not(:first-child){text-align:right}
+.s-table td{padding:10px 14px;font-size:13px;color:var(--charcoal-soft);border-bottom:1px solid var(--rule-soft)}
+.s-table td:not(:first-child){text-align:right;font-family:var(--mono);font-weight:600}
+.s-table td.highlight{color:var(--charcoal);font-weight:700}
+.s-table td .tag{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px}
+.tag-up{background:var(--green-bg);color:var(--green)}
+.tag-down{background:var(--warn-bg);color:var(--warn)}
+.tag-flat{background:var(--card);color:var(--gray-mid)}
+.tag-note{background:var(--warn-bg);color:var(--warn)}
+.tag-star{background:var(--pink-soft);color:var(--pink)}
+.s-table tr.total-row td{border-top:2px solid var(--charcoal);font-weight:800;color:var(--charcoal)}
+.s-table tr.star-row td{background:var(--pink-soft)}
+
+.claims-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:800px){.claims-grid{grid-template-columns:1fr}}
+.claim-card{border-radius:10px;padding:18px 20px}
+.claim-card.yes{background:var(--green-bg);border:1px solid rgba(21,128,61,0.15)}
+.claim-card.no{background:var(--card);border:1px solid var(--rule)}
+.claim-card .claim-header{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.claim-card.yes .claim-header{color:var(--green)}
+.claim-card.no .claim-header{color:var(--gray-mid)}
+.claim-card .claim-item{font-size:13px;color:var(--charcoal-soft);line-height:1.55;padding:4px 0}
+.claim-card .claim-item strong{color:var(--charcoal);font-weight:700}
+
+.cf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px 0}
+.cf-item{background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:14px 16px}
+.cf-item-label{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--pink);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.cf-item-title{font-size:13px;font-weight:800;color:var(--charcoal);margin-bottom:6px;line-height:1.35}
+.cf-item-body{font-size:12px;color:var(--charcoal-soft);line-height:1.5}
+.cf-item-body strong{color:var(--charcoal);font-weight:700}
+
+.page-footer{border-top:1px solid var(--rule);padding:24px 0;margin-top:48px;text-align:center;font-size:11px;color:var(--gray-light)}
+.page-footer strong{color:var(--gray-mid);font-weight:700}
+.page-footer a{color:var(--gray-mid);text-decoration:none;border-bottom:1px solid var(--rule)}
+
+@media(max-width:800px){
+  .top-bar{padding:12px 18px}.page{padding:0 18px 48px}.hero h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ── DID Weekly Ratios Chart: 13 pre + 4 post ── */
+function DIDWeeklyChart({en}) {
+  const W=620, H=260, PX=50, PY=28, PB=52, PR=24;
+  const cW = W-PX-PR, cH = H-PY-PB;
+  const preRatios = [1.855, 2.164, 2.242, 1.921, 2.291, 1.839, 1.932, 2.352, 2.250, 2.331, 2.602, 2.253, 2.310];
+  const postRatios = [2.451, 2.705, 3.224, 3.276];
+  const allRatios = [...preRatios, ...postRatios];
+  const preMean = 2.180, postMean = 2.914;
+  const maxY=3.5, minY=1.5;
+  const x = i => PX + (i/(allRatios.length-1)) * cW;
+  const y = v => PY + cH - ((v-minY)/(maxY-minY)) * cH;
+  const prePath = preRatios.map((v,i) => `${i===0?"M":"L"}${x(i)},${y(v)}`).join(" ");
+  const postPath = postRatios.map((v,i) => `${i===0?"M":"L"}${x(i+preRatios.length)},${y(v)}`).join(" ");
+  const launchX = (x(12) + x(13)) / 2;
+  return (
+    <div style={{background:"var(--card)",border:"1px solid var(--rule)",borderRadius:10,padding:"18px 14px",margin:"22px 0",overflowX:"auto"}}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:620,display:"block",margin:"0 auto"}}>
+        {[1.5,2.0,2.5,3.0,3.5].map(v=>(<g key={v}><line x1={PX} y1={y(v)} x2={W-PR} y2={y(v)} stroke="var(--rule)" strokeWidth="1"/><text x={PX-8} y={y(v)+4} textAnchor="end" fill="var(--gray-light)" fontSize="9" fontFamily="var(--mono)">{v.toFixed(1)}x</text></g>))}
+        <line x1={PX} y1={y(preMean)} x2={launchX} y2={y(preMean)} stroke="var(--blue)" strokeWidth="1.5" strokeDasharray="4,3"/>
+        <text x={PX+6} y={y(preMean)-6} fill="var(--blue)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{en?"Pre mean 2.18":"Media pre 2.18"}</text>
+        <line x1={launchX} y1={y(postMean)} x2={W-PR} y2={y(postMean)} stroke="var(--pink)" strokeWidth="1.5" strokeDasharray="4,3"/>
+        <text x={W-PR-6} y={y(postMean)-6} textAnchor="end" fill="var(--pink)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{en?"Post mean 2.91":"Media post 2.91"}</text>
+        <line x1={launchX} y1={PY} x2={launchX} y2={PY+cH} stroke="var(--charcoal)" strokeWidth="1.5"/>
+        <text x={launchX} y={PY-8} textAnchor="middle" fill="var(--charcoal)" fontSize="10" fontWeight="800" fontFamily="var(--mono)">{en?"LAUNCH Apr 8":"LANZAMIENTO 8 Abr"}</text>
+        <path d={prePath} fill="none" stroke="var(--blue)" strokeWidth="2" opacity="0.85"/>
+        <path d={postPath} fill="none" stroke="var(--pink)" strokeWidth="2.5"/>
+        {preRatios.map((v,i)=>(<circle key={`pre${i}`} cx={x(i)} cy={y(v)} r="3" fill="var(--blue)"/>))}
+        {postRatios.map((v,i)=>(<circle key={`post${i}`} cx={x(i+preRatios.length)} cy={y(v)} r="4" fill="var(--pink)"/>))}
+        {[0,4,8,12,16].map(i=>{const wk=i<13?`W${i+1}`:`W${i+1}`;return (<text key={i} x={x(i)} y={H-12} textAnchor="middle" fill="var(--gray-mid)" fontSize="10" fontFamily="var(--mono)">{wk}</text>)})}
+        <text x={W/2} y={H-2} textAnchor="middle" fill="var(--gray-light)" fontSize="9" fontFamily="var(--mono)">{en?"Weeks (Jan 5 – May 4, 2026)":"Semanas (5 Ene – 4 May 2026)"}</text>
+      </svg>
+      <div style={{display:"flex",justifyContent:"center",gap:24,marginTop:8,fontSize:11,color:"var(--gray-mid)"}}>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:14,height:3,background:"var(--blue)",borderRadius:2,display:"inline-block"}}/> {en?"Pre (13 weeks)":"Pre (13 semanas)"}</span>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:14,height:3,background:"var(--pink)",borderRadius:2,display:"inline-block"}}/> {en?"Post (4 weeks)":"Post (4 semanas)"}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── CI Range Bar: -€0K to +€171K with CI [+€48K, +€171K] ── */
+function CIRangeBar({en}) {
+  const W=600, H=120, PX=30, PR=30;
+  const cW = W - PX - PR;
+  const min = -50, max = 200; // €K/year
+  const ciLow = 48, ciHigh = 171;
+  const x = v => PX + ((v-min)/(max-min)) * cW;
+  const zeroX = x(0);
+  return (
+    <div style={{background:"var(--card)",border:"1px solid var(--rule)",borderRadius:10,padding:"20px 16px",margin:"18px 0"}}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:600,display:"block",margin:"0 auto"}}>
+        <line x1={PX} y1={60} x2={W-PR} y2={60} stroke="var(--rule)" strokeWidth="2"/>
+        <rect x={x(ciLow)} y={50} width={x(ciHigh)-x(ciLow)} height={20} fill="var(--green-bg)" stroke="var(--green)" strokeWidth="1.5" rx="3"/>
+        <line x1={zeroX} y1={36} x2={zeroX} y2={84} stroke="var(--charcoal)" strokeWidth="1.5" strokeDasharray="4,3"/>
+        <text x={zeroX} y={28} textAnchor="middle" fill="var(--charcoal)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{en?"ZERO":"CERO"}</text>
+        <text x={x(ciLow)} y={45} textAnchor="middle" fill="var(--green)" fontSize="11" fontWeight="800" fontFamily="var(--mono)">+€48K</text>
+        <text x={x(ciHigh)} y={45} textAnchor="middle" fill="var(--green)" fontSize="11" fontWeight="800" fontFamily="var(--mono)">+€171K</text>
+        <text x={(x(ciLow)+x(ciHigh))/2} y={97} textAnchor="middle" fill="var(--green)" fontSize="11" fontWeight="700" fontFamily="var(--mono)">{en?"95% CI · entirely positive":"IC 95% · todo positivo"}</text>
+        {[-50,0,50,100,150,200].map(v=>(<text key={v} x={x(v)} y={H-2} textAnchor="middle" fill="var(--gray-light)" fontSize="9" fontFamily="var(--mono)">{v>=0?`+€${v}K`:`-€${Math.abs(v)}K`}</text>))}
+      </svg>
+      <div style={{textAlign:"center",fontSize:12,color:"var(--gray-mid)",marginTop:8}}>{en?<><strong>Annualized revenue impact, Web channel only.</strong> Web is ~35% of treated volume, so this is a lower bound on total impact.</>:<><strong>Impacto de revenue anualizado, canal Web solamente.</strong> Web es ~35% del volumen tratado, así que este es un piso del impacto total.</>}</div>
+    </div>
+  );
+}
+
+/* ── Elasticity comparison: Web (Day 1, 2, 3) ── */
+function ElasticityBar({en}) {
+  const W=560, H=220, PX=70, PR=40, PY=30, PB=50;
+  const cW = W-PX-PR, cH = H-PY-PB;
+  const data = [
+    {label:"Day 1", web:0.06, app:-2.68, color:"var(--gray-light)"},
+    {label:"Day 2", web:-0.24, app:-2.01, color:"var(--warn)"},
+    {label:"Day 3", web:-2.28, app:-2.61, color:"var(--pink)"},
+  ];
+  const minV=-3, maxV=0.5;
+  const y = v => PY + cH - ((v-minV)/(maxV-minV)) * cH;
+  const barW = (cW / 3) * 0.32;
+  return (
+    <div style={{background:"var(--card)",border:"1px solid var(--rule)",borderRadius:10,padding:"18px 14px",margin:"18px 0",overflowX:"auto"}}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:560,display:"block",margin:"0 auto"}}>
+        {[-3,-2,-1,0].map(v=>(<g key={v}><line x1={PX} y1={y(v)} x2={W-PR} y2={y(v)} stroke="var(--rule)" strokeWidth="1"/><text x={PX-8} y={y(v)+4} textAnchor="end" fill="var(--gray-light)" fontSize="9" fontFamily="var(--mono)">{v}</text></g>))}
+        <line x1={PX} y1={y(-1)} x2={W-PR} y2={y(-1)} stroke="var(--warn)" strokeWidth="1.5" strokeDasharray="4,3"/>
+        <text x={W-PR-4} y={y(-1)-6} textAnchor="end" fill="var(--warn)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{en?"Elastic threshold ε=-1":"Umbral elástico ε=-1"}</text>
+        {data.map((d,i)=>{
+          const cx = PX + (cW/3)*(i+0.5);
+          const webX = cx - barW - 4;
+          const appX = cx + 4;
+          const webY = d.web<0 ? y(d.web) : y(0);
+          const webH = Math.abs(y(d.web) - y(0));
+          const appY = y(d.app);
+          const appH = y(0) - y(d.app);
+          return (
+            <g key={i}>
+              <rect x={webX} y={webY} width={barW} height={webH} fill={d.web<-1?"var(--pink)":"var(--gray-light)"} rx="2"/>
+              <text x={webX+barW/2} y={webY-6} textAnchor="middle" fill="var(--charcoal)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{d.web>=0?`+${d.web.toFixed(2)}`:d.web.toFixed(2)}</text>
+              <rect x={appX} y={appY} width={barW} height={appH} fill="var(--blue)" rx="2"/>
+              <text x={appX+barW/2} y={appY-6} textAnchor="middle" fill="var(--charcoal)" fontSize="10" fontWeight="700" fontFamily="var(--mono)">{d.app.toFixed(2)}</text>
+              <text x={cx} y={H-22} textAnchor="middle" fill="var(--charcoal)" fontSize="12" fontWeight="700" fontFamily="var(--mono)">{d.label}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{display:"flex",justifyContent:"center",gap:24,marginTop:6,fontSize:11,color:"var(--gray-mid)"}}>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:12,height:10,background:"var(--pink)",borderRadius:2}}/> Web (30d)</span>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:12,height:10,background:"var(--gray-light)",borderRadius:2}}/> Web {en?"(inelastic)":"(inelástico)"}</span>
+        <span style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:12,height:10,background:"var(--blue)",borderRadius:2}}/> App (6d clean)</span>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [lang, setLang] = useState("en");
+  const [scrolled, setScrolled] = useState(false);
+  const en = lang === "en";
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  return (<div>
+    <div className={`top-bar ${scrolled ? "scrolled" : ""}`}>
+      <div className="top-bar-left">
+        <span className="top-bar-dot" />
+        <span className="top-bar-brand">Holafly</span>
+        <span className="top-bar-divider" />
+        <span className="top-bar-context">EXP-009 GBP D+30</span>
+      </div>
+      <div className="top-right">
+        <span className="top-bar-badge">{en ? "Maintain" : "Mantener"}</span>
+        <div className="lang-toggle">
+          <button className={en ? "active" : ""} onClick={() => setLang("en")}>EN</button>
+          <button className={!en ? "active" : ""} onClick={() => setLang("es")}>ES</button>
+        </div>
+      </div>
+    </div>
+
+    <div className="page">
+      {/* ═══ 1. HERO ═══ */}
+      <div className="hero anim-up">
+        <div className="hero-eyebrow">EXP-009 Results</div>
+        <h1>{en ? <>GBP correction generates <span className="accent">+€48K to +€171K/year.</span><br/>We're keeping it.</> : <>La corrección GBP genera <span className="accent">+€48K a +€171K/año.</span><br/>La mantenemos.</>}</h1>
+        <div className="hero-deck">{en ? <>On April 8 we corrected Day 1 to 3 prices on 63 GBP destinations to align with the £3.79/day policy. <strong>Web revenue lift is real and statistically significant. The full confidence interval sits above zero.</strong> ARPU vs counterfactual missed the +8% threshold by 0.2 percentage points, which the DID and elasticity evidence override.</> : <>El 8 de abril corregimos los precios de Día 1 a 3 en 63 destinos GBP para alinear con la política de £3.79/día. <strong>El lift de revenue Web es real y estadísticamente significativo. El intervalo de confianza completo está por encima de cero.</strong> ARPU vs contrafactual falló el umbral +8% por 0.2 puntos porcentuales, lo cual la evidencia DID y de elasticidad supera.</>}</div>
+        <div className="hero-meta">
+          <span><strong>{en ? "For" : "Para"}</strong> Alfonso Mata, Xabi Marinelarena, Shravan Kochhar</span>
+          <span className="sep" /><span><strong>{en ? "Date" : "Fecha"}</strong> May 9, 2026</span>
+          <span className="sep" /><span><strong>Owner</strong> Guido Mautino</span>
+          <span className="sep" /><span><strong>Status</strong> D+30 {en ? "close" : "cierre"}</span>
+        </div>
+      </div>
+
+      {/* ═══ 2. VERDICT ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "The Verdict" : "El Veredicto"}</div>
+        <h2>{en ? <>Maintain. The numbers <span className="highlight">support the call.</span></> : <>Mantener. Los números <span className="highlight">sostienen la decisión.</span></>}</h2>
+        <div className="section-intro">{en ? <>Three readings agree on direction. DID Web revenue lift is +0.734 ratio points, 95% CI [+0.321, +1.147]. Annualized that's <strong>+€48K to +€171K only from the Web channel,</strong> which is roughly 35% of treated volume. Gross margin held within guardrail. ARPU lift came in at +7.8% vs the counterfactual, technically 0.2pp below the +8% success threshold.</> : <>Tres lecturas coinciden en dirección. El lift de revenue Web por DID es +0.734 puntos de ratio, IC 95% [+0.321, +1.147]. Anualizado, eso son <strong>+€48K a +€171K solo del canal Web,</strong> que representa ~35% del volumen tratado. El margen bruto se mantuvo dentro del guardrail. El lift de ARPU vino en +7.8% vs contrafactual, técnicamente 0.2pp por debajo del umbral de éxito +8%.</>}</div>
+        <div className="metrics-grid">
+          <div className="metric anim-scale"><div className="metric-label">{en ? "Revenue Impact (Web)" : "Impacto Revenue (Web)"}</div><div className="metric-value">+<span className="accent">€48-171K</span></div><div className="metric-sub">{en ? "annualized, 95% CI entirely positive" : "anualizado, IC 95% todo positivo"}</div></div>
+          <div className="metric anim-scale" style={{animationDelay:"60ms"}}><div className="metric-label">{en ? "ARPU vs Counterfactual" : "ARPU vs Contrafactual"}</div><div className="metric-value">+<span className="warn">7.8%</span></div><div className="metric-sub">{en ? "missed +8% threshold by 0.2pp" : "falló umbral +8% por 0.2pp"}</div></div>
+          <div className="metric anim-scale" style={{animationDelay:"120ms"}}><div className="metric-label">{en ? "Gross Margin (post)" : "Margen Bruto (post)"}</div><div className="metric-value"><span className="green">64.9%</span></div><div className="metric-sub">{en ? "-1.04pp vs pre, within guardrail" : "-1.04pp vs pre, dentro del guardrail"}</div></div>
+          <div className="metric anim-scale" style={{animationDelay:"180ms"}}><div className="metric-label">{en ? "DID Web Ratio Lift" : "Lift Ratio DID Web"}</div><div className="metric-value">+<span className="accent">0.734</span></div><div className="metric-sub">{en ? "treated/control, 95% CI [+0.32, +1.15]" : "tratado/control, IC 95% [+0.32, +1.15]"}</div></div>
+        </div>
+      </div>
+
+      {/* ═══ 3. WHAT WE DID ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "The Change" : "El Cambio"}</div>
+        <h2>{en ? <>We aligned GBP to the <span className="accent">£3.79/day policy.</span></> : <>Alineamos GBP a la <span className="accent">política de £3.79/día.</span></>}</h2>
+        <div className="section-intro">{en ? <>Holafly's approved policy is £3.79/day on Day 1, then standard charm pricing on Day 2 and Day 3. GBP destinations were off-policy. UK buyers saw a higher Day 1 price than they should have, and the discrepancy propagated to Day 2 and Day 3.</> : <>La política aprobada de Holafly es £3.79/día en Día 1, después charm pricing estándar en Día 2 y Día 3. Los destinos GBP estaban fuera de política. Los compradores UK veían un Día 1 más caro del que debían, y la discrepancia se propagaba a Día 2 y Día 3.</>}</div>
+        <table className="s-table">
+          <thead><tr><th>{en ? "Variant" : "Variante"}</th><th>{en ? "Old price" : "Precio viejo"}</th><th>{en ? "New price" : "Precio nuevo"}</th><th>{en ? "Change" : "Cambio"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">Day 1</td><td>£3.79</td><td>£2.99</td><td>-21.1%</td></tr>
+            <tr><td className="highlight">Day 2</td><td>£7.58</td><td>£5.99</td><td>-21.0%</td></tr>
+            <tr><td className="highlight">Day 3</td><td>£11.37</td><td>£8.99</td><td>-20.9%</td></tr>
+          </tbody>
+        </table>
+        <div className="callout">{en ? <><strong>Scope.</strong> 63 GBP destinations, Day 1 to 3 plans only. Launch April 8, 2026. 4-14 day plans untouched (used as a reference group for the GBP-wide demand check). Brief hypothesis: aligning the price-per-day improves Web conversion and lifts revenue without breaking GM.</> : <><strong>Scope.</strong> 63 destinos GBP, planes Día 1 a 3 solamente. Lanzamiento 8 abril 2026. Planes 4-14d sin tocar (usados como grupo de referencia para el chequeo de demanda GBP-wide). Hipótesis del brief: alinear el precio-por-día mejora conversión Web y levanta revenue sin romper GM.</>}</div>
+      </div>
+
+      {/* ═══ 4. METHODOLOGY ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Methodology" : "Metodología"}</div>
+        <h2>{en ? <>Two methods, one story. <span className="highlight">Web-only primary.</span></> : <>Dos métodos, una historia. <span className="highlight">Web-only primario.</span></>}</h2>
+        <div className="section-intro">{en ? <>The App platform mispriced Day 1 between April 15 and May 4 (Iñigo's team caught it and fixed it by May 5). To keep the causal read clean, the primary metric is Web-only revenue DID. App data is reported separately and used as a directional cross-check.</> : <>La plataforma App tuvo mal el precio de Día 1 entre 15 abril y 4 mayo (el equipo de Iñigo lo detectó y arregló para el 5 mayo). Para mantener la lectura causal limpia, la métrica primaria es DID de revenue Web-only. La data de App se reporta por separado y se usa como cross-check direccional.</>}</div>
+        <div className="grid-2">
+          <div className="card"><div className="card-label">{en ? "Method 1: Web Revenue DID" : "Método 1: DID Revenue Web"}</div><p>{en ? <><strong>63 treated GBP destinations vs the GBP control group</strong> on Day 1 to 3 plans, Web channel only. Weekly revenue ratio (treated/control) compared 13 weeks pre vs 4 weeks post. Welch standard errors.</> : <><strong>63 destinos GBP tratados vs grupo control GBP</strong> en planes Día 1 a 3, canal Web solamente. Ratio de revenue semanal (tratado/control) comparado 13 semanas pre vs 4 semanas post. Errores estándar de Welch.</>}</p><p style={{marginTop:8}}>{en ? <>Pre-period stability check: CV = 10.5%, well under the 20% threshold. The pre-trend is parallel enough for DID to hold.</> : <>Check de estabilidad pre-período: CV = 10.5%, muy por debajo del umbral 20%. La pre-tendencia es lo suficientemente paralela para que DID sea válido.</>}</p></div>
+          <div className="card"><div className="card-label">{en ? "Method 2: ARPU Counterfactual" : "Método 2: Contrafactual ARPU"}</div><p>{en ? <><strong>LinearRegression with DOW dummies</strong> projected what Adobe ARPU would have been for April 1 to 14 absent the change. Compared to observed Adobe ARPU April 8 to 22.</> : <><strong>LinearRegression con dummies de día de semana</strong> proyectó qué ARPU de Adobe habría sido para 1-14 abril sin el cambio. Comparado contra ARPU de Adobe observado 8-22 abril.</>}</p><p style={{marginTop:8}}>{en ? <>Counterfactual: €4.85. Observed: €5.23. Delta: <strong>+7.8% vs the +8% threshold</strong>. Source: Adobe Analytics, currency GBP, web environment.</> : <>Contrafactual: €4.85. Observado: €5.23. Delta: <strong>+7.8% vs umbral +8%</strong>. Fuente: Adobe Analytics, moneda GBP, entorno web.</>}</p></div>
+        </div>
+      </div>
+
+      {/* ═══ 5. DID DEEP DIVE ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "DID Deep Dive" : "DID Detalle"}</div>
+        <h2>{en ? <>The ratio jumped <span className="accent">on launch week</span> and held.</> : <>El ratio saltó <span className="accent">en la semana de lanzamiento</span> y se mantuvo.</>}</h2>
+        <div className="section-intro">{en ? <>Each dot is one week's revenue ratio between treated and control destinations on Web. Pre-period (blue, 13 weeks) clusters around 2.18. Post-period (pink, 4 complete weeks) jumps to 2.91 and holds there.</> : <>Cada punto es el ratio de revenue de una semana entre destinos tratados y de control en Web. El pre-período (azul, 13 semanas) se agrupa alrededor de 2.18. El post-período (rosa, 4 semanas completas) salta a 2.91 y se mantiene ahí.</>}</div>
+        <DIDWeeklyChart en={en} />
+        <table className="s-table">
+          <thead><tr><th>{en ? "Period" : "Período"}</th><th>{en ? "Weeks" : "Semanas"}</th><th>{en ? "Mean ratio" : "Ratio medio"}</th><th>{en ? "Std" : "Desv"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">{en ? "Pre" : "Pre"}</td><td>13</td><td>2.180</td><td>0.228</td></tr>
+            <tr><td className="highlight">{en ? "Post" : "Post"}</td><td>4</td><td>2.914</td><td>0.402</td></tr>
+            <tr className="total-row"><td className="highlight">{en ? "DID delta" : "Delta DID"}</td><td></td><td>+0.734</td><td>SE 0.211</td></tr>
+          </tbody>
+        </table>
+        <div className="callout">{en ? <><strong>95% CI: [+0.321, +1.147].</strong> Control Web revenue averaged €408.83/day. Translating ratio points to euros and annualizing gives <strong>+€48K to +€171K/year</strong> from the Web channel alone. Web is ~35% of treated volume, so this is a lower bound on total impact.</> : <><strong>IC 95%: [+0.321, +1.147].</strong> El revenue Web del control promedió €408.83/día. Traduciendo puntos de ratio a euros y anualizando da <strong>+€48K a +€171K/año</strong> solo del canal Web. Web es ~35% del volumen tratado, así que este es un piso del impacto total.</>}</div>
+        <CIRangeBar en={en} />
+      </div>
+
+      {/* ═══ 6. ELASTICITY ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Elasticity" : "Elasticidad"}</div>
+        <h2>{en ? <>Day 3 Web is <span className="highlight">the star.</span> Channel matters more than variant.</> : <>Día 3 Web es <span className="highlight">la estrella.</span> El canal pesa más que la variante.</>}</h2>
+        <div className="section-intro">{en ? <>We measured price elasticity on Web for 30 days post (April 9 to May 8, both days are clean Web data). Day 3 came in at ε = -2.28: a 20.9% price cut on Day 3 lifted Web orders 42.8% and Web revenue 13.3%. Day 1 and Day 2 Web were inelastic. App, where we have a clean 6-day window (April 9 to 14), was elastic on every variant.</> : <>Medimos elasticidad de precio en Web por 30 días post (9 abril a 8 mayo, ambos días son data Web limpia). Día 3 vino en ε = -2.28: una baja de 20.9% en Día 3 levantó las órdenes Web 42.8% y el revenue Web 13.3%. Día 1 y Día 2 Web fueron inelásticos. App, donde tenemos una ventana limpia de 6 días (9-14 abril), fue elástica en todas las variantes.</>}</div>
+        <ElasticityBar en={en} />
+        <div className="card-label" style={{marginTop:14}}>{en ? "Web 30-day window (Apr 9 to May 8)" : "Ventana Web 30 días (9 abr a 8 may)"}</div>
+        <table className="s-table">
+          <thead><tr><th>{en ? "Variant" : "Variante"}</th><th>{en ? "Price Δ" : "Δ Precio"}</th><th>{en ? "Volume Δ" : "Δ Volumen"}</th><th>ε</th><th>{en ? "Revenue/day Δ" : "Δ Revenue/día"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">Day 1</td><td>-20.7%</td><td>-1.2%</td><td>+0.06</td><td><span className="tag tag-down">-35.3%</span></td></tr>
+            <tr><td className="highlight">Day 2</td><td>-19.7%</td><td>+4.6%</td><td>-0.24</td><td><span className="tag tag-down">-17.4%</span></td></tr>
+            <tr className="star-row"><td className="highlight">Day 3</td><td>-18.8%</td><td>+42.8%</td><td>-2.28</td><td><span className="tag tag-up">+13.3%</span> <span className="tag tag-star">★</span></td></tr>
+          </tbody>
+        </table>
+        <div className="card-label" style={{marginTop:14}}>{en ? "App 6-day clean window (Apr 9 to 14)" : "Ventana App 6 días limpia (9-14 abr)"}</div>
+        <table className="s-table">
+          <thead><tr><th>{en ? "Variant" : "Variante"}</th><th>ε</th><th>{en ? "Read" : "Lectura"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">Day 1</td><td>-2.68</td><td><span className="tag tag-up">{en ? "Elastic" : "Elástico"}</span></td></tr>
+            <tr><td className="highlight">Day 2</td><td>-2.01</td><td><span className="tag tag-up">{en ? "Elastic" : "Elástico"}</span></td></tr>
+            <tr><td className="highlight">Day 3</td><td>-2.61</td><td><span className="tag tag-up">{en ? "Elastic" : "Elástico"}</span></td></tr>
+          </tbody>
+        </table>
+        <div className="callout green">{en ? <><strong>The cross-channel pattern is the headline.</strong> App is elastic across all three variants in the clean window. Web is inelastic on Day 1 and Day 2 but strongly elastic on Day 3. This says channel matters more than variant for GBP. The implication: when the App data is fully back, the total impact should be larger than what Web alone shows.</> : <><strong>El patrón cross-channel es el titular.</strong> App es elástica en las tres variantes en la ventana limpia. Web es inelástica en Día 1 y Día 2 pero fuertemente elástica en Día 3. Esto dice que el canal pesa más que la variante para GBP. La implicación: cuando la data de App vuelva completa, el impacto total debería ser mayor que lo que muestra Web sola.</>}</div>
+        <div className="callout warn">{en ? <><strong>Caveat on Day 1 Web.</strong> ε = +0.06 means volume barely moved despite a 20.7% price cut. Revenue/day fell 35.3%. Two readings of this: either Day 1 Web buyers were not price-blocked (already converting at the old price), or external traffic conditions on Day 1 Web are masking the response. App data will help disambiguate at D+60.</> : <><strong>Advertencia sobre Día 1 Web.</strong> ε = +0.06 significa que el volumen apenas se movió a pesar de una baja de precio de 20.7%. Revenue/día cayó 35.3%. Dos lecturas: o los compradores Día 1 Web no estaban bloqueados por precio (ya convertían al precio viejo), o las condiciones de tráfico externo en Día 1 Web están enmascarando la respuesta. La data de App ayudará a desambiguar en D+60.</>}</div>
+      </div>
+
+      {/* ═══ 7. ARPU vs COUNTERFACTUAL ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "ARPU vs Counterfactual" : "ARPU vs Contrafactual"}</div>
+        <h2>{en ? <>+7.8% lift. <span className="accent">0.2pp short</span> of the +8% threshold.</> : <>Lift +7.8%. <span className="accent">0.2pp corto</span> del umbral +8%.</>}</h2>
+        <div className="section-intro">{en ? <>We projected the Adobe ARPU we would have seen for April 1 to 14 absent the change using LinearRegression with day-of-week dummies, then compared to the observed value over April 8 to 22 (the standard 14-day post window). The lift is +7.8%, which sits 0.2 percentage points below the +8% success threshold declared in the brief.</> : <>Proyectamos el ARPU de Adobe que habríamos visto para 1-14 abril sin el cambio usando LinearRegression con dummies de día de semana, después comparamos contra el valor observado en 8-22 abril (la ventana post estándar de 14 días). El lift es +7.8%, lo cual está 0.2 puntos porcentuales por debajo del umbral de éxito +8% declarado en el brief.</>}</div>
+        <table className="s-table">
+          <thead><tr><th>{en ? "Metric" : "Métrica"}</th><th>{en ? "Value" : "Valor"}</th><th>{en ? "Note" : "Nota"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">{en ? "Counterfactual (Apr 1-14)" : "Contrafactual (1-14 abr)"}</td><td>€4.85</td><td>{en ? "LinearRegression + DOW dummies" : "LinearRegression + dummies DOW"}</td></tr>
+            <tr><td className="highlight">{en ? "Observed D+14 (Apr 8-22)" : "Observado D+14 (8-22 abr)"}</td><td>€5.23</td><td>{en ? "Adobe Analytics, Web, GBP" : "Adobe Analytics, Web, GBP"}</td></tr>
+            <tr className="total-row"><td className="highlight">{en ? "Delta vs counterfactual" : "Delta vs contrafactual"}</td><td>+7.8%</td><td><span className="tag tag-down">{en ? "NOT MET (-0.2pp)" : "NO CUMPLE (-0.2pp)"}</span></td></tr>
+          </tbody>
+        </table>
+        <div className="callout warn">{en ? <><strong>Why we override the threshold miss.</strong> Adobe ARPU covers the full GBP funnel where treated traffic (63 destinations on Day 1-3) is roughly 3.4% of total. The metric is structurally diluted by untreated traffic. The DID measures revenue directly on the treated cohort and returns a 95% CI that excludes zero. When the diluted metric is one-fifth of a percentage point short and the focused metric is robustly positive, the focused metric wins.</> : <><strong>Por qué anulamos el threshold miss.</strong> El ARPU de Adobe cubre el funnel GBP completo donde el tráfico tratado (63 destinos en Día 1-3) es aproximadamente 3.4% del total. La métrica está diluida por el tráfico no tratado. El DID mide revenue directamente sobre la cohorte tratada y devuelve un IC 95% que excluye el cero. Cuando la métrica diluida queda una quinta parte de un punto porcentual corta y la métrica focalizada es robustamente positiva, la métrica focalizada gana.</>}</div>
+      </div>
+
+      {/* ═══ 8. GROSS MARGIN ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Gross Margin" : "Margen Bruto"}</div>
+        <h2>{en ? <>GM held. <span className="highlight">Within the guardrail.</span></> : <>GM se sostuvo. <span className="highlight">Dentro del guardrail.</span></>}</h2>
+        <div className="section-intro">{en ? "We track gross margin as a guardrail, not a success metric. Any pricing cut should pull GM down to some extent, but the brief required staying within ±5pp of the pre baseline." : "Trackeamos margen bruto como guardrail, no como métrica de éxito. Cualquier baja de precio debería bajar GM en algún grado, pero el brief requería mantenerse dentro de ±5pp del baseline pre."}</div>
+        <table className="s-table">
+          <thead><tr><th>{en ? "Period" : "Período"}</th><th>GM</th><th>{en ? "Coverage" : "Cobertura"}</th></tr></thead>
+          <tbody>
+            <tr><td className="highlight">{en ? "Pre 90d" : "Pre 90d"}</td><td>65.94%</td><td>{en ? "63 / 63 destinations" : "63 / 63 destinos"}</td></tr>
+            <tr><td className="highlight">{en ? "Post 31d" : "Post 31d"}</td><td>64.91%</td><td>{en ? "59 / 63 destinations" : "59 / 63 destinos"}</td></tr>
+            <tr className="total-row"><td className="highlight">Δ</td><td>-1.04pp</td><td><span className="tag tag-up">{en ? "Within guardrail (±5pp)" : "Dentro del guardrail (±5pp)"}</span></td></tr>
+          </tbody>
+        </table>
+        <div className="callout green">{en ? <><strong>The -1.04pp move is small relative to a 20% price cut.</strong> Volume gains on Day 3 plus carrier-side cost improvements (Core network migration is ongoing) compensated most of the GM hit. Four destinations have no post COGS data because they had zero treated orders. The 59-destination coverage is solid.</> : <><strong>El movimiento de -1.04pp es chico relativo a una baja de precio de 20%.</strong> Las ganancias de volumen en Día 3 más las mejoras de costos del carrier (la migración a red Core está en curso) compensaron la mayor parte del hit de GM. Cuatro destinos no tienen data de COGS post porque tuvieron cero órdenes tratadas. La cobertura de 59 destinos es sólida.</>}</div>
+      </div>
+
+      {/* ═══ 12. CONFOUNDERS ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Confounders" : "Confounders"}</div>
+        <h2>{en ? <>Three external factors. <span className="highlight">All accounted for.</span></> : <>Tres factores externos. <span className="highlight">Todos contemplados.</span></>}</h2>
+        <div className="section-intro">{en ? "These could have biased the read. The DID approach handles them by construction, since both treated and control destinations experience the same external conditions." : "Estos pudieron sesgar la lectura. El enfoque DID los maneja por construcción, ya que tanto destinos tratados como de control experimentan las mismas condiciones externas."}</div>
+        <div className="cf-grid">
+          <div className="cf-item"><div className="cf-item-label">01</div><div className="cf-item-title">{en ? "App pricing bug (Apr 15-May 4)" : "Bug pricing App (15 abr-4 may)"}</div><div className="cf-item-body">{en ? <>App excluded from primary analysis. <strong>Web-only is the causal read.</strong></> : <>App excluido del análisis primario. <strong>Web-only es la lectura causal.</strong></>}</div></div>
+          <div className="cf-item"><div className="cf-item-label">02</div><div className="cf-item-title">{en ? "Adobe scope dilution" : "Dilución de scope Adobe"}</div><div className="cf-item-body">{en ? <>Adobe ARPU is full GBP funnel, treated traffic is ~3.4%. <strong>The +7.8% lift is diluted.</strong></> : <>El ARPU de Adobe es el funnel GBP completo, el tráfico tratado es ~3.4%. <strong>El lift +7.8% está diluido.</strong></>}</div></div>
+          <div className="cf-item"><div className="cf-item-label">03</div><div className="cf-item-title">{en ? "GBP-wide demand surge" : "Suba de demanda GBP-wide"}</div><div className="cf-item-body">{en ? <>+35-38% in untouched 4-14d plans. <strong>DID controls for this.</strong></> : <>+35-38% en planes 4-14d sin tocar. <strong>DID controla por esto.</strong></>}</div></div>
+        </div>
+      </div>
+
+      {/* ═══ 14. NEXT STEPS ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Next Steps" : "Próximos Pasos"}</div>
+        <h2>{en ? <>D+60 combines App and Web. <span className="accent">June 7.</span></> : <>D+60 combina App y Web. <span className="accent">7 de junio.</span></>}</h2>
+        <div className="section-intro">{en ? "Two priorities for the next checkpoint." : "Dos prioridades para el próximo checkpoint."}</div>
+        <div className="card card-accent">
+          <p><strong>{en ? "1. Add App into a combined revenue read." : "1. Sumar App a una lectura combinada de revenue."}</strong></p>
+          <p>{en ? "From May 5 onward, App is clean. By D+60 we'll have ~33 days of App. Combining Web (clean since launch) with App (clean from May 5) gives the total causal impact. Expect the figure to be larger than Web-alone." : "Desde el 5 mayo, App está limpio. Para D+60 tendremos ~33 días de App. Combinar Web (limpio desde el lanzamiento) con App (limpio desde el 5 mayo) da el impacto causal total. Esperar que la cifra sea mayor que solo-Web."}</p>
+        </div>
+        <div className="card card-accent">
+          <p><strong>{en ? "2. Investigate the Day 1 Web ε puzzle." : "2. Investigar el rompecabezas de ε en Día 1 Web."}</strong></p>
+          <p>{en ? "Day 1 Web ε = +0.06 is anomalous. Two hypotheses: pre-existing Day 1 Web buyers were not price-blocked (suggests we left margin on the table at the old price), or external traffic conditions masked the response. D+60 data will help distinguish." : "El ε = +0.06 de Día 1 Web es anómalo. Dos hipótesis: los compradores Día 1 Web preexistentes no estaban bloqueados por precio (sugiere que dejamos margen sobre la mesa al precio viejo), o las condiciones de tráfico externo enmascararon la respuesta. La data D+60 ayudará a distinguir."}</p>
+        </div>
+      </div>
+
+      {/* ═══ APPENDIX ═══ */}
+      <hr className="section-divider" />
+      <div className="section">
+        <div className="section-label">{en ? "Appendix" : "Apéndice"}</div>
+        <h2>{en ? "Sources and references." : "Fuentes y referencias."}</h2>
+        <div className="card-label" style={{marginTop:20}}>{en ? "Data sources" : "Fuentes de datos"}</div>
+        <div className="card" style={{marginTop:8}}>
+          <p><strong>{en ? "Revenue and orders:" : "Revenue y órdenes:"}</strong> BigQuery. {en ? "Filters: GBP storefront, paid, single eSIM, non-zero price, no applied_discount_code filter (per LEARN-109)." : "Filtros: storefront GBP, paid, eSIM único, precio no-cero, sin filtro de applied_discount_code (por LEARN-109)."}</p>
+          <p><strong>ARPU:</strong> Adobe Analytics. {en ? "Currency = GBP, Page contains ecom/esim-, Environment = web." : "Currency = GBP, Page contiene ecom/esim-, Environment = web."}</p>
+          <p><strong>{en ? "Gross margin:" : "Margen bruto:"}</strong> {en ? "Looker Studio export, COGS table (product_end_date_gm_v2), GBP origin scope." : "Export de Looker Studio, tabla COGS (product_end_date_gm_v2), scope origen GBP."}</p>
+          <p><strong>{en ? "Counterfactual:" : "Contrafactual:"}</strong> {en ? "Python sklearn LinearRegression with day-of-week dummies, fit on Jan 1-Mar 31, projected to Apr 1-14." : "Python sklearn LinearRegression con dummies de día de semana, fit en 1 ene-31 mar, proyectado a 1-14 abr."}</p>
+          <p style={{marginTop:8}}><strong>D+30 Notion:</strong> <a href="https://www.notion.so/holafly/35aeea72a188811cb888f0f24cb6e19d" target="_blank" style={{color:"var(--pink)",textDecoration:"none",borderBottom:"1px solid var(--pink-border)"}}>D+30 Close (May 9, 2026)</a></p>
+          <p><strong>D+14 Notion:</strong> <a href="https://www.notion.so/holafly/D-14-Close-April-22-2026-34feea72a18881d285c2eeee840b73c7" target="_blank" style={{color:"var(--pink)",textDecoration:"none",borderBottom:"1px solid var(--pink-border)"}}>D+14 Close (Apr 22, 2026)</a></p>
+          <p><strong>D+14 Dashboard:</strong> <a href="https://guidomautino.github.io/holafly-pricing-dashboards/exp_009_gbp_d14_close.html" target="_blank" style={{color:"var(--pink)",textDecoration:"none",borderBottom:"1px solid var(--pink-border)"}}>Interactive D+14</a></p>
+        </div>
+        <div className="card-label" style={{marginTop:20}}>{en ? "Treatment scope (recap)" : "Scope del tratamiento (recap)"}</div>
+        <div className="card" style={{marginTop:8}}>
+          <p>{en ? "63 GBP destinations, Day 1 to Day 3 plans. Launch April 8, 2026. £3.79 → £2.99 (Day 1), £7.58 → £5.99 (Day 2), £11.37 → £8.99 (Day 3). 4-14d plans untouched and used as a GBP-wide demand reference." : "63 destinos GBP, planes Día 1 a Día 3. Lanzamiento 8 abril 2026. £3.79 → £2.99 (Día 1), £7.58 → £5.99 (Día 2), £11.37 → £8.99 (Día 3). Planes 4-14d sin tocar y usados como referencia de demanda GBP-wide."}</p>
+        </div>
+      </div>
+
+      <div className="page-footer">
+        <strong>Holafly</strong> · Growth Pricing · {en ? "EXP-009 D+30 Close, May 9, 2026" : "EXP-009 Cierre D+30, 9 Mayo 2026"} · Owner: Guido Mautino
+      </div>
+    </div>
+  </div>);
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

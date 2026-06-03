@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Holafly · Pricing — Verificación PIM</title>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#E6485C;--pink-soft:rgba(230,72,92,0.08);--pink-border:rgba(230,72,92,0.18);
+  --charcoal:#292B2E;--charcoal-soft:#4A4D52;--gray-mid:#64748B;--gray-light:#94A3B8;
+  --card:#F8FAFC;--white:#FFFFFF;--rule:#E4E6EA;--rule-soft:rgba(41,43,46,0.06);
+  --green:#15803D;--green-bg:#E8F5EE;--warn:#B45309;--warn-bg:#FDF3E7;
+  --blue:#1D4ED8;--blue-bg:#E8EFFD;--purple:#7C3AED;--purple-bg:#F3EEFE;
+  --pastel-yellow:#FFF0AB;--mono:'JetBrains Mono',monospace;--sans:'Mulish',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--white);color:var(--charcoal);line-height:1.65;font-size:14px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--pink);color:var(--white)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.anim-up{animation:fadeUp .4s ease both}
+
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 48px;background:rgba(255,255,255,0.92);border-bottom:1px solid var(--rule)}
+.top-bar-left{display:flex;align-items:center;gap:10px}
+.top-bar-dot{width:8px;height:8px;background:var(--pink);border-radius:50%}
+.top-bar-brand{font-size:15px;font-weight:800;color:var(--charcoal);letter-spacing:-0.02em}
+.top-bar-divider{width:1px;height:14px;background:var(--rule)}
+.top-bar-context{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--gray-mid);letter-spacing:.08em;text-transform:uppercase}
+.top-bar-date{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--gray-light);letter-spacing:.06em}
+
+.page{max-width:1100px;margin:0 auto;padding:0 48px 64px}
+
+.hero{padding:56px 0 40px}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--pink);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--pink)}
+.hero h1{font-size:clamp(34px,5vw,52px);font-weight:900;color:var(--charcoal);line-height:1.08;letter-spacing:-0.03em;margin-bottom:18px}
+.hero h1 .accent{color:var(--pink)}
+.hero-deck{font-size:16px;color:var(--charcoal-soft);max-width:760px;line-height:1.65}
+.hero-deck strong{color:var(--charcoal);font-weight:700}
+.hero-meta{display:flex;gap:18px;margin-top:24px;flex-wrap:wrap;font-size:12px;color:var(--gray-light)}
+.hero-meta span strong{color:var(--charcoal);font-weight:700}
+.hero-meta .sep{width:1px;height:12px;background:var(--rule);align-self:center}
+
+.section{padding:36px 0 6px}
+.section-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin-bottom:8px}
+.section h2{font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--charcoal);line-height:1.15;letter-spacing:-0.02em;margin-bottom:8px}
+.section h2 .highlight{background-image:linear-gradient(120deg,var(--pastel-yellow),var(--pastel-yellow));background-repeat:no-repeat;background-size:100% 26%;background-position:0 88%;padding:0 3px}
+.section-intro{font-size:15px;color:var(--charcoal-soft);max-width:790px;line-height:1.65;margin-bottom:22px}
+.section-intro strong{color:var(--charcoal);font-weight:700}
+.section-divider{border:none;border-top:1px solid var(--rule);margin:40px 0 0}
+
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:18px 16px;text-align:center}
+.metric-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px}
+.metric-value{font-family:var(--mono);font-size:28px;font-weight:800;color:var(--charcoal);line-height:1}
+.metric-value .accent{color:var(--pink)}
+
+.callout{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--pink);border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0;font-size:13px;color:var(--charcoal-soft);line-height:1.6}
+.callout strong{color:var(--charcoal);font-weight:700}.callout em{color:var(--pink);font-style:normal;font-weight:700}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.callout.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+
+.ctx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 12px}
+.ctx-card{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px;text-align:center;position:relative;overflow:hidden}
+.ctx-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--warn)}
+.ctx-val{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--charcoal);line-height:1;margin-bottom:4px}
+.ctx-label{font-size:11px;color:var(--gray-mid);font-weight:600}
+@media(max-width:800px){.ctx-grid{grid-template-columns:1fr 1fr}}
+
+.opp-list{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.opp-row{background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:16px 20px;display:grid;grid-template-columns:36px 1fr auto;gap:16px;align-items:center;transition:box-shadow .15s}
+.opp-row:hover{box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.opp-num{width:36px;height:36px;border-radius:8px;background:#FDE8EB;color:var(--pink);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:var(--mono)}
+.opp-body .opp-title{font-size:15px;font-weight:700;color:var(--charcoal);margin-bottom:3px}
+.opp-body .opp-desc{font-size:12px;color:var(--gray-mid);line-height:1.5}
+.opp-own{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--warn);background:var(--warn-bg);border:1px solid var(--rule);border-radius:999px;padding:6px 12px;white-space:nowrap;text-align:center}
+.opp-own .ol{display:block;font-size:8px;color:var(--gray-light);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1px;font-weight:700}
+@media(max-width:700px){.opp-row{grid-template-columns:36px 1fr}.opp-own{grid-column:2}}
+
+.inc-list{display:flex;flex-direction:column;gap:0;margin:8px 0}
+.inc-row{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--rule-soft);align-items:center}
+.inc-row:last-child{border-bottom:none}
+.inc-row .txt{font-size:14px;color:var(--charcoal-soft);line-height:1.5}
+.inc-row .txt strong{color:var(--charcoal);font-weight:700}
+.status{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap;justify-self:start;min-width:108px;justify-content:center}
+.status.planned{background:var(--warn-bg);color:var(--warn)}.status.done{background:var(--card);color:var(--gray-mid)}
+.status::before{content:'';width:6px;height:6px;border-radius:50%}
+.status.planned::before{background:var(--warn)}.status.done::before{background:var(--gray-light)}
+
+.page-footer{border-top:1px solid var(--rule);padding:24px 0 8px;margin-top:40px;text-align:center;font-size:12px;color:var(--gray-light)}
+.page-footer strong{color:var(--charcoal);font-weight:700}
+.excel{display:inline-flex;align-items:center;gap:9px;background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:9px 15px;margin-top:10px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--charcoal-soft)}
+.excel .sq{width:15px;height:15px;border-radius:4px;background:var(--green)}
+
+@media(max-width:800px){.top-bar{padding:12px 18px}.page{padding:0 18px 48px}.hero h1{font-size:28px}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-left">
+    <span class="top-bar-dot"></span>
+    <span class="top-bar-brand">Holafly · Pricing</span>
+    <span class="top-bar-divider"></span>
+    <span class="top-bar-context">Verificación PIM</span>
+  </div>
+  <span class="top-bar-date">03 JUN 2026</span>
+</div>
+
+<div class="page">
+
+  <div class="hero anim-up">
+    <div class="hero-eyebrow">Informe ejecutivo</div>
+    <h1>El checkout cobra el <span class="accent">precio de catálogo</span></h1>
+    <p class="hero-deck">Validado contra nuestros modelos. En régimen, desde la migración del <strong>22 de mayo</strong>, está limpio:
+      lo que falta para el 100% de cobranza es pago con crédito de fidelización (HolaCoins), <strong>no un error de precio</strong>.
+      El único desvío fue una ventana pre-migración, aislada y asumida. Quedan preguntas abiertas, mapeadas y con dueño.</p>
+    <div class="hero-meta">
+      <span><strong>8</strong> destinos</span><span class="sep"></span>
+      <span><strong>4</strong> modelos</span><span class="sep"></span>
+      <span><strong>26</strong> monedas</span><span class="sep"></span>
+      <span>ventas confirmadas · destinos migrados</span>
+    </div>
+  </div>
+
+  <div class="section anim-up">
+    <div class="section-label">01 · Validado</div>
+    <h2>El precio vendido <span class="highlight">coincide con el modelo</span></h2>
+    <p class="section-intro">Reconstruimos el precio cobrado desde las órdenes y lo comparamos contra la curva del modelo, por moneda y duración.
+      Modelo compartido confirmado: una misma curva cuadra en varios destinos. Las definiciones de datos (venta, fecha, precios, IVA, duración) están <strong>confirmadas con Data</strong>.</p>
+    <div class="metrics-grid">
+      <div class="metric"><div class="metric-label">Destinos</div><div class="metric-value">8</div></div>
+      <div class="metric"><div class="metric-label">Modelos</div><div class="metric-value">4</div></div>
+      <div class="metric"><div class="metric-label">Monedas</div><div class="metric-value">26</div></div>
+      <div class="metric"><div class="metric-label">Catálogo cobrado</div><div class="metric-value"><span class="accent">~100%</span></div></div>
+    </div>
+    <div class="callout green">Cuando la cobranza baja del catálogo son <strong>pagos parciales con crédito de fidelización (HolaCoins)</strong>, un mecanismo conocido del producto, no un error de precio. La curva publicada es la que se cobra.</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="section anim-up">
+    <div class="section-label">02 · Ventana de migración</div>
+    <h2>Un desvío, aislado y <span class="highlight">pre-migración</span></h2>
+    <p class="section-intro">Antes de configurarse el precio, <strong>50 órdenes en 14 destinos</strong> se vendieron a un precio placeholder muy por debajo del catálogo,
+      en destinos que aún no estaban migrados oficialmente (6 al 21 de mayo). No es recurrente desde el 22. El detalle se entregó a ingeniería.</p>
+    <div class="ctx-grid">
+      <div class="ctx-card"><div class="ctx-val">2.193</div><div class="ctx-label">AUD</div></div>
+      <div class="ctx-card"><div class="ctx-val">797</div><div class="ctx-label">EUR</div></div>
+      <div class="ctx-card"><div class="ctx-val">387</div><div class="ctx-label">GBP</div></div>
+      <div class="ctx-card"><div class="ctx-val">335</div><div class="ctx-label">USD</div></div>
+    </div>
+    <div class="callout warn">Leak por moneda, sin sumar entre monedas. Equivalente aproximado: <em>~€3.000</em>. Causa: precio sin configurar al migrar (placeholder).</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="section anim-up">
+    <div class="section-label">03 · Preguntas abiertas</div>
+    <h2>Lo que aún <span class="highlight">condiciona la lógica</span></h2>
+    <p class="section-intro">Piezas que todavía no están resueltas, cada una con dueño y un siguiente paso claro.</p>
+    <div class="opp-list">
+      <div class="opp-row"><div class="opp-num">1</div><div class="opp-body"><div class="opp-title">Cálculo de IVA con HolaCoins</div><div class="opp-desc">El IVA no cierra con final − base. Hipótesis: se calcula sobre el monto restante tras el crédito.</div></div><div class="opp-own"><span class="ol">Dueño</span>Pablo + Finanzas</div></div>
+      <div class="opp-row"><div class="opp-num">2</div><div class="opp-body"><div class="opp-title">Trazabilidad de HolaCoins</div><div class="opp-desc">Hoy no viaja a las tablas ni a Hub. Se infiere por aproximación.</div></div><div class="opp-own"><span class="ol">Dueño</span>Loyalty · Data</div></div>
+      <div class="opp-row"><div class="opp-num">3</div><div class="opp-body"><div class="opp-title">Reglas de pricing sin documentar</div><div class="opp-desc">No hay fuente única; se decidieron entre Pablo y Data, sin Finanzas en su momento.</div></div><div class="opp-own"><span class="ol">Dueño</span>Pablo + Finanzas</div></div>
+      <div class="opp-row"><div class="opp-num">4</div><div class="opp-body"><div class="opp-title">IVA de destinos pendientes</div><div class="opp-desc">Egipto y un destino más en 0% temporal hasta configurar su tasa.</div></div><div class="opp-own"><span class="ol">Dueño</span>Daniel</div></div>
+      <div class="opp-row"><div class="opp-num">5</div><div class="opp-body"><div class="opp-title">Migración pausada (Batch 2.2)</div><div class="opp-desc">45 destinos detenidos por temas no-pricing en investigación. Incluye el cambio de precio del día 1.</div></div><div class="opp-own"><span class="ol">Dueño</span>Engineering</div></div>
+      <div class="opp-row"><div class="opp-num">6</div><div class="opp-body"><div class="opp-title">Decimales en JPY (web)</div><div class="opp-desc">El checkout web muestra decimales confusos en yenes. No pasa en Shopify.</div></div><div class="opp-own"><span class="ol">Dueño</span>Kevin</div></div>
+      <div class="opp-row"><div class="opp-num">7</div><div class="opp-body"><div class="opp-title">Órdenes en destinos no migrados</div><div class="opp-desc">Se vieron órdenes en PIM de destinos no migrados o blocked; confirmar el camino del precio.</div></div><div class="opp-own"><span class="ol">Dueño</span>Engineering</div></div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="section anim-up">
+    <div class="section-label">04 · Inconsistencias de migración</div>
+    <h2>Marcadas por <span class="highlight">ingeniería</span></h2>
+    <p class="section-intro">Destinos con órdenes en PIM pese a no estar migrados o estar blocked, según el Migration status.</p>
+    <div class="inc-list">
+      <div class="inc-row"><span class="status planned">BLOCKED</span><div class="txt"><strong>French Polynesia</strong> · no soportado en el nuevo core; se migró por horas el 26 de mayo.</div></div>
+      <div class="inc-row"><span class="status done">sin migrar</span><div class="txt"><strong>Eastern Europe · Belarus · Curaçao</strong> · con órdenes en PIM pese a no estar migrados (leakage pre-migración).</div></div>
+      <div class="inc-row"><span class="status planned">BLOCKED</span><div class="txt"><strong>Nepal</strong> · demorado porque los destinos unlimited no funcionaban en las apps.</div></div>
+    </div>
+    <div class="callout">Contexto: 9 destinos blocked en total, varios por modelo de pricing no listo. <strong>Pricing toma estos modelos</strong>; la inconsistencia es de estado de migración, no de la curva.</div>
+  </div>
+
+  <div class="page-footer">
+    <div><strong>Detalle completo en el Excel adjunto</strong> · validación por destino, criterios de filtro, mapa de preguntas y las 50 órdenes.</div>
+    <div class="excel"><span class="sq"></span>Verificacion_Pricing_PIM.xlsx</div>
+  </div>
+
+</div>
+</body>
+</html>

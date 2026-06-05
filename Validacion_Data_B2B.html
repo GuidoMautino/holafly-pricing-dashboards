@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Holafly · Validación de datos — Análisis B2B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#E6485C;--pink-deep:#C13447;--pink-wash:#FDEEF0;--pink-border:rgba(230,72,92,0.20);
+  --pastel-yellow:#FFF0AB;--green:#15803D;--green-bg:#E8F5EE;--warn:#B45309;--warn-bg:#FDF3E7;--blue:#1D4ED8;--blue-bg:#E8EFFD;
+  --charcoal:#292B2E;--charcoal-soft:#4A4D52;--gray-mid:#64748B;--gray-light:#94A3B8;
+  --card:#F8FAFC;--paper:#FAFAFB;--white:#FFFFFF;--border:#E4E6EA;--rule:rgba(41,43,46,0.10);
+  --code-bg:#1E2024;
+  --mono:'JetBrains Mono',monospace;--sans:'Mulish',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--white);color:var(--charcoal);line-height:1.62;font-size:14.5px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 32px 80px}
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:11px;padding:14px 32px;background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.top .dot{width:8px;height:8px;border-radius:50%;background:var(--pink);animation:pulse 2.4s ease-in-out infinite}
+.top .b{font-weight:800;font-size:14px}.top .s{width:1px;height:13px;background:var(--rule)}
+.top .c{font-family:var(--mono);font-size:10px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:.12em}
+.top .badge{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);background:var(--blue-bg);padding:5px 10px;border-radius:6px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.hero{padding:48px 0 8px}
+.hero .eye{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin-bottom:14px}
+.hero h1{font-size:clamp(26px,4vw,38px);font-weight:900;line-height:1.1;letter-spacing:-0.02em;margin-bottom:18px}
+.hero p{font-size:15.5px;color:var(--charcoal-soft);max-width:680px}
+.hero p strong{color:var(--charcoal);font-weight:700}
+h2{font-size:21px;font-weight:800;letter-spacing:-0.01em;margin:42px 0 6px;padding-top:30px;border-top:1px solid var(--border)}
+h2 .n{font-family:var(--mono);font-size:12px;color:var(--pink);font-weight:700;margin-right:10px}
+.lead{font-size:14px;color:var(--gray-mid);margin-bottom:16px;max-width:680px}
+p.t{font-size:14.5px;color:var(--charcoal-soft);margin-bottom:14px;max-width:700px}
+p.t strong{color:var(--charcoal);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 8px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+th{background:var(--charcoal);color:#fff;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:10px 13px;text-align:left}
+td{padding:11px 13px;border-top:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--paper)}
+td.k{font-weight:700;white-space:nowrap}
+td .m{font-family:var(--mono);font-size:12px;color:var(--charcoal-soft)}
+.assume{list-style:none;padding:0;margin:8px 0}
+.assume li{position:relative;padding:14px 16px 14px 44px;border:1px solid var(--border);border-radius:11px;margin-bottom:10px;background:var(--card)}
+.assume li .qn{position:absolute;left:14px;top:14px;font-family:var(--mono);font-size:13px;font-weight:800;color:var(--pink)}
+.assume li .at{font-weight:700;display:block;margin-bottom:3px}
+.assume li .ad{font-size:13.5px;color:var(--charcoal-soft)}
+.assume li .ad code{font-family:var(--mono);font-size:12px;background:var(--white);border:1px solid var(--border);border-radius:4px;padding:1px 5px}
+.assume li .q{color:var(--pink);font-weight:700}
+.assume li.flag{border-color:var(--pink-border);background:var(--pink-wash)}
+pre{background:var(--code-bg);color:#E6E8EB;border-radius:11px;padding:18px 20px;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.6;margin:6px 0 18px}
+pre .cm{color:#8A9099}pre .kw{color:#FF8C9A}pre .fn{color:#7FD1FF}
+.qlabel{font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal);margin:18px 0 6px}
+.callout{border-radius:12px;padding:18px 20px;margin:18px 0;border:1px solid var(--pink-border);background:var(--pink-wash)}
+.callout .ct{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--pink-deep);margin-bottom:8px}
+.callout p{font-size:13.5px;color:var(--charcoal-soft)}.callout p strong{color:var(--charcoal)}
+.foot{margin-top:36px;font-family:var(--mono);font-size:10px;color:var(--gray-light);line-height:1.7;border-top:1px solid var(--border);padding-top:18px}
+@media(max-width:700px){.wrap{padding:0 20px 56px}.top{padding:12px 20px}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="dot"></div><div class="b">Holafly · Pricing</div><div class="s"></div>
+  <div class="c">Validación de datos — B2B</div>
+  <div class="badge">Para Data · Óscar</div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eye">Validación de datos · 5 jun 2026</div>
+    <h1>Validación del análisis B2B (plan por día)</h1>
+    <p>Antes de avanzar quiero que <strong>Data corrobore los supuestos y el dato</strong>. <strong>No</strong> es aprobación de pricing (eso lo ve Pricing/B2B) — es confirmar que las tablas, campos y supuestos están bien. Mapeé el modelo con dos agentes (Gemini) y <strong>verifiqué todo contra el dato con queries</strong> (varias cosas de los agentes salieron mal y las corregí). Igual prefiero que me corrijan donde haga falta.</p>
+    <p style="font-size:14px;color:var(--gray-mid);max-width:680px;margin-top:12px">Para contexto: el análisis concluyó que un €3/día plano no llega al 40% de margen, pero <strong style="color:var(--charcoal)">tieriado por destino sí</strong> (~69% mezclado). Eso es lo que va a Pricing. Acá te pido validar la <strong style="color:var(--charcoal)">base de dato</strong> sobre la que se apoya, no la decisión de precio.</p>
+  </div>
+
+  <h2><span class="n">01</span>El dato que usé</h2>
+  <p class="lead">Todo es 100% B2B (sin B2C), ventana de órdenes <strong>1-feb → 4-jun 2026</strong>, dataset <code style="font-family:var(--mono);font-size:12px">hly--data--pro--57</code>.</p>
+  <table>
+    <thead><tr><th>Concepto</th><th>Tabla · campo</th><th>Filtro</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Producto (B2B)</td><td><span class="m">dim_order_line.product_id</span></td><td><span class="m">= 'plan-unlimited-b2b'</span></td></tr>
+      <tr><td class="k">Ingreso</td><td><span class="m">fct_revenue.net_revenue_eur</span></td><td><span class="m">is_revenue_confirmed = true</span></td></tr>
+      <tr><td class="k">Costo</td><td><span class="m">consumption_cost_per_day.total_cost_eur</span></td><td><span class="m">por country_code_iso3, link order_id</span></td></tr>
+      <tr><td class="k">Destino</td><td><span class="m">consumption_cost_per_day.country_code_iso3</span></td><td><span class="m">país de consumo</span></td></tr>
+      <tr><td class="k">Ventana</td><td><span class="m">dim_order.created_at</span></td><td><span class="m">2026-02-01 → 2026-06-04</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="n">02</span>Qué dio el dato (para que lo cotejes)</h2>
+  <p class="lead">Los resultados clave, por si querés contrastarlos contra tu propia corrida.</p>
+  <table>
+    <thead><tr><th>Métrica</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Margen actual del Unlimited (ex-anomalías)</td><td><span class="m">~83%</span></td></tr>
+      <tr><td class="k">Margen a €3/día plano (base días de uso)</td><td><span class="m">33% — no llega a 40%</span></td></tr>
+      <tr><td class="k">Margen a €3/día tieriado por destino</td><td><span class="m">~69% mezclado · todo ≥40%</span></td></tr>
+      <tr><td class="k">Costo por día de uso (rango)</td><td><span class="m">€0,18 (UK) → €4,18 (Arabia) · 87% del volumen ≤ €1,80</span></td></tr>
+      <tr><td class="k">Muestra</td><td><span class="m">el grueso del volumen en destinos de 50+ eSIMs</span></td></tr>
+      <tr><td class="k">Excluido del modelo</td><td><span class="m">Omán (~50% del costo bruto, anómalo) · 1 eSIM de Nepal (€279/GB) · país "800" (basura)</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="n">03</span>Lo que asumí — confirmá o corregí</h2>
+  <ul class="assume">
+    <li><span class="qn">1</span><span class="at">Aislar B2B por PRODUCTO, no por línea de negocio</span><span class="ad">El mismo producto aparece etiquetado en <code>business_line</code> distintos (b2b/subscription/b2c); filtrar por <code>business_line='b2b'</code> perdía ~35% de las órdenes. <span class="q">¿Es correcto aislar por producto? ¿Hay otros SKUs B2B a sumar?</span></span></li>
+    <li><span class="qn">2</span><span class="at">Ingreso = net_revenue_eur con is_revenue_confirmed=true</span><span class="ad"><span class="q">¿Es el campo y el filtro correctos para el ingreso neto B2B?</span></span></li>
+    <li><span class="qn">3</span><span class="at">Costo = total_cost_eur por país de consumo</span><span class="ad">Lo tomé como euros reales, linkeado por <code>order_id</code>. <span class="q">¿Correcto? ¿country_code_iso3 ahí es el destino de consumo (no el comprador)?</span></span></li>
+    <li><span class="qn">4</span><span class="at">Margen = (ingreso − suma de costo en todos los países) ÷ ingreso, por orden</span><span class="ad">El plan es mundial, así que el costo de una orden suma el consumo de todos los países donde roameó. <span class="q">¿Es la forma correcta?</span></span></li>
+    <li><span class="qn">5</span><span class="at">Ventana anclada en la orden, consumo completo</span><span class="ad">Filtré por <code>created_at</code> y traje TODO el consumo de esas órdenes, sin cortar el consumo por fecha (para no truncar costo). <span class="q">¿OK?</span></span></li>
+    <li class="flag"><span class="qn">6</span><span class="at">Base de "días" (del que menos seguro estoy)</span><span class="ad"><code>orders_per_esim.days</code> vino como centinela <strong>-1</strong> (no es duración) y <code>valid_to</code> vacío — el unlimited es una suscripción abierta, sin "días de viaje". Para simular un precio por día usé los <strong>días con consumo real</strong> como base conservadora. <span class="q">¿Es razonable? ¿Cuál es la base de días/duración correcta para el unlimited?</span></span></li>
+    <li><span class="qn">7</span><span class="at">total_cost_eur está en euros reales</span><span class="ad">Un export externo daba valores ~100x más altos (parecía otra unidad). <span class="q">¿Confirmás que total_cost_eur es el euro real?</span></span></li>
+  </ul>
+
+  <h2><span class="n">04</span>Las queries (para que las corras si querés)</h2>
+  <p class="t">Estas son las que <strong>sostienen los supuestos</strong> de arriba — cada una dice qué respalda. De las ~15 que corrí, estas <strong>6 son las que importan para corroborar</strong>; el resto fueron iteración y debugging (variantes, barridos de precio). Si querés las demás, te las paso.</p>
+
+  <div class="qlabel">Universo de productos B2B · respalda el supuesto 1</div>
+  <pre>SELECT ol.product_id,
+  COUNT(DISTINCT ol.order_id) AS ordenes_total,
+  COUNT(DISTINCT IF(DATE(o.created_at) BETWEEN '2026-02-01' AND '2026-06-04', ol.order_id, NULL)) AS ordenes_ventana
+FROM `hly--data--pro--57`.mdm_gold.dim_order_line ol
+JOIN `hly--data--pro--57`.mdm_gold.dim_order o ON ol.order_id = o.order_id
+WHERE ol.product_id LIKE '%b2b%'
+GROUP BY ol.product_id ORDER BY ordenes_ventana DESC;</pre>
+
+  <div class="qlabel">business_line repartido · respalda el supuesto 1 (por qué NO usamos business_line)</div>
+  <pre>WITH b2b AS (
+  SELECT DISTINCT order_id FROM `hly--data--pro--57`.mdm_gold.dim_order_line
+  WHERE product_id = 'plan-unlimited-b2b'
+)
+SELECT f.business_line, COUNT(DISTINCT f.order_id) AS ordenes, ROUND(SUM(f.net_revenue_eur),0) AS net_eur
+FROM `hly--data--pro--57`.mdm_gold.fct_revenue f JOIN b2b ON f.order_id = b2b.order_id
+GROUP BY f.business_line ORDER BY ordenes DESC;
+-- resultado: el mismo producto cae en b2b / subscription / b2c (por eso no se filtra por business_line)</pre>
+
+  <div class="qlabel">Órdenes sin consumo: legacy vs core · confirma que todo el cohorte es core</div>
+  <pre>WITH b2b AS (
+  SELECT DISTINCT ol.order_id, o.platform
+  FROM `hly--data--pro--57`.mdm_gold.dim_order_line ol
+  JOIN `hly--data--pro--57`.mdm_gold.dim_order o ON ol.order_id = o.order_id
+  WHERE ol.product_id LIKE '%b2b%' AND DATE(o.created_at) BETWEEN '2026-02-01' AND '2026-06-04'
+),
+cost AS (SELECT DISTINCT order_id FROM `hly--data--pro--57`.dp_consumption.consumption_cost_per_day)
+SELECT b.platform,
+  CASE WHEN c.order_id IS NULL THEN 'sin_consumo' ELSE 'con_consumo' END AS flag,
+  COUNT(*) AS ordenes
+FROM b2b b LEFT JOIN cost c ON b.order_id = c.order_id
+GROUP BY b.platform, flag ORDER BY b.platform, flag;</pre>
+
+  <div class="qlabel">A · Costo por día de uso, por destino (insumo del tiering)</div>
+  <pre><span class="cm">-- Solo plan-unlimited-b2b. Excluye el eSIM roto de Nepal.</span>
+<span class="kw">WITH</span> b2b <span class="kw">AS</span> (
+  <span class="kw">SELECT DISTINCT</span> ol.order_id
+  <span class="kw">FROM</span> `hly--data--pro--57`.mdm_gold.dim_order_line ol
+  <span class="kw">JOIN</span> `hly--data--pro--57`.mdm_gold.dim_order o <span class="kw">ON</span> ol.order_id = o.order_id
+  <span class="kw">WHERE</span> ol.product_id = <span class="fn">'plan-unlimited-b2b'</span>
+    <span class="kw">AND</span> <span class="fn">DATE</span>(o.created_at) <span class="kw">BETWEEN</span> <span class="fn">'2026-02-01'</span> <span class="kw">AND</span> <span class="fn">'2026-06-04'</span>
+)
+<span class="kw">SELECT</span>
+  c.country_code_iso3,
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> c.iccid) <span class="kw">AS</span> esims,
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> <span class="fn">CONCAT</span>(c.iccid, <span class="fn">CAST</span>(c.utc_date <span class="kw">AS STRING</span>))) <span class="kw">AS</span> esim_dias,
+  <span class="fn">ROUND</span>(<span class="fn">SUM</span>(c.total_cost_eur), 2) <span class="kw">AS</span> cost_eur,
+  <span class="fn">ROUND</span>(<span class="fn">SUM</span>(c.total_cost_eur) / <span class="fn">NULLIF</span>(<span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> <span class="fn">CONCAT</span>(c.iccid, <span class="fn">CAST</span>(c.utc_date <span class="kw">AS STRING</span>))),0), 2) <span class="kw">AS</span> cost_per_active_day
+<span class="kw">FROM</span> `hly--data--pro--57`.dp_consumption.consumption_cost_per_day c
+<span class="kw">JOIN</span> b2b <span class="kw">ON</span> c.order_id = b2b.order_id
+<span class="kw">WHERE</span> c.iccid != <span class="fn">'8943108150106321349'</span>  <span class="cm">-- eSIM roto de Nepal</span>
+<span class="kw">GROUP BY</span> c.country_code_iso3 <span class="kw">ORDER BY</span> esim_dias <span class="kw">DESC</span>;
+<span class="cm">-- resultado: 87% del volumen con costo/día &lt;= €1,80; rango €0,18 (UK) a €4+ (caros)</span></pre>
+
+  <div class="qlabel">B · Margen mezclado a precio actual + cola negativa</div>
+  <pre><span class="kw">WITH</span> b2b <span class="kw">AS</span> (
+  <span class="kw">SELECT DISTINCT</span> ol.order_id
+  <span class="kw">FROM</span> `hly--data--pro--57`.mdm_gold.dim_order_line ol
+  <span class="kw">JOIN</span> `hly--data--pro--57`.mdm_gold.dim_order o <span class="kw">ON</span> ol.order_id = o.order_id
+  <span class="kw">WHERE</span> ol.product_id <span class="kw">LIKE</span> <span class="fn">'%b2b%'</span>
+    <span class="kw">AND</span> <span class="fn">DATE</span>(o.created_at) <span class="kw">BETWEEN</span> <span class="fn">'2026-02-01'</span> <span class="kw">AND</span> <span class="fn">'2026-06-04'</span>
+),
+rev <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> order_id, <span class="fn">SUM</span>(net_revenue_eur) <span class="kw">AS</span> net_rev
+  <span class="kw">FROM</span> `hly--data--pro--57`.mdm_gold.fct_revenue
+  <span class="kw">WHERE</span> order_id <span class="kw">IN</span> (<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> b2b) <span class="kw">AND</span> is_revenue_confirmed = <span class="kw">true</span>
+  <span class="kw">GROUP BY</span> order_id
+),
+cost <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> order_id, <span class="fn">SUM</span>(total_cost_eur) <span class="kw">AS</span> cost
+  <span class="kw">FROM</span> `hly--data--pro--57`.dp_consumption.consumption_cost_per_day
+  <span class="kw">WHERE</span> order_id <span class="kw">IN</span> (<span class="kw">SELECT</span> order_id <span class="kw">FROM</span> b2b)
+  <span class="kw">GROUP BY</span> order_id
+)
+<span class="kw">SELECT</span>
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> planes,
+  <span class="fn">ROUND</span>(<span class="fn">SUM</span>(r.net_rev),0) <span class="kw">AS</span> rev_total,
+  <span class="fn">ROUND</span>(<span class="fn">SUM</span>(<span class="fn">COALESCE</span>(c.cost,0)),0) <span class="kw">AS</span> cost_total,
+  <span class="fn">ROUND</span>((<span class="fn">SUM</span>(r.net_rev)-<span class="fn">SUM</span>(<span class="fn">COALESCE</span>(c.cost,0)))/<span class="fn">NULLIF</span>(<span class="fn">SUM</span>(r.net_rev),0),4) <span class="kw">AS</span> gm_mezclado,
+  <span class="fn">COUNTIF</span>((r.net_rev - <span class="fn">COALESCE</span>(c.cost,0)) &lt; 0) <span class="kw">AS</span> planes_negativos
+<span class="kw">FROM</span> rev r <span class="kw">LEFT JOIN</span> cost c <span class="kw">ON</span> r.order_id = c.order_id;
+<span class="cm">-- resultado: GM ~83% ex-anomalías a precio actual; cola de planes negativos en destinos caros</span></pre>
+
+  <div class="qlabel">Diagnóstico del campo days · respalda el supuesto 6 (la base de días)</div>
+  <pre>WITH b2b AS (
+  SELECT DISTINCT ol.order_id, ol.product_id
+  FROM `hly--data--pro--57`.mdm_gold.dim_order_line ol
+  JOIN `hly--data--pro--57`.mdm_gold.dim_order o ON ol.order_id = o.order_id
+  WHERE ol.product_id LIKE '%b2b%' AND DATE(o.created_at) BETWEEN '2026-02-01' AND '2026-06-04'
+)
+SELECT b.product_id, MIN(e.days) AS days_min, MAX(e.days) AS days_max,
+  COUNTIF(e.days &lt; 0) AS filas_dias_neg, COUNTIF(e.valid_to IS NULL) AS sin_valid_to
+FROM `hly--data--pro--57`.dp_esim.orders_per_esim e JOIN b2b b ON e.order_id = b.order_id
+GROUP BY b.product_id;
+-- resultado: days = -1 (centinela) y valid_to vacío para unlimited → no hay duración real</pre>
+
+  <h2><span class="n">05</span>Preguntas sin responder (dependen de ustedes)</h2>
+  <table>
+    <tbody>
+      <tr><td class="k">Facturación del Unlimited</td><td>¿Cómo se cobra hoy (mensual / precio efectivo / descuentos)? Lo necesito para comparar el por-día vs €57/mes.</td></tr>
+      <tr><td class="k">Omán</td><td>Concentra ~50% del costo con patrón anómalo. Lo excluí. ¿Es uno o pocos clientes? ¿Consumo real o abuso?</td></tr>
+      <tr><td class="k">eSIM de Nepal</td><td>1 eSIM a ~€279/GB (14,6% del costo bruto). Lo traté como error de dato y lo excluí. ¿Lo confirman?</td></tr>
+      <tr><td class="k">Consumo sin venta</td><td>~€4.285 de costo en órdenes que consumieron pero sin ingreso confirmado (refund/cancel). ¿Esperado?</td></tr>
+      <tr><td class="k">Recurrencia</td><td><code style="font-family:var(--mono);font-size:12px">payment_type</code> distingue pago único vs suscripción. ¿Cómo conviene tratarla en el margen?</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="ct">◆ Los dos que más mueven la aguja</div>
+    <p>Si solo pueden mirar dos cosas: <strong>la base de "días" del unlimited</strong> (supuesto 6) y <strong>Omán</strong>. Una llamada corta para esos dos me alcanza. Gracias por la mano.</p>
+  </div>
+
+  <div class="foot">
+    Holafly · Pricing — Validación de datos, análisis B2B · 5 jun 2026 · 100% datos B2B (plan unlimited, aislado por producto) · ventana 1 feb – 4 jun 2026.
+  </div>
+
+</div>
+</body>
+</html>

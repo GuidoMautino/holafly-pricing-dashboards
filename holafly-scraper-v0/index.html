@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holafly vs Competidores - Pricing Benchmark</title>
+<style>
+:root{--green:#16a06a;--ink:#16242f;--muted:#6b7c8a;--line:#e4eaef;--bg:#f6f8fa;--maxw:1460px;}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:30px 28px 70px}
+h1{font-size:28px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+.example{background:#f3faf6;border:1px solid #bfe6d2;border-left:4px solid var(--green);border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.example .extitle{font-weight:800;font-size:15px;margin-bottom:8px}
+.example .exrow{font-size:13.5px;margin:5px 0}
+.example .exrow b{color:var(--ink)}
+.example .exnote{color:#3a5; font-style:italic}
+.example .exlinks{font-size:12.5px;color:var(--muted);margin-top:9px;border-top:1px dashed #cfe7da;padding-top:8px}
+.example .exlinks a{color:var(--green);font-weight:700}
+details.howto{background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px 16px;margin-bottom:16px}
+details.howto summary{cursor:pointer;font-weight:700;padding:10px 0;font-size:14px}
+details.howto ul{margin:4px 0 12px;padding-left:18px;font-size:13px;color:#2c3e4d}
+details.howto li{margin:4px 0}
+.thesis{background:#fff;border-left:4px solid var(--ink);border-radius:8px;padding:11px 15px;font-size:14px;margin-bottom:16px}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 15px;flex:1;min-width:140px}
+.kpi b{display:block;font-size:21px}.kpi span{font-size:12px;color:var(--muted)}
+.vcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:18px}
+.vhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.vhead b{font-size:16px}.vhead select{font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:9px;font-weight:600}
+.q{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.q .chip{font-size:11px;font-weight:800;border-radius:7px;padding:3px 0;text-align:center;height:fit-content}
+.q .ql{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.q .qa{font-size:14px;margin-top:1px}
+.chip.si{background:#16a06a;color:#fff}.chip.casi{background:#ffe39a;color:#5c4400}.chip.no{background:#e15241;color:#fff}.chip.na{background:#dce8f5;color:#1c3d5a}
+.bar{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:14px 0 6px}
+.grp{display:flex;gap:8px;align-items:center}
+.grp .lab{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-right:2px}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:7px 13px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+.tabinfo{background:#eef4fb;border:1px solid #cfe0f1;border-radius:10px;padding:10px 14px;font-size:13px;color:#244;margin:8px 0}
+.tabinfo b{color:var(--ink)}
+.eurwarn{display:none;background:#fff6e5;border:1px solid #f4c969;border-left:4px solid #e8a317;color:#6b4e00;border-radius:10px;padding:10px 14px;font-size:13px;margin:8px 0}
+.eurwarn b{color:#5c4400}
+.filternote{font-size:13px;color:var(--muted);margin:6px 2px}
+.filternote a{color:var(--green);font-weight:700;cursor:pointer;text-decoration:underline}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;overflow-x:auto}
+table{border-collapse:separate;border-spacing:5px;width:100%;font-size:14px;table-layout:fixed}
+th{font-size:12px;color:var(--muted);font-weight:700;padding:5px 6px}
+td.dest{text-align:left;font-weight:700;position:sticky;left:0;background:#fff;width:190px;padding-right:10px;cursor:pointer}
+td.dest:hover{color:var(--green)}
+td.dest small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+td.val{text-align:center}
+.cell{border-radius:9px;padding:12px 4px;font-weight:700;font-size:14px;min-width:64px;cursor:help;display:block}
+.cell.empty{background:transparent;color:var(--muted);font-weight:400;cursor:default}
+.cell.nodata{background:#f0f1f3;color:#aab4bd;font-weight:500;cursor:default}
+#tip{position:fixed;z-index:99;display:none;background:#16242f;color:#fff;font-size:12px;font-weight:600;padding:7px 10px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);pointer-events:none;max-width:300px;line-height:1.5}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:14px 2px}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+.notes{margin-top:22px}.notes h3{font-size:15px;margin:0 0 8px}
+.note{background:#fff;border:1px solid var(--line);border-left:3px solid #f4a259;border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px}
+.note b{color:var(--ink)}
+.foot{color:var(--muted);font-size:12px;margin-top:22px;border-top:1px solid var(--line);padding-top:12px}
+</style></head>
+<body><div class="wrap">
+  <h1>Holafly vs Competidores &mdash; Pricing Benchmark</h1>
+  <p class="sub" id="sub"></p>
+  <div class="example" id="example"></div>
+  <details class="howto"><summary>Cómo leer este archivo (leyenda completa)</summary><ul>
+    <li><b>Qué compara:</b> Holafly vs el competidor que elijas, en los destinos top por revenue, en 8 duraciones (1 a 30 días).</li>
+    <li><b>Competidor:</b> Airalo, Saily, o “Mejor precio” (el más barato de todos en cada celda, la comparación más dura para Holafly).</li>
+    <li><b>Pestaña “Unlimited vs Unlimited”:</b> el plan ilimitado de cada uno a la misma duración. Comparación limpia y exacta.</li>
+    <li><b>Pestaña “Costo real del viaje”:</b> el plan MÁS BARATO que cada proveedor vende para cubrir un viaje de N días a tu consumo real (capeado o ilimitado, lo que salga menos). El tooltip muestra el plan exacto y su validez.</li>
+    <li><b>El número</b> de la celda es el gap: cuánto más caro (+) o barato (&minus;) es Holafly. <b>Pasá el mouse</b> para ver los dos precios y el plan elegido.</li>
+    <li><b>Colores:</b> <span style="color:#16a06a;font-weight:700">verde</span> Holafly más barato · amarillo/naranja algo más caro · <span style="color:#e15241;font-weight:700">rojo</span> bastante más caro · celeste = el competidor no vende esa duración · gris = sin dato.</li>
+    <li><b>Moneda:</b> <b>USD = exacto</b> (nativo de todos). <b>EUR = aprox:</b> Holafly nativo, competidores convertidos a ~0,90 (no nativo).</li>
+  </ul></details>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="vcard" id="vcard">
+    <div class="vhead"><b>Veredicto</b> <select id="dest"></select></div>
+    <div id="verdict"></div>
+  </div>
+
+  <div class="bar">
+    <div class="grp"><span class="lab">Competidor</span><div class="seg" id="compseg"></div></div>
+    <div class="grp"><span class="lab">Comparar</span><div class="seg" id="tabs"><button data-tab="unl" class="on">Unlimited vs Unlimited</button><button data-tab="cost">Costo real del viaje</button></div></div>
+    <div class="grp"><span class="lab">Celda</span><div class="seg" id="modeseg"><button data-mode="gap" class="on">Gap %</button><button data-mode="price">Precio HF</button></div></div>
+    <div class="grp"><span class="lab">Moneda</span><div class="seg" id="curseg"><button data-cur="USD" class="on">USD</button><button data-cur="EUR">EUR</button></div></div>
+  </div>
+
+  <div class="tabinfo" id="tabinfo"></div>
+  <div class="eurwarn" id="eurwarn"><b>⚠ Vista EUR aproximada.</b> Holafly en su EUR nativo; los competidores convertidos a ~0,90 (no es su precio EUR nativo). La comparación exacta es en <b>USD</b>; el gap relativo no cambia con la moneda.</div>
+  <div class="filternote" id="filternote"></div>
+
+  <div class="card"><table id="tbl"></table></div>
+  <div class="legend" id="legend"></div>
+  <div class="notes" id="notes"></div>
+  <div class="foot" id="foot"></div>
+</div><div id="tip"></div>
+
+<script>
+const D = {"date": "2026-06-08", "air_fx": 0.9, "durations": [1, 3, 5, 7, 10, 15, 20, 30], "competitors": ["Airalo", "Saily"], "fup": {"Airalo": "~3 GB/día (a verificar)", "Saily": "3–5 GB/día según mercado, luego 1 Mbps", "BEST": "capa su unlimited"}, "destinos": [{"name": "United States", "cons": 0.592, "note": "", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.5, "v": 8.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 8.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 19.0, "v": 9.0, "vl": "3GB·7d", "vov": false}, "Saily": {"u": 18.04, "v": 8.99, "vl": "3GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 27.0, "v": 13.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 27.54, "v": 13.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 22.5, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 33.24, "v": 21.84, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 22.5, "vl": "10GB·15d", "vov": false}, "Saily": {"u": 46.54, "v": 21.84, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 37.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 56.99, "v": 35.14, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 69.0, "v": 37.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": 68.39, "v": 35.14, "vl": "20GB·30d", "vov": false}}}}}, {"name": "Japan", "cons": 0.933, "note": "", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.5, "v": 7.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 7.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 17.0, "v": 10.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 10.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 27.0, "v": 17.0, "vl": "10GB·7d", "vov": false}, "Saily": {"u": 28.99, "v": 17.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 17.5, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 17.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 24.0, "vl": "20GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 24.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 25.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 24.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 72.0, "v": 72.0, "vl": "Ilimitado·30d", "vov": false}, "Saily": {"u": 71.99, "v": 71.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "Morocco", "cons": 1.07, "note": "Precio real (no es error de scrape). Holafly lo vende con GM negativo: barato porque está subsidiado, no escalar como ventaja de precio.", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 16.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 15.99, "vl": "3GB·30d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 17.5, "v": 17.5, "vl": "Ilimitado·3d", "vov": false}, "Saily": {"u": null, "v": 21.99, "vl": "5GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 29.0, "v": 29.0, "vl": "Ilimitado·5d", "vov": false}, "Saily": {"u": null, "v": 33.99, "vl": "10GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 35.0, "v": 35.0, "vl": "Ilimitado·7d", "vov": false}, "Saily": {"u": null, "v": 33.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": null, "v": null, "vl": null, "vov": false}, "Saily": {"u": 35.99, "v": 35.99, "vl": "Ilimitado·10d", "vov": false}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": null, "v": null, "vl": null, "vov": false}, "Saily": {"u": 48.99, "v": 42.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": null, "vl": null, "vov": false}, "Saily": {"u": 59.99, "v": 59.99, "vl": "Ilimitado·20d", "vov": false}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": null, "v": null, "vl": null, "vov": false}, "Saily": {"u": 89.99, "v": 89.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "China", "cons": 1.162, "note": "", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 9.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 10.99, "vl": "3GB·30d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.5, "v": 11.5, "vl": "Ilimitado·3d", "vov": false}, "Saily": {"u": null, "v": 15.99, "vl": "5GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 19.0, "v": 19.0, "vl": "Ilimitado·5d", "vov": false}, "Saily": {"u": 22.99, "v": 22.99, "vl": "Ilimitado·5d", "vov": false}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 27.0, "v": 24.5, "vl": "10GB·7d", "vov": false}, "Saily": {"u": 29.99, "v": 26.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 35.0, "vl": "Ilimitado·10d", "vov": false}, "Saily": {"u": 35.99, "v": 35.99, "vl": "Ilimitado·10d", "vov": false}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 39.0, "vl": "20GB·15d", "vov": false}, "Saily": {"u": 49.99, "v": 45.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 49.0, "vl": "50GB·30d", "vov": true}, "Saily": {"u": 60.99, "v": 60.99, "vl": "Ilimitado·20d", "vov": false}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 69.0, "v": 49.0, "vl": "50GB·30d", "vov": false}, "Saily": {"u": 72.99, "v": 72.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "United Kingdom", "cons": 0.628, "note": "", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 4.49, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.5, "v": 8.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 8.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 19.0, "v": 12.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 12.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 27.0, "v": 12.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 28.99, "v": 12.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 18.5, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 18.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 18.5, "vl": "10GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 18.99, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 31.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 30.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 72.0, "v": 31.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 30.99, "vl": "20GB·30d", "vov": false}}}}}, {"name": "Egypt", "cons": 0.412, "note": "", "days": {"1": {"he": 6.9, "hu": 7.9, "c": {"Airalo": {"u": null, "v": 5.5, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 8.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 20.5, "v": 13.0, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 14.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 29.5, "v": 14.5, "vl": "3GB·7d", "vov": false}, "Saily": {"u": null, "v": 14.99, "vl": "3GB·30d", "vov": true}}}, "7": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 36.5, "v": 14.5, "vl": "3GB·7d", "vov": false}, "Saily": {"u": null, "v": 14.99, "vl": "3GB·30d", "vov": true}}}, "10": {"he": 36.9, "hu": 39.9, "c": {"Airalo": {"u": 38.0, "v": 22.0, "vl": "5GB·15d", "vov": true}, "Saily": {"u": 35.99, "v": 19.99, "vl": "5GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 37.0, "vl": "10GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 33.99, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 38.5, "vl": "10GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 33.99, "vl": "10GB·30d", "vov": true}}}, "30": {"he": 86.9, "hu": 93.9, "c": {"Airalo": {"u": 91.5, "v": 49.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": 89.99, "v": 42.99, "vl": "20GB·30d", "vov": false}}}}}, {"name": "Brazil", "cons": 1.605, "note": "", "days": {"1": {"he": 6.9, "hu": 7.9, "c": {"Airalo": {"u": null, "v": 7.5, "vl": "2GB·15d", "vov": true}, "Saily": {"u": null, "v": 9.99, "vl": "3GB·30d", "vov": true}}}, "3": {"he": 11.9, "hu": 12.9, "c": {"Airalo": {"u": 11.0, "v": 11.0, "vl": "Ilimitado·3d", "vov": false}, "Saily": {"u": null, "v": 13.99, "vl": "5GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 18.0, "v": 18.0, "vl": "Ilimitado·5d", "vov": false}, "Saily": {"u": 21.99, "v": 21.99, "vl": "Ilimitado·5d", "vov": false}}}, "7": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 25.0, "v": 25.0, "vl": "Ilimitado·7d", "vov": false}, "Saily": {"u": null, "v": 36.99, "vl": "Ilimitado·10d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 32.0, "v": 32.0, "vl": "Ilimitado·10d", "vov": false}, "Saily": {"u": 36.99, "v": 36.99, "vl": "Ilimitado·10d", "vov": false}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 46.0, "v": 46.0, "vl": "Ilimitado·15d", "vov": false}, "Saily": {"u": 48.99, "v": 48.99, "vl": "Ilimitado·15d", "vov": false}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 85.0, "vl": "Ilimitado·30d", "vov": true}, "Saily": {"u": 59.99, "v": 59.99, "vl": "Ilimitado·20d", "vov": false}}}, "30": {"he": 86.9, "hu": 93.9, "c": {"Airalo": {"u": 85.0, "v": 85.0, "vl": "Ilimitado·30d", "vov": false}, "Saily": {"u": 89.99, "v": 89.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "Mexico", "cons": 0.646, "note": "", "days": {"1": {"he": 5.9, "hu": 6.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 4.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.9, "hu": 12.9, "c": {"Airalo": {"u": 12.5, "v": 7.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 11.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 18.0, "v": 12.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 18.04, "v": 16.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 25.0, "v": 12.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": null, "v": 16.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 32.0, "v": 17.5, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 33.24, "v": 23.74, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 40.0, "v": 17.5, "vl": "10GB·15d", "vov": false}, "Saily": {"u": 46.54, "v": 23.74, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 31.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 56.99, "v": 43.69, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 59.0, "v": 31.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": 68.39, "v": 43.69, "vl": "20GB·30d", "vov": false}}}}}, {"name": "Turkey", "cons": 0.655, "note": "", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.5, "v": 6.0, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 6.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 19.0, "v": 9.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 9.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 27.0, "v": 9.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": null, "v": 9.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 15.0, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 15.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 15.0, "vl": "10GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 15.99, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 22.5, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 22.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 72.5, "v": 22.5, "vl": "20GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 22.99, "vl": "20GB·30d", "vov": false}}}}}, {"name": "Spain", "cons": 0.793, "note": "", "days": {"1": {"he": 3.79, "hu": 4.5, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 13.5, "c": {"Airalo": {"u": 11.0, "v": 5.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 6.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 18.0, "v": 8.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": null, "v": 9.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 28.9, "c": {"Airalo": {"u": 25.0, "v": 13.0, "vl": "10GB·7d", "vov": false}, "Saily": {"u": null, "v": 15.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 38.9, "c": {"Airalo": {"u": 33.0, "v": 13.5, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 15.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 52.9, "c": {"Airalo": {"u": 45.0, "v": 19.0, "vl": "20GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 22.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 64.9, "c": {"Airalo": {"u": null, "v": 20.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 22.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 78.9, "c": {"Airalo": {"u": 67.0, "v": 39.0, "vl": "50GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 71.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "Thailand", "cons": 0.656, "note": "", "days": {"1": {"he": 3.79, "hu": 4.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 2.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 12.9, "c": {"Airalo": {"u": 9.5, "v": 5.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 5.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 15.0, "v": 7.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 7.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 21.5, "v": 7.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 28.99, "v": 7.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 31.0, "v": 9.9, "vl": "50GB·10d", "vov": false}, "Saily": {"u": 34.99, "v": 10.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 39.0, "v": 10.5, "vl": "10GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 10.99, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 18.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 19.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 49.0, "v": 18.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 19.99, "vl": "20GB·30d", "vov": false}}}}}, {"name": "Colombia", "cons": 0.588, "note": "", "days": {"1": {"he": 6.9, "hu": 7.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 4.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.9, "hu": 12.9, "c": {"Airalo": {"u": 12.5, "v": 8.0, "vl": "2GB·15d", "vov": true}, "Saily": {"u": null, "v": 12.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 20.5, "v": 10.5, "vl": "3GB·30d", "vov": true}, "Saily": {"u": null, "v": 12.99, "vl": "3GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 29.5, "v": 15.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": null, "v": 16.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 27.0, "vl": "10GB·15d", "vov": true}, "Saily": {"u": null, "v": 29.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 27.0, "vl": "10GB·15d", "vov": false}, "Saily": {"u": null, "v": 29.99, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 41.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": null, "v": 40.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 86.9, "hu": 93.9, "c": {"Airalo": {"u": 91.5, "v": 41.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": null, "v": 40.99, "vl": "20GB·30d", "vov": false}}}}}, {"name": "United Arab Emirates", "cons": 1.319, "note": "", "days": {"1": {"he": 5.9, "hu": 6.9, "c": {"Airalo": {"u": null, "v": 8.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 9.99, "vl": "3GB·30d", "vov": true}}}, "3": {"he": 11.9, "hu": 12.9, "c": {"Airalo": {"u": 12.5, "v": 11.0, "vl": "5GB·7d", "vov": true}, "Saily": {"u": null, "v": 11.99, "vl": "5GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 20.5, "v": 18.5, "vl": "10GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 18.99, "vl": "Ilimitado·5d", "vov": false}}}, "7": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 29.5, "v": 18.5, "vl": "10GB·7d", "vov": false}, "Saily": {"u": null, "v": 19.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 33.0, "vl": "20GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 33.99, "vl": "20GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 33.0, "vl": "20GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 33.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 72.5, "vl": "Ilimitado·30d", "vov": true}, "Saily": {"u": 59.99, "v": 59.99, "vl": "Ilimitado·20d", "vov": false}}}, "30": {"he": null, "hu": null, "c": {"Airalo": {"u": 72.5, "v": 72.5, "vl": "Ilimitado·30d", "vov": false}, "Saily": {"u": 71.99, "v": 71.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "Indonesia", "cons": 0.654, "note": "", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 4.5, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 4.79, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.0, "v": 8.0, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 8.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 19.0, "v": 12.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 13.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 27.0, "v": 12.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": null, "v": 13.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 20.0, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 21.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 20.0, "vl": "10GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 21.99, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 35.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 35.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 69.0, "v": 35.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 35.99, "vl": "20GB·30d", "vov": false}}}}}, {"name": "Dominican Republic", "cons": 0.53, "note": "", "days": {"1": {"he": 6.9, "hu": 7.9, "c": {"Airalo": {"u": null, "v": 6.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 8.49, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 20.5, "v": 16.0, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 20.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 28.9, "hu": 31.9, "c": {"Airalo": {"u": 31.0, "v": 17.0, "vl": "3GB·7d", "vov": false}, "Saily": {"u": null, "v": 20.99, "vl": "3GB·30d", "vov": true}}}, "7": {"he": 36.9, "hu": 39.9, "c": {"Airalo": {"u": 37.0, "v": 24.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": null, "v": 26.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 36.0, "vl": "10GB·15d", "vov": true}, "Saily": {"u": null, "v": 37.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": 60.0, "v": 36.0, "vl": "10GB·15d", "vov": false}, "Saily": {"u": null, "v": 37.99, "vl": "10GB·30d", "vov": true}}}, "20": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": null, "v": 49.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": null, "v": null, "vl": null, "vov": false}}}, "30": {"he": 86.9, "hu": 98.9, "c": {"Airalo": {"u": 97.0, "v": 49.0, "vl": "20GB·30d", "vov": false}, "Saily": {"u": null, "v": null, "vl": null, "vov": false}}}}}, {"name": "Italy", "cons": 1.241, "note": "", "days": {"1": {"he": 3.79, "hu": 4.5, "c": {"Airalo": {"u": null, "v": 7.0, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 8.99, "vl": "3GB·30d", "vov": true}}}, "3": {"he": 11.37, "hu": 13.5, "c": {"Airalo": {"u": 11.0, "v": 10.0, "vl": "5GB·7d", "vov": true}, "Saily": {"u": null, "v": 12.99, "vl": "5GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 17.0, "v": 17.0, "vl": "10GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 18.99, "vl": "Ilimitado·5d", "vov": false}}}, "7": {"he": 26.9, "hu": 28.9, "c": {"Airalo": {"u": 25.0, "v": 17.0, "vl": "10GB·7d", "vov": false}, "Saily": {"u": null, "v": 20.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 38.9, "c": {"Airalo": {"u": 33.0, "v": 25.0, "vl": "20GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 28.99, "vl": "20GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 52.9, "c": {"Airalo": {"u": 45.0, "v": 25.0, "vl": "20GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 28.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 64.9, "c": {"Airalo": {"u": null, "v": 35.0, "vl": "50GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 59.99, "vl": "Ilimitado·20d", "vov": false}}}, "30": {"he": 68.9, "hu": 78.9, "c": {"Airalo": {"u": 65.0, "v": 35.0, "vl": "50GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 71.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "Canada", "cons": 0.307, "note": "", "days": {"1": {"he": 6.9, "hu": 7.9, "c": {"Airalo": {"u": null, "v": 7.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 9.99, "vl": "2GB·15d", "vov": true}}}, "3": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 19.0, "v": 7.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 9.99, "vl": "2GB·15d", "vov": true}}}, "5": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 27.0, "v": 9.0, "vl": "3GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 9.99, "vl": "2GB·15d", "vov": true}}}, "7": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 32.0, "v": 9.0, "vl": "3GB·7d", "vov": false}, "Saily": {"u": null, "v": 17.99, "vl": "5GB·30d", "vov": true}}}, "10": {"he": 36.9, "hu": 39.9, "c": {"Airalo": {"u": 37.0, "v": 15.0, "vl": "5GB·15d", "vov": true}, "Saily": {"u": 33.24, "v": 17.99, "vl": "5GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 45.0, "v": 15.0, "vl": "5GB·15d", "vov": false}, "Saily": {"u": 46.54, "v": 17.99, "vl": "5GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 23.0, "vl": "10GB·30d", "vov": true}, "Saily": {"u": 56.99, "v": 23.99, "vl": "7GB·30d", "vov": true}}}, "30": {"he": 86.9, "hu": 93.9, "c": {"Airalo": {"u": 86.0, "v": 23.0, "vl": "10GB·30d", "vov": false}, "Saily": {"u": 85.49, "v": 29.44, "vl": "10GB·30d", "vov": false}}}}}, {"name": "Australia", "cons": 0.743, "note": "", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 10.99, "vl": "5GB·30d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.5, "v": 7.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 10.99, "vl": "5GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 18.5, "v": 10.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": 18.99, "v": 10.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 26.5, "v": 16.5, "vl": "10GB·7d", "vov": false}, "Saily": {"u": null, "v": 17.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 32.0, "v": 17.5, "vl": "10GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 17.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 45.0, "v": 29.0, "vl": "20GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 29.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 30.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 29.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 66.5, "v": 45.0, "vl": "50GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 71.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "France", "cons": 2.023, "note": "Airalo no vende unlimited en France. Exclusiva de Holafly.", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 6.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 8.99, "vl": "3GB·30d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": null, "v": 15.0, "vl": "10GB·7d", "vov": true}, "Saily": {"u": null, "v": 19.99, "vl": "10GB·30d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": null, "v": 22.5, "vl": "20GB·15d", "vov": true}, "Saily": {"u": null, "v": 31.99, "vl": "20GB·30d", "vov": true}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": null, "v": 22.5, "vl": "20GB·15d", "vov": true}, "Saily": {"u": null, "v": 31.99, "vl": "20GB·30d", "vov": true}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": null, "v": 35.5, "vl": "50GB·30d", "vov": true}, "Saily": {"u": 34.99, "v": 34.99, "vl": "Ilimitado·10d", "vov": false}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": null, "v": 35.5, "vl": "50GB·30d", "vov": true}, "Saily": {"u": 48.99, "v": 48.99, "vl": "Ilimitado·15d", "vov": false}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 35.5, "vl": "50GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 59.99, "vl": "Ilimitado·20d", "vov": false}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": null, "v": null, "vl": null, "vov": false}, "Saily": {"u": 71.99, "v": 71.99, "vl": "Ilimitado·30d", "vov": false}}}}}, {"name": "Argentina", "cons": 0.933, "note": "", "days": {"1": {"he": 8.9, "hu": 9.9, "c": {"Airalo": {"u": null, "v": 5.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 5.29, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 18.9, "hu": 20.9, "c": {"Airalo": {"u": 20.0, "v": 9.5, "vl": "3GB·3d", "vov": false}, "Saily": {"u": null, "v": 9.99, "vl": "3GB·30d", "vov": true}}}, "5": {"he": 26.9, "hu": 29.9, "c": {"Airalo": {"u": 29.0, "v": 16.0, "vl": "5GB·7d", "vov": false}, "Saily": {"u": null, "v": 16.99, "vl": "5GB·30d", "vov": true}}}, "7": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 28.0, "vl": "10GB·7d", "vov": false}, "Saily": {"u": null, "v": 29.99, "vl": "10GB·30d", "vov": true}}}, "10": {"he": 36.9, "hu": 39.9, "c": {"Airalo": {"u": 39.5, "v": 29.0, "vl": "10GB·15d", "vov": true}, "Saily": {"u": null, "v": 29.99, "vl": "10GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": null, "v": 47.0, "vl": "20GB·15d", "vov": false}, "Saily": {"u": null, "v": 46.99, "vl": "20GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 47.0, "vl": "20GB·30d", "vov": true}, "Saily": {"u": null, "v": 46.99, "vl": "20GB·30d", "vov": true}}}, "30": {"he": 82.9, "hu": 89.9, "c": {"Airalo": {"u": null, "v": null, "vl": null, "vov": false}, "Saily": {"u": null, "v": null, "vl": null, "vov": false}}}}}, {"name": "Ireland", "cons": 0.071, "note": "Consumo 0,07 GB/d es muestra rota (eSIMs comprados sin uso). No usar como verdad de consumo.", "days": {"1": {"he": 3.79, "hu": 3.9, "c": {"Airalo": {"u": null, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": true}}}, "3": {"he": 11.37, "hu": 11.7, "c": {"Airalo": {"u": 11.5, "v": 4.0, "vl": "1GB·3d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": true}}}, "5": {"he": 18.9, "hu": 19.5, "c": {"Airalo": {"u": 19.5, "v": 7.5, "vl": "3GB·7d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": false}}}, "7": {"he": 26.9, "hu": 27.3, "c": {"Airalo": {"u": 27.0, "v": 7.5, "vl": "3GB·7d", "vov": false}, "Saily": {"u": null, "v": 3.99, "vl": "1GB·7d", "vov": false}}}, "10": {"he": 33.9, "hu": 36.9, "c": {"Airalo": {"u": 35.0, "v": 10.5, "vl": "5GB·15d", "vov": true}, "Saily": {"u": 34.99, "v": 7.99, "vl": "3GB·30d", "vov": true}}}, "15": {"he": 46.9, "hu": 50.9, "c": {"Airalo": {"u": 49.0, "v": 10.5, "vl": "5GB·15d", "vov": false}, "Saily": {"u": 48.99, "v": 7.99, "vl": "3GB·30d", "vov": true}}}, "20": {"he": 56.9, "hu": 61.9, "c": {"Airalo": {"u": null, "v": 11.0, "vl": "5GB·30d", "vov": true}, "Saily": {"u": 59.99, "v": 7.99, "vl": "3GB·30d", "vov": true}}}, "30": {"he": 68.9, "hu": 74.9, "c": {"Airalo": {"u": 72.0, "v": 11.0, "vl": "5GB·30d", "vov": false}, "Saily": {"u": 71.99, "v": 7.99, "vl": "3GB·30d", "vov": false}}}}}]};
+let CUR='USD', TAB='unl', MODE='gap', FILTER='ALL', COMP='Airalo';
+const AIR_FX = D.air_fx;
+
+function fmtPct(dl){ const r=Math.round(dl); return (r>0?'+':(r<0?'−':''))+Math.abs(r)+'%'; }
+function median(a){ if(!a.length) return null; const s=[...a].sort((x,y)=>x-y),m=Math.floor(s.length/2); return s.length%2? s[m] : (s[m-1]+s[m])/2; }
+function money(v){ if(v==null) return '&mdash;'; const s=(CUR==='USD'?'$':'€'); return s+(Math.round(v*10)/10).toFixed(v<10?2:1); }
+function hfCur(cell){ return CUR==='USD'? cell.hu : cell.he; }
+function compLabel(){ return COMP==='BEST'?'Mejor precio':COMP; }
+
+// devuelve {price(USD), who, label, ov, has} para el competidor seleccionado, en USD
+function pick(cell, std){
+  function val(c){ return std? c.v : c.u; }
+  if(COMP==='BEST'){ let best=null,who=null,lab=null,ov=false,any=false;
+    D.competitors.forEach(k=>{const c=cell.c[k]; if(c){any=true; const v=val(c); if(v!=null&&(best==null||v<best)){best=v;who=k;lab=std?c.vl:null;ov=std?!!c.vov:false;}}});
+    return {price:best,who:who,label:lab,ov:ov,has:any}; }
+  const c=cell.c[COMP]; if(!c) return {has:false,price:null};
+  return {price:val(c),who:COMP,label:std?c.vl:null,ov:std?!!c.vov:false,has:true};
+}
+function colDelta(dl){ if(dl==null) return {bg:'#dce8f5',fg:'#1c3d5a'};
+  if(dl<=-10) return {bg:'#16a06a',fg:'#fff'}; if(dl<=5) return {bg:'#bce6cd',fg:'#0f4429'};
+  if(dl<=15) return {bg:'#ffe39a',fg:'#5c4400'}; if(dl<=25) return {bg:'#f4a259',fg:'#3d1d00'};
+  return {bg:'#e15241',fg:'#fff'}; }
+
+function statsFor(destFilter){
+  let gaps=[],cap=[],excl=0,total=0,cheaper=0;
+  D.destinos.forEach(o=>{ if(destFilter!=='ALL'&&o.name!==destFilter) return;
+    Object.keys(o.days).forEach(dk=>{ const cell=o.days[dk]; if(cell.hu==null) return;
+      const pu=pick(cell,false); if(!pu.has) return;
+      if(pu.price==null){ excl++; } else { total++; const dl=(cell.hu-pu.price)/pu.price*100; gaps.push(dl); if(dl<0)cheaper++; }
+      const pc=pick(cell,true); if(pc.has&&pc.price!=null) cap.push((cell.hu-pc.price)/pc.price*100);
+    });
+  });
+  return {gaps,cap,excl,total,cheaper,med:median(gaps),medcap:median(cap)};
+}
+
+function renderKPIs(){
+  const s=statsFor('ALL'); const lab=compLabel(); const p=s.total?Math.round(s.cheaper/s.total*100):0;
+  document.getElementById('kpis').innerHTML =
+    kpi(s.total?(s.cheaper+'/'+s.total):'—','Holafly más barato vs '+lab+' unlimited ('+p+'%)')+
+    kpi(s.med!=null?fmtPct(s.med):'—','mediana del gap unlimited')+
+    kpi(s.excl+'','celdas donde '+lab+' no vende unlimited')+
+    kpi(s.medcap!=null?fmtPct(s.medcap):'—','mediana gap vs costo real del viaje');
+}
+function kpi(b,sp){ return '<div class="kpi"><b>'+b+'</b><span>'+sp+'</span></div>'; }
+
+function renderTabInfo(){
+  const lab=compLabel();
+  document.getElementById('tabinfo').innerHTML = TAB==='unl'
+   ? '<b>Unlimited vs Unlimited.</b> El plan ilimitado de Holafly y de '+lab+' a la misma duración. Comparación limpia y exacta: los dos venden ilimitado por día.'
+   : '<b>Costo real del viaje.</b> El plan más barato que cada proveedor vende para cubrir un viaje de N días a tu consumo real, sea capeado o ilimitado. El tooltip muestra el plan exacto. <b>*</b> = la validez del plan supera bastante el viaje (Airalo viene en 3/7/15/30 días, Saily casi todo 30; comprás validez que no usás, punto a favor de Holafly). No es 1 a 1: es techo de datos vs ilimitado, un heavy user revienta el cap del competidor.';
+}
+
+function renderExample(){
+  const o=D.destinos.find(x=>x.name==='Spain'); const box=document.getElementById('example');
+  if(!o||!o.days['5']){ box.style.display='none'; return; }
+  const c=o.days['5'], a=c.c.Airalo, s=c.c.Saily, hf=c.hu, need=Math.round(o.cons*5*10)/10;
+  const gAU=Math.round((hf-a.u)/a.u*100), gAC=Math.round((hf-a.v)/a.v*100), gSC=Math.round((hf-s.v)/s.v*100);
+  box.innerHTML =
+    '<div class="extitle">Cómo se calcula — ejemplo concreto: España, viaje de 5 días (cifras en USD)</div>'+
+    '<div class="exrow"><b>1. Consumo real:</b> ≈ '+o.cons.toFixed(2)+' GB/día × 5 días = <b>~'+need+' GB</b> en todo el viaje (dato interno de Holafly).</div>'+
+    '<div class="exrow"><b>2. “Unlimited vs Unlimited”:</b> comparamos el plan ilimitado de cada uno a 5 días. Holafly $'+hf+' vs Airalo $'+a.u+' → Holafly <b>'+(gAU>0?'+':'')+gAU+'%</b>. Saily no vende ilimitado de menos de 10 días.</div>'+
+    '<div class="exrow"><b>3. “Costo real del viaje”:</b> buscamos el plan más barato de cada uno que dure ≥ 5 días y alcance los ~'+need+' GB. Airalo: <b>'+a.vl+' = $'+a.v+'</b>. Saily: <b>'+s.vl+' = $'+s.v+'</b> (validez 30d, más de lo que usás). Holafly ilimitado $'+hf+' → <b>+'+gAC+'%</b> vs Airalo y <b>+'+gSC+'%</b> vs Saily.</div>'+
+    '<div class="exrow exnote">Ojo: en “costo real” el competidor te da un <b>techo de GB</b> (y con throttle), Holafly es ilimitado de verdad. Por eso parece carísimo, pero no es lo mismo producto.</div>'+
+    '<div class="exlinks">Fuentes del ejemplo (precios del sitio): <a href="https://www.airalo.com/spain-esim" target="_blank" rel="noopener">Airalo España ↗</a> · <a href="https://saily.com/esim-spain/" target="_blank" rel="noopener">Saily España ↗</a> · Holafly: lista de precios interna</div>';
+}
+
+function renderVerdict(name){
+  const box=document.getElementById('verdict'); const lab=compLabel(); const s=statsFor(name);
+  if(name==='ALL'){
+    if(!s.total&&!s.excl){ box.innerHTML='<div class="q"><div class="chip na">—</div><div><div class="ql">Sin datos</div><div class="qa">No hay datos de '+lab+' todavía.</div></div></div>'; return; }
+    const p=s.total?Math.round(s.cheaper/s.total*100):0;
+    box.innerHTML =
+      qrow(s.med>5?'no':'casi',s.med>5?'No':'Casi','1 · ¿Tenemos el mejor precio vs '+lab+'?','Holafly más barato en '+s.cheaper+'/'+s.total+' ('+p+'%). Mediana '+(s.med!=null?fmtPct(s.med):'—')+'. Competitivos, no los más baratos.')+
+      qrow('na','Rango','2 · ¿Es parejo?',s.gaps.length?('Gap de '+fmtPct(Math.min(...s.gaps))+' a '+fmtPct(Math.max(...s.gaps))+'. '+s.excl+' celdas sin unlimited de '+lab+'.'):'—')+
+      qrow(s.medcap>30?'no':(s.medcap>5?'casi':'si'),s.medcap>30?'No':(s.medcap>5?'Mix':'OK'),'3 · ¿vs el costo real del viaje?',s.medcap!=null?('Holafly queda '+fmtPct(s.medcap)+' sobre el plan más barato de '+lab+' que cubre el viaje.'):'—')+
+      qrow('na','Claim','4 · ¿Qué claim es defendible?','No “los más baratos”. Unlimited real sin throttle ('+lab+' '+(D.fup[COMP]||'capa su unlimited')+') + conveniencia + duraciones que el competidor no cubre.');
+    return;
+  }
+  const o=D.destinos.find(x=>x.name===name);
+  if(!s.total&&!s.excl){ box.innerHTML='<div class="q"><div class="chip na">—</div><div><div class="ql">Sin datos</div><div class="qa">'+lab+' no está scrapeado para '+name+' todavía.</div></div></div>'+(o&&o.note?('<div class="q"><div class="chip na">⚠</div><div><div class="ql">Ojo</div><div class="qa">'+o.note+'</div></div></div>'):''); return; }
+  let q1c,q1t,q1a;
+  if(s.gaps.length===0){ q1c='na';q1t='N/A';q1a=lab+' no vende unlimited acá. Holafly sin competencia de unlimited.'; }
+  else if(s.med<-5){ q1c='si';q1t='Sí';q1a='Holafly más barato que '+lab+' (mediana '+fmtPct(s.med)+').'; }
+  else if(s.med<=8){ q1c='casi';q1t='Casi';q1a='Paridad (mediana '+fmtPct(s.med)+'). '+lab+' gana por poco.'; }
+  else if(s.med<=18){ q1c='no';q1t='No';q1a='Holafly algo más caro (mediana '+fmtPct(s.med)+').'; }
+  else { q1c='no';q1t='No';q1a='Holafly claramente más caro (mediana '+fmtPct(s.med)+').'; }
+  let q2a=s.gaps.length?('Gap de '+fmtPct(Math.min(...s.gaps))+' a '+fmtPct(Math.max(...s.gaps))+' según duración.'):'Sin unlimited de '+lab+'.';
+  if(s.excl) q2a+=' En '+s.excl+' duraciones '+lab+' no vende: Holafly sin rival.';
+  let q3c,q3a;
+  if(s.medcap==null){ q3c='na';q3a='Sin plan comparable.'; }
+  else if(s.medcap>30){ q3c='no';q3a='Holafly queda '+fmtPct(s.medcap)+' sobre el plan más barato de '+lab+' que cubre el viaje. Perdemos salvo que valoren el ilimitado.'; }
+  else if(s.medcap>5){ q3c='casi';q3a='Holafly queda '+fmtPct(s.medcap)+' sobre el plan más barato de '+lab+'. Moderado.'; }
+  else { q3c='si';q3a='Holafly queda '+fmtPct(s.medcap)+': competitivo incluso contra el plan más barato.'; }
+  let q4a;
+  if(name==='Morocco'){ q4a='Más baratos, pero a GM negativo. No comunicar como ventaja de precio; leak a revisar.'; }
+  else if(s.gaps.length===0){ q4a='Exclusiva de Holafly en unlimited vs '+lab+'. Comunicar unlimited real y conveniencia.'; }
+  else if(s.med>18){ q4a='Caros vs '+lab+'. No comunicar precio; apoyar en no-throttle ('+lab+' '+(D.fup[COMP]||'')+') y conveniencia.'; }
+  else { q4a='Unlimited real sin throttle ('+lab+' '+(D.fup[COMP]||'capa su unlimited')+') + conveniencia. Premium chico y defendible.'; }
+  let html=qrow(q1c,q1t,'1 · ¿Tenemos el mejor precio vs '+lab+'?',q1a)+
+    qrow('na','Rango','2 · ¿Es parejo entre duraciones?',q2a)+
+    qrow(q3c,(q3c==='si'?'OK':(q3c==='casi'?'Mix':(q3c==='na'?'N/A':'No'))),'3 · ¿vs el costo real del viaje?',q3a)+
+    qrow('na','Claim','4 · ¿Qué claim es defendible?',q4a);
+  if(o.note) html+='<div class="q"><div class="chip na">⚠</div><div><div class="ql">Ojo</div><div class="qa">'+o.note+'</div></div></div>';
+  box.innerHTML=html;
+}
+function qrow(c,t,l,a){ return '<div class="q"><div class="chip '+c+'">'+t+'</div><div><div class="ql">'+l+'</div><div class="qa">'+a+'</div></div></div>'; }
+
+function cellHTML(cell, d){
+  if(!cell) return '<span class="cell empty">&mdash;</span>';
+  const std=(TAB==='cost'); const h=hfCur(cell);
+  if(h==null) return '<span class="cell empty">&mdash;</span>';
+  const p=pick(cell,std);
+  if(!p.has) return '<span class="cell nodata" data-tip="'+compLabel()+': sin dato para este destino (no scrapeado todavía)">sin dato</span>';
+  if(p.price==null){
+    if(std) return '<span class="cell nodata" data-tip="'+compLabel()+': no tiene ningún plan que cubra este viaje">&mdash;</span>';
+    const main=MODE==='price'?money(h):'HF';
+    return '<span class="cell" data-tip="Holafly: ilimitado '+d+'d — '+money(h)+'<br>'+compLabel()+': no vende ilimitado de '+d+' días<br><b>Holafly no tiene rival acá</b>" style="background:#dce8f5;color:#1c3d5a">'+main+'</span>';
+  }
+  const a = CUR==='USD'? p.price : p.price*AIR_FX;
+  const dl=(h-a)/a*100, col=colDelta(dl);
+  const main = (MODE==='price'? money(h) : fmtPct(dl)) + (std&&p.ov?'<sup>*</sup>':'');
+  const hline='Holafly: ilimitado '+d+'d — '+money(h);
+  const cline= std ? (p.who+': '+p.label+' — '+money(a)+(p.ov?' (validez &gt; viaje)':'')) : (p.who+': ilimitado '+d+'d — '+money(a));
+  const tip=hline+'<br>'+cline+'<br><b>Gap Holafly: '+fmtPct(dl)+'</b>';
+  return '<span class="cell" data-tip="'+tip+'" style="background:'+col.bg+';color:'+col.fg+'">'+main+'</span>';
+}
+function renderTable(){
+  let head='<tr><th class="dest" style="text-align:left">Destino</th>';
+  D.durations.forEach(d=>head+='<th>'+d+'d</th>'); head+='</tr>';
+  const list = FILTER==='ALL'? D.destinos : D.destinos.filter(o=>o.name===FILTER);
+  let body='';
+  list.forEach(o=>{ const consTxt=o.cons!=null?(o.cons.toFixed(2)+' GB/d'+(o.note?'  ⚠':'')):'';
+    body+='<tr><td class="dest" data-name="'+o.name+'">'+o.name+'<small>'+consTxt+'</small></td>';
+    D.durations.forEach(d=>{ body+='<td class="val">'+cellHTML(o.days[d], d)+'</td>'; });
+    body+='</tr>'; });
+  document.getElementById('tbl').innerHTML=head+body;
+  const fn=document.getElementById('filternote');
+  fn.innerHTML = FILTER==='ALL'?'':('Mostrando solo <b>'+FILTER+'</b> · <a id="seeall">ver todos</a>');
+  const sa=document.getElementById('seeall'); if(sa) sa.onclick=()=>applySelection('ALL');
+}
+function renderLegend(){
+  document.getElementById('legend').innerHTML =
+   '<span><i style="background:#16a06a"></i>Holafly &ge;10% más barato</span><span><i style="background:#bce6cd"></i>paridad</span>'+
+   '<span><i style="background:#ffe39a"></i>+5 a +15%</span><span><i style="background:#f4a259"></i>+15 a +25%</span>'+
+   '<span><i style="background:#e15241"></i>&gt;+25%</span><span><i style="background:#dce8f5"></i>no vende esa duración</span><span><i style="background:#f0f1f3"></i>sin dato</span>';
+}
+function renderNotes(){
+  let n='<h3>Notas y letra chica</h3>';
+  D.destinos.forEach(o=>{ if(o.note) n+='<div class="note"><b>'+o.name+'.</b> '+o.note+'</div>'; });
+  n+='<div class="note" style="border-left-color:#16a06a"><b>Fair use (la letra chica del unlimited).</b> Saily da 3 a 5 GB/día según mercado a full speed y luego 1 Mbps (US/Canadá/México 3GB y $46.54; resto 5GB y $48.99; dato del propio sitio). Airalo ~3 GB/día (a verificar). Holafly no throttlea. Ahí se justifica el premium.</div>';
+  n+='<div class="note" style="border-left-color:#6b7c8a"><b>“Costo real del viaje”.</b> Para cada duración tomo el plan más barato del competidor (capeado o ilimitado) que dure ≥ los días del viaje y alcance el consumo×días. El <b>*</b> marca cuando ese plan trae validez bastante mayor al viaje. No es 1 a 1: techo de datos vs ilimitado; un heavy user revienta el cap.</div>';
+  n+='<div class="note" style="border-left-color:#e15241"><b>Saily sin ilimitado de un solo uso en LATAM.</b> En Colombia, Argentina y Rep. Dominicana, Saily solo ofrece ilimitado vía suscripción recurrente (Ultra), no como eSIM de un solo uso. Por eso ahí Holafly no tiene rival en unlimited.</div>';
+  n+='<div class="note" style="border-left-color:#6b7c8a"><b>Metodología / FX.</b> USD = precio nativo de todos (exacto). EUR = Holafly nativo y competidores a 0,90 (aprox, no nativo); el gap relativo no cambia. Consumo real = promedio interno por día-de-plan. Saily y Airalo: 21 destinos cada uno.</div>';
+  document.getElementById('notes').innerHTML=n;
+}
+function applySelection(name){ FILTER=name; document.getElementById('dest').value=name; renderVerdict(name); renderTable(); }
+function syncUI(){
+  document.querySelectorAll('#compseg button').forEach(b=>b.classList.toggle('on',b.dataset.comp===COMP));
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===TAB));
+  document.querySelectorAll('#modeseg button').forEach(b=>b.classList.toggle('on',b.dataset.mode===MODE));
+  document.querySelectorAll('#curseg button').forEach(b=>b.classList.toggle('on',b.dataset.cur===CUR));
+  document.getElementById('eurwarn').style.display=CUR==='EUR'?'block':'none';
+  renderKPIs(); renderTabInfo(); renderVerdict(FILTER); renderTable();
+}
+document.getElementById('compseg').innerHTML = D.competitors.map((c,i)=>'<button data-comp="'+c+'"'+(i===0?' class="on"':'')+'>'+c+'</button>').join('')+'<button data-comp="BEST">Mejor precio</button>';
+document.getElementById('compseg').addEventListener('click',e=>{ if(e.target.dataset.comp){COMP=e.target.dataset.comp;syncUI();}});
+document.getElementById('tabs').addEventListener('click',e=>{ if(e.target.dataset.tab){TAB=e.target.dataset.tab;syncUI();}});
+document.getElementById('modeseg').addEventListener('click',e=>{ if(e.target.dataset.mode){MODE=e.target.dataset.mode;syncUI();}});
+document.getElementById('curseg').addEventListener('click',e=>{ if(e.target.dataset.cur){CUR=e.target.dataset.cur;syncUI();}});
+const sel=document.getElementById('dest');
+sel.innerHTML='<option value="ALL">Todos los destinos (lectura global)</option>'+D.destinos.map(o=>'<option value="'+o.name+'">'+o.name+'</option>').join('');
+sel.addEventListener('change',()=>applySelection(sel.value));
+const tip=document.getElementById('tip'); const tbl=document.getElementById('tbl');
+tbl.addEventListener('mousemove',e=>{ const c=e.target.closest('.cell'); if(c&&c.dataset.tip){ tip.innerHTML=c.dataset.tip; tip.style.display='block'; let x=e.clientX+14,y=e.clientY+14; if(x>innerWidth-310)x=e.clientX-300; tip.style.left=x+'px'; tip.style.top=y+'px'; } else tip.style.display='none'; });
+tbl.addEventListener('mouseleave',()=>tip.style.display='none');
+tbl.addEventListener('click',e=>{const td=e.target.closest('td.dest'); if(td&&td.dataset.name){applySelection(td.dataset.name);document.getElementById('vcard').scrollIntoView({behavior:'smooth',block:'start'});}});
+document.getElementById('sub').innerHTML='Comparativa de precios de Holafly vs competidores. <b>Para empezar:</b> elegí un Competidor en los controles, y si querés un destino en el Veredicto. La tabla muestra el gap; el recuadro verde de abajo explica el cálculo con un ejemplo. · Airalo (21 destinos) + Saily (21 destinos) · datos '+D.date+'.';
+document.getElementById('foot').innerHTML='Gap = (Holafly − competidor) / competidor. Verde = Holafly más barato. Fuente: precios de los sitios + curva Holafly + consumo interno.';
+renderLegend(); renderNotes(); renderExample(); syncUI();
+</script>
+</body></html>

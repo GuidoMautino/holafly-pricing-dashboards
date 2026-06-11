@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Holafly · Validación de datos — Órdenes en USD</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#1a1a2e; --muted:#6b7280; --line:#e5e7eb; --bg:#fafafa; --card:#ffffff;
+    --accent:#e11d48; --accent-soft:#fff1f2; --ok:#059669; --warn:#d97706;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;font-size:15px}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px 64px}
+  header{border-bottom:1px solid var(--line);background:var(--card);padding:14px 0;margin-bottom:36px}
+  header .wrap{display:flex;justify-content:space-between;align-items:center;padding-bottom:0}
+  .brand{font-weight:700;letter-spacing:.2px}
+  .brand span{color:var(--accent)}
+  .tag{font-size:12.5px;color:var(--muted)}
+  h1{font-size:26px;line-height:1.25;margin:6px 0 14px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+  .chip{font-size:12px;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:999px;font-weight:600}
+  .chip.gray{background:#f3f4f6;color:var(--muted)}
+  .lead{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:18px 20px;margin-bottom:34px}
+  .lead p+p{margin-top:10px}
+  section{margin-bottom:40px}
+  .secnum{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:1px;margin-right:8px}
+  h2{font-size:19px;margin-bottom:14px;display:flex;align-items:baseline}
+  h3{font-size:15px;margin:18px 0 8px}
+  p+p{margin-top:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card)}
+  th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--line);padding:8px 10px}
+  td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .down{color:var(--accent);font-weight:600}
+  .up{color:var(--ok);font-weight:600}
+  .pill{font-size:11.5px;padding:2px 8px;border-radius:999px;font-weight:600;white-space:nowrap}
+  .pill.usd{background:#eef2ff;color:#4338ca}
+  .pill.local{background:#ecfdf5;color:#047857}
+  canvas{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;margin:10px 0 6px}
+  .caption{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+  .ask{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:12px}
+  .ask .q{font-weight:700;margin-bottom:4px}
+  .ask .qnum{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;align-items:center;justify-content:center;margin-right:8px}
+  pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px;font-size:12.5px;overflow-x:auto;line-height:1.5;margin:8px 0 18px}
+  .qlabel{font-weight:600;margin-top:14px}
+  .qlabel small{color:var(--muted);font-weight:400}
+  .highlight{background:var(--accent-soft);border:1px solid #fecdd3;border-radius:8px;padding:16px 18px;margin-top:20px}
+  .highlight b{color:var(--accent)}
+  footer{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;font-size:12.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">Holafly · <span>Pricing</span></div>
+    <div class="tag">Validación de datos · 11 jun 2026</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="meta">
+    <span class="chip">Para Data</span>
+    <span class="chip gray">Contexto: cierre D+30 · EXP-PRIC-011 (FX correction USD)</span>
+  </div>
+  <h1>Validación — Caída sostenida de las órdenes en USD (presentment currency)</h1>
+
+  <div class="lead">
+    <p><b>Alcance, para leer esto bien:</b> el hallazgo es <b>general de toda la tienda</b> (todos los destinos, todas las monedas), no del experimento. Lo detecté cerrando el D+30 de EXP-PRIC-011 (la corrección de FX USD en Spain/Italy/Brazil/Colombia, con Mexico de control), y por eso las tablas de detalle usan esos 5 destinos como muestra. <b>No</b> es un bug report ni una decisión de pricing: la tabla reconcilia perfecto contra el dashboard oficial (drift máx 0,38% en 15 cortes). Lo que pido es confirmar la <b>causa</b> de un movimiento grande del dato.</p>
+    <p>El resumen en una línea: <b>el share USD de las órdenes se redujo a la mitad en 17 meses</b> (44,5% → 20,2%), los compradores no se fueron, parecen haber migrado a monedas locales, y eso cambia cómo se pueden leer comparaciones año contra año tomando solo las órdenes en USD.</p>
+  </div>
+
+  <section>
+    <h2><span class="secnum">01</span> El dato que usé</h2>
+    <div class="card">
+      <table>
+        <tr><th>Concepto</th><th>Detalle</th></tr>
+        <tr><td>Tabla</td><td><code>activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted</code></td></tr>
+        <tr><td>Filtros</td><td><code>financial_status = 'paid'</code> · ventana 1-ene-2025 → 8-jun-2026</td></tr>
+        <tr><td>Dimensiones</td><td><code>presentment_currency_code</code> · <code>origin</code> · <code>destination</code> · mes</td></tr>
+        <tr><td>Ground truth</td><td>Validado contra dashboard Foundational: drift máximo 0,38% (net_sales, 5 destinos × 3 ventanas; orders matchean a la unidad en el pre)</td></tr>
+        <tr><td>Scope del detalle por destino</td><td>Spain, Italy, Brazil, Colombia, Mexico (los 5 del experimento; checkout 100% Shopify, verificado vs PIM)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="secnum">02</span> Qué dio el dato (3 hechos, para que los cotejes)</h2>
+
+    <h3>Hecho 1 · El share USD global cae en pendiente continua, sin escalón único</h3>
+    <canvas id="chartGlobal" height="110"></canvas>
+    <div class="caption">Share USD sobre órdenes paid, total compañía (tabla Shopify), mensual. Jun-2026 parcial (al día 8). Las órdenes totales crecieron de 521K (ene-25) a ~1,1M/mes; las USD se mantuvieron ~230-380K y luego caen en 2026.</div>
+
+    <h3>Hecho 2 · La pendiente es idéntica en los 5 destinos del experimento</h3>
+    <canvas id="chartDest" height="130"></canvas>
+    <div class="caption">Share USD sobre órdenes paid por destino, mensual. La caída es transversal y anterior al experimento (launch 5-may-2026, marcado). México, que no tuvo cambio de precio, cae igual que el resto.</div>
+
+    <h3>Hecho 3 · Los orígenes top del cohort USD no se fueron: crecieron y cambiaron de moneda</h3>
+    <div class="caption" style="margin-top:2px">Top-10 orígenes por compras en USD (may-jun 2025, destinos del experimento). Comparación may-2025 vs may-2026.</div>
+    <div class="card" style="padding:0">
+      <table>
+        <tr><th>Origin</th><th>Orders totales</th><th>Δ YoY</th><th>Share USD</th><th>Moneda dominante 2026</th><th>Inflexión del share</th></tr>
+        <tr><td>México</td><td class="num">11.848 → 18.238</td><td class="num up">+54%</td><td class="num">47,7% → 16,1%</td><td><span class="pill local">MXN 64%</span></td><td class="num">sep-2025</td></tr>
+        <tr><td>Estados Unidos</td><td class="num">9.994 → 16.641</td><td class="num up">+67%</td><td class="num">87,0% → 76,4%</td><td><span class="pill usd">USD 76%</span></td><td class="num">nov-2025</td></tr>
+        <tr><td>España</td><td class="num">7.472 → 15.202</td><td class="num up">+103%</td><td class="num">24,6% → 13,6%</td><td><span class="pill local">EUR 74%</span></td><td class="num">may-2026</td></tr>
+        <tr><td>Chile</td><td class="num">5.152 → 6.235</td><td class="num up">+21%</td><td class="num">35,6% → 17,9%</td><td><span class="pill local">CLP 62%</span></td><td class="num">abr-2025</td></tr>
+        <tr><td>Reino Unido</td><td class="num">4.507 → 9.510</td><td class="num up">+111%</td><td class="num">35,1% → 3,7%</td><td><span class="pill local">GBP 80%</span></td><td class="num">abr-2025</td></tr>
+        <tr><td>Colombia</td><td class="num">3.602 → 7.143</td><td class="num up">+98%</td><td class="num">44,1% → 18,6%</td><td><span class="pill local">COP 61%</span></td><td class="num">abr-2025</td></tr>
+        <tr><td>Italia</td><td class="num">2.653 → 4.737</td><td class="num up">+79%</td><td class="num">27,5% → 3,5%</td><td><span class="pill local">EUR 93%</span></td><td class="num">oct-2025</td></tr>
+        <tr><td>Costa Rica</td><td class="num">1.623 → 2.880</td><td class="num up">+77%</td><td class="num">83,3% → 73,5%</td><td><span class="pill usd">USD 74%</span></td><td class="num">sep-2025</td></tr>
+        <tr><td>Argentina</td><td class="num">1.281 → 1.740</td><td class="num up">+36%</td><td class="num">59,3% → 52,9%</td><td><span class="pill usd">USD 53%</span></td><td class="num">may-2026</td></tr>
+        <tr><td>Ecuador</td><td class="num">1.231 → 2.141</td><td class="num up">+74%</td><td class="num">88,9% → 84,1%</td><td><span class="pill usd">USD 84%</span></td><td class="num">sep-2025</td></tr>
+      </table>
+    </div>
+    <div class="caption">El patrón: cada origin tiene su propio mes de inflexión, y lo que queda comprando en USD son los orígenes genuinamente dolarizados (USA, Ecuador, Costa Rica). Los demás migraron a su moneda local o regional.</div>
+  </section>
+
+  <section>
+    <h2><span class="secnum">03</span> La lectura que pido confirmar o corregir</h2>
+
+    <div class="ask">
+      <div class="q"><span class="qnum">1</span>Qué explica la migración de moneda por origen</div>
+      <p>Cada origin tiene su propio mes de inflexión (Chile/Colombia/UK ~abr-2025, México/Costa Rica ~sep-2025, USA ~nov-2025) y los compradores siguen comprando, en otra moneda. No asumimos causa. <b>Hubo cambios en cómo se asigna la display currency por país de origen durante el último año y medio</b> (nuevas monedas disponibles, cambios de default por geo, u otra cosa)? Si existen fechas de esos cambios, cierran la atribución contra las inflexiones del Hecho 3.</p>
+    </div>
+    <div class="ask">
+      <div class="q"><span class="qnum">2</span>La consecuencia metodológica que voy a documentar</div>
+      <p>Independiente de la causa, la composición del grupo que compra en USD cambió (en 2025 incluía mexicanos, británicos, chilenos viendo USD; en 2026 son mayormente orígenes dolarizados), por lo que comparar solo las órdenes USD <b>no es válido año contra año</b>. Las comparaciones <b>dentro de 2026</b> sí son consistentes. Ven algún otro factor que explique el patrón y que esto no contemple?</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="secnum">04</span> Las queries (para que las corras si querés)</h2>
+
+    <div class="qlabel">QD3 · Share USD global mensual <small>· respalda el Hecho 1</small></div>
+<pre>SELECT
+  FORMAT_DATE('%Y-%m', DATE(created_at)) AS month,
+  COUNTIF(presentment_currency_code = 'USD') AS usd_orders,
+  COUNT(*) AS all_orders,
+  ROUND(100 * COUNTIF(presentment_currency_code = 'USD') / COUNT(*), 1) AS usd_share_pct
+FROM `activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted`
+WHERE financial_status = 'paid'
+  AND DATE(created_at) BETWEEN '2025-01-01' AND '2026-06-08'
+GROUP BY month
+ORDER BY month;</pre>
+
+    <div class="qlabel">QD1 · Mix de currency por mes y destino <small>· respalda el Hecho 2</small></div>
+<pre>SELECT
+  FORMAT_DATE('%Y-%m', DATE(created_at)) AS month,
+  destination,
+  presentment_currency_code,
+  COUNT(*) AS orders,
+  ROUND(SUM(net_sales), 2) AS net_sales_eur
+FROM `activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted`
+WHERE financial_status = 'paid'
+  AND DATE(created_at) BETWEEN '2025-01-01' AND '2026-06-08'
+  AND destination IN ('Spain','Italy','Brazil','Colombia','Mexico')
+GROUP BY month, destination, presentment_currency_code
+ORDER BY destination, month, orders DESC;</pre>
+
+    <div class="qlabel">QD2 · Orígenes del cohort USD: ¿desaparecieron o cambiaron de moneda? <small>· respalda el Hecho 3</small></div>
+<pre>WITH top_usd_origins AS (
+  SELECT origin
+  FROM `activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted`
+  WHERE financial_status = 'paid'
+    AND presentment_currency_code = 'USD'
+    AND DATE(created_at) BETWEEN '2025-04-21' AND '2025-06-04'
+    AND destination IN ('Spain','Italy','Brazil','Colombia','Mexico')
+  GROUP BY origin
+  ORDER BY COUNT(*) DESC
+  LIMIT 10
+)
+SELECT
+  FORMAT_DATE('%Y-%m', DATE(created_at)) AS month,
+  origin,
+  presentment_currency_code,
+  COUNT(*) AS orders,
+  ROUND(SUM(net_sales), 2) AS net_sales_eur
+FROM `activaciones-holafly.Data_team.int_shopify_sales_with_vat_adjusted`
+WHERE financial_status = 'paid'
+  AND DATE(created_at) BETWEEN '2025-01-01' AND '2026-06-08'
+  AND destination IN ('Spain','Italy','Brazil','Colombia','Mexico')
+  AND origin IN (SELECT origin FROM top_usd_origins)
+GROUP BY month, origin, presentment_currency_code
+ORDER BY origin, month, orders DESC;</pre>
+  </section>
+
+  <section>
+    <h2><span class="secnum">05</span> Qué NO estoy afirmando</h2>
+    <div class="card">
+      <p>• <b>No es un bug de la tabla.</b> BQ reconcilia contra el dashboard Foundational con drift máximo de 0,38% y orders exactas en la ventana pre.</p>
+      <p style="margin-top:8px">• <b>No estoy atribuyendo switching de moneda al experimento.</b> El patrón es de 17 meses y transversal a destinos tratados y no tratados; lo declaro como contexto, sin juicio causal sobre el experimento.</p>
+      <p style="margin-top:8px">• <b>No cambia las decisiones del D+14.</b> Las lecturas del experimento son intra-2026, donde la definición es la misma a ambos lados. Lo que cambia es cómo usar comparaciones año contra año sobre las órdenes en USD de acá en adelante.</p>
+    </div>
+
+    <div class="highlight">
+      <b>Lo que más mueve la aguja:</b> saber si hubo cambios en la asignación de display currency por origen, y sus fechas (pregunta 1). Con eso cruzo las inflexiones del Hecho 3 y queda cerrado con evidencia. Una respuesta por Slack alcanza. Gracias!
+    </div>
+  </section>
+
+  <footer>
+    Holafly · Pricing — Validación de datos, órdenes USD · 11 jun 2026 · Tabla Shopify (paid), ene-2025 → jun-2026 · Detalle por destino: los 5 del EXP-PRIC-011 · Ground truth: Foundational, drift máx 0,38%.
+  </footer>
+</div>
+
+<script>
+const months = ['2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'];
+const globalShare = [44.5,41.7,40.7,38.4,41.1,40.0,38.7,33.5,30.8,27.3,28.9,29.3,29.2,24.4,23.7,23.6,20.2,18.7];
+const dest = {
+  'Brazil':   [58.8,53.3,53.7,46.9,46.0,45.7,44.1,39.3,37.3,32.6,32.9,29.8,33.4,28.7,28.5,29.1,26.1,26.4],
+  'Colombia': [63.1,60.9,61.9,55.9,57.2,58.3,54.7,50.9,47.6,45.6,48.4,47.9,50.4,44.6,43.5,44.7,39.3,39.4],
+  'Mexico':   [50.9,48.6,50.4,43.6,49.6,50.0,45.8,39.4,41.4,33.9,39.3,43.1,41.6,37.0,35.1,34.5,32.2,32.1],
+  'Spain':    [47.0,45.2,44.5,37.9,42.1,41.9,40.5,34.9,33.9,30.7,34.4,33.4,32.5,28.8,30.8,27.9,20.2,17.8],
+  'Italy':    [44.3,43.1,44.5,41.3,45.7,42.8,41.2,36.7,34.9,31.9,32.7,30.8,28.5,25.5,28.9,25.8,21.2,19.5]
+};
+const colors = {'Brazil':'#0ea5e9','Colombia':'#8b5cf6','Mexico':'#f59e0b','Spain':'#e11d48','Italy':'#059669'};
+
+const launchLine = {
+  id:'launchLine',
+  afterDraw(chart){
+    const i = months.indexOf('2026-05');
+    if(i<0) return;
+    const x = chart.scales.x.getPixelForValue(i) - (chart.scales.x.getPixelForValue(1)-chart.scales.x.getPixelForValue(0))*0.13;
+    const {top,bottom} = chart.chartArea;
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.strokeStyle='rgba(225,29,72,.45)'; ctx.setLineDash([5,4]); ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,bottom); ctx.stroke();
+    ctx.fillStyle='rgba(225,29,72,.8)'; ctx.font='11px sans-serif';
+    ctx.fillText('launch 5-may', x+5, top+12);
+    ctx.restore();
+  }
+};
+
+new Chart(document.getElementById('chartGlobal'), {
+  type:'line',
+  data:{labels:months, datasets:[{label:'Share USD global (%)', data:globalShare, borderColor:'#e11d48', backgroundColor:'rgba(225,29,72,.08)', fill:true, tension:.3, pointRadius:2.5}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{min:0,max:50,ticks:{callback:v=>v+'%'}}}}
+});
+
+new Chart(document.getElementById('chartDest'), {
+  type:'line',
+  data:{labels:months, datasets:Object.entries(dest).map(([k,v])=>({label:k, data:v, borderColor:colors[k], tension:.3, pointRadius:0, borderWidth:2}))},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}}, scales:{y:{min:0,max:70,ticks:{callback:v=>v+'%'}}}},
+  plugins:[launchLine]
+});
+</script>
+</body>
+</html>

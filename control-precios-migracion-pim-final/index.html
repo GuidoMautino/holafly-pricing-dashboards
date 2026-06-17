@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Migración PIM · Control de precios</title>
+<style>
+  :root{--green:#16a06a;--green-d:#0f7a50;--ink:#16242f;--muted:#6b7c8a;--line:#e7edf1;--bg:#f7f9fb;--card:#fff;--amber:#e8a317;--red:#e15241}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto;padding:28px 22px 64px}
+  header{padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--green-d)}
+  h1{font-size:25px;letter-spacing:-.01em;margin:7px 0 6px;line-height:1.2}
+  .meta{font-size:13px;color:var(--muted)}
+  .tldr{background:#f1faf5;border:1px solid #c5e8d6;border-left:4px solid var(--green);border-radius:14px;padding:18px 20px;margin:20px 0}
+  .tldr p{margin:0;font-size:16px;line-height:1.55;color:#23463a}
+  .tldr strong{color:var(--ink)}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 6px}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 14px;flex:1;min-width:140px}
+  .chip .v{font-size:18px;font-weight:700}
+  .chip .k{font-size:11px;color:var(--muted);margin-top:2px}
+  .chip.g .v{color:var(--green-d)} .chip.a .v{color:#9a6b00}
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:10px 0;overflow:hidden}
+  summary{cursor:pointer;padding:15px 18px;font-weight:600;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary .lead{font-weight:400;color:var(--muted);font-size:13px}
+  summary::after{content:"+";color:var(--green);font-size:20px;font-weight:700;flex:none}
+  details[open] summary::after{content:"–"}
+  details[open] summary{border-bottom:1px solid var(--line)}
+  .body{padding:6px 18px 18px}
+  p{font-size:14px;color:#3a4a55;margin:10px 0}
+  strong{color:var(--ink)}
+  table{width:100%;border-collapse:separate;border-spacing:0 4px;margin:8px 0;font-size:13.5px}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;text-align:left;padding:4px 10px}
+  td{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 10px}
+  td:first-child{border-left:1px solid var(--line);border-radius:8px 0 0 8px}
+  td:last-child{border-right:1px solid var(--line);border-radius:0 8px 8px 0}
+  td.n{text-align:right;font-variant-numeric:tabular-nums}
+  .pos{color:var(--green-d);font-weight:600}.neg{color:var(--red);font-weight:600}.dim{color:var(--muted)}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:7px}
+  .tag.g{background:#e8f5ee;color:var(--green-d)}.tag.a{background:#fdf3df;color:#9a6b00}
+  .box{border-radius:10px;padding:14px 16px;margin:10px 0;border:1px solid var(--line)}
+  .box.g{background:#f1faf5;border-color:#c5e8d6}.box.a{background:#fff9ec;border-color:#f0dcae}
+  .box .lbl{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .box.g .lbl{color:var(--green-d)}.box.a .lbl{color:#9a6b00}
+  .box h3{margin:5px 0 6px;font-size:15px}.box p{margin:0 0 7px}.box p:last-child{margin:0}
+  ul{margin:8px 0;padding-left:0;list-style:none}
+  li{font-size:14px;color:#3a4a55;margin:9px 0;padding-left:18px;position:relative}
+  li:before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--green)}
+  a{color:var(--green-d);font-weight:600}
+  footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+  @media(max-width:560px){.chips{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Migración PIM · Control de precios</div>
+  <h1>La migración replicó los precios, no fue un cambio de pricing</h1>
+  <div class="meta">Ruido legacy vs. modelo (mudanza legacy → PIM/Strapi) · 208 destinos · foto del modelo 8-jun · estado de migración 17-jun</div>
+</header>
+
+<div class="tldr">
+  <p><strong>EUR y USD —el 73% de las ventas— replicaron casi perfecto: réplica 95,7% y 93,3%, con la curva promedio moviéndose menos de 1%.</strong> El precio sí se mueve en algunos puntos, pero por motivos esperados (ajuste de tipo de cambio y emparejado de la curva), más dos hallazgos puntuales: COP, que estaba subvaluado y se corrigió, y un +10 en pesos mexicanos sin impacto material. El objetivo de este control era confirmar si los precios post-migración sirven como base confiable para medir y experimentar — y sirven, con los reparos que se listan abajo.</p>
+</div>
+
+<div class="chips">
+  <div class="chip g"><div class="v">95,7%</div><div class="k">EUR · réplica (47,6% ventas)</div></div>
+  <div class="chip g"><div class="v">93,3%</div><div class="k">USD · réplica (25,1% ventas)</div></div>
+  <div class="chip g"><div class="v">COP ✓</div><div class="k">subprecio corregido</div></div>
+  <div class="chip a"><div class="v">MXN +10</div><div class="k">artefacto menor, aceptado</div></div>
+</div>
+
+<details open>
+  <summary>Cuánto se movió el precio, por moneda <span class="lead">EUR/USD casi sin cambios; GBP es redistribución FX</span></summary>
+  <div class="body">
+    <table>
+      <thead><tr><th>Moneda</th><th class="n">% ventas</th><th class="n">curva vs legacy</th><th class="n">réplica</th><th>lectura</th></tr></thead>
+      <tbody>
+        <tr><td>EUR</td><td class="n">47,6%</td><td class="n dim">+0,09%</td><td class="n">95,7%</td><td>casi sin cambios</td></tr>
+        <tr><td>USD</td><td class="n">25,1%</td><td class="n dim">−0,66%</td><td class="n">93,3%</td><td>casi sin cambios</td></tr>
+        <tr><td>GBP</td><td class="n">6,1%</td><td class="n dim">+0,10%</td><td class="n">68,2%</td><td>ajuste FX <span class="tag a">AJUSTAR</span></td></tr>
+        <tr><td>MXN</td><td class="n">3,8%</td><td class="n dim">+0,48%</td><td class="n">94,4%</td><td>incluye el +10</td></tr>
+        <tr><td>COP</td><td class="n">1,4%</td><td class="n pos">+9,46% *</td><td class="n">92,4%</td><td>solo 7 destinos realineados <span class="tag g">corregido</span></td></tr>
+      </tbody>
+    </table>
+    <p class="dim" style="font-size:12.5px"><strong>* El +9,46% de COP no es general.</strong> 201 de los 208 destinos COP replican normal (curva −0,08%); el promedio lo levantan los 7 destinos realineados (Kenya, Qatar, Jordan, Senegal, Kazakhstan, Kyrgyzstan, Faroe Islands), que saltan ~+287% — es el hallazgo COP de la sección de abajo, no un movimiento de COP en todo el mundo.</p>
+    <p class="dim" style="font-size:12.5px">La réplica de GBP es baja (68%) pero su curva promedio es ~0: subas y bajas se cancelan, es redistribución por FX, no encarecimiento. Réplica baja ≠ precio más caro. La réplica global es 91,6% (ponderada por precios).</p>
+  </div>
+</details>
+
+<details>
+  <summary>¿Para arriba o para abajo? <span class="lead">días cortos bajan, días largos suben (FX)</span></summary>
+  <div class="body">
+    <table>
+      <thead><tr><th>Rango</th><th>Dirección</th><th>Qué es</th></tr></thead>
+      <tbody>
+        <tr><td>1–7 días <span class="dim">(anclas, alto volumen)</span></td><td><span class="neg">baja</span> · 73%</td><td>enderezado de la curva (monotonicidad)</td></tr>
+        <tr><td>8+ días</td><td><span class="pos">sube</span> · 85%</td><td>ajuste FX deliberado + corrección COP</td></tr>
+      </tbody>
+    </table>
+    <p>En los días cortos, donde está el volumen, el precio bajó. Las subas están en duraciones largas y son casi todas el ajuste de FX intencional y la corrección de COP. El neto general es levemente positivo, y ese neto es básicamente COP más las monedas en ajuste FX.</p>
+  </div>
+</details>
+
+<details>
+  <summary>Dos hallazgos para el equipo <span class="lead">COP (positivo) · MXN +10 (menor)</span></summary>
+  <div class="body">
+    <div class="box g">
+      <div class="lbl">Hallazgo positivo · verificado en tienda</div>
+      <h3>COP estaba muy por debajo del tipo de cambio</h3>
+      <p>En 7 destinos (Kenya, Qatar, Jordan, Senegal, Kazakhstan, Kyrgyzstan, Faroe Islands) el legacy publicaba COP hasta <strong>4,7× por debajo</strong> del FX oficial. Kenya día 2: <strong>11.999 → 56.999</strong>. El modelo lo corrige.</p>
+      <p>No es un cambio de precio: es tapar un subprecio histórico. Impacto positivo en revenue; conviene vigilar la conversión de esos cortes.</p>
+    </div>
+    <div class="box a">
+      <div class="lbl">Artefacto menor · aceptado</div>
+      <h3>MXN publica +10 sobre el modelo</h3>
+      <p>La publicación deja MXN <strong>+10 pesos</strong> sobre el modelo (México día 1: modelo 129, tienda 139). No es deliberado: salió de la conversión con monotonicidad.</p>
+      <p>Inmaterial: ≈€0,45 por celda, solo supera el 3% en días 1–3, y MXN es 3,8% de ventas. Se limpia cuando se republiquen las curvas nuevas.</p>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Las 38 "curva ajustada" no son error <span class="lead">FX + monotonicidad, sin decisión pendiente</span></summary>
+  <div class="body">
+    <p>38 destinos quedan marcados <em>curva ajustada</em> (más de 7 días con cambios &gt;3%). Revisados los de mayor revenue (Egypt, Brazil, Colombia, Latin America, Spain): todo se explica con dos mecanismos conocidos — las monedas de ajuste FX deliberado y la curva emparejada por monotonicidad.</p>
+    <div class="box g" style="background:#f7f9fb;border-color:var(--line)">
+      <p><strong>Ejemplo · Egypt.</strong> El precio es idéntico en las puntas (día 1, 15 y 90 sin cambio) y solo se movió en el medio (día 30: EUR 86,9 → 90,5), <strong>en los mismos días para todas las monedas a la vez</strong>. Si fuera tipo de cambio cambiaría toda la curva de una moneda; que se muevan los mismos días en todas confirma que es la curva base emparejada — monotonicidad, no un encarecimiento del destino.</p>
+    </div>
+  </div>
+</details>
+
+<details>
+  <summary>Estado de la migración al 17-jun <span class="lead">~49% del revenue todavía sin migrar</span></summary>
+  <div class="body">
+    <table>
+      <thead><tr><th>Estado</th><th>Destinos clave</th><th class="n">% revenue</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag g">en PRO</span></td><td>Egypt, Colombia, Latin America, Italy, Argentina…</td><td class="n">~51%</td></tr>
+        <tr><td><span class="tag a">listo, sin migrar</span></td><td>USA, Europe, UK, Japan, China, Turkey, Brazil, Mexico, Spain</td><td class="n">~43%</td></tr>
+        <tr><td><span class="tag a">bloqueado</span></td><td>Morocco</td><td class="n">~6%</td></tr>
+      </tbody>
+    </table>
+    <p>El modelo de batch 4 ya está auditado en esta foto, pero el cutover de la plata grande está pendiente. Cuando migre, re-auditar; el gate es que México siga dando 96% de réplica.</p>
+  </div>
+</details>
+
+<details>
+  <summary>Qué falta <span class="lead">re-auditar batch 4 · 3 destinos sin data · CR de COP</span></summary>
+  <div class="body">
+    <ul>
+      <li><strong>Re-auditar batch 4</strong> cuando pase a producción (Export fresco, mismo gate).</li>
+      <li><strong>Kosovo, Kuwait y French Polynesia</strong>: 3 destinos sin auditar (sin legacy / modelo parkeado).</li>
+      <li><strong>Vigilar la conversión</strong> de los cortes COP realineados, por el salto de precio.</li>
+    </ul>
+  </div>
+</details>
+
+<details>
+  <summary>Fuentes</summary>
+  <div class="body">
+    <table>
+      <tbody>
+        <tr><td>Consolidado (contexto, método, por moneda)</td><td><a href="https://docs.google.com/spreadsheets/d/12qeZGN8uj0SnUW1GHiy1Fsn7bsDeYYbG/edit?usp=sharing">Abrir en Drive →</a></td></tr>
+        <tr><td>Detalle por modelo — 41 docs</td><td><a href="https://drive.google.com/drive/folders/10K5jurMN3g0KjTFWXOeeRhXWL9JvzXnp?usp=sharing">Abrir carpeta →</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<footer>
+  Control de ruido de migración · foto del modelo 8-jun-2026 · estado de migración 17-jun-2026 · solo precios, sin ponderar por volumen; nunca se agregan montos cruzando monedas.
+</footer>
+
+</div>
+</body>
+</html>

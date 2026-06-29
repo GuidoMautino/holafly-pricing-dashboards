@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Holafly · Exposición a IA · método Reforge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  :root{
+    --paper:#FAFAF8; --card:#FFFFFF; --ink:#292B2E; --mute:#6B6F73; --line:#E4E2DC;
+    --pink:#E6485C; --pink-soft:#FCEBED; --soft:#F3F0EA;
+    --r1:#1F9E8C; --r4:#E2B23A; --r7:#B82A45;
+    --font:"Mulish",ui-sans-serif,system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.55;padding-bottom:80px}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+  h1,h2,h3,h4{letter-spacing:-.01em}
+  .mono{font-family:var(--mono)}
+
+  .langtog{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+  .langtog button{border:0;background:transparent;color:var(--mute);font-family:var(--mono);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer}
+  .langtog button.on{background:var(--ink);color:#fff}
+
+  /* STICKY TOPBAR */
+  #topbar{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(250,250,248,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    transform:translateY(-100%);transition:transform .25s ease;opacity:0}
+  #topbar.show{transform:translateY(0);opacity:1}
+  #topbar .in{max-width:1000px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:14px}
+  #topbar .brand{font-weight:900;font-size:13px;white-space:nowrap}
+  #topbar .brand span{color:var(--pink)}
+  #topbar .tb-scores{display:flex;gap:7px}
+  #topbar .tsc{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:7px;color:#fff;white-space:nowrap}
+  #topbar nav{margin-left:auto;display:flex;gap:4px;align-items:center}
+  #topbar nav a{font-size:12px;font-weight:700;color:var(--mute);text-decoration:none;padding:6px 9px;border-radius:7px}
+  #topbar nav a:hover{background:var(--soft);color:var(--ink)}
+  @media(max-width:760px){#topbar nav a{display:none}}
+
+  /* HERO */
+  header.hero{padding:20px 0 24px}
+  .herotop{display:flex;justify-content:flex-end;margin-bottom:18px}
+  .kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);font-weight:700}
+  header.hero h1{font-size:34px;line-height:1.1;font-weight:900;margin:12px 0 12px;max-width:800px}
+  .thesis{font-size:16.5px;color:#3E4145;max-width:780px;margin:0;line-height:1.55}
+  .thesis b{color:var(--ink)}
+
+  /* SECTION HEADER */
+  .shead{display:flex;align-items:center;gap:11px;margin:38px 0 14px;scroll-margin-top:64px}
+  .shead .n{font-family:var(--mono);font-size:12px;color:var(--pink);font-weight:700}
+  .shead h2{font-size:16px;font-weight:800;margin:0;text-transform:uppercase;letter-spacing:.04em}
+  .shead .tag{font-family:var(--mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+  .shead .line{flex:1;height:1px;background:var(--line)}
+  .lead{font-size:14px;color:var(--mute);margin:-4px 0 14px;max-width:760px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px}
+
+  /* CONTEXT */
+  .ctx{padding:6px 22px 20px}
+  .ctx .scqa{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;margin-top:14px}
+  .ctx .blk .h{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);margin-bottom:4px}
+  .ctx .blk p{margin:0;font-size:13.5px;line-height:1.55;color:#3E4145}
+  .ctx .blk p b{color:var(--ink)}
+  .method{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+  .method .row{display:flex;gap:22px;flex-wrap:wrap;align-items:center}
+  .mlab{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);margin-bottom:7px}
+  .scale{flex:1;min-width:260px}
+  .scale .bar{height:12px;border-radius:999px;background:linear-gradient(90deg,var(--r1),var(--r4),var(--r7))}
+  .scale .slab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--mute);margin-top:5px}
+  .bands{display:flex;gap:8px;flex-wrap:wrap}
+  .bandchip{font-family:var(--mono);font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;color:#fff}
+  .areas-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .al-item{display:flex;gap:9px;font-size:12.5px;line-height:1.4}
+  .al-item .b{font-weight:800;white-space:nowrap}
+  .al-item .c{font-family:var(--mono);font-size:10px;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:1px 5px;align-self:flex-start;margin-top:1px}
+
+  /* EXEC CARDS */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .mcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .mcard h3{margin:0;font-size:15px;font-weight:800}
+  .mcard .sub{font-size:11.5px;color:var(--mute);margin-top:2px;line-height:1.35;min-height:30px}
+  .mcard .score{font-family:var(--mono);font-size:42px;font-weight:800;line-height:1;margin:12px 0 2px}
+  .mcard .score span{font-size:15px;color:var(--mute)}
+  .mcard .bd{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:999px;color:#fff;margin-top:4px}
+  .mcard .arg{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;line-height:1.48;color:#3E4145}
+  .mcard .arg .h{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);margin-bottom:4px}
+  .mcard .arg b{color:var(--ink)}
+  .areas-bars{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+  .arow{display:grid;grid-template-columns:74px 1fr 26px;gap:8px;align-items:center}
+  .arow .al{font-size:11px;color:var(--mute);font-weight:700}
+  .arow .track{height:7px;background:var(--soft);border-radius:999px;overflow:hidden}
+  .arow .track i{display:block;height:100%;border-radius:999px;transition:width .25s,background .25s}
+  .arow .av{font-family:var(--mono);font-size:11.5px;font-weight:700;text-align:right}
+
+  /* CONTROLS */
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 6px}
+  .seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+  .seg button{border:0;background:transparent;color:var(--mute);font-family:var(--font);font-size:13px;font-weight:700;padding:7px 13px;border-radius:8px;cursor:pointer;transition:all .14s}
+  .seg button.on{background:var(--ink);color:#fff}
+  .ghost{font-family:var(--mono);font-size:11.5px;font-weight:500;border:1px solid var(--line);background:var(--card);color:var(--mute);border-radius:9px;padding:8px 12px;cursor:pointer}
+  .hint{font-size:12px;color:#A6A39C;font-family:var(--mono)}
+
+  /* HEATMAP */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 16px 16px}
+  .hm-row{display:grid;grid-template-columns:1fr 44px 44px 44px;gap:8px;align-items:center;padding:4px 4px;border-radius:8px}
+  .hm-row:hover{background:var(--soft)}
+  .hm-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:700;padding-top:8px}
+  .hm-head .m{text-align:center}
+  .hm-area{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pink);padding:13px 4px 4px}
+  .hm-name{font-size:12.5px}
+  .cell{height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:13px;color:#fff;cursor:pointer;transition:transform .08s}
+  .cell:hover{transform:scale(1.08)}
+  .note{font-size:12px;color:#A6A39C;margin-top:12px;line-height:1.5}
+
+  /* LECTURA */
+  .lectura{background:var(--ink);color:#F2F0EC;border-radius:18px;padding:26px 24px}
+  .lectura .lab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);font-weight:700}
+  .lectura .pt{margin-top:16px}
+  .lectura .pt h4{font-size:14.5px;font-weight:800;margin:0 0 4px;color:#fff;display:flex;gap:9px;align-items:baseline}
+  .lectura .pt h4 .k{font-family:var(--mono);font-size:11px;color:var(--pink)}
+  .lectura .pt p{margin:0;font-size:13.5px;line-height:1.6;color:#CFCDC8}
+  .lectura .pt p b{color:#fff}
+  .lectura .div{border-top:1px solid #3C3E41;margin-top:16px;padding-top:2px}
+
+  /* AUDIT IA */
+  .auh{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pink)}
+  .aumethod{font-size:12.5px;color:#3E4145;margin:8px 0 0;line-height:1.5}
+  .aubluf{font-size:15px;font-weight:800;color:var(--ink);background:var(--soft);border-left:3px solid var(--pink);border-radius:0 10px 10px 0;padding:12px 14px;margin-top:14px;line-height:1.45}
+  .aubuckets{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .buck{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .buck .bh{font-weight:800;font-size:13px;margin-bottom:7px}
+  .buck.green{background:rgba(31,158,140,.06)} .buck.green .bh{color:#1F7E70}
+  .buck.red{background:rgba(230,72,92,.06)} .buck.red .bh{color:#C23046}
+  .buck ul{margin:0;padding-left:17px} .buck li{font-size:12.5px;line-height:1.5;color:#3E4145;margin:3px 0}
+  .aufind{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .aufind .fi{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.45;color:#3E4145}
+  .aufind .fi b{color:var(--ink)}
+  .augrid{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:5px;margin-top:6px}
+  .augrid .gh{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--mute);text-align:center;padding-bottom:2px}
+  .augrid .gq{font-size:11.5px;display:flex;align-items:center}
+  .augrid .gc{height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:700;color:#fff}
+  .aulegend{font-size:11px;color:var(--mute);margin-top:10px;line-height:1.5}
+  .aunote{margin-top:14px;font-size:12px;color:#3E4145;background:#fff;border:1px dashed var(--line);border-radius:9px;padding:10px 12px;line-height:1.5}
+  @media(max-width:760px){.aufind,.aubuckets{grid-template-columns:1fr}.augrid{font-size:9px;gap:3px}}
+
+  /* AREAS */
+  .area{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden}
+  .area>.ahead{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;flex-wrap:wrap}
+  .area>.ahead:hover{background:#fcfcfb}
+  .ahead .ttl{flex:1;min-width:200px}
+  .ahead .ttl .t{font-size:15px;font-weight:800;display:flex;align-items:center;gap:9px}
+  .ahead .ttl .t .cnt{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+  .ahead .ttl .bl{font-size:12.5px;color:var(--mute);margin-top:3px;line-height:1.4}
+  .ahead .mini{display:flex;gap:6px}
+  .ahead .mini .b{width:46px;text-align:center}
+  .ahead .mini .b .mv{font-family:var(--mono);font-size:14px;font-weight:800;border-radius:7px;padding:3px 0;color:#fff}
+  .ahead .mini .b .mk{font-family:var(--mono);font-size:8.5px;color:var(--mute);margin-top:2px;letter-spacing:.04em}
+  .ahead .chev{font-family:var(--mono);color:var(--pink);font-size:13px;transition:transform .2s}
+  .area.open .ahead .chev{transform:rotate(90deg)}
+  .abody{display:none;border-top:1px solid var(--line);padding:0 18px 8px}
+  .area.open .abody{display:block}
+  .explain{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 6px}
+  .explain .e{background:var(--soft);border-radius:10px;padding:10px 12px}
+  .explain .e .h{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);margin-bottom:3px}
+  .explain .e p{margin:0;font-size:12.5px;line-height:1.45;color:#3E4145}
+
+  /* FACTOR */
+  .factor{border-top:1px solid var(--line);padding:14px 0}
+  .fhead{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+  .fnum{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--pink);background:var(--pink-soft);border-radius:6px;padding:2px 7px}
+  .fname{font-size:14px;font-weight:800}
+  .fdesc{font-size:12.5px;color:var(--mute);margin:6px 0 0}
+  .poles{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;margin:10px 2px 0}
+  .poles .lo{color:var(--r1)}.poles .hi{color:var(--pink)}
+  .sliders{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:9px}
+  .slot{background:var(--soft);border-radius:11px;padding:9px 11px 11px}
+  .slot .l{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700}
+  .slot .chip{min-width:25px;height:25px;border-radius:7px;color:#fff;font-family:var(--mono);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+  input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:999px;margin:8px 0 0;background:linear-gradient(90deg,var(--r1),var(--r4),var(--r7));outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+  .misfit{margin-top:11px;background:var(--pink-soft);border-radius:9px;padding:9px 12px;font-size:12px;color:#9a2c3a;line-height:1.5}
+  .misfit b{color:#7a1f2b}
+  .why{margin-top:10px}
+  .why>button{font-family:var(--mono);font-size:11.5px;font-weight:500;border:1px solid var(--line);background:var(--card);color:var(--pink);border-radius:8px;padding:6px 11px;cursor:pointer}
+  .why .b{display:none;margin-top:9px;border-left:2px solid var(--pink);padding-left:13px}
+  .why .b.open{display:block}
+  .why .r{font-size:12.5px;margin:6px 0;color:#3E4145;line-height:1.5}
+  .why .r b{color:var(--ink)}
+
+  /* PRIORIDADES */
+  .pcol{padding:13px 16px;border-bottom:1px solid var(--line)}
+  .pcol:last-child{border-bottom:0}
+  .ph{font-size:13px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .ph .dot{width:10px;height:10px;border-radius:3px}
+  .pill{display:inline-flex;align-items:center;gap:7px;background:var(--soft);border-radius:999px;padding:5px 11px;margin:3px 5px 3px 0;font-size:12px}
+  .pill .s{width:20px;height:20px;border-radius:6px;color:#fff;font-family:var(--mono);font-weight:700;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
+
+  footer{font-family:var(--mono);font-size:11.5px;color:#A6A39C;line-height:1.7;margin-top:30px;text-align:center}
+
+  @media(max-width:760px){
+    .cards{grid-template-columns:1fr}
+    .ctx .scqa,.areas-legend,.explain{grid-template-columns:1fr}
+    .sliders{grid-template-columns:1fr}
+    .hm-row{grid-template-columns:1fr 36px 36px 36px}
+    header.hero h1{font-size:26px}
+  }
+</style>
+</head>
+<body data-lang="es">
+
+<div id="topbar"><div class="in">
+  <span class="brand">Holafly <span>·</span> <span id="tb-title">Exposición a IA</span></span>
+  <span class="tb-scores" id="tbScores"></span>
+  <nav>
+    <a href="#ctx" id="nav-ctx">Contexto</a>
+    <a href="#veredicto" id="nav-ver">Veredicto</a>
+    <a href="#lectura" id="nav-lec">Lectura</a>
+    <a href="#areas" id="nav-areas">Áreas</a>
+    <span class="langtog" id="langTop"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></span>
+  </nav>
+</div></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="herotop"><span class="langtog" id="langHero"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></span></div>
+    <div id="heroBox"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="shead" id="ctx"></div>
+  <div class="card ctx" id="ctxBox"></div>
+
+  <div class="shead" id="veredicto"></div>
+  <p class="lead" id="lead-ver"></p>
+  <div class="controls">
+    <span class="hint" id="lbl-models"></span>
+    <div class="seg" id="modelToggle">
+      <button data-m="b2c" class="on">B2C</button>
+      <button data-m="men" class="on" id="btn-men">Mensual</button>
+      <button data-m="b2b" class="on">B2B</button>
+    </div>
+    <button class="ghost" id="reset"></button>
+  </div>
+  <div class="cards" id="cards"></div>
+  <div style="margin-top:16px"></div>
+  <div class="panel" id="heatmap"></div>
+  <div id="auditBox" style="margin-top:16px"></div>
+
+  <div class="shead" id="lectura"></div>
+  <div class="lectura" id="lecturaBox"></div>
+
+  <div class="shead" id="areas"></div>
+  <p class="lead" id="lead-areas"></p>
+  <div class="controls"><button class="ghost" id="expandAll"></button></div>
+  <div id="areasWrap"></div>
+
+  <div class="shead" id="sh-prio"></div>
+  <div class="panel" id="prios" style="padding:0 16px"></div>
+
+  <footer id="footBox"></footer>
+</div>
+
+<script>
+let lang='es';
+const L=o=>(o&&typeof o==='object'&&'es'in o)?o[lang]:o;
+
+const UI={
+  tbTitle:{es:"Exposición a IA",en:"AI exposure"},
+  nav:{ctx:{es:"Contexto",en:"Context"},ver:{es:"Veredicto",en:"Verdict"},lec:{es:"Lectura",en:"Read"},areas:{es:"Áreas",en:"Areas"}},
+  kicker:{es:"Diagnóstico de exposición a IA · framework de Reforge aplicado a Holafly",en:"AI exposure diagnostic · Reforge framework applied to Holafly"},
+  h1:{es:"El riesgo de Holafly está concentrado en un solo flanco.",en:"Holafly's risk is concentrated on a single front."},
+  thesis:{es:"La IA no fabrica conectividad, nadie consigue datos en Tokio con un prompt, así que el producto aguanta. Lo expuesto es <b>cómo te descubren y por qué te eligen</b>. Este informe va de lo macro a lo micro: el veredicto primero, el detalle de cada factor cuando lo quieras abrir.",
+    en:"AI doesn't manufacture connectivity. Nobody gets data in Tokyo from a prompt, so the product holds. What's exposed is <b>how you get discovered and why you get chosen</b>. This report runs macro to micro: the verdict first, the detail of each factor when you choose to open it."},
+  sh:{ctx:{n:"00",t:{es:"Qué es esto y de dónde sale",en:"What this is and where it comes from"}},
+      ver:{n:"01",t:{es:"El veredicto, por modelo",en:"The verdict, by model"},tag:{es:"macro",en:"macro"}},
+      lec:{n:"02",t:{es:"La lectura estratégica",en:"The strategic read"},tag:{es:"qué hacer con esto",en:"what to do with it"}},
+      areas:{n:"03",t:{es:"Las 4 áreas, en detalle",en:"The 4 areas, in detail"},tag:{es:"micro",en:"micro"}},
+      prio:{n:"04",t:{es:"Dónde actuar primero",en:"Where to act first"},tag:{es:"factores en rojo ≥5",en:"red factors ≥5"}}},
+  leadVer:{es:"Los tres modelos, su total y dónde se concentra el rojo. Las barras de cada card son el promedio del modelo en cada una de las 4 áreas: ahí se ve que la vulnerabilidad no está repartida, vive en Use Case y Growth (el embudo).",
+    en:"The three models, their total and where the red concentrates. Each card's bars are the model's average across the 4 areas: that's where you see the vulnerability isn't spread out, it lives in Use Case and Growth (the funnel)."},
+  leadAreas:{es:"Cada área explica qué evalúa y cómo se lee. Abrila para ver sus factores, mover los scores y leer el razonamiento de cada uno.",
+    en:"Each area explains what it measures and how to read it. Open it to see its factors, move the scores and read the reasoning behind each one."},
+  lblModels:{es:"modelos:",en:"models:"},
+  btnMen:{es:"Mensual",en:"Monthly"},
+  reset:{es:"↺ volver a mi lectura",en:"↺ reset to my read"},
+  expandOpen:{es:"▾ abrir todas las áreas",en:"▾ open all areas"},
+  expandClose:{es:"▴ cerrar todas las áreas",en:"▴ close all areas"},
+  argLabel:{es:"Por qué este valor",en:"Why this score"},
+  vuln:{es:"vulnerabilidad",en:"vulnerability"},
+  hmNote:{es:"El rojo se junta arriba, en Use&nbsp;Case y Growth: ese es el embudo. Lo que queda bajo abajo (consistencia, pricing por valor) es el producto, que la IA no puede replicar. Click en una celda para abrir su factor.",
+    en:"The red gathers up top, in Use&nbsp;Case and Growth: that's the funnel. What stays low at the bottom (consistency, value-based pricing) is the product, which AI can't replicate. Click a cell to open its factor."},
+  whyBtn:{es:"por qué estos números",en:"why these numbers"},
+  prioEmpty:{es:"Sin factores en rojo. Modelo defendido.",en:"No red factors. Defended model."},
+  foco:{es:["foco","focos"],en:["focus","focuses"]},
+  scoreLbl:{es:"Cómo se puntúa cada factor",en:"How each factor is scored"},
+  scoreTicks:{es:["1 · bajo riesgo","4 · medio","7 · alto riesgo"],en:["1 · low risk","4 · medium","7 · high risk"]},
+  bandLbl:{es:"El total cae en una banda (/126)",en:"The total lands in a band (/126)"},
+  bandChips:{es:["Baja · 18 a 36","Moderada · 37 a 72","Alta · 73 a 126"],en:["Low · 18 to 36","Moderate · 37 to 72","High · 73 to 126"]},
+  method:{es:"Son <b>18 factores</b> en <b>4 áreas</b>. Cada uno va de 1 a 7 y la suma da el total sobre 126. El propio Reforge avisa algo que vale subrayar: <b>el total importa menos que la concentración</b>. Los factores en 5 o más son las prioridades. Lo aplicamos a los <b>tres modelos de venta de Holafly por separado</b> (B2C directo, planes mensuales, B2B), porque el riesgo IA es distinto en cada uno. Los scores son la lectura de Guido sobre el negocio, no un dato medido: están para discutirse y calibrarse con BQ y el benchmark. Movélos y todo se recalcula.",
+    en:"It's <b>18 factors</b> across <b>4 areas</b>. Each runs 1 to 7 and the sum gives the total out of 126. Reforge itself flags something worth underlining: <b>the total matters less than the concentration</b>. Factors at 5 or higher are the priorities. We applied it to <b>Holafly's three sales models separately</b> (B2C direct, monthly plans, B2B), because the AI risk differs in each. The scores are Guido's read of the business, not a measured figure: they're meant to be argued and calibrated against BQ and the benchmark. Move them and everything recalculates."},
+  scqa:{
+    s:{lbl:{es:"Situación",en:"Situation"},p:{es:"La IA está reescribiendo qué productos sobreviven. En los casos peores genera un <b>Product Market Fit Collapse</b>: productos que parecían sólidos pierden su razón de ser de golpe (Chegg, Stack Overflow, Getty).",en:"AI is rewriting which products survive. In the worst cases it triggers a <b>Product Market Fit Collapse</b>: products that looked solid lose their reason to exist overnight (Chegg, Stack Overflow, Getty)."}},
+    c:{lbl:{es:"Complicación",en:"Complication"},p:{es:"El golpe no avisa y no pega parejo. Algunos productos quedan intactos y otros se vacían en meses. La diferencia está en dónde sos vulnerable, y casi nunca es obvio a simple vista.",en:"The hit gives no warning and doesn't land evenly. Some products stay intact and others empty out in months. The difference is where you're vulnerable, and it's rarely obvious at a glance."}},
+    q:{lbl:{es:"Pregunta",en:"Question"},p:{es:"Qué tan expuesta está Holafly, y por dónde exactamente. No el titular 'la IA viene', sino el mapa concreto de dónde duele y dónde no.",en:"How exposed Holafly is, and where exactly. Not the headline 'AI is coming', but the concrete map of where it hurts and where it doesn't."}},
+    a:{lbl:{es:"Respuesta",en:"Answer"},p:{es:"Este diagnóstico. Usa el <b>AI Vulnerability Assessment de Reforge</b> (de su material sobre estrategia de producto en la era IA, a partir de la observación de Casey Winters sobre el PMF Collapse). Lo corrimos sobre Holafly.",en:"This diagnostic. It uses <b>Reforge's AI Vulnerability Assessment</b> (from their material on product strategy in the AI era, built on Casey Winters' observation about PMF Collapse). We ran it on Holafly."}}
+  },
+  areaLegend:{
+    uc:{es:"Si la IA puede meterse en el trabajo que tu producto resuelve para el usuario.",en:"Whether AI can step into the job your product does for the user."},
+    gm:{es:"Si la IA fortalece o rompe el motor que trae y retiene clientes.",en:"Whether AI strengthens or breaks the engine that wins and keeps customers."},
+    df:{es:"Si tus barreras (data, red, marca, switching) aguantan con IA en juego.",en:"Whether your moats (data, network, brand, switching) hold with AI in play."},
+    bm:{es:"Si tu forma de cobrar y tu margen resisten la presión de la IA.",en:"Whether how you charge and your margin resist AI pressure."}
+  },
+  lecturaLab:{es:"6 conclusiones",en:"6 takeaways"},
+  lectura:[
+    {h:{es:"El total engaña",en:"The total misleads"},p:{es:"La mitad de los 18 factores preguntan si la IA puede replicar tu producto. No puede: es infraestructura física. Esos factores te dan \"seguro\" y diluyen el total hacia abajo, escondiendo un riesgo real y concentrado en 4 o 5 celdas de distribución. No mires la suma. Mirá la concentración.",en:"Half of the 18 factors ask whether AI can replicate your product. It can't: it's physical infrastructure. Those factors score \"safe\" and drag the total down, hiding a real risk concentrated in 4 or 5 distribution cells. Don't look at the sum. Look at the concentration."}},
+    {h:{es:"Todo el riesgo está en la distribución",en:"All the risk is in distribution"},p:{es:"El growth model de <b>B2C llega a 20/21</b>. SEO (\"best esim japan\"), paid search y afiliados, los tres en la zona que la IA rehace ahora. Las AI Overviews se comen el clic, los chatbots responden la query sin que entres al sitio, y el agente de viaje termina comprando por el usuario. Si arreglás un solo cuadrante, es éste.",en:"B2C's growth model hits <b>20/21</b>. SEO (\"best esim japan\"), paid search and affiliates, all three in the zone AI is rewriting now. AI Overviews eat the click, chatbots answer the query without you reaching the site, and the travel agent ends up buying for the user. If you fix one quadrant, it's this one."}},
+    {h:{es:"El mensual juega de defensa",en:"Monthly plays defense"},p:{es:"La suscripción da vuelta los tres factores más letales del B2C: frecuencia 7→2, switching 7→4, relación mediada 7→5. Cada euro que movés de un viaje suelto a conectividad recurrente sale del radio de explosión de la distribución por IA.",en:"The subscription flips B2C's three most lethal factors: frequency 7→2, switching 7→4, mediated relationship 7→5. Every euro you move from a one-off trip to recurring connectivity leaves the blast radius of AI distribution."}},
+    {h:{es:"La fuerza es simétrica",en:"The force is symmetric"},p:{es:"Si Holafly se vuelve <b>el eSIM que el agente recomienda por default</b> (marca, disponibilidad estructurada, partnership con plataformas de viaje IA, checkout y API agent-friendly), el mismo agente que hoy te puede saltear mañana te puede elegir. El juego deja de ser rankear en Google y pasa a ser el default del agente.",en:"If Holafly becomes <b>the eSIM the agent recommends by default</b> (brand, structured availability, partnership with AI travel platforms, agent-friendly checkout and API), the same agent that can skip you today can pick you tomorrow. The game stops being ranking on Google and becomes being the agent's default."}},
+    {h:{es:"El casillero es real pero chico y volátil",en:"The slot is real but small and volatile"},p:{es:"El audit ubicó tu frente fuerte: unlimited, heavy, multipaís, y sobre todo español/LATAM (Gemini te corona en México). En inglés y en la query de precio, perdés. Y la posición oscila motor a motor: aparecés #1 o ausente según con qué IA hable el usuario. No es un ranking bajo y parejo, es inestabilidad, más difícil de gestionar porque no hay una sola palanca.",en:"The audit located your strong front: unlimited, heavy, multi-country, and above all Spanish/LATAM (Gemini crowns you in Mexico). In English and on the price query, you lose. And the position swings engine to engine: you show up #1 or absent depending on which AI the user opens. It's not a low, even ranking, it's instability, harder to manage because there's no single lever."}},
+    {h:{es:"Tu cancha: el pricing es parte de la defensa",en:"Your court: pricing is part of the defense"},div:true,p:{es:"Si la IA commoditiza la comparación y el agente optimiza por precio y specs, tu posición premium necesita un claim de <b>unlimited</b> que el agente pueda parsear. Ojo: el audit mostró que ese casillero te lo están reescribiendo (Ubigi ataca con hotspot sin cap; tu 500MB/día y el throttling salen con asterisco en los 4 motores). El diferencial es legible pero erosionable. El benchmark de 189 destinos es el prototipo manual de lo que el agente va a hacer solo: no te invalida el trabajo, le pone reloj. <b>Cobrá el premium ahora y reinvertí en lo que sobrevive: marca, cobertura, unlimited bien hecho y stickiness.</b>",en:"If AI commoditizes comparison and the agent optimizes on price and specs, your premium position needs an <b>unlimited</b> claim the agent can parse. Careful: the audit showed that slot is being rewritten on you (Ubigi attacks with uncapped hotspot; your 500MB/day and throttling show up with an asterisk in all 4 engines). The differentiator is legible but erodible. The 189-destination benchmark is the manual prototype of what the agent will do on its own: it doesn't invalidate the work, it puts a clock on it. <b>Charge the premium now and reinvest in what survives: brand, coverage, unlimited done right and stickiness.</b>"}}
+  ],
+  audit:{
+    label:{es:"Validación · audit de IA en 4 motores",en:"Validation · AI audit across 4 engines"},
+    purpose:{es:"No nos quedamos en la teoría. Le preguntamos a las 4 IAs (ChatGPT, Perplexity, Gemini y una Claude aislada) lo que preguntaría un viajero, en sesiones limpias sin historial, y miramos si recomendaban Holafly. El veredicto deja de ser opinión y pasa a ser evidencia.",en:"We didn't stop at theory. We asked the 4 AIs (ChatGPT, Perplexity, Gemini and an isolated Claude) what a traveler would ask, in clean sessions with no history, and checked whether they recommended Holafly. The verdict stops being opinion and becomes evidence."},
+    bluf:{es:"En la pregunta genérica de viaje, Holafly desaparece. Solo aparece fuerte en su nicho, y de forma inestable entre motores.",en:"On the generic travel question, Holafly disappears. It only shows up strong in its niche, and unevenly across engines."},
+    green:{lbl:{es:"Dónde aparece bien",en:"Where it shows up well"},items:{es:["Datos unlimited, sin límite de GB","Viaje multipaís","México y consultas en español"],en:["Unlimited data, no GB cap","Multi-country trips","Mexico and Spanish-language queries"]}},
+    red:{lbl:{es:"Dónde desaparece",en:"Where it disappears"},items:{es:["'El mejor eSIM para Japón', una sola recomendación","Cuando lo que pesa es el precio","En inglés genérico"],en:["'Best eSIM for Japan', a single recommendation","When price is what matters","In generic English"]}},
+    engines:["ChatGPT","Perplexity","Gemini","Claude"],
+    rows:[
+      {q:{es:"Japón, una recomendación",en:"Japan, one rec"},c:["no","no","no","no"],prompt:"I'm traveling to Japan for 10 days. What's the best eSIM to buy? Give me one specific recommendation."},
+      {q:{es:"5 países, 3 semanas",en:"5 countries, 3 weeks"},c:["ok","mid","ok","mid"],prompt:"I'm doing a 5-country trip over 3 weeks. What's the best eSIM option?"},
+      {q:{es:"México (español)",en:"Mexico (Spanish)"},c:["ok","mid","ok","no"],prompt:"Mejor eSIM para un viaje de 2 semanas a México?"},
+      {q:{es:"Unlimited, sin GB cap",en:"Unlimited, no GB cap"},c:["mid","ok","ok","mid"],prompt:"I want unlimited data on my trip, not a GB cap. Which eSIM should I get?"},
+      {q:{es:"Holafly vale la pena",en:"Is Holafly worth it"},c:["mid","mid","mid","mid"],prompt:"Is Holafly worth it? What are people saying?"},
+      {q:{es:"vs Airalo vs Saily",en:"vs Airalo vs Saily"},c:["mid","mid","mid","mid"],prompt:"Holafly vs Airalo vs Saily: which is best and for whom?"},
+      {q:{es:"Nómada 2-3 meses",en:"Nomad 2-3 months"},c:["mid","mid","ok","mid"],prompt:"Best eSIM or plan for a digital nomad staying 2-3 months across countries?"},
+      {q:{es:"B2B / empresa",en:"B2B / company"},c:["mid","ok","no","mid"],prompt:"Our company needs eSIMs for employees who travel internationally. Which B2B eSIM providers should we look at?"}
+    ],
+    legend:{es:"✓ fuerte (1º o top 3) · ~ presente con peros · ✗ ausente o descartada. Una corrida por celda, la salida es probabilística.",en:"✓ strong (1st or top 3) · ~ present with caveats · ✗ absent or ruled out. One run per cell, output is probabilistic."},
+    findings:[
+      {es:"<b>En la genérica, 0 de 4.</b> Forzada a elegir una sola opción para Japón, ningún motor eligió Holafly. Ganaron Ubigi, Saily y MobiMatter. El default de viaje está perdido.",en:"<b>On the generic one, 0 of 4.</b> Forced to pick a single option for Japan, no engine chose Holafly. Ubigi, Saily and MobiMatter won. The travel default is lost."},
+      {es:"<b>Lotería de motor.</b> Gemini la corona en México y la omite en B2B. Perplexity la pone #1 en unlimited. No es un ranking bajo, es inestabilidad: la posición depende de con qué IA hable el usuario.",en:"<b>Engine lottery.</b> Gemini crowns it in Mexico and omits it in B2B. Perplexity ranks it #1 in unlimited. It's not a low ranking, it's instability: position depends on which AI the user opens."},
+      {es:"<b>Su casillero está disputado.</b> En 'unlimited, sin límite', que debería ser su cancha, aparece fuerte pero no domina: en un motor la pasa Ubigi con hotspot sin cap. El diferencial es legible pero erosionable.",en:"<b>Its slot is contested.</b> On 'unlimited, no cap', which should be its turf, it shows up strong but doesn't dominate: in one engine Ubigi overtakes it with uncapped hotspot. The differentiator is legible but erodible."}
+    ],
+    note:{es:"Esto endureció el veredicto del B2C: relación mediada (F11 6→7) y unit economics (F18 5→6). El total del B2C pasó de 98 a 100. El Mensual subió de 78 a 79 (F11 4→5). El B2B no se movió: la presencia en la IA es volátil, pero contratos y switching siguen protegiendo.",en:"This hardened the B2C verdict: mediated relationship (F11 6→7) and unit economics (F18 5→6). B2C total went from 98 to 100. Monthly rose from 78 to 79 (F11 4→5). B2B didn't move: AI presence is volatile, but contracts and switching still protect it."}
+  },
+  foot:{es:"Holafly · Exposición a IA · framework AI Vulnerability Assessment de Reforge (18 factores, 1 bajo a 7 alto) · scores = lectura de Guido, ajustables.<br>Bandas /126: 18 a 36 baja · 37 a 72 moderada · 73 a 126 alta. · v4 · audit IA · jun-2026",
+    en:"Holafly · AI exposure · Reforge AI Vulnerability Assessment framework (18 factors, 1 low to 7 high) · scores = Guido's read, adjustable.<br>Bands /126: 18 to 36 low · 37 to 72 moderate · 73 to 126 high. · v4 · audit IA · jun-2026"}
+};
+
+const MODELS=[
+  {k:"b2c",name:{es:"B2C directo",en:"B2C direct"},sub:{es:"el viajero compra un eSIM por viaje · el grueso del revenue",en:"traveler buys an eSIM per trip · the bulk of revenue"},
+   arg:{es:"El producto aguanta, pero el embudo no. Compra infrecuente, switching nulo, cero efectos de red y distribución en plena reconfiguración por IA. El audit lo endureció: <b>0 de 4 motores</b> cuando hay que elegir uno. El riesgo más alto, casi todo en Use Case y Growth.",en:"The product holds, the funnel doesn't. Infrequent purchase, zero switching cost, no network effects and distribution being rewritten by AI. The audit hardened it: <b>0 of 4 engines</b> when forced to pick one. The highest risk, almost all in Use Case and Growth."}},
+  {k:"men",name:{es:"Planes mensuales",en:"Monthly plans"},sub:{es:"conectividad recurrente · nómades y uso continuo",en:"recurring connectivity · nomads and continuous use"},
+   arg:{es:"Alta, pero por la adquisición que comparte con el B2C, no por el producto. La recurrencia arregla lo más letal del B2C (frecuencia, switching, relación), así que <b>el rojo le queda solo en los canales</b>. La versión más defendible del consumo.",en:"High, but because of the acquisition it shares with B2C, not the product. Recurrence fixes B2C's most lethal factors (frequency, switching, relationship), so <b>the red is left only in the channels</b>. The most defensible version of the consumer business."}},
+  {k:"b2b",name:{es:"B2B",en:"B2B"},sub:{es:"reventa, corporate y partnerships",en:"resale, corporate and partnerships"},
+   arg:{es:"La más defendida. Contratos, relación de cuenta, switching real y uso continuo bajan el riesgo en casi todas las áreas. El procurement lento actúa de colchón. <b>Hacia acá debería empujar el pricing.</b>",en:"The most defended. Contracts, account relationship, real switching cost and continuous use lower the risk across almost every area. Slow procurement acts as a buffer. <b>This is where pricing should be pushing.</b>"}}
+];
+
+const AREAS=[
+ {name:"Use Case",blurb:{es:"Si la IA puede meterse en el trabajo que tu producto resuelve para el usuario.",en:"Whether AI can step into the job your product does for the user."},
+  what:{es:"Mide cuán reemplazable es tu producto en el día a día del usuario: qué tan central, qué tan único y qué tan seguido lo usan.",en:"Measures how replaceable your product is in the user's day to day: how central, how unique and how often they use it."},
+  how:{es:"Sube el riesgo cuando el uso es automatizable, commodity, infrecuente y sin relación. Baja cuando hace falta criterio humano o consistencia absoluta.",en:"Risk rises when usage is automatable, commodity, infrequent and relationship-free. It drops when human judgment or absolute consistency is required."},
+  factors:[
+  {n:1,name:{es:"Workspace propio ↔ Herramienta adyacente",en:"Own workspace ↔ Adjacent tool"},desc:{es:"Sos donde pasa el trabajo central, o un complemento downstream?",en:"Are you where the core work happens, or a downstream add-on?"},lo:{es:"Workspace central",en:"Core workspace"},hi:{es:"Tool adyacente",en:"Adjacent tool"},
+   s:{b2c:6,men:4,b2b:5},
+   why:{b2c:{es:"El eSIM es un ítem de checkout colgado del viaje. El workspace del viaje (planner, booking, pronto el agente IA) está en otro lado. Si esa capa se queda con la conectividad, sos reemplazable.",en:"The eSIM is a checkout item bolted onto the trip. The trip's workspace (planner, booking, soon the AI agent) is elsewhere. If that layer takes over connectivity, you're replaceable."},men:{es:"Más central: es tu línea recurrente, no un add-on de un viaje puntual.",en:"More central: it's your recurring line, not an add-on to a one-off trip."},b2b:{es:"Componente que el partner bundlea en su oferta. Adyacente a lo suyo.",en:"A component the partner bundles into its offer. Adjacent to their thing."}}},
+  {n:2,name:{es:"Output outlier ↔ Output commodity",en:"Outlier output ↔ Commodity output"},desc:{es:"Calidad outlier difícil de replicar, o 'good enough' alcanza?",en:"Outlier quality that's hard to replicate, or is 'good enough' enough?"},lo:{es:"Output outlier",en:"Outlier output"},hi:{es:"Output commodity",en:"Commodity output"},
+   s:{b2c:4,men:4,b2b:4},
+   misfit:{es:"La IA no fabrica conectividad, el riesgo de réplica ronda cero. Lo que queda es commoditización de precio, que el shopping con IA amplifica. No es el riesgo que el framework imagina.",en:"AI doesn't manufacture connectivity, so replication risk is near zero. What's left is price commoditization, which AI shopping amplifies. It's not the risk the framework imagines."},
+   why:{b2c:{es:"'Datos que andan' alcanza para la mayoría. Tu diferencial (ilimitado, simpleza, soporte) es real pero leve frente a un comprador que optimiza precio.",en:"'Data that works' is enough for most. Your edge (unlimited, simplicity, support) is real but thin against a buyer optimizing on price."},men:{es:"Igual: commodity con diferencial leve.",en:"Same: commodity with a thin edge."},b2b:{es:"Reliability pesa más, pero sigue siendo commodity.",en:"Reliability matters more, but it's still commodity."}}},
+  {n:3,name:{es:"Criterio humano ↔ Reconocimiento de patrones",en:"Human judgment ↔ Pattern recognition"},desc:{es:"Juicio humano fino, o decisión que un patrón resuelve?",en:"Fine human judgment, or a decision a pattern can solve?"},lo:{es:"Juicio humano",en:"Human judgment"},hi:{es:"Patrón replicable",en:"Replicable pattern"},
+   s:{b2c:5,men:4,b2b:3},
+   why:{b2c:{es:"Elegir el plan es una decisión que un patrón resuelve, no hace falta criterio humano. En el audit, pedida una sola recomendación, cada motor nombró un eSIM concreto sin dudar. La elección es replicable.",en:"Choosing the plan is a decision a pattern resolves, no human judgment needed. In the audit, asked for a single recommendation, each engine named a specific eSIM without hesitating. The choice is replicable."},men:{es:"La decisión de suscripción es un poco más pegajosa.",en:"The subscription decision is a bit stickier."},b2b:{es:"Procurement con contrato, negociación y confianza: más juicio humano.",en:"Procurement with contracts, negotiation and trust: more human judgment."}}},
+  {n:4,name:{es:"Difícil ↔ Fácil de automatizar",en:"Hard ↔ Easy to automate"},desc:{es:"El workflow del use case resiste la automatización full?",en:"Does the use case's workflow resist full automation?"},lo:{es:"Resiste",en:"Resists"},hi:{es:"Automatizable entero",en:"Fully automatable"},
+   s:{b2c:6,men:5,b2b:4},
+   why:{b2c:{es:"'Voy a Japón 10 días, comprá el eSIM': estructurado y repetible. Territorio puro de agentic commerce.",en:"'Going to Japan for 10 days, buy the eSIM': structured and repeatable. Pure agentic-commerce territory."},men:{es:"Recurrente pero igual automatizable.",en:"Recurring but still automatable."},b2b:{es:"Integración y procurement no se automatizan tan limpio.",en:"Integration and procurement don't automate as cleanly."}}},
+  {n:5,name:{es:"Cliente conservador ↔ Cliente tech-forward",en:"Conservative ↔ Tech-forward customer"},desc:{es:"Dónde caen tus clientes en la curva de adopción?",en:"Where do your customers sit on the adoption curve?"},lo:{es:"Conservadores",en:"Conservative"},hi:{es:"Early adopters",en:"Early adopters"},
+   s:{b2c:6,men:5,b2b:3},
+   why:{b2c:{es:"El que compra eSIM en vez de roaming ya es la franja tech-forward. Baja lealtad, se va a lo más fácil o barato, incluido lo que le sirva un agente IA.",en:"Whoever buys an eSIM instead of roaming is already the tech-forward slice. Low loyalty, moves to whatever's easiest or cheapest, including whatever an AI agent serves them."},men:{es:"Nómades: muy tech-forward, pero anclados a un setup que ya les funciona.",en:"Nomads: very tech-forward, but anchored to a setup that already works for them."},b2b:{es:"Procurement corporativo: lento, conservador, por proceso. Es un colchón.",en:"Corporate procurement: slow, conservative, process-driven. It's a buffer."}}},
+  {n:6,name:{es:"Importa la relación ↔ Relación irrelevante",en:"Relationship matters ↔ Relationship irrelevant"},desc:{es:"Valoran la relación con el proveedor o solo el resultado?",en:"Do they value the relationship with the provider or just the outcome?"},lo:{es:"Relación protege",en:"Relationship protects"},hi:{es:"Puro transaccional",en:"Purely transactional"},
+   s:{b2c:7,men:5,b2b:3},
+   why:{b2c:{es:"Nadie tiene relación con su proveedor de eSIM. Querés datos que anden, barato y fácil. Cero moat relacional.",en:"Nobody has a relationship with their eSIM provider. You want data that works, cheap and easy. Zero relational moat."},men:{es:"El billing recurrente crea hábito leve, no relación.",en:"Recurring billing creates light habit, not a relationship."},b2b:{es:"Account management, contratos, partners. Acá la relación sí protege.",en:"Account management, contracts, partners. Here the relationship does protect."}}},
+  {n:7,name:{es:"Consistencia requerida ↔ Variación beneficiosa",en:"Consistency required ↔ Variation beneficial"},desc:{es:"La consistencia te protege o la variación suma?",en:"Does consistency protect you or does variation help?"},lo:{es:"Exige consistencia",en:"Demands consistency"},hi:{es:"Se beneficia de variar",en:"Benefits from variation"},
+   s:{b2c:2,men:2,b2b:1},
+   misfit:{es:"Acá el producto sí se protege: la variabilidad probabilística de la IA es un defecto donde necesitás determinismo. Uno de los pocos factores donde el bajo score es real, no un decoy.",en:"Here the product does protect itself: AI's probabilistic variability is a defect where you need determinism. One of the few factors where the low score is real, not a decoy."},
+   why:{b2c:{es:"Conectividad = mismos datos, siempre. Nunca querrías un eSIM 'creativo'.",en:"Connectivity = same data, every time. You'd never want a 'creative' eSIM."},men:{es:"Igual.",en:"Same."},b2b:{es:"SLA, reliability total. Lo más protegido.",en:"SLA, total reliability. The most protected."}}},
+  {n:8,name:{es:"Uso frecuente ↔ Uso infrecuente",en:"Frequent use ↔ Infrequent use"},desc:{es:"Hábito (diario o mensual) o zona olvidable?",en:"Habit (daily or monthly) or forgettable zone?"},lo:{es:"Hábito fuerte",en:"Strong habit"},hi:{es:"Olvidable",en:"Forgettable"},
+   s:{b2c:7,men:2,b2b:4},
+   why:{b2c:{es:"Se viaja pocas veces al año, la compra es infrecuente, cae en zona olvidable, cada viaje se re-investiga de cero, y la IA intercepta esa re-decisión. El golpe más fuerte está acá.",en:"People travel a few times a year, the purchase is infrequent, it lands in the forgettable zone, every trip is researched from scratch, and AI intercepts that re-decision. The hardest hit is here."},men:{es:"Mensual = zona de hábito. La suscripción es el antídoto exacto a este factor (7→2).",en:"Monthly = habit zone. The subscription is the exact antidote to this factor (7→2)."},b2b:{es:"Renovación periódica, algo de hábito por integración.",en:"Periodic renewal, some habit through integration."}}}
+ ]},
+ {name:"Growth Model",blurb:{es:"Si la IA fortalece o rompe el motor que trae y retiene clientes.",en:"Whether AI strengthens or breaks the engine that wins and keeps customers."},
+  what:{es:"Mira el motor de crecimiento: por qué canales llegan los clientes y si el loop que los trae se sostiene en un mundo con IA.",en:"Looks at the growth engine: which channels bring customers and whether the loop that brings them holds up in a world with AI."},
+  how:{es:"Sube cuando dependés de canales que la IA rehace (search, SEO, afiliados) o cuando un paso del loop queda amenazado. Baja cuando la relación es directa y los canales son estables.",en:"Rises when you depend on channels AI is rewriting (search, SEO, affiliates) or when a loop step is threatened. Drops when the relationship is direct and channels are stable."},
+  factors:[
+  {n:9,name:{es:"Canales estables ↔ Canales en disrupción",en:"Stable channels ↔ Disrupted channels"},desc:{es:"La IA está rehaciendo los canales por los que llegás?",en:"Is AI rewriting the channels you reach customers through?"},lo:{es:"Estables",en:"Stable"},hi:{es:"Rehechos por IA",en:"Rewritten by AI"},
+   s:{b2c:7,men:6,b2b:3},
+   why:{b2c:{es:"SEO, paid search y afiliados, los tres en la zona de impacto. El audit lo confirmó duro: en la query de una sola recomendación para Japón, Holafly salió 0 de 4, y dos motores respondieron de memoria. El default genérico no está disputado, está perdido en la capa más profunda.",en:"SEO, paid search and affiliates, all three in the impact zone. The audit confirmed it hard: on the single-recommendation query for Japan, Holafly came up 0 of 4, with two engines answering from memory. The generic default isn't contested, it's lost at the deepest layer."},men:{es:"Se adquiere por los mismos canales. La retención ya es tuya una vez suscripto.",en:"Acquired through the same channels. Retention is already yours once subscribed."},b2b:{es:"Sales-led, partnerships. La IA hasta puede ayudar a prospectar.",en:"Sales-led, partnerships. AI can even help prospect."}}},
+  {n:10,name:{es:"Growth loop intacto ↔ debilitado",en:"Growth loop intact ↔ weakened"},desc:{es:"La IA fortalece o socava el motor de crecimiento?",en:"Does AI strengthen or undermine the growth engine?"},lo:{es:"Intacto",en:"Intact"},hi:{es:"Amenazado",en:"Threatened"},
+   s:{b2c:6,men:5,b2b:3},
+   why:{b2c:{es:"El loop SEO y contenido se debilita directo (contenido commoditizado, clics que desaparecen). El referral (HFREF) no es el motor. Quedás apoyado en paid, que encarece con el shift de canales.",en:"The SEO and content loop weakens directly (commoditized content, clicks that vanish). Referral (HFREF) isn't the engine. You're left leaning on paid, which gets pricier as channels shift."},men:{es:"Recurrencia ayuda el LTV, pero la adquisición tiene la misma exposición.",en:"Recurrence helps LTV, but acquisition has the same exposure."},b2b:{es:"Loops de sales y partnership intactos.",en:"Sales and partnership loops intact."}}},
+  {n:11,name:{es:"Relación directa ↔ mediada",en:"Direct ↔ mediated relationship"},desc:{es:"Vienen directo a vos o vía terceros?",en:"Do they come straight to you or via third parties?"},lo:{es:"Directa",en:"Direct"},hi:{es:"Mediada",en:"Mediated"},
+   s:{b2c:7,men:5,b2b:3},
+   why:{b2c:{es:"El descubrimiento sigue mediado, pero el mediador pasó de comparador a modelo. En el comparador eras uno entre varios links. Cuando la IA elige una sola opción, o sos ese pick o no existís. La mediación se volvió binaria, y en el audit el pick no fue tuyo (0/4 en Japón).",en:"Discovery is still mediated, but the mediator went from comparator to model. In the comparator you were one of several links. When the AI picks a single option, you're either that pick or you don't exist. Mediation became binary, and in the audit the pick wasn't yours (0/4 in Japan)."},men:{es:"Suscripto = relación de billing directa, más directo. Pero la adquisición la comparte con el B2C: en la query de nómada el audit la dejó secundaria, detrás de Saily Ultra por precio.",en:"Subscribed = direct billing relationship, more direct. But acquisition is shared with B2C: on the nomad query the audit left it secondary, behind Saily Ultra on price."},b2b:{es:"Relación contractual directa con el negocio.",en:"Direct contractual relationship with the business."}}}
+ ]},
+ {name:"Defensibility",blurb:{es:"Si tus barreras (data, red, marca, switching) aguantan con IA en juego.",en:"Whether your moats (data, network, brand, switching) hold with AI in play."},
+  what:{es:"Evalúa tus moats: data propietaria, efectos de red, costo de cambio y si el valor que das es replicable por una IA.",en:"Assesses your moats: proprietary data, network effects, switching cost and whether the value you deliver is replicable by an AI."},
+  how:{es:"Sube cuando los moats son débiles o fáciles de simular, el switching es trivial y el valor es pura utilidad funcional. Baja con data única, efectos de red reales y switching alto.",en:"Rises when moats are weak or easy to simulate, switching is trivial and the value is pure functional utility. Drops with unique data, real network effects and high switching cost."},
+  factors:[
+  {n:12,name:{es:"Data propietaria ↔ Data pública",en:"Proprietary data ↔ Public data"},desc:{es:"Corre sobre data propietaria inaccesible a la IA?",en:"Does it run on proprietary data inaccessible to AI?"},lo:{es:"Propietaria",en:"Proprietary"},hi:{es:"Pública",en:"Public"},
+   s:{b2c:5,men:5,b2b:4},
+   misfit:{es:"Tenés data de ops valiosa (pricing, conversión, uso), pero no es un moat de cara al cliente. Y tu moat real, los deals con carriers, es supply-side, invisible para este factor.",en:"You have valuable ops data (pricing, conversion, usage), but it's not a customer-facing moat. And your real moat, the carrier deals, is supply-side, invisible to this factor."},
+   why:{b2c:{es:"Lo que el cliente compara (precios, disponibilidad) es info pública. Sin moat de data hacia afuera.",en:"What the customer compares (prices, availability) is public info. No data moat facing outward."},men:{es:"Igual.",en:"Same."},b2b:{es:"Algo de data de integración y uso con partners.",en:"Some integration and usage data with partners."}}},
+  {n:13,name:{es:"Valor por data ↔ por contenido",en:"Value from data ↔ from content"},desc:{es:"Tu valor es data única o contenido replicable?",en:"Is your value unique data or replicable content?"},lo:{es:"Data única",en:"Unique data"},hi:{es:"Contenido replicable",en:"Replicable content"},
+   s:{b2c:4,men:4,b2b:3},
+   why:{b2c:{es:"El valor del producto no es contenido. Pero tu adquisición se apoya en contenido SEO replicable. Este factor en parte recuenta el riesgo de distribución.",en:"The product's value isn't content. But your acquisition leans on replicable SEO content. This factor partly re-counts the distribution risk."},men:{es:"Igual.",en:"Same."},b2b:{es:"Valor vía servicio y contrato, no contenido.",en:"Value via service and contract, not content."}}},
+  {n:14,name:{es:"Engagement emocional ↔ Utilidad funcional",en:"Emotional engagement ↔ Functional utility"},desc:{es:"Experiencia y emoción, o utilidad funcional pura?",en:"Experience and emotion, or pure functional utility?"},lo:{es:"Emocional",en:"Emotional"},hi:{es:"Utilidad funcional",en:"Functional utility"},
+   s:{b2c:7,men:6,b2b:6},
+   why:{b2c:{es:"El eSIM es utilidad funcional pura. Cero moat emocional. La eficiencia (más barato o fácil) siempre suma, y la IA empuja eficiencia en la compra.",en:"The eSIM is pure functional utility. Zero emotional moat. Efficiency (cheaper or easier) always helps, and AI pushes efficiency in the purchase."},men:{es:"'Estar siempre conectado' roza lo experiencial, pero sigue siendo utilidad.",en:"'Always connected' brushes the experiential, but it's still utility."},b2b:{es:"Centro de costo. Utilidad pura.",en:"Cost center. Pure utility."}}},
+  {n:15,name:{es:"Network effects fuertes ↔ débiles",en:"Strong ↔ weak network effects"},desc:{es:"Efectos de red que la IA no puede simular?",en:"Network effects AI can't simulate?"},lo:{es:"Robustos",en:"Robust"},hi:{es:"Nulos o replicables",en:"None or replicable"},
+   s:{b2c:6,men:6,b2b:5},
+   misfit:{es:"La falta de efectos de red viene de fábrica, no la causó la IA. Holafly nunca los tuvo, así que el score alto no se lee como 'la IA me los rompió'.",en:"The lack of network effects is built in, not caused by AI. Holafly never had them, so the high score doesn't read as 'AI broke them'."},
+   why:{b2c:{es:"Tu eSIM no vale más porque otros usen Holafly. Marca y escala, no red.",en:"Your eSIM isn't worth more because others use Holafly. Brand and scale, not network."},men:{es:"Igual.",en:"Same."},b2b:{es:"Algún lock-in de sistema vía integraciones. Efectos de red débiles.",en:"Some system lock-in via integrations. Weak network effects."}}},
+  {n:16,name:{es:"Switching cost alto ↔ bajo",en:"High ↔ low switching cost"},desc:{es:"Hay barreras reales para irse?",en:"Are there real barriers to leaving?"},lo:{es:"Difícil cambiarse",en:"Hard to switch"},hi:{es:"Cero fricción",en:"Zero friction"},
+   s:{b2c:7,men:4,b2b:3},
+   why:{b2c:{es:"Costo de cambio cercano a cero. El próximo viaje comprás cualquier eSIM. Sin data que migrar. La infrecuencia lo agrava: cada viaje es un switch nuevo.",en:"Switching cost near zero. Next trip you buy any eSIM. No data to migrate. Infrequency makes it worse: every trip is a fresh switch."},men:{es:"Suscripción activa, setup que anda y eSIM instalado dan fricción media. Cancelar y reinstalar molesta.",en:"An active subscription, a setup that works and an installed eSIM add medium friction. Cancelling and reinstalling is a hassle."},b2b:{es:"Contratos, integraciones, billing, workflows de partner. Switching cost real.",en:"Contracts, integrations, billing, partner workflows. Real switching cost."}}}
+ ]},
+ {name:"Business Model",blurb:{es:"Si tu forma de cobrar y tu margen resisten la presión de la IA.",en:"Whether how you charge and your margin resist AI pressure."},
+  what:{es:"Mira cómo cobrás y cómo aguanta tu margen: si el pricing está atado al valor o a asientos, y si la economía unitaria resiste.",en:"Looks at how you charge and how your margin holds: whether pricing is tied to value or to seats, and whether unit economics resist."},
+  how:{es:"Sube con pricing per-seat (la IA reduce asientos) y márgenes finos. Baja con pricing por valor y márgenes sólidos.",en:"Rises with per-seat pricing (AI cuts seats) and thin margins. Drops with value-based pricing and solid margins."},
+  factors:[
+  {n:17,name:{es:"Pricing por valor ↔ por seat",en:"Value-based ↔ per-seat pricing"},desc:{es:"Tu pricing refleja valor o cuenta licencias?",en:"Does your pricing reflect value or count licenses?"},lo:{es:"Por valor",en:"By value"},hi:{es:"Por seat o licencia",en:"Per seat or license"},
+   s:{b2c:2,men:3,b2b:4},
+   misfit:{es:"El riesgo que mide, que la IA reduzca asientos, casi no aplica: cobrás por plan o viaje, no per-seat. Acá el framework no te toca. Bajo score real.",en:"The risk it measures, AI cutting seats, barely applies: you charge per plan or trip, not per seat. Here the framework doesn't touch you. A genuinely low score."},
+   why:{b2c:{es:"Cobrás por plan o viaje (uso). Nada de per-seat.",en:"You charge per plan or trip (usage). No per-seat."},men:{es:"Por línea recurrente. Marginal.",en:"Per recurring line. Marginal."},b2b:{es:"Por línea o flota corporativa: algo de exposición si la IA consolida viajeros.",en:"Per line or corporate fleet: some exposure if AI consolidates travelers."}}},
+  {n:18,name:{es:"Unit economics fuertes ↔ débiles",en:"Strong ↔ weak unit economics"},desc:{es:"Tus márgenes aguantan la presión de costos IA?",en:"Do your margins withstand AI cost pressure?"},lo:{es:"Resilientes",en:"Resilient"},hi:{es:"Frágiles",en:"Fragile"},
+   s:{b2c:6,men:4,b2b:3},
+   misfit:{es:"El framework piensa en costo de compute, que para vos ronda cero. El riesgo IA real en tu margen es CAC inflation: perdés tráfico orgánico gratis, vas más a paid, y sale más caro. Reinterpretá el factor o te despista.",en:"The framework thinks compute cost, which for you is near zero. The real AI margin risk is CAC inflation: you lose free organic traffic, lean more on paid, and it costs more. Reinterpret the factor or it misleads you."},
+   why:{b2c:{es:"Sos premium (no el más barato) y el CAC sube con el shift de canales. El audit le puso evidencia: perdés el orgánico (0/4 cuando la IA recomienda una sola), así que la demanda que antes llegaba gratis ahora hay que pagarla. Todo empuja a paid.",en:"You're premium (not the cheapest) and CAC rises with the channel shift. The audit put evidence on it: you lose the organic (0/4 when the AI recommends just one), so demand that used to arrive for free now has to be paid for. It all pushes to paid."},men:{es:"Mejor LTV amortigua el CAC. La recurrencia ayuda el payback.",en:"Better LTV cushions CAC. Recurrence helps payback."},b2b:{es:"Márgenes de contrato, CAC más bajo vía sales.",en:"Contract margins, lower CAC via sales."}}}
+ ]}
+];
+
+let visible={b2c:true,men:true,b2b:true};
+let openAreas=new Set();
+let openWhys=new Set();
+let allOpen=false;
+const RAMP=["#1F9E8C","#4FAE6B","#8FB44C","#E2B23A","#E68A3C","#E6485C","#B82A45"];
+const colorFor=v=>RAMP[Math.max(1,Math.min(7,Math.round(v)))-1];
+function band(t){if(t<=36)return{label:{es:"Baja",en:"Low"},color:"#1F9E8C"};if(t<=72)return{label:{es:"Moderada",en:"Moderate"},color:"#E2B23A"};return{label:{es:"Alta",en:"High"},color:"#E6485C"};}
+function modelTotal(k){let t=0;AREAS.forEach(a=>a.factors.forEach(f=>t+=f.s[k]));return t;}
+function areaAvg(area,k){return area.factors.reduce((s,f)=>s+f.s[k],0)/area.factors.length;}
+function flat(){const o=[];AREAS.forEach(a=>a.factors.forEach(f=>o.push(f)));return o;}
+function shortName(s){return s.replace(' ↔ ',' / ');}
+function shortArea(n){return n.replace(' Model','');}
+
+function setText(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
+function shead(n,t,tag){return `<span class="n">${n}</span><h2>${t}</h2>`+(tag?`<span class="tag">${tag}</span>`:'')+`<span class="line"></span>`;}
+
+function applyStatic(){
+  document.body.setAttribute('data-lang',lang);
+  document.querySelectorAll('.langtog').forEach(tg=>tg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-l')===lang)));
+  setText('tb-title',L(UI.tbTitle));
+  setText('nav-ctx',L(UI.nav.ctx));setText('nav-ver',L(UI.nav.ver));setText('nav-lec',L(UI.nav.lec));setText('nav-areas',L(UI.nav.areas));
+  setText('heroBox',`<div class="kicker">${L(UI.kicker)}</div><h1>${L(UI.h1)}</h1><p class="thesis">${L(UI.thesis)}</p>`);
+  setText('ctx',shead(UI.sh.ctx.n,L(UI.sh.ctx.t)));
+  setText('veredicto',shead(UI.sh.ver.n,L(UI.sh.ver.t),L(UI.sh.ver.tag)));
+  setText('lectura',shead(UI.sh.lec.n,L(UI.sh.lec.t),L(UI.sh.lec.tag)));
+  setText('areas',shead(UI.sh.areas.n,L(UI.sh.areas.t),L(UI.sh.areas.tag)));
+  setText('sh-prio',shead(UI.sh.prio.n,L(UI.sh.prio.t),L(UI.sh.prio.tag)));
+  setText('lead-ver',L(UI.leadVer));
+  setText('lead-areas',L(UI.leadAreas));
+  setText('lbl-models',L(UI.lblModels));
+  setText('btn-men',L(UI.btnMen));
+  setText('reset',L(UI.reset));
+  document.getElementById('expandAll').innerHTML=allOpen?L(UI.expandClose):L(UI.expandOpen);
+  setText('footBox',L(UI.foot));
+  // ctx box
+  const sc=UI.scqa, tk=L(UI.scoreTicks), bc=L(UI.bandChips), al=UI.areaLegend;
+  setText('ctxBox',`
+    <div class="scqa">
+      <div class="blk"><div class="h">${L(sc.s.lbl)}</div><p>${L(sc.s.p)}</p></div>
+      <div class="blk"><div class="h">${L(sc.c.lbl)}</div><p>${L(sc.c.p)}</p></div>
+      <div class="blk"><div class="h">${L(sc.q.lbl)}</div><p>${L(sc.q.p)}</p></div>
+      <div class="blk"><div class="h">${L(sc.a.lbl)}</div><p>${L(sc.a.p)}</p></div>
+    </div>
+    <div class="method">
+      <div class="row">
+        <div class="scale"><div class="mlab">${L(UI.scoreLbl)}</div><div class="bar"></div><div class="slab"><span>${tk[0]}</span><span>${tk[1]}</span><span>${tk[2]}</span></div></div>
+        <div style="flex:1;min-width:240px"><div class="mlab">${L(UI.bandLbl)}</div><div class="bands"><span class="bandchip" style="background:#1F9E8C">${bc[0]}</span><span class="bandchip" style="background:#E2B23A">${bc[1]}</span><span class="bandchip" style="background:#E6485C">${bc[2]}</span></div></div>
+      </div>
+      <p style="font-size:12.5px;color:#3E4145;line-height:1.55;margin:14px 0 0">${L(UI.method)}</p>
+      <div class="areas-legend">
+        <div class="al-item"><span class="c">8</span><span><span class="b">Use Case.</span> ${L(al.uc)}</span></div>
+        <div class="al-item"><span class="c">3</span><span><span class="b">Growth Model.</span> ${L(al.gm)}</span></div>
+        <div class="al-item"><span class="c">5</span><span><span class="b">Defensibility.</span> ${L(al.df)}</span></div>
+        <div class="al-item"><span class="c">2</span><span><span class="b">Business Model.</span> ${L(al.bm)}</span></div>
+      </div>
+    </div>`);
+  // lectura box
+  let pts=UI.lectura.map((p,i)=>`<div class="pt${p.div?' div':''}"><h4><span class="k">0${i+1}</span> ${L(p.h)}</h4><p>${L(p.p)}</p></div>`).join('');
+  setText('lecturaBox',`<div class="lab">${L(UI.lecturaLab)}</div>${pts}`);
+  const au=UI.audit,CELL={ok:{t:"✓",c:"#1F9E8C"},mid:{t:"~",c:"#E2B23A"},no:{t:"✗",c:"#E6485C"}};
+  let agh=`<div class="gh"></div>`+au.engines.map(e=>`<div class="gh">${e}</div>`).join('');
+  let agr=au.rows.map(r=>`<div class="gq">${L(r.q)}</div>`+r.c.map(code=>`<div class="gc" style="background:${CELL[code].c}">${CELL[code].t}</div>`).join('')).join('');
+  let afi=au.findings.map(x=>`<div class="fi">${L(x)}</div>`).join('');
+  let abk=g=>`<ul>`+L(g.items).map(it=>`<li>${it}</li>`).join('')+`</ul>`;
+  let apr=au.rows.map((r,i)=>`<p style="margin:8px 0"><b>${i+1}. ${L(r.q)}</b><br><span class="mono" style="font-size:11.5px;color:var(--mute)">${r.prompt}</span></p>`).join('');
+  setText('auditBox',`<div class="panel"><div class="auh">${L(au.label)}</div><p class="aumethod">${L(au.purpose)}</p>`+
+    `<div class="aubluf">${L(au.bluf)}</div>`+
+    `<div class="aubuckets"><div class="buck green"><div class="bh">✓ ${L(au.green.lbl)}</div>${abk(au.green)}</div><div class="buck red"><div class="bh">✗ ${L(au.red.lbl)}</div>${abk(au.red)}</div></div>`+
+    `<div class="aufind">${afi}</div>`+
+    `<details class="read" style="margin-top:14px"><summary><span class="chev mono">▶</span> ${lang==='es'?'Ver el detalle por motor y las 8 preguntas':'See the per-engine detail and the 8 prompts'}</summary><div class="body"><div class="augrid">${agh}${agr}</div><div class="aulegend">${L(au.legend)}</div><div style="margin-top:14px">${apr}</div></div></details>`+
+    `<div class="aunote">${L(au.note)}</div></div>`);
+}
+
+function renderTopbar(){
+  const h=document.getElementById('tbScores');h.innerHTML='';
+  MODELS.forEach(m=>{if(!visible[m.k])return;const t=modelTotal(m.k),b=band(t);
+    h.insertAdjacentHTML('beforeend',`<span class="tsc" style="background:${b.color}">${m.k.toUpperCase()} ${t}</span>`);});
+}
+
+function renderCards(){
+  const h=document.getElementById('cards');h.innerHTML='';
+  MODELS.forEach(m=>{
+    if(!visible[m.k])return;
+    const t=modelTotal(m.k),b=band(t);
+    let bars=AREAS.map(a=>{const av=areaAvg(a,m.k),pct=Math.round(av/7*100);
+      return `<div class="arow"><span class="al">${shortArea(a.name)}</span><span class="track"><i style="width:${pct}%;background:${colorFor(av)}"></i></span><span class="av" style="color:${colorFor(av)}">${av.toFixed(1)}</span></div>`;}).join('');
+    h.insertAdjacentHTML('beforeend',`<div class="mcard"><h3>${L(m.name)}</h3><div class="sub">${L(m.sub)}</div>
+      <div class="score" style="color:${b.color}">${t}<span> /126</span></div>
+      <span class="bd" style="background:${b.color}">${L(b.label)} ${L(UI.vuln)}</span>
+      <div class="arg"><div class="h">${L(UI.argLabel)}</div>${L(m.arg)}</div>
+      <div class="areas-bars">${bars}</div></div>`);
+  });
+}
+
+function renderHeatmap(){
+  const h=document.getElementById('heatmap');h.innerHTML='';
+  h.insertAdjacentHTML('beforeend',`<div class="hm-row hm-head"><div>Factor</div>`+MODELS.map(m=>`<div class="m" style="${visible[m.k]?'':'opacity:.25'}">${m.k.toUpperCase()}</div>`).join('')+`</div>`);
+  AREAS.forEach(a=>{
+    h.insertAdjacentHTML('beforeend',`<div class="hm-area">${a.name}</div>`);
+    a.factors.forEach(f=>{
+      let c=`<div class="hm-name">${f.n}. ${shortName(L(f.name))}</div>`;
+      MODELS.forEach(m=>{const v=f.s[m.k];c+=`<div class="cell" data-go="${f.n}" title="${L(m.name)}: ${v}/7" style="background:${colorFor(v)};${visible[m.k]?'':'opacity:.16'}">${v}</div>`;});
+      h.insertAdjacentHTML('beforeend',`<div class="hm-row">${c}</div>`);
+    });
+  });
+  h.insertAdjacentHTML('beforeend',`<div class="note">${L(UI.hmNote)}</div>`);
+  h.querySelectorAll('[data-go]').forEach(c=>c.addEventListener('click',()=>openFactor(+c.getAttribute('data-go'))));
+}
+
+function renderAreas(){
+  const h=document.getElementById('areasWrap');h.innerHTML='';
+  AREAS.forEach((a,ai)=>{
+    const isOpen=allOpen||openAreas.has(ai);
+    let mini=MODELS.filter(m=>visible[m.k]).map(m=>{const av=areaAvg(a,m.k);
+      return `<div class="b"><div class="mv" style="background:${colorFor(av)}">${av.toFixed(1)}</div><div class="mk">${m.k.toUpperCase()}</div></div>`;}).join('');
+    let factors=a.factors.map(f=>{
+      let slots=MODELS.filter(m=>visible[m.k]).map(m=>{const v=f.s[m.k];
+        return `<div class="slot"><div class="l"><span>${L(m.name)}</span><span class="chip" id="chip-${f.n}-${m.k}" style="background:${colorFor(v)}">${v}</span></div><input type="range" min="1" max="7" step="1" value="${v}" data-f="${f.n}" data-m="${m.k}"></div>`;}).join('');
+      let rows=MODELS.filter(m=>visible[m.k]).map(m=>`<div class="r"><b>${L(m.name)}:</b> ${L(f.why[m.k])}</div>`).join('');
+      let mf=f.misfit?`<div class="misfit"><b>${lang==='es'?'Acá el framework no calza:':"Here the framework doesn't fit:"}</b> ${L(f.misfit)}</div>`:'';
+      const wo=openWhys.has(f.n)?' open':'';
+      return `<div class="factor" id="f${f.n}">
+        <div class="fhead"><span class="fnum">${f.n}</span><span class="fname">${L(f.name)}</span></div>
+        <div class="fdesc">${L(f.desc)}</div>
+        <div class="poles"><span class="lo">◂ 1 · ${L(f.lo)}</span><span class="hi">${L(f.hi)} · 7 ▸</span></div>
+        <div class="sliders">${slots}</div>${mf}
+        <div class="why"><button data-why="${f.n}">${L(UI.whyBtn)}</button><div class="b${wo}" id="why-${f.n}">${rows}</div></div>
+      </div>`;}).join('');
+    h.insertAdjacentHTML('beforeend',`<div class="area${isOpen?' open':''}" data-area="${ai}">
+      <div class="ahead">
+        <div class="ttl"><div class="t">${a.name} <span class="cnt">${a.factors.length} ${lang==='es'?'factores':'factors'}</span></div><div class="bl">${L(a.blurb)}</div></div>
+        <div class="mini">${mini}</div>
+        <span class="chev">▶</span>
+      </div>
+      <div class="abody">
+        <div class="explain"><div class="e"><div class="h">${lang==='es'?'Qué evalúa':'What it measures'}</div><p>${L(a.what)}</p></div><div class="e"><div class="h">${lang==='es'?'Cómo se lee':'How to read it'}</div><p>${L(a.how)}</p></div></div>
+        ${factors}
+      </div></div>`);
+  });
+  h.querySelectorAll('.ahead').forEach(head=>head.addEventListener('click',e=>{
+    if(e.target.closest('input')||e.target.closest('button'))return;
+    const area=head.parentElement,ai=+area.getAttribute('data-area');
+    area.classList.toggle('open');
+    if(area.classList.contains('open'))openAreas.add(ai);else openAreas.delete(ai);
+  }));
+  h.querySelectorAll('input[type=range]').forEach(inp=>inp.addEventListener('input',e=>{
+    const fn=+e.target.getAttribute('data-f'),mk=e.target.getAttribute('data-m'),v=+e.target.value;
+    flat().find(x=>x.n===fn).s[mk]=v;
+    const chip=document.getElementById(`chip-${fn}-${mk}`);chip.textContent=v;chip.style.background=colorFor(v);
+    renderTopbar();renderCards();renderHeatmap();renderPrios();renderAreaMinis();
+  }));
+  h.querySelectorAll('[data-why]').forEach(b=>b.addEventListener('click',()=>{
+    const n=+b.getAttribute('data-why');const body=document.getElementById('why-'+n);
+    body.classList.toggle('open');
+    if(body.classList.contains('open'))openWhys.add(n);else openWhys.delete(n);
+  }));
+}
+function renderAreaMinis(){
+  document.querySelectorAll('.area').forEach(el=>{
+    const ai=+el.getAttribute('data-area'),a=AREAS[ai],mini=el.querySelector('.mini');if(!mini)return;
+    mini.innerHTML=MODELS.filter(m=>visible[m.k]).map(m=>{const av=areaAvg(a,m.k);
+      return `<div class="b"><div class="mv" style="background:${colorFor(av)}">${av.toFixed(1)}</div><div class="mk">${m.k.toUpperCase()}</div></div>`;}).join('');
+  });
+}
+function openFactor(n){
+  let ai=AREAS.findIndex(a=>a.factors.some(f=>f.n===n));
+  openAreas.add(ai);
+  const area=document.querySelector(`.area[data-area="${ai}"]`);
+  if(area)area.classList.add('open');
+  setTimeout(()=>{const node=document.getElementById('f'+n);
+    if(node){node.scrollIntoView({behavior:'smooth',block:'center'});const o=node.style.background;node.style.transition='background .3s';node.style.background='#FCEBED';setTimeout(()=>node.style.background=o,1000);}},80);
+}
+
+function renderPrios(){
+  const h=document.getElementById('prios');h.innerHTML='';
+  MODELS.forEach(m=>{
+    if(!visible[m.k])return;
+    const items=flat().filter(f=>f.s[m.k]>=5).sort((a,b)=>b.s[m.k]-a.s[m.k]);
+    let pills=items.map(f=>`<span class="pill"><span class="s" style="background:${colorFor(f.s[m.k])}">${f.s[m.k]}</span>${f.n}. ${shortName(L(f.name))}</span>`).join('');
+    if(!items.length)pills=`<span class="hint">${L(UI.prioEmpty)}</span>`;
+    const fw=L(UI.foco);const word=items.length===1?fw[0]:fw[1];
+    h.insertAdjacentHTML('beforeend',`<div class="pcol"><div class="ph"><span class="dot" style="background:${band(modelTotal(m.k)).color}"></span>${L(m.name)} · ${items.length} ${word}</div>${pills}</div>`);
+  });
+}
+
+document.getElementById('modelToggle').addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON')return;
+  const k=e.target.getAttribute('data-m');
+  if(visible[k]&&Object.values(visible).filter(Boolean).length===1)return;
+  visible[k]=!visible[k];e.target.classList.toggle('on',visible[k]);renderDynamic();
+});
+document.getElementById('expandAll').addEventListener('click',e=>{
+  allOpen=!allOpen;
+  if(allOpen){AREAS.forEach((a,i)=>openAreas.add(i));}else{openAreas.clear();}
+  document.querySelectorAll('.area').forEach(a=>a.classList.toggle('open',allOpen));
+  e.target.innerHTML=allOpen?L(UI.expandClose):L(UI.expandOpen);
+});
+document.getElementById('reset').addEventListener('click',()=>{AREAS.forEach(a=>a.factors.forEach(f=>Object.assign(f.s,BASELINE[f.n])));renderDynamic();});
+const BASELINE={};AREAS.forEach(a=>a.factors.forEach(f=>BASELINE[f.n]={...f.s}));
+
+document.querySelectorAll('.langtog').forEach(tg=>tg.addEventListener('click',e=>{
+  const btn=e.target.closest('button');if(!btn)return;
+  lang=btn.getAttribute('data-l');renderAll();
+}));
+
+const tb=document.getElementById('topbar');
+window.addEventListener('scroll',()=>{tb.classList.toggle('show',window.scrollY>360);});
+
+function renderDynamic(){renderTopbar();renderCards();renderHeatmap();renderAreas();renderPrios();}
+function renderAll(){applyStatic();renderDynamic();}
+renderAll();
+</script>
+</body>
+</html>

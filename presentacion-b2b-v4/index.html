@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holafly · Propuesta B2B por día (v4)</title>
+<style>
+:root{
+  --coral:#E6485C; --green:#16A06A; --green-d:#0F7A50; --slate:#5A6B7B; --ink:#16242F;
+  --muted:#6B7C8A; --line:#E7EDF1; --bg:#F7F9FB; --card:#FFFFFF;
+  --amber:#9A6207; --amber-bg:#FFF3E2; --amber-bd:#F2D9AE;
+  --shadow:0 8px 26px rgba(22,36,47,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,system-ui,"Segoe UI",Inter,Roboto,Arial,sans-serif;
+  line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1480px;margin:0 auto;padding:0 5vw}
+b{font-weight:700}
+
+header{border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:30}
+.hd{display:flex;align-items:center;gap:16px;padding:16px 5vw;max-width:1480px;margin:0 auto}
+.hd svg{height:27px;width:auto;display:block}
+.crumb{color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;border-left:1px solid var(--line);padding-left:16px}
+.hd .right{margin-left:auto;display:flex;align-items:center;gap:14px;color:var(--muted);font-size:12.5px}
+.langsw{display:inline-flex;gap:2px;background:#EEF1F5;border-radius:999px;padding:3px}
+.langsw button{border:0;background:transparent;color:var(--muted);font-weight:800;font-size:12px;padding:5px 12px;border-radius:999px;cursor:pointer;transition:.15s}
+.langsw button.on{background:var(--ink);color:#fff}
+
+.ribbon{background:var(--amber-bg);border-bottom:1px solid var(--amber-bd)}
+.ribbon .wrap{padding:12px 5vw;font-size:13.5px;color:var(--amber);font-weight:600;display:flex;gap:9px;align-items:flex-start}
+#ennote{display:none;background:var(--ink);color:#fff}
+#ennote .wrap{padding:10px 5vw;font-size:13px;font-weight:600;display:flex;gap:9px;align-items:center}
+body.lang-en #ennote{display:block}
+
+.hero{padding:62px 0 30px}
+.eyebrow{color:var(--coral);font-weight:800;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:43px;line-height:1.1;margin:16px 0 0;letter-spacing:-.022em;max-width:23ch}
+.lede{font-size:19px;margin-top:20px;max-width:74ch;color:#33414d}
+.lede b{color:var(--green-d)}
+
+section{padding:48px 0;border-top:1px solid var(--line)}
+.snum{color:var(--muted);font-weight:800;font-size:12px;letter-spacing:.14em}
+h2{font-size:27px;margin:8px 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:15.5px;margin:0 0 28px;max-width:88ch}
+.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.03em;padding:3px 9px;border-radius:999px;vertical-align:middle;margin-left:8px}
+.tag.solid{background:#E7F4EE;color:var(--green-d)}
+.tag.draft{background:var(--amber-bg);color:var(--amber)}
+
+/* placeholder + non-apples markers */
+.ph{display:inline-block;background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:2px 7px;border-radius:6px;vertical-align:middle}
+.nap{color:var(--coral);font-weight:800;cursor:help}
+.napnote{font-size:12.5px;color:var(--coral);margin-top:10px;font-weight:600}
+
+/* confidence map */
+.cmap{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.cbox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+.chip{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;padding:6px 13px;border-radius:999px;margin-bottom:18px}
+.chip .d{width:8px;height:8px;border-radius:50%}
+.chip.ok{background:#E7F4EE;color:var(--green-d)} .chip.ok .d{background:var(--green)}
+.chip.mid{background:var(--amber-bg);color:var(--amber)} .chip.mid .d{background:#E0A52E}
+.chip.gap{background:#FBEAEC;color:#B23142} .chip.gap .d{background:var(--coral)}
+.cbox p{margin:13px 0;font-size:14.5px;line-height:1.5} .cbox p b{color:var(--ink)}
+.migr{margin-top:20px;background:var(--ink);color:#E3E7EC;border-radius:16px;padding:20px 24px;font-size:14.5px}
+.migr b{color:#fff}
+
+/* legend + comparison */
+.legend{display:flex;gap:22px;flex-wrap:wrap;margin:0 0 18px}
+.lg{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700}
+.lg .d{width:13px;height:13px;border-radius:4px}
+.d-b2c{background:var(--slate)} .d-corp{background:#EE7C8B} .d-cup{background:var(--coral)} .d-b2b{background:var(--green)}
+.cmp{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{padding:16px 16px;text-align:center;border-bottom:1px solid var(--line)}
+th{font-weight:800;font-size:13px;color:#fff;line-height:1.25}
+th.h-b2c{background:var(--slate)} th.h-corp{background:#EE7C8B} th.h-cup{background:var(--coral)} th.h-b2b{background:var(--green)} th.h-m{background:var(--ink)}
+th .th2{display:block;font-size:10.5px;font-weight:600;opacity:.85;margin-top:3px}
+td:first-child,th:first-child{text-align:left} td:first-child{font-weight:700}
+.c-corp{background:#FDF4F5} .c-cup{background:#FDEFF1}
+.secrow td{background:#EEF2F5;font-weight:800;font-size:11.5px;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;text-align:left;padding:9px 16px}
+tr:last-child td{border-bottom:0}
+.msub{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:3px}
+.bigcell{font-size:17px;font-weight:800}
+.cmpnote{font-size:12.5px;color:var(--muted);margin-top:12px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+.stat .big{font-size:42px;font-weight:800;color:var(--coral);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .lab{color:var(--muted);font-size:13.5px;margin-top:8px}
+.note{background:var(--ink);color:#E3E7EC;border-radius:16px;padding:20px 24px;margin-top:20px;font-size:15px} .note b{color:#fff}
+
+/* tiers */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tier{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+.tier.lead{background:#FBEAEC;border-color:#F4CDD3}
+.tier .price{font-size:46px;font-weight:800;color:var(--coral)}
+.tier .price span{font-size:18px;color:var(--muted);font-weight:600}
+.tier .reg{font-weight:700;margin-top:10px} .tier .meta{color:var(--muted);font-size:13.5px;margin-top:4px}
+.gmbadge{display:inline-block;margin-top:14px;background:#E7F4EE;color:var(--green-d);font-weight:800;font-size:13px;padding:6px 13px;border-radius:999px}
+
+/* scenario callout */
+.callout{margin-top:22px;background:#EAF6F1;border:1px solid #BFE5D5;border-radius:16px;padding:22px 24px}
+.callout h3{margin:0 0 8px;font-size:17px;color:var(--green-d)}
+.callout p{margin:6px 0;font-size:14.5px;color:#234}
+
+/* risks */
+.risks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.risk .rn{font-size:26px;font-weight:800;color:var(--coral);display:block;margin-bottom:4px;letter-spacing:-.01em}
+.topm{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.tm{display:grid;grid-template-columns:118px 1fr 168px;gap:12px;align-items:center;font-size:13.5px}
+.tiertag{display:inline-block;font-size:10px;font-weight:800;color:#fff;background:#B23142;border-radius:5px;padding:1px 5px;margin-left:3px;vertical-align:middle}
+.tmn{font-weight:700}
+.tmbar{height:12px;background:#F4CDD3;border-radius:999px;overflow:hidden}
+.tmbar>i{display:block;height:100%;background:#B23142;border-radius:999px}
+.tmv{color:#B23142;font-weight:700;text-align:right;font-size:12.5px;white-space:nowrap}
+.risk{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--coral);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+.risk b{display:block;margin-bottom:6px;font-size:15px}
+.risk span{font-size:14px;color:#33414d}
+@media(max-width:880px){.risks{grid-template-columns:1fr}}
+
+/* margin grouped bars */
+.gm{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:var(--shadow)}
+.gmleg{display:flex;gap:22px;margin-bottom:20px;font-size:13.5px;font-weight:700}
+.gmleg span{display:flex;align-items:center;gap:8px} .gmleg i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.grp{padding:16px 0;border-top:1px solid var(--line)} .grp:first-of-type{border-top:0}
+.grp .bandname{font-weight:800;margin-bottom:10px}
+.brow{display:grid;grid-template-columns:90px 1fr 56px;gap:12px;align-items:center;margin:8px 0}
+.brow .who{font-size:12.5px;color:var(--muted)}
+.track{height:14px;background:#EDF1F4;border-radius:999px;overflow:hidden}
+.track>i{display:block;height:100%;border-radius:999px;width:0;transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+.gm.in .track>i{width:var(--w)}
+.fill-co{background:#9AA7B2} .fill-pr{background:var(--green)}
+.bval{font-weight:800;text-align:right;font-size:13.5px}
+
+details.method{margin-top:18px;background:#F4F6F8;border:1px solid var(--line);border-radius:14px;padding:4px 20px}
+details.method summary{cursor:pointer;font-weight:700;padding:14px 0;list-style:none;color:var(--green-d)}
+details.method summary::-webkit-details-marker{display:none}
+details.method summary::before{content:"▸ ";color:var(--green)}
+details.method[open] summary::before{content:"▾ "}
+details.method .body{font-size:14px;color:#33414d;padding:0 0 16px;line-height:1.6}
+details.method code{background:#E7EDF1;padding:1px 5px;border-radius:5px;font-size:12.5px}
+
+.switch{display:inline-flex;gap:4px;background:#EEF1F5;border-radius:999px;padding:4px;margin-bottom:18px}
+.switch button{border:0;background:transparent;color:var(--muted);font-weight:700;font-size:13.5px;padding:9px 18px;border-radius:999px;cursor:pointer;transition:.15s}
+.switch button.on{background:var(--ink);color:#fff}
+.flatwarn{display:none;margin-top:16px;background:#FBEAEC;border:1px solid #F4CDD3;color:#B23142;border-radius:14px;padding:16px 20px;font-size:14.5px;font-weight:600}
+.flatwarn b{color:#9B2230}
+.mixdist{display:none;margin-top:16px;background:#EAF6F1;border:1px solid #BFE5D5;border-radius:14px;padding:16px 20px;font-size:14px;color:#234}
+.mixt{width:auto;border-collapse:collapse;margin:12px 0}
+.mixt th,.mixt td{padding:6px 22px 6px 0;text-align:left;font-size:13.5px}
+.mixt th{color:var(--green-d);font-weight:700;border-bottom:1px solid #BFE5D5}
+.mixt td{border-bottom:1px solid #D6EBE0}
+.ct{width:auto;border-collapse:collapse;margin:10px 0;font-size:13px}
+.ct th,.ct td{padding:5px 22px 5px 0;text-align:left;border-bottom:1px solid var(--line)}
+.ct th{color:var(--muted);font-weight:700}
+.ct .hi{color:#B23142;font-weight:700}
+.ct tr.ctsum td{border-top:2px solid var(--line);font-weight:800;padding-top:8px}
+.ct tr.cttot td{border-top:2px solid var(--ink);font-weight:800;padding-top:8px;color:var(--ink)}
+
+.aclar{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;padding:4px 0 14px}
+.aclar .box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.aclar .box b{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.aclar .box span{font-size:13.5px;color:#33414d}
+.aclar .box.warn{background:#FBEAEC;border-color:#F4CDD3}
+.aclar .box.warn b{color:#B23142}
+.aclar .box.pend{background:var(--amber-bg);border-color:var(--amber-bd)}
+.aclar .box.pend b{color:var(--amber)}
+.aclar .box.pend::before{content:"PENDIENTE";display:inline-block;font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--amber);background:#fff;border:1px solid var(--amber-bd);border-radius:5px;padding:1px 5px;margin-bottom:6px}
+
+.stack{position:relative;margin-top:8px}
+.scard{position:sticky;top:calc(86px + var(--i,0)*12px);background:var(--card);border:1px solid var(--line);border-left:6px solid var(--coral);border-radius:22px;box-shadow:var(--shadow);padding:38px 44px;margin-bottom:24px;min-height:230px;display:flex;flex-direction:column;justify-content:center}
+.scard.fin{border-left-color:var(--green)}
+.scard .idx{position:absolute;top:24px;right:34px;font-size:12.5px;font-weight:800;color:var(--muted);letter-spacing:.1em}
+.scard .n{font-size:38px;font-weight:800;color:var(--coral);letter-spacing:-.02em;line-height:1.07;max-width:22ch;margin:0}
+.scard.fin .n{color:var(--green-d)}
+.scard .t{font-size:17.5px;color:#33414d;margin-top:15px;max-width:68ch;line-height:1.55}
+@media(max-width:900px){.scard{padding:28px 26px;min-height:200px}.scard .n{font-size:27px}.scard .t{font-size:15.5px}}
+.compgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+.compcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow)}
+.compcard .ch{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+.compcard .cn{font-size:17px;font-weight:800}
+.compcard .ct{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.compcard .cl{font-size:13.5px;color:#33414d;line-height:1.5;margin:6px 0}
+.cmp td.win{background:#E7F4EE;color:var(--green-d);font-weight:700}
+.cmp td.lose{background:#FBEAEC;color:#B23142}
+.cmp td.par{color:var(--muted)}
+@media(max-width:880px){.compgrid{grid-template-columns:1fr}}
+
+.steps{display:grid;gap:12px;counter-reset:s}
+.step{display:flex;gap:15px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px 20px;box-shadow:var(--shadow)}
+.step::before{counter-increment:s;content:counter(s);background:var(--coral);color:#fff;font-weight:800;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 28px}
+
+.closing{background:var(--ink);color:#EAEef2;border-radius:20px;padding:40px;box-shadow:var(--shadow)}
+.closing h2{color:#fff;margin-top:0}
+.closing p{font-size:16px;max-width:80ch;color:#D6DCE2}
+.closing b{color:#fff}
+
+footer{padding:30px 0 70px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line)}
+.src{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;font-size:13px;color:#33414d} .src div{padding:5px 0}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.track>i{transition:none}}
+@media(max-width:900px){.cmap,.stats,.tiers{grid-template-columns:1fr}h1{font-size:31px}table{font-size:12.5px}th,td{padding:11px 9px}}
+.en{display:none}
+body.lang-en .es{display:none}
+body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-es">
+<header>
+  <div class="hd">
+    <svg viewBox="0 0 104 32" xmlns="http://www.w3.org/2000/svg" aria-label="Holafly"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.0563 7.28786C77.7143 7.03453 77.3245 6.90648 76.8856 6.90648C76.0089 6.90648 75.5707 7.44977 75.5707 8.53587V10.1959H78.9861V13.4237H75.5707V25.536H72.1398V13.4237H69.8199V10.1959H72.1398V8.10552C72.1398 6.69136 72.5259 5.57974 73.2977 4.76994C74.0697 3.96063 75.0274 3.55566 76.171 3.55566C77.1046 3.55566 77.853 3.69412 78.4152 3.97066C78.8652 4.19243 79.2317 4.43076 79.5171 4.68518L78.0563 7.28786ZM47.8396 25.535H51.7185V4.20114H47.8396V25.535ZM40.4703 21.4441C39.6729 22.3335 38.6766 22.7783 37.4808 22.7783C36.2648 22.7783 35.2685 22.3387 34.4912 21.4594C33.7139 20.5806 33.3253 19.456 33.3253 18.0859C33.3253 16.7366 33.7139 15.6224 34.4912 14.7431C35.2685 13.8642 36.2648 13.4244 37.4808 13.4244C38.6766 13.4244 39.6729 13.8642 40.4703 14.7431C41.2672 15.6224 41.666 16.7366 41.666 18.0859C41.666 19.4354 41.2672 20.5547 40.4703 21.4441ZM41.4577 11.093C40.2815 10.3777 38.9562 10.0198 37.4817 10.0198C36.0266 10.0198 34.7061 10.3777 33.5206 11.093C32.3345 11.8089 31.4077 12.7799 30.7403 14.0066C30.0723 15.2333 29.7388 16.5931 29.7388 18.0853C29.7388 19.578 30.0723 20.9428 30.7403 22.1796C31.4077 23.4168 32.3294 24.393 33.5056 25.1084C34.6813 25.8239 36.0065 26.1818 37.4817 26.1818C38.9562 26.1818 40.2815 25.8239 41.4577 25.1084C42.6334 24.393 43.5601 23.4168 44.2379 22.1796C44.9152 20.9428 45.2543 19.578 45.2543 18.0853C45.2543 16.5931 44.9152 15.2333 44.2379 14.0066C43.5601 12.7799 42.6334 11.8089 41.4577 11.093ZM85.3357 25.535H81.4568V4.20114H85.3357V25.535ZM99.2024 10.0198V17.8808C99.2024 19.1347 98.8883 20.1004 98.2605 20.7788C97.6324 21.4568 96.8102 21.796 95.7935 21.796C94.8366 21.796 94.0987 21.5185 93.5807 20.9637C93.062 20.4088 92.8031 19.4738 92.8031 18.1582V10.0198H89.2147V18.7748C89.2147 20.9535 89.6977 22.5774 90.6649 23.6457C91.6317 24.7146 92.9624 25.2487 94.6571 25.2487C95.7135 25.2487 96.5906 25.069 97.2886 24.7092C97.9862 24.3499 98.614 23.8205 99.1725 23.1216L99.2024 23.2141V24.8479C99.2024 26.122 98.8883 27.1032 98.2605 27.792C97.6324 28.4803 96.77 28.8247 95.6737 28.8247C94.171 28.8247 93.1875 28.2526 92.7199 27.1138L89.7546 28.6852C90.1545 29.4528 90.6868 30.1111 91.3528 30.659C92.4391 31.553 93.8795 32.0001 95.6737 32.0001C97.9062 32.0001 99.6509 31.3474 100.907 30.0424C102.163 28.737 102.791 26.9953 102.791 24.8171V10.0198H99.2024ZM63.5744 20.3843C63.5744 21.2637 63.2795 21.9537 62.6901 22.4545C62.1002 22.9557 61.3683 23.2059 60.4944 23.2059C59.6607 23.2059 59.005 23.0271 58.5276 22.6691C58.0496 22.3118 57.8111 21.8364 57.8111 21.2431C57.8111 20.6096 58.0293 20.1238 58.4666 19.7864C58.9036 19.449 59.5998 19.2089 60.5556 19.0656L63.5744 18.6057V20.3843ZM65.4346 11.4458C64.2349 10.495 62.7206 10.0198 60.8909 10.0198C59.1018 10.0198 57.6993 10.4031 56.6827 11.1698C55.6743 11.93 54.9569 13.0784 54.5287 14.6127L57.7937 15.2085C57.9356 14.5095 58.2198 13.9696 58.6496 13.5924C59.1271 13.1737 59.8337 12.964 60.7691 12.964C62.6393 12.964 63.5745 13.8944 63.5745 15.7546V15.9387L60.3116 16.3986C58.0749 16.7053 56.515 17.3033 55.6307 18.1927C54.7464 19.082 54.3042 20.1708 54.3042 21.4588C54.3042 22.3995 54.5377 23.2276 55.0056 23.9429C55.4731 24.6588 56.1034 25.2108 56.8961 25.599C57.6892 25.9872 58.563 26.1818 59.5187 26.1818C61.4904 26.1818 62.9035 25.5789 63.7574 24.3723L64.1538 25.7523H67.2338V15.6934C67.2338 13.8126 66.6341 12.3965 65.4346 11.4458ZM13.1151 13.519C17.302 14.3547 20.3139 13.9602 22.2514 12.3347V4.20114H25.8592V25.535H22.2514V16.3925V16.1184C20.7622 16.8201 19.0142 17.1731 16.9913 17.1731C15.7959 17.1731 14.5039 17.0492 13.1151 16.8046V25.535H9.50866V15.9599C9.03462 15.8241 8.55231 15.6785 8.0594 15.5198C5.47279 14.6879 2.15403 15.0945 0.723524 15.7075L0 12.5309C2.07157 11.8148 5.76141 11.3847 8.9963 12.4255C9.16891 12.481 9.33908 12.534 9.50866 12.5865V4.20114H13.1151V12.9485V13.519Z" fill="#E6485C"/></svg>
+    <div class="crumb"><span class="es">Pricing · Propuesta B2B por día</span><span class="en">Pricing · B2B per-day proposal</span></div>
+    <div class="right">
+      <span><span class="es">v4 · 29-jun-2026</span><span class="en">v4 · Jun 29, 2026</span></span>
+      <div class="langsw" id="langsw"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero reveal">
+    <div class="eyebrow"><span class="es">Propuesta de Pricing · B2B</span><span class="en">Pricing Proposal · B2B</span></div>
+    <h1><span class="es">Capturar una demanda que ya existe, con margen sano.</span><span class="en">Capture a demand that already exists, with healthy margin.</span></h1>
+    <p class="lede"><span class="es">Hay empresas comprando viajes dentro de B2C, sin un producto que las atienda. La propuesta es un esquema de <b>tiers por día (€3 / €5 / €10)</b> que captura esa demanda y mantiene el margen en línea con el de la compañía.</span><span class="en">Companies are already buying trips inside B2C, with no product serving them. The proposal is a scheme of <b>per-day tiers (€3 / €5 / €10)</b> that captures that demand and keeps margin in line with the company's.</span></p>
+    <div class="stats" style="margin-top:32px">
+      <div class="stat"><div class="big"><span class="count" data-to="31.8" data-dec="1" data-pre="€" data-suf="M">€0M</span></div><div class="lab"><span class="es">de demanda corp/año comprando dentro de B2C (run-rate 12m)</span><span class="en">of corp demand/year buying inside B2C (12m run-rate)</span></div></div>
+      <div class="stat"><div class="big"><span class="count" data-to="16" data-dec="0" data-pre="~" data-suf="×">~0×</span></div><div class="lab"><span class="es">lo que el B2B captura hoy (€2,0M/año)</span><span class="en">what B2B captures today (€2.0M/year)</span></div></div>
+      <div class="stat"><div class="big">87,5%</div><div class="lab"><span class="es">margen del tier €3, donde vive el 70% del volumen</span><span class="en">margin of the €3 tier, where 70% of volume lives</span></div></div>
+    </div>
+  </div>
+
+  <section class="reveal">
+    <div class="snum"><span class="es">CÓMO LEER ESTO</span><span class="en">HOW TO READ THIS</span></div>
+    <h2><span class="es">Mapa de confianza</span><span class="en">Confidence map</span></h2>
+    <p class="sub"><span class="es">Qué es firme, qué es preliminar y qué falta. Lo dejamos replegado; cada dato preliminar va igual avisado donde se analiza.</span><span class="en">What's solid, what's preliminary and what's missing. Kept collapsed; every preliminary figure is still flagged where it's used.</span></p>
+    <details class="method"><summary><span class="es">Ver el mapa de confianza</span><span class="en">View the confidence map</span></summary><div class="body" style="padding-top:8px">
+    <div class="cmap">
+      <div class="cbox">
+        <span class="chip ok"><span class="d"></span><span class="es">Firme · reproducible</span><span class="en">Solid · reproducible</span></span>
+        <p><span class="es"><b>Tiers y margen:</b> GM operacional por banda, sobre los mismos destinos que la compañía.</span><span class="en"><b>Tiers and margin:</b> operating GM per band, over the same destinations as the company.</span></p>
+        <p><span class="es"><b>Oportunidad €31,8M/año:</b> 16× el B2B actual. Sizing de las 4 columnas y volumen por banda, cerrados.</span><span class="en"><b>Opportunity €31.8M/year:</b> 16× the current B2B. Sizing of the 4 columns and volume per band, closed.</span></p>
+        <p><span class="es"><b>Trips se compran cortos:</b> 93% ≤18 días, sobre 4,5M órdenes.</span><span class="en"><b>Trips are bought short:</b> 93% ≤18 days, over 4.5M orders.</span></p>
+      </div>
+      <div class="cbox">
+        <span class="chip mid"><span class="d"></span><span class="es">Preliminar · con Data</span><span class="en">Preliminary · with Data</span></span>
+        <p><span class="es"><b>GB y costo/GB de consumo:</b> anclado en el dashboard oficial, en confirmación con Data.</span><span class="en"><b>Consumption GB and cost/GB:</b> anchored on the official dashboard, being confirmed with Data.</span></p>
+        <p><span class="es"><b>Hotspot / tethering:</b> resuelto con Data (tethering + código 102); falta cerrar la base comparable entre unidades.</span><span class="en"><b>Hotspot / tethering:</b> resolved with Data (tethering + code 102); the comparable base across units is still to be closed.</span></p>
+        <p><span class="es"><b>Corp dentro de B2C:</b> por dominio de email (proxy), triangulado con el método del equipo B2B.</span><span class="en"><b>Corp inside B2C:</b> by email domain (proxy), triangulated with the B2B team's method.</span></p>
+      </div>
+      <div class="cbox">
+        <span class="chip gap"><span class="d"></span><span class="es">Falta definir</span><span class="en">To be defined</span></span>
+        <p><span class="es"><b>Revenue real del B2B</b> con los factores de descuento (Data afina la maestra, ~2 sem).</span><span class="en"><b>Real B2B revenue</b> with the invoice discount factors (Data is refining the master table, ~2 wks).</span></p>
+        <p><span class="es"><b>GM full del Unlimited</b> con Finanzas (el operacional ya lo tenemos).</span><span class="en"><b>Full GM of the Unlimited</b> with Finance (we already have the operating one).</span></p>
+        <p><span class="es"><b>Escenario de COGS futuros</b> para el what-if de 2 tiers (input del equipo de carrier).</span><span class="en"><b>Future COGS scenario</b> for the 2-tier what-if (carrier team input).</span></p>
+      </div>
+    </div>
+    <div class="migr">🛠 <span class="es"><b>Nota de la migración.</b> Con el pase a PIM, datos de consumo que antes teníamos cambiaron de tabla. Por eso varios números de consumo van como preliminares mientras Data los estabiliza. Las vigas de la propuesta no dependen de eso.</span><span class="en"><b>Migration note.</b> With the move to PIM, consumption data we used to have changed tables. That's why several consumption numbers go in as preliminary while Data stabilizes them. The proposal's pillars don't depend on that.</span></div>
+    </div></details>
+  </section>
+
+  <!-- ============ 1 · PRICE PROPOSAL ============ -->
+  <section class="reveal">
+    <div class="snum">01 · <span class="es">LA PROPUESTA</span><span class="en">THE PROPOSAL</span> <span class="tag solid"><span class="es">firme</span><span class="en">solid</span></span></div>
+    <h2><span class="es">Tres tiers por día, una sola lógica</span><span class="en">Three per-day tiers, one logic</span></h2>
+    <p class="sub"><span class="es">Precio por día por región, calibrado contra el costo real por destino. 125 destinos en tres bandas.</span><span class="en">Per-day price by region, calibrated against the real cost per destination. 125 destinations in three bands.</span></p>
+    <div class="tiers">
+      <div class="tier lead"><div class="price">€3<span>/<span class="es">día</span><span class="en">day</span></span></div><div class="reg"><span class="es">Europa · Norteamérica · Oceanía</span><span class="en">Europe · North America · Oceania</span></div><div class="meta">43 <span class="es">destinos</span><span class="en">destinations</span> · <b>70% <span class="es">del volumen</span><span class="en">of volume</span></b></div><div class="gmbadge"><span class="es">Margen op.</span><span class="en">Op. margin</span> 87,5%</div></div>
+      <div class="tier"><div class="price">€5<span>/<span class="es">día</span><span class="en">day</span></span></div><div class="reg">Latam · Asia</div><div class="meta">54 <span class="es">destinos</span><span class="en">destinations</span> · <b>28% <span class="es">del volumen</span><span class="en">of volume</span></b></div><div class="gmbadge"><span class="es">Margen op.</span><span class="en">Op. margin</span> 68,9%</div></div>
+      <div class="tier"><div class="price">€10<span>/<span class="es">día</span><span class="en">day</span></span></div><div class="reg"><span class="es">Medio Oriente · África</span><span class="en">Middle East · Africa</span></div><div class="meta">28 <span class="es">destinos</span><span class="en">destinations</span> · <b>2,5% <span class="es">del volumen</span><span class="en">of volume</span></b></div><div class="gmbadge"><span class="es">Margen op.</span><span class="en">Op. margin</span> 77,0%</div></div>
+    </div>
+    <div class="note"><span class="es"><b>El €3 es el mejor precio, no un precio cualquiera:</b> ya tiene aplicado el máximo descuento por volumen (−15%), el que consigue un cliente de alto volumen. Es el ancla. Como no todos los clientes llegan a ese máximo, la vista "con mix de descuento" de abajo muestra que el margen real es aún mejor que el piso. El €3/día ya existe como plan Daily; la propuesta lo <b>regionaliza</b> en bandas.</span><span class="en"><b>€3 is the best price, not just any price:</b> it already has the maximum volume discount applied (−15%), the one a high-volume client gets. It's the anchor. Since not all clients reach that maximum, the "with discount mix" view below shows the real margin is even better than the floor. The €3/day already exists as the Daily plan; the proposal <b>regionalizes</b> it into bands.</span></div>
+
+    <h2 style="margin-top:40px"><span class="es">El margen, manzanas con manzanas</span><span class="en">The margin, apples to apples</span></h2>
+    <p class="sub"><span class="es">Margen operacional (revenue − costo de datos, sin marketing). La barra gris es el <b>GM de consumo (COGS) de toda la compañía</b> en esos mismos destinos, sin segmentar por unidad de negocio. La verde es la propuesta, como rango: piso conservador (todos al −15%) y techo con un mix de descuento realista.</span><span class="en">Operating margin (revenue − data cost, no marketing). The gray bar is the <b>consumption GM (COGS) of the whole company</b> in those same destinations, not segmented by business unit. The green one is the proposal, shown as a range: conservative floor (everyone at −15%) and ceiling with a realistic discount mix.</span></p>
+    <div class="switch" id="sw">
+      <button data-m="prop" class="on"><span class="es">Precio propuesto (piso)</span><span class="en">Proposed price (floor)</span></button>
+      <button data-m="mix"><span class="es">Con mix de descuento</span><span class="en">With discount mix</span></button>
+      <button data-m="flat"><span class="es">¿Y si €3 a todos?</span><span class="en">What if €3 for all?</span></button>
+    </div>
+    <div class="gm">
+      <div class="gmleg"><span><i class="fill-co"></i><span class="es">GM consumo COGS · toda la compañía</span><span class="en">COGS consumption GM · whole company</span></span><span><i style="background:var(--green)"></i><span class="es">Propuesta B2B por día</span><span class="en">B2B per-day proposal</span></span></div>
+      <div class="grp">
+        <div class="bandname">€3 · <span class="es">Europa / NA / Oceanía</span><span class="en">Europe / NA / Oceania</span></div>
+        <div class="brow"><div class="who"><span class="es">Compañía</span><span class="en">Company</span></div><div class="track"><i class="fill-co" style="--w:79.5%"></i></div><div class="bval">79,5%</div></div>
+        <div class="brow"><div class="who"><span class="es">Propuesta</span><span class="en">Proposal</span></div><div class="track"><i class="fill-pr prop" data-prop="87.5%" data-mix="88.7%" data-flat="87.5%" style="--w:87.5%"></i></div><div class="bval" data-prop="87,5%" data-mix="88,7%" data-flat="87,5%">87,5%</div></div>
+      </div>
+      <div class="grp">
+        <div class="bandname">€5 · Latam / Asia</div>
+        <div class="brow"><div class="who"><span class="es">Compañía</span><span class="en">Company</span></div><div class="track"><i class="fill-co" style="--w:76.2%"></i></div><div class="bval">76,2%</div></div>
+        <div class="brow"><div class="who"><span class="es">Propuesta</span><span class="en">Proposal</span></div><div class="track"><i class="fill-pr prop" data-prop="68.9%" data-mix="72.0%" data-flat="48.2%" style="--w:68.9%"></i></div><div class="bval" data-prop="68,9%" data-mix="72,0%" data-flat="48,2%">68,9%</div></div>
+      </div>
+      <div class="grp">
+        <div class="bandname">€10 · <span class="es">Medio Oriente / África</span><span class="en">Middle East / Africa</span></div>
+        <div class="brow"><div class="who"><span class="es">Compañía</span><span class="en">Company</span></div><div class="track"><i class="fill-co" style="--w:55.2%"></i></div><div class="bval">55,2%</div></div>
+        <div class="brow"><div class="who"><span class="es">Propuesta</span><span class="en">Proposal</span></div><div class="track"><i class="fill-pr prop" data-prop="77.0%" data-mix="79.2%" data-flat="24.3%" style="--w:77.0%"></i></div><div class="bval" data-prop="77,0%" data-mix="79,2%" data-flat="24,3%">77,0%</div></div>
+      </div>
+    </div>
+    <div class="mixdist" id="mixdist"><span class="es"><b>Mix de descuento declarado</b> (lo definimos nosotros: no todos los clientes llegan al máximo −15%).</span><span class="en"><b>Declared discount mix</b> (we define it: not all clients reach the −15% maximum).</span>
+      <table class="mixt">
+        <tr><th><span class="es">Descuento</span><span class="en">Discount</span></th><th><span class="es">% del volumen</span><span class="en">% of volume</span></th><th><span class="es">€3 efectivo</span><span class="en">€3 effective</span></th></tr>
+        <tr><td>0% (<span class="es">paga lista</span><span class="en">list price</span>)</td><td>35%</td><td>€3,53</td></tr>
+        <tr><td>−5%</td><td>30%</td><td>€3,35</td></tr>
+        <tr><td>−10%</td><td>20%</td><td>€3,18</td></tr>
+        <tr><td>−15% (<span class="es">máximo</span><span class="en">max</span>)</td><td>15%</td><td>€3,00</td></tr>
+      </table>
+      <span class="es">Descuento promedio <b>−5,75%</b>: como el precio efectivo sube sobre el ancla, el margen del €5 pasa de 68,9% (piso) a 72%.</span><span class="en">Average discount <b>−5.75%</b>: since the effective price rises above the anchor, the €5 margin goes from 68.9% (floor) to 72%.</span></div>
+    <div class="flatwarn" id="fw">⚠️ <span class="es">A <b>€3 para todos</b>, el <b>€10 se desploma a 24,3%</b> (debajo del piso del 40%) y el €5 baja a 48,2% (ajustado, pero todavía sano). <b>Por eso existen los tiers de €5 y €10.</b></span><span class="en">At <b>€3 for everyone</b>, the <b>€10 collapses to 24.3%</b> (below the 40% floor) and the €5 drops to 48.2% (tight, but still healthy). <b>That's why the €5 and €10 tiers exist.</b></span></div>
+    <details class="method">
+      <summary><span class="es">Cómo se calcula este margen (números reales, dashboard oficial)</span><span class="en">How this margin is calculated (real numbers, official dashboard)</span></summary>
+      <div class="body">
+        <span class="es"><b>Tomamos los mismos 125 destinos que definen los tiers.</b> Para cada destino calculamos su GM = (precio/día × días − costo real) ÷ (precio/día × días), con el <b>costo real del dashboard oficial</b> <code>B2B Client Consumption</code> (1-feb a 7-jun). Después <b>ponderamos esos GM por volumen dentro de cada banda</b>, y los comparamos contra el GM real de la compañía sobre <b>exactamente esos mismos destinos</b>. Manzanas con manzanas: misma definición de regiones, mismo período, misma métrica.<br><br>
+        <b>Piso (todos al −15%), propuesta vs compañía:</b> €3 → 87,5% vs 79,5% · €5 → 68,9% vs 76,2% · €10 → 77,0% vs 55,2%. Blended 76,9% vs 74,5%.<br><br>
+        <b>Con el mix de descuento declarado</b> (35% lista · 30% −5% · 20% −10% · 15% −15%; promedio −5,75%): el GM sube a €3 → 88,7% · €5 → 72,0% · €10 → 79,2%. El €5 recorta el gap con la compañía. El mix lo definimos nosotros y lo declaramos; el €3/€5/€10 sigue siendo el ancla.</span><span class="en"><b>We take the same 125 destinations that define the tiers.</b> For each one we compute its GM = (price/day × days − real cost) ÷ (price/day × days), using the <b>real cost from the official dashboard</b> <code>B2B Client Consumption</code> (Feb 1 – Jun 7). Then we <b>weight those GMs by volume within each band</b>, and compare against the company's real GM over <b>exactly those same destinations</b>. Apples to apples: same region definition, same period, same metric.<br><br>
+        <b>Floor (everyone at −15%), proposal vs company:</b> €3 → 87,5% vs 79,5% · €5 → 68,9% vs 76,2% · €10 → 77,0% vs 55,2%. Blended 76,9% vs 74,5%.<br><br>
+        <b>With the declared discount mix</b> (35% list · 30% −5% · 20% −10% · 15% −15%; average −5,75%): GM rises to €3 → 88,7% · €5 → 72,0% · €10 → 79,2%. The €5 narrows the gap with the company. We define and declare the mix; €3/€5/€10 remains the anchor.</span>
+      </div>
+    </details>
+
+    <details class="method">
+      <summary><span class="es">Qué pasa con el margen si aplanamos todo a €3 · detalle por destino</span><span class="en">What happens to margin if we flatten everything to €3 · by destination</span></summary>
+      <div class="body">
+        <p><span class="es">Un precio único de €3/día deja algunos destinos vendiéndose bajo costo. Son pocos, y pesan. Lo que los rompe no es el costo por GB, es el costo por día activo: destinos de consumo intensivo donde cada día de uso cuesta más de lo que €3 cubre.</span><span class="en">A single €3/day price leaves a few destinations selling below cost. Few of them, but heavy. What breaks them is not cost per GB, it is cost per active day: intensive-consumption destinations where each day of use costs more than €3 covers.</span></p>
+        <table class="ct">
+          <tr><th><span class="es">Destino</span><span class="en">Destination</span></th><th>Tier</th><th><span class="es">GM al tier</span><span class="en">GM at tier</span></th><th><span class="es">GM a €3 plano</span><span class="en">GM at €3 flat</span></th><th><span class="es">% del volumen</span><span class="en">% of volume</span></th></tr>
+          <tr><td>Morocco</td><td>€10</td><td style="color:var(--green-d);font-weight:700">79%</td><td style="color:#9A5E0E;font-weight:700">31%</td><td><b>3,6%</b></td></tr>
+          <tr><td>Kenya</td><td>€10</td><td style="color:var(--green-d);font-weight:700">77%</td><td style="color:#9A5E0E;font-weight:700">22%</td><td>0,3%</td></tr>
+          <tr><td>Bahamas</td><td>€5</td><td style="color:#9A5E0E;font-weight:700">18%</td><td style="color:#B23142;font-weight:800">−36%</td><td>0,2%</td></tr>
+          <tr><td style="color:var(--muted)">Spain <span class="es">(referencia sana)</span><span class="en">(healthy reference)</span></td><td style="color:var(--muted)">€3</td><td style="color:var(--green-d);font-weight:700">84%</td><td style="color:var(--green-d);font-weight:700">84%</td><td style="color:var(--muted)">1,8%</td></tr>
+        </table>
+        <p><span class="es"><b>Morocco</b> es el caso que pesa: 3,6% del volumen total, y a €3 cae al filo del umbral del 40%, cuando con su tier de €10 rinde sano. Bahamas se va directo a pérdida. Spain ya está en €3 y no se mueve, porque su costo por día es bajo. Por eso existen los tiers de €5 y €10.</span><span class="en"><b>Morocco</b> is the case that weighs: 3.6% of total volume, and at €3 it drops to the edge of the 40% floor, while at its €10 tier it runs healthy. Bahamas goes straight to loss. Spain is already at €3 and does not move, because its cost per day is low. That is why the €5 and €10 tiers exist.</span></p>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:10px"><span class="es">COGS Pricing Hub por destino y variante, validado contra el consumo real (<code>consumption_cost_per_day</code>). 1-feb a 7-jun, sin el outlier de Nepal.</span><span class="en">COGS Pricing Hub by destination and variant, validated against real consumption (<code>consumption_cost_per_day</code>). Feb 1 – Jun 7, excluding the Nepal outlier.</span></p>
+      </div>
+    </details>
+
+    <div class="callout">
+      <h3><span class="es">What if new COGS → solo 2 tiers</span><span class="en">What if new COGS → only 2 tiers</span></h3>
+      <p><span class="es">Si el equipo de carrier sigue bajando costos, el esquema puede colapsar de <b>3 tiers a 2</b>, y destinos que hoy caen en tier 3 (€10) pueden bajar a tier 2 (€5) o incluso tier 1 (€3). Cada negociación de costo que baja un destino de banda mejora el precio al cliente <b>sin tocar el margen</b>. Es trabajo de equipo consciente con carrier.</span><span class="en">If the carrier team keeps lowering costs, the scheme can collapse from <b>3 tiers to 2</b>, and destinations in tier 3 (€10) today can drop to tier 2 (€5) or even tier 1 (€3). Every cost negotiation that moves a destination down a band improves the client price <b>without touching the margin</b>. It's deliberate teamwork with carrier.</span></p>
+      <p style="color:var(--muted)"><span class="es">Primer dato concreto del carrier (Arianna): <b>Morocco</b> baja a ~0,9 USD/GB en julio (tentativo). El resto del escenario se cuantifica a medida que el carrier confirme los nuevos COGS.</span><span class="en">First concrete carrier data point (Arianna): <b>Morocco</b> drops to ~0.9 USD/GB in July (tentative). The rest of the scenario gets quantified as carrier confirms the new COGS.</span></p>
+    </div>
+
+    <div class="callout" style="background:#FBEAEC;border-color:#F4CDD3">
+      <h3 style="color:#B23142"><span class="es">Mercados a presionar · GM &lt; 40%</span><span class="en">Markets to push · GM &lt; 40%</span></h3>
+      <p><span class="es">50 destinos rinden por debajo del 40% de GM de consumo. El top 5 por revenue concentra el problema, y <b>Morocco</b> lo lidera de lejos (cae en el tier €10): vende mucho, deja poco. Ahí es donde el carrier tiene que negociar mejores costos.</span><span class="en">50 destinations run below 40% consumption GM. The top 5 by revenue concentrate the problem, and <b>Morocco</b> leads by far (it falls in the €10 tier): sells a lot, leaves little. That's where carrier has to negotiate better costs.</span></p>
+      <div class="topm">
+        <div class="tm"><span class="tmn">Morocco <span class="tiertag">€10</span></span><div class="tmbar"><i style="width:32%"></i></div><span class="tmv">GM 32% → <b style="color:var(--green-d)">~72%</b> · €5,2M</span></div>
+        <div class="tm"><span class="tmn">Andorra</span><div class="tmbar"><i style="width:1%"></i></div><span class="tmv">GM 1% · €0,64M</span></div>
+        <div class="tm"><span class="tmn">Kenya</span><div class="tmbar"><i style="width:38%"></i></div><span class="tmv">GM 38% · €0,52M</span></div>
+        <div class="tm"><span class="tmn">Bahamas</span><div class="tmbar"><i style="width:6%"></i></div><span class="tmv">GM 6% · €0,36M</span></div>
+        <div class="tm"><span class="tmn">Jamaica</span><div class="tmbar"><i style="width:19%"></i></div><span class="tmv">GM 19% · €0,31M</span></div>
+      </div>
+      <p style="color:var(--muted)"><span class="es"><b>Timeline del carrier</b> (Arianna, tentativo): <b>Morocco</b>: el costo baja de ~€2,04 a ~€0,83/GB en julio (0,9 USD, tentativo, sujeto a temporada alta), de ahí el salto de margen de arriba (de peor destino a casi el promedio de la compañía). <b>Kenya</b> mejora a principios de septiembre (integración de operador directo). <b>Andorra</b> recién con Orange integrado (fin de año o después). <b>Bahamas</b> y <b>Jamaica</b> sin reducción en el timeline por ahora. Todos están en el scope: negocian apenas haya oportunidad.</span><span class="en"><b>Carrier timeline</b> (Arianna, tentative): <b>Morocco</b>: cost drops from ~€2.04 to ~€0.83/GB in July (0.9 USD, tentative, subject to high season), driving the margin jump above (from worst destination to near the company average). <b>Kenya</b> improves in early September (direct operator integration). <b>Andorra</b> only once Orange is integrated (year-end or later). <b>Bahamas</b> and <b>Jamaica</b> no reduction in the timeline for now. All in scope: they negotiate as soon as there's an opportunity.</span></p>
+    </div>
+  </section>
+
+  <!-- ============ 2 · WHAT IF WE KEEP CURRENT PRICE → RISKS ============ -->
+  <section class="reveal">
+    <div class="snum">02 · <span class="es">QUÉ PASA SI NO MOVEMOS NADA</span><span class="en">WHAT IF WE KEEP THE SINGLE PRICE</span></div>
+    <h2><span class="es">El costo de mantener el precio único</span><span class="en">The cost of keeping a single price</span></h2>
+    <p class="sub"><span class="es">Hoy el Daily es un <b>€3 único para todos los destinos</b>. Mantenerlo no es gratis, y la demanda corp que ya tenemos podría estar mucho mejor atendida.</span><span class="en">Today the Daily is a <b>single €3 for every destination</b>. Keeping it isn't free, and the corp demand we already have could be served much better.</span></p>
+    <div class="risks" style="grid-template-columns:repeat(2,1fr)">
+      <div class="risk"><span class="rn">01</span><b><span class="es">El margen se rompe en los destinos caros</span><span class="en">Margin breaks in the expensive destinations</span></b><span><span class="es">Con €3 plano, el €10 se desploma a 24,3% (debajo del piso del 40%) y el €5 queda ajustado en 48,2%. El simulador de arriba lo muestra: por eso existen los tiers.</span><span class="en">With a flat €3, the €10 collapses to 24.3% (below the 40% floor) and the €5 sits tight at 48.2%. The simulator above shows it: that's why the tiers exist.</span></span></div>
+      <div class="risk"><span class="rn">02</span><b><span class="es">El viajero corto no tiene oferta</span><span class="en">The short-trip traveler has no offer</span></b><span><span class="es">El Unlimited mensual no calza un viaje de 8 días. Sin un por-día, ese viajero compra B2C o se va a un competidor con producto B2B.</span><span class="en">The monthly Unlimited doesn't fit an 8-day trip. Without a per-day, that traveler buys B2C or moves to a competitor with a B2B product.</span></span></div>
+    </div>
+    <div class="callout"><h3><span class="es">Y además, el valor de gestionar esa demanda</span><span class="en">And on top: the value of managing that demand</span></h3><p><span class="es">La demanda corp (~€32M/año) no se pierde, ya compra. Pero compra suelta, sin gestión. Un producto B2B por día le da atención personalizada, mejores beneficios y facilidad para los empleados, y de paso la hace crecer por recurrencia y volumen. No es solo evitar un riesgo: es construir algo mejor.</span><span class="en">The corp demand (~€32M/year) isn't lost, it already buys. But it buys loose, unmanaged. A B2B per-day product gives it personalized service, better benefits and ease for employees, and grows it through recurrence and volume. It's not just avoiding a risk: it's building something better.</span></p></div>
+  </section>
+
+  <!-- ============ 03 · LAS 4 UNIDADES ============ -->
+  <section class="reveal">
+    <div class="snum">03 · <span class="es">LAS 4 UNIDADES</span><span class="en">THE 4 UNITS</span></div>
+    <h2><span class="es">Quién compra, lado a lado</span><span class="en">Who buys, side by side</span></h2>
+    <p class="sub"><span class="es">Cuatro formas de comprar el mismo producto. La oportunidad está en el medio: empresas comprando dentro de B2C, separadas por dominio de email (inferido) y por cupón (lo que identifica el equipo B2B).</span><span class="en">Four ways to buy the same product. The opportunity is in the middle: companies buying inside B2C, split by email domain (inferred) and by coupon (what the B2B team identifies).</span></p>
+    <p class="napnote" style="color:var(--muted)"><span class="es">El techo por dominio (~€32M/año, €11,4M en la ventana) reconcilia con la maestra dentro del 1%. El piso duro por cupón es apenas €17,9k, validado por Emilio. Son capas distintas, no se suman. La columna dominio es la oportunidad (verde) y la B2B-Unlimited el producto actual (ámbar).</span><span class="en">The domain ceiling (~€32M/year, €11.4M in the window) reconciles with the master table within 1%. The hard coupon floor is just €17.9k, validated by Emilio. They're different layers, they don't add up. The domain column is the opportunity (green) and B2B-Unlimited the current product (amber).</span></p>
+    <div class="legend">
+      <div class="lg"><span class="d d-b2c"></span><span class="es">B2C puro</span><span class="en">Pure B2C</span></div>
+      <div class="lg"><span class="d d-corp"></span>B2B-thru-B2C · <span class="es">dominio (inferido)</span><span class="en">domain (inferred)</span></div>
+      <div class="lg"><span class="d d-cup"></span>B2B-thru-B2C · <span class="es">cupón (Emilio)</span><span class="en">coupon (Emilio)</span></div>
+      <div class="lg"><span class="d d-b2b"></span><span class="es">B2B puro</span><span class="en">Pure B2B</span></div>
+    </div>
+    <div class="cmp">
+      <table>
+        <tr>
+          <th class="h-m"><span class="es">Métrica</span><span class="en">Metric</span></th>
+          <th class="h-b2c"><span class="es">B2C puro</span><span class="en">Pure B2C</span><span class="th2"><span class="es">sin el corp inferido</span><span class="en">excl. inferred corp</span></span></th>
+          <th class="h-corp">B2B-thru-B2C<span class="th2"><span class="es">inferido · dominio</span><span class="en">inferred · domain</span></span></th>
+          <th class="h-cup">B2B-thru-B2C<span class="th2"><span class="es">cupón · Emilio</span><span class="en">coupon · Emilio</span></span></th>
+          <th class="h-b2b"><span class="es">B2B puro</span><span class="en">Pure B2B</span><span class="th2"><span class="es">el producto B2B propio</span><span class="en">the own B2B product</span></span></th>
+        </tr>
+        <tr class="secrow"><td colspan="5"><span class="es">Tamaño · revenue transaccionado en la ventana de 4 meses (1-feb a 7-jun) · firme</span><span class="en">Size · revenue transacted in the 4-month window (Feb 1 to Jun 7) · solid</span></td></tr>
+        <tr>
+          <td>Revenue <span class="msub"><span class="es">en los 4 meses</span><span class="en">over 4 months</span></span></td>
+          <td class="bigcell">€114,8M<span class="msub"><span class="es">B2C puro · sin el corp</span><span class="en">Pure B2C · excl. corp</span></span></td>
+          <td class="c-corp bigcell">€11,4M<span class="msub"><span class="es">techo · por dominio</span><span class="en">ceiling · by domain</span></span></td>
+          <td class="c-cup">€17,9k<span class="msub"><span class="es">piso duro · por cupón · validado por Emilio</span><span class="en">hard floor · by coupon · validated by Emilio</span></span></td>
+          <td class="bigcell">€0,64M <span class="ph"><span class="es">en validación</span><span class="en">in validation</span></span><span class="msub"><span class="es">B2B propio · perfil del Unlimited (ver aclaraciones)</span><span class="en">own B2B · Unlimited profile (see notes)</span></span></td>
+        </tr>
+        <tr class="secrow"><td colspan="5"><span class="es">Perfil de comportamiento · cómo se comporta cada una · direccional</span><span class="en">Behavior profile · how each one behaves · directional</span> <span class="nap">*</span></td></tr>
+        <tr>
+          <td>AOV <span class="msub"><span class="es">ticket promedio</span><span class="en">avg ticket</span></span></td>
+          <td class="bigcell">€26,4<span class="msub"><span class="es">por viaje</span><span class="en">per trip</span></span></td>
+          <td class="c-corp bigcell">€30,1<span class="msub"><span class="es">por viaje · +14%</span><span class="en">per trip · +14%</span></span></td>
+          <td class="c-cup">€22<span class="msub"><span class="es">por orden</span><span class="en">per order</span></span></td>
+          <td class="bigcell">~€45<span class="msub"><span class="es">/mes · Unlimited</span><span class="en">/mo · Unlimited</span></span></td>
+        </tr>
+        <tr>
+          <td>Cost / GB <span class="nap" title="No comparable directo: cada unidad va a destinos distintos. Ver la apertura por destino abajo.">*</span> <span class="msub"><span class="es">costo de datos</span><span class="en">data cost</span></span></td>
+          <td>€0,41</td><td class="c-corp">€0,62</td><td class="c-cup">n/d</td><td>€1,39 <span class="msub"><span class="es">va a destinos caros</span><span class="en">goes to costly destinations</span></span></td>
+        </tr>
+        <tr>
+          <td><span class="es">Consumo / eSIM</span><span class="en">Usage / eSIM</span> <span class="nap" title="B2B del dashboard oficial; B2C promedio compañía (proxy). Por día: B2B 0,91 vs B2C 0,64 GB/día (~1,4x). El B2B consume más por ser mensual, no por mayor intensidad.">*</span> <span class="msub"><span class="es">GB por eSIM</span><span class="en">GB per eSIM</span></span></td>
+          <td>~5 GB <span class="msub"><span class="es">por viaje · prom. compañía</span><span class="en">per trip · company avg</span></span></td>
+          <td class="c-corp">n/d</td>
+          <td class="c-cup">n/d</td>
+          <td>~22 GB <span class="msub"><span class="es">/mes · Unlimited</span><span class="en">/mo · Unlimited</span></span></td>
+        </tr>
+        <tr>
+          <td>Hotspot <span class="nap" title="Trips = muestra reciente, Unlimited = feb-jun. Tethering confirmado por Data (tethering+102).">*</span> <span class="msub"><span class="es">% del GB tetherizado</span><span class="en">% of GB tethered</span></span></td>
+          <td>7,6% <span class="msub"><span class="es">muestra reciente</span><span class="en">recent sample</span></span></td><td class="c-corp">10,4% <span class="msub"><span class="es">muestra reciente</span><span class="en">recent sample</span></span></td><td class="c-cup">n/d</td><td>29,4% <span class="msub"><span class="es">Unlimited · confirmado</span><span class="en">Unlimited · confirmed</span></span></td>
+        </tr>
+        <tr>
+          <td><span class="es">Duración</span><span class="en">Duration</span> <span class="nap" title="Días comprados (trips) vs días de uso (Unlimited): bases distintas.">*</span> <span class="msub"><span class="es">días</span><span class="en">days</span></span></td>
+          <td><span class="es">8,1 comprados · 93% ≤18d</span><span class="en">8.1 bought · 93% ≤18d</span></td>
+          <td class="c-corp"><span class="es">8,6 comprados · 93% ≤18d</span><span class="en">8.6 bought · 93% ≤18d</span></td>
+          <td class="c-cup">n/d</td>
+          <td><span class="es">~24,5 de uso</span><span class="en">~24.5 used</span> <span class="msub">Unlimited</span></td>
+        </tr>
+        <tr>
+          <td>Discount <span class="nap" title="% de órdenes que usan un código. En validación contra el dashboard de descuentos (~30-40%), que puede medir otro universo.">*</span> <span class="msub"><span class="es">% de órdenes con descuento</span><span class="en">% of orders w/ discount</span></span></td>
+          <td>~14% <span class="msub"><span class="es">código chico · efectivo ~0%</span><span class="en">small code · effective ~0%</span></span></td>
+          <td class="c-corp">~15% <span class="msub"><span class="es">código chico · efectivo ~0%</span><span class="en">small code · effective ~0%</span></span></td>
+          <td class="c-cup">100% <span class="msub"><span class="es">por definición · se identifica por el cupón</span><span class="en">by definition · identified by the coupon</span></span></td>
+          <td>~25% <span class="msub"><span class="es">negociado · inferido</span><span class="en">negotiated · inferred</span></span></td>
+        </tr>
+      </table>
+    </div>
+    <div class="napnote"><span class="nap">*</span> <span class="es">Perfil direccional: los trips son muestra reciente y los Unlimited feb-jun, así que la comparación va en dirección, no como número exacto. El tethering está confirmado por Data.</span><span class="en">Directional profile: trips are a recent sample and Unlimited is Feb–Jun, so the comparison reads as direction, not an exact number. Tethering is confirmed by Data.</span></div>
+
+    <details class="method"><summary><span class="es">Aclaraciones y fuentes de la comparativa</span><span class="en">Notes and sources of the comparison</span></summary>
+      <div class="aclar">
+        <div class="box"><b>B2C <span class="es">puro</span><span class="en">pure</span></b><span><span class="es">€114,8M = B2C total (€126,2M) menos el corp inferido por dominio (€11,4M). Así las columnas no se solapan.</span><span class="en">€114.8M = total B2C (€126.2M) minus the inferred corp by domain (€11.4M). That way the columns don't overlap.</span></span></div>
+        <div class="box"><b>AOV</b><span><span class="es">Trips = por viaje. Unlimited = mensual por eSIM (~€45). Cupón = €22 por orden.</span><span class="en">Trips = per trip. Unlimited = monthly per eSIM (~€45). Coupon = €22 per order.</span></span></div>
+        <div class="box"><b>Hotspot <span class="nap">*</span></b><span><span class="es">Tethering + 102, confirmado por Data. Trips = muestra reciente: comparar con Unlimited es direccional.</span><span class="en">Tethering + 102, confirmed by Data. Trips = recent sample: comparing with Unlimited is directional.</span></span></div>
+        <div class="box"><b>Cost / GB</b><span><span class="es">No comparable directo: el B2B (€1,39) va a destinos caros, los trips (€0,41-0,62) a Europa. El dashboard agregado muestra 1,80/GB, pero es por el ICCID roto de Nepal; sin ese outlier queda en €1,39 (cartera Unlimited + Always-on). La apertura por destino lo muestra ↓</span><span class="en">Not directly comparable: B2B (€1.39) goes to costly destinations, trips (€0.41-0.62) to Europe. The aggregate dashboard shows 1.80/GB, but that's the broken Nepal ICCID; without that outlier it's €1.39 (Unlimited + Always-on portfolio). The breakdown by destination shows it ↓</span></span></div>
+        <div class="box"><b><span class="es">Descuento</span><span class="en">Discount</span></b><span><span class="es">Efectivo ~0%: ~14% usa código, pero el promedio sobre el total es casi nulo. B2B ~25% negociado (inferido).</span><span class="en">Effective ~0%: ~14% use a code, but the average over the total is nearly zero. B2B ~25% negotiated (inferred).</span></span></div>
+        <div class="box pend"><b>B2B <span class="es">puro · en validación</span><span class="en">pure · in validation</span></b><span><span class="es">€0,64M. El dashboard oficial de revenue (feb-jun) marca ~€486k; lo dejamos en validación hasta que Data cierre la maestra. El revenue fino por SKU (Unlimited + Always-on) se está cerrando con Emilio. El perfil de la columna (AOV, hotspot, duración) es del Unlimited, representativo del producto B2B actual.</span><span class="en">€0.64M. The official revenue dashboard (Feb–Jun) shows ~€486k; we keep it in validation until Data closes the master table. The fine revenue by SKU (Unlimited + Always-on) is being closed with Emilio. The column's profile (AOV, hotspot, duration) is the Unlimited's, representative of the current B2B product.</span></span></div>
+        <div class="box pend"><b>GM <span class="es">por columna</span><span class="en">per column</span></b><span><span class="es">No se incluye todavía: el equipo B2B avisó que su GM no está consolidado (lo validan con Data y Finanzas), y revenue y costo viven en fuentes con criterios temporales distintos. El GM se reporta a nivel de banda de precio, no por columna, hasta cerrarlo.</span><span class="en">Not included yet: the B2B team flagged its GM isn't consolidated (validating with Data and Finance), and revenue and cost live in sources with different temporal criteria. GM is reported by price band, not per column, until closed.</span></span></div>
+        <div class="box"><b><span class="es">Aislamiento por dominio</span><span class="en">Domain isolation</span></b><span><span class="es">Corp = dominio fuera de genéricos (gmail, etc.) y ≤1000 cuentas. Triangula con <code>non_corp_domains</code> (Emilio), &lt;1%.</span><span class="en">Corp = domain outside generics (gmail, etc.) and ≤1000 accounts. Triangulates with <code>non_corp_domains</code> (Emilio), &lt;1%.</span></span></div>
+        <div class="box"><b><span class="es">Fuentes · ventana</span><span class="en">Sources · window</span></b><span><span class="es">Maestra fct_revenue_prorated + dashboard B2B Client Consumption. 1-feb a 7-jun.</span><span class="en">Master fct_revenue_prorated + B2B Client Consumption dashboard. Feb 1 – Jun 7.</span></span></div>
+      </div>
+    </details>
+
+    <details class="method"><summary><span class="es">Apertura · cost/GB del B2B por destino</span><span class="en">Breakdown · B2B cost/GB by destination</span></summary>
+      <div class="body">
+        <span class="es">El 59% del consumo del B2B va a destinos caros, y eso arrastra el promedio. Los trips, en cambio, viven en Europa:</span><span class="en">59% of the B2B's consumption goes to costly destinations, and that drags the average up. The trips, instead, live in Europe:</span>
+        <table class="ct">
+          <tr><th><span class="es">Destino</span><span class="en">Destination</span></th><th><span class="es">% del GB</span><span class="en">% of GB</span></th><th>GB</th><th><span class="es">costo</span><span class="en">cost</span></th><th>cost/GB</th></tr>
+          <tr><td>China</td><td>11%</td><td>2.093</td><td>€4.788</td><td class="hi">€2,29</td></tr>
+          <tr><td>Emiratos (UAE)</td><td>6%</td><td>1.131</td><td>€1.244</td><td class="hi">€1,10</td></tr>
+          <tr><td>Brazil</td><td>5%</td><td>933</td><td>€979</td><td class="hi">€1,05</td></tr>
+          <tr><td>Saudi Arabia</td><td>4%</td><td>797</td><td>€2.143</td><td class="hi">€2,69</td></tr>
+          <tr><td>Colombia</td><td>4%</td><td>753</td><td>€1.129</td><td class="hi">€1,50</td></tr>
+          <tr><td>Gibraltar</td><td>3%</td><td>598</td><td>€904</td><td class="hi">€1,51</td></tr>
+          <tr class="ctsum"><td><span class="es">Caros (&gt;€1/GB)</span><span class="en">Costly (&gt;€1/GB)</span></td><td class="hi">59% <span class="es">del GB</span><span class="en">of GB</span></td><td class="hi">11.632</td><td class="hi">€23.547</td><td class="hi">€2,02 <span class="es">prom.</span><span class="en">avg</span></td></tr>
+          <tr><td>USA</td><td>9%</td><td>1.803</td><td>€1.225</td><td>€0,68</td></tr>
+          <tr><td>Spain</td><td>4%</td><td>768</td><td>€230</td><td>€0,30</td></tr>
+          <tr><td>France</td><td>3%</td><td>675</td><td>€203</td><td>€0,30</td></tr>
+          <tr><td>Italy</td><td>3%</td><td>562</td><td>€169</td><td>€0,30</td></tr>
+          <tr class="ctsum"><td><span class="es">Resto (≤€1/GB)</span><span class="en">Rest (≤€1/GB)</span></td><td>41% <span class="es">del GB</span><span class="en">of GB</span></td><td>8.143</td><td>€3.881</td><td>€0,48 <span class="es">prom.</span><span class="en">avg</span></td></tr>
+          <tr class="cttot"><td>Blended B2B</td><td>100%</td><td>19.775</td><td>€27.428</td><td>€1,39/GB</td></tr>
+        </table>
+        <span class="es">Dashboard B2B Client Consumption (Emilio), 1-feb a 7-jun, sin el iccid roto de Nepal. El dashboard agregado muestra 1,80/GB porque incluye ese outlier. Cartera B2B (Unlimited + Always-on); GB en miles, costo en €.</span><span class="en">B2B Client Consumption dashboard (Emilio), Feb 1 – Jun 7, excluding the broken Nepal iccid. The aggregate dashboard shows 1.80/GB because it includes that outlier. B2B portfolio (Unlimited + Always-on); GB in thousands, cost in €.</span>
+      </div>
+    </details>
+  </section>
+
+  
+
+  <!-- ============ 04 · COMPETENCIA ============ -->
+  <section class="reveal">
+    <div class="snum">04 · <span class="es">COMPETENCIA</span><span class="en">COMPETITION</span></div>
+    <h2><span class="es">Cómo queda parada Holafly</span><span class="en">Where Holafly stands</span></h2>
+    <p class="sub"><span class="es">No es precio contra precio (no existe un per-día B2B publicado afuera). Es mostrar el terreno: dónde Holafly gana, empata y pierde, sin maquillar.</span><span class="en">It's not price vs price (no B2B per-day is published outside). It maps the terrain: where Holafly wins, ties and loses, no spin.</span></p>
+    <div class="compgrid">
+      <div class="compcard"><div class="ch"><span class="cn">Airalo for Business</span><span class="ct"><span class="es">eSIM puro</span><span class="en">pure eSIM</span></span></div><div class="cl"><span class="es">Per-GB + unlimited (~3GB/día a full speed, después 1Mbps). El hotspot come de ese tope de 3GB. Dashboard + SSO/SCIM, factura consolidada.</span><span class="en">Per-GB + unlimited (~3GB/day at full speed, then 1Mbps). Hotspot eats from that 3GB cap. Dashboard + SSO/SCIM, consolidated billing.</span></div><div class="cl"><span class="es"><b>Precio B2B quote-gated, no público.</b> 200+ destinos, marca masiva (30M consumer).</span><span class="en"><b>B2B price quote-gated, not public.</b> 200+ destinations, mass brand (30M consumer).</span></div></div>
+      <div class="compcard"><div class="ch"><span class="cn">Saily for Business</span><span class="ct"><span class="es">eSIM puro · Nord</span><span class="en">pure eSIM · Nord</span></span></div><div class="cl"><span class="es">Per-GB + unlimited regional (5GB/día a full speed, la política prohíbe el tethering excesivo). Self-serve, factura automática.</span><span class="en">Per-GB + regional unlimited (5GB/day at full speed, policy bans excessive tethering). Self-serve, automatic billing.</span></div><div class="cl"><span class="es"><b>Precio igual al de B2C</b> (US desde $3,99); el delta B2B es solo 5% off en volumen. Ángulo seguridad (Nord).</span><span class="en"><b>Same price as B2C</b> (US from $3.99); the B2B delta is just 5% off on volume. Security angle (Nord).</span></div></div>
+      <div class="compcard"><div class="ch"><span class="cn">Revolut Titan</span><span class="ct">fintech · bundle</span></div><div class="cl"><span class="es">eSIM como perk dentro de la suscripción Titan de Revolut Business. 10GB/mes globales, se pierden sin rollover.</span><span class="en">eSIM as a perk inside the Revolut Business Titan subscription. 10GB/month global, lost with no rollover.</span></div><div class="cl"><span class="es"><b>£65 + VAT por usuario/mes.</b> Requiere ser cliente de Revolut Business. No es standalone.</span><span class="en"><b>£65 + VAT per user/month.</b> Requires being a Revolut Business client. Not standalone.</span></div></div>
+      <div class="compcard"><div class="ch"><span class="cn">N26</span><span class="ct">fintech</span></div><div class="cl"><span class="es">Sin producto B2B. Travel eSIM de consumer disponible para cuentas business. Bundles por país in-app, sin panel ni asignación a empleados.</span><span class="en">No B2B product. Consumer travel eSIM available for business accounts. Per-country in-app bundles, no panel or employee assignment.</span></div><div class="cl"><span class="es">Requiere cuenta N26. Data-only.</span><span class="en">Requires N26 account. Data-only.</span></div></div>
+    </div>
+    <div class="cmp"><table>
+      <tr><th class="h-m"><span class="es">Dimensión</span><span class="en">Dimension</span></th><th class="h-b2b">Holafly</th><th class="h-b2c">Airalo</th><th class="h-b2c">Saily</th><th class="h-b2c">Revolut</th><th class="h-b2c">N26</th></tr>
+      <tr><td><span class="es">Per-día por día activo</span><span class="en">Per-day, by active day</span></td><td class="win">✓ <span class="es">único</span><span class="en">unique</span></td><td class="lose"><span class="es">bloques</span><span class="en">blocks</span></td><td class="lose"><span class="es">bloques</span><span class="en">blocks</span></td><td class="lose"><span class="es">mensual</span><span class="en">monthly</span></td><td class="lose">bundles</td></tr>
+      <tr><td><span class="es">Hotspot dedicado</span><span class="en">Dedicated hotspot</span></td><td class="win">10 GB/<span class="es">día</span><span class="en">day</span></td><td class="par"><span class="es">come del 3GB</span><span class="en">eats from 3GB</span></td><td class="par"><span class="es">restringe excesivo</span><span class="en">restricts excess</span></td><td class="par">n/d</td><td class="par">n/d</td></tr>
+      <tr><td><span class="es">Precio</span><span class="en">Price</span> <span class="nap" title="Modelos distintos (per-día vs per-GB vs mensual): no es comparable directo">*</span></td><td class="win">€3/<span class="es">día</span><span class="en">day</span> · €51/<span class="es">mes</span><span class="en">mo</span></td><td class="lose">quote-gated</td><td class="par">= B2C ($3,99+)</td><td class="par">£65/<span class="es">mes</span><span class="en">mo</span></td><td class="par">in-app</td></tr>
+      <tr><td><span class="es">Precio transparente</span><span class="en">Transparent price</span></td><td class="win"><span class="es">publicado</span><span class="en">published</span></td><td class="lose">quote-gated</td><td class="par">= B2C</td><td class="par">£65/<span class="es">mes</span><span class="en">mo</span></td><td class="par">in-app</td></tr>
+      <tr><td><span class="es">Standalone (sin banco)</span><span class="en">Standalone (no bank)</span></td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td><td class="lose"><span class="es">requiere Revolut</span><span class="en">needs Revolut</span></td><td class="lose"><span class="es">requiere N26</span><span class="en">needs N26</span></td></tr>
+      <tr><td><span class="es">Gestión B2B</span><span class="en">B2B management</span></td><td class="win"><span class="es">HBC + factura</span><span class="en">HBC + billing</span></td><td class="win">dashboard + SSO</td><td class="par">self-serve</td><td class="par">bundle</td><td class="lose"><span class="es">ninguna</span><span class="en">none</span></td></tr>
+      <tr><td><span class="es">Cobertura</span><span class="en">Coverage</span></td><td class="par">160+</td><td class="win">200+</td><td class="par">150-200</td><td class="par">100+</td><td class="par">100+</td></tr>
+    </table></div>
+    <div class="napnote" style="color:var(--muted)"><span class="es">Captura 25-jun-2026. El unlimited de Holafly va <b>a la par</b> (Saily da algo más, 5GB/día), lo mostramos honesto. El caballo de batalla es el <b>hotspot 10GB/día Business</b>, muy por encima de todos, que engancha con el hallazgo de que el B2B tetherea más.</span><span class="en">Snapshot Jun 25, 2026. Holafly's unlimited is <b>on par</b> (Saily gives a bit more, 5GB/day), shown honestly. The battle horse is the <b>10GB/day Business hotspot</b>, well above everyone, tied to the finding that B2B tethers more.</span></div>
+    <div class="note"><span class="es"><b>El espacio libre.</b> Ninguno de los cuatro ofrece un por-día regional con precio publicado. Es el lugar que Holafly puede ocupar primero.</span><span class="en"><b>The open space.</b> None of the four offers a regional per-day with a published price. It's the spot Holafly can take first.</span></div>
+  </section>
+
+  <!-- ============ 05 · HALLAZGOS (cierre) ============ -->
+  <section class="reveal" style="transform:none">
+    <div class="snum">05 · <span class="es">HALLAZGOS QUE MUEVEN LA DECISIÓN</span><span class="en">FINDINGS THAT MOVE THE DECISION</span></div>
+    <h2><span class="es">Hallazgos que mueven la decisión</span><span class="en">Findings that move the decision</span></h2>
+    <p class="sub"><span class="es">Lo que queremos que se lleven de la presentación.</span><span class="en">What we want them to take away from the presentation.</span></p>
+    <div class="stack">
+      <div class="scard" style="--i:0"><div class="idx">01 / 08</div><div class="n"><span class="es">~€32M ya en juego</span><span class="en">~€32M already in play</span></div><div class="t"><span class="es">El corp ya gasta ~€32M/año comprando viajes dentro de B2C: 16× lo que el B2B factura hoy. No es plata nueva ni perdida, es demanda que ya tenemos, esperando el producto que la atienda.</span><span class="en">Corp already spends ~€32M/year buying trips inside B2C: 16× what B2B bills today. It's not new money nor lost money, it's demand we already have, waiting for the product that serves it.</span></div></div>
+      <div class="scard" style="--i:1"><div class="idx">02 / 08</div><div class="n"><span class="es">La oportunidad vive en tu mejor margen</span><span class="en">The opportunity lives in your best margin</span></div><div class="t"><span class="es">El 77% del revenue corp (por dominio) está en la banda €3, la de mayor margen (87,5% GM). No es un cliente que aprieta costo: viaja barato, a Europa, y deja más. Capturarlo es upside sin tensión de margen. El apetito B2B por tethering existe, pero se ve en el producto Unlimited actual (29,4% de hotspot), que es otro grupo, no esta oportunidad.</span><span class="en">77% of corp revenue (by domain) sits in the €3 band, the highest-margin one (87.5% GM). It's not a client that squeezes cost: it travels cheap, to Europe, and leaves more. Capturing it is upside with no margin tension. B2B appetite for tethering exists, but it shows in the current Unlimited product (29.4% hotspot), which is another group, not this opportunity.</span></div></div>
+      <div class="scard" style="--i:2"><div class="idx">03 / 08</div><div class="n"><span class="es">93% viaja ≤18 días</span><span class="en">93% travel ≤18 days</span></div><div class="t"><span class="es">Los trips se compran y se usan cortos: ~8 días promedio, 93% por debajo de 18. El por-día calza exacto; el Unlimited mensual le queda grande y caro a ese viajero.</span><span class="en">Trips are bought and used short: ~8 days average, 93% under 18. The per-day fits exactly; the monthly Unlimited is too big and too expensive for that traveler.</span></div></div>
+      <div class="scard" style="--i:3"><div class="idx">04 / 08</div><div class="n"><span class="es">Descuento efectivo ~0%</span><span class="en">Effective discount ~0%</span></div><div class="t"><span class="es">El corp paga retail, igual que el consumidor: ~15% usa un código, pero el descuento efectivo es casi nulo. Nadie le ofreció un deal. Hay margen para captarlo con un mejor precio y seguir rentable.</span><span class="en">Corp pays retail, same as the consumer: ~15% use a code, but the effective discount is nearly nil. No one offered them a deal. There's room to capture them with a better price and stay profitable.</span></div></div>
+      <div class="scard" style="--i:4"><div class="idx">05 / 08</div><div class="n"><span class="es">70% del volumen es €3</span><span class="en">70% of volume is €3</span></div><div class="t"><span class="es">El grueso del negocio vive en el tier barato: €3 ≈ 70% del volumen, €5 ≈ 28%, €10 apenas 2,5%. El €10, el de peor margen, es marginal en volumen.</span><span class="en">The bulk of the business lives in the cheap tier: €3 ≈ 70% of volume, €5 ≈ 28%, €10 just 2.5%. The €10, the worst margin, is marginal in volume.</span></div></div>
+      <div class="scard" style="--i:5"><div class="idx">06 / 08</div><div class="n"><span class="es">El dato y el método</span><span class="en">The data and the method</span></div><div class="t"><span class="es">Esto exigió cruzar legacy, core y tres dashboards, con métricas que viven en fuentes distintas y que hoy todavía no se pueden separar fino (el consumo por sub-grupo, por ejemplo). La unificación que está armando Fernando es justamente lo que va a permitir leer esto con precisión. Y las proyecciones de hoy son aritméticas: sin forecasting de demanda, LTV ni elasticidad, son una cota conservadora, no el techo.</span><span class="en">This required cross-referencing legacy, core and three dashboards, with metrics that live in different sources and can't yet be split finely (consumption by sub-group, for instance). The unification Fernando is building is exactly what will let us read this with precision. And today's projections are arithmetic: with no demand forecasting, LTV or elasticity, they're a conservative floor, not the ceiling.</span></div></div>
+      <div class="scard" style="--i:6"><div class="idx">07 / 08</div><div class="n"><span class="es">Casi un gemelo del consumer</span><span class="en">Almost a twin of the consumer</span></div><div class="t"><span class="es">La oportunidad se comporta como el consumer: trips cortos, Europa, banda €3. Pero deja +14% de ticket y vive en el mejor margen. El producto B2C que ya funciona le sirve; falta el envoltorio B2B: gestión, factura, asignación a empleados. Eso baja el riesgo de ejecución, el producto ya está probado.</span><span class="en">The opportunity behaves like the consumer: short trips, Europe, the €3 band. But it leaves +14% more ticket and lives in the best margin. The B2C product that already works serves it; what's missing is the B2B wrapper: management, billing, employee assignment. That lowers execution risk, the product is already proven.</span></div></div>
+      <div class="scard fin" style="--i:7"><div class="idx">08 / 08</div><div class="n"><span class="es">El paso es de equipo</span><span class="en">The next step is a team move</span></div><div class="t"><span class="es">Esta demanda vive entre B2C y B2B, y hoy ningún equipo la gestiona. El por-día captura lo que el Unlimited no cubre, sin canibalizar. El movimiento es uno: alinear con el equipo B2B y darle el producto correcto. Romper el silo.</span><span class="en">This demand lives between B2C and B2B, and today no team manages it. The per-day captures what the Unlimited doesn't cover, without cannibalizing. The move is one: align with the B2B team and give it the right product. Break the silo.</span></div></div>
+    </div>
+  </section>
+
+  
+
+  <footer>
+    <div class="src reveal">
+      <div><span class="es"><b>Fuentes y ventana.</b> Todo 1-feb a 7-jun 2026, salvo el run-rate de oportunidad (12m).</span><span class="en"><b>Sources and window.</b> Everything Feb 1 – Jun 7, 2026, except the opportunity run-rate (12m).</span></div>
+      <div><span class="es">· Oportunidad: queries de revenue 12m (legacy + core) + cruce con el método de dominios del equipo B2B (<code>non_corp_domains</code>); reconcilia &lt;1% con la maestra candidata.</span><span class="en">· Opportunity: 12m revenue queries (legacy + core) + cross-check with the B2B team's domain method (<code>non_corp_domains</code>); reconciles &lt;1% with the candidate master table.</span></div>
+      <div><span class="es">· Margen compañía: COGS Pricing Hub (revenue/costo por destino, GM operacional). Margen B2B por banda: dashboard oficial B2B Client Consumption (costo/día por destino).</span><span class="en">· Company margin: COGS Pricing Hub (revenue/cost per destination, operating GM). B2B margin per band: official B2B Client Consumption dashboard (cost/day per destination).</span></div>
+      <div><span class="es">· AOV y duración de trips: compras data_roaming pre+post; corp por dominio de email (proxy). AOV B2B: revenue ÷ eSIMs. Descuento B2B: inferido.</span><span class="en">· Trip AOV and duration: data_roaming purchases pre+post; corp by email domain (proxy). B2B AOV: revenue ÷ eSIMs. B2B discount: inferred.</span></div>
+      <div>· <span class="nap">*</span> <span class="es">= métricas de comportamiento direccionales (trips muestra reciente vs Unlimited feb-jun). El cupón (€17,9k) está validado por Emilio; el revenue B2B propio se afina cuando Data cierre la maestra.</span><span class="en">= directional behavior metrics (trips recent sample vs Unlimited Feb–Jun). The coupon (€17.9k) is validated by Emilio; own B2B revenue gets refined when Data closes the master table.</span></div>
+    </div>
+    <div style="margin-top:14px"><span class="es">Holafly · Pricing · Propuesta B2B por día · v4 · 29-jun-2026.</span><span class="en">Holafly · Pricing · B2B per-day proposal · v4 · Jun 29, 2026.</span></div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fmt(v,dec){return v.toLocaleString('es-ES',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+  function countup(el){
+    var to=parseFloat(el.dataset.to),dec=parseInt(el.dataset.dec||'0',10),pre=el.dataset.pre||'',suf=el.dataset.suf||'';
+    if(rm){el.textContent=pre+fmt(to,dec)+suf;return;}
+    var dur=1100,t0=performance.now();
+    function step(t){var p=Math.min(1,(t-t0)/dur);p=1-Math.pow(1-p,3);el.textContent=pre+fmt(to*p,dec)+suf;if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('in');
+      e.target.querySelectorAll&&e.target.querySelectorAll('.count').forEach(function(c){if(!c._done){c._done=1;countup(c);}});
+      io.unobserve(e.target);}
+  });},{threshold:0.18});
+  document.querySelectorAll('.reveal,.gm').forEach(function(el){io.observe(el);});
+
+  var sw=document.getElementById('sw'), fw=document.getElementById('fw');
+  if(sw){sw.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    [].forEach.call(sw.children,function(x){x.classList.remove('on');}); b.classList.add('on');
+    var m=b.dataset.m;
+    document.querySelectorAll('.gm i.prop').forEach(function(i){i.style.setProperty('--w',i.dataset[m]);});
+    document.querySelectorAll('.gm .bval[data-prop]').forEach(function(v){v.textContent=v.dataset[m];});
+    fw.style.display=(m==='flat')?'block':'none';
+    var md=document.getElementById('mixdist'); if(md) md.style.display=(m==='mix')?'block':'none';
+  });}
+
+  // language toggle (ES/EN content)
+  var ls=document.getElementById('langsw');
+  if(ls){ls.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    [].forEach.call(ls.children,function(x){x.classList.remove('on');}); b.classList.add('on');
+    document.body.classList.toggle('lang-en', b.dataset.l==='en');
+    document.documentElement.lang=b.dataset.l;
+  });}
+})();
+</script>
+</body>
+</html>

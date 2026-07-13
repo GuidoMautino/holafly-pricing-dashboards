@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holafly Pricing Benchmark — Runs</title>
+<style>
+:root{--green:#16a06a;--green-d:#0f7a50;--ink:#16242f;--muted:#6b7c8a;--line:#e7edf1;--bg:#f7f9fb;--card:#fff;--amber:#8a5a00;--amber-bg:#fff3d6}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:40;background:rgba(247,249,251,.88);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.nav .in{max-width:min(1600px,94vw);margin:0 auto;padding:11px 22px;display:flex;align-items:center;gap:16px}
+.spacer{flex:1}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);padding:7px 12px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:.12s}
+.seg button.on{background:var(--ink);color:#fff}
+.wrap{max-width:min(1600px,94vw);margin:0 auto;padding:32px 22px 80px}
+h1{font-size:27px;margin:0 0 6px;letter-spacing:-.02em}
+.tagline{color:var(--muted);font-size:15px;margin:0 0 22px;max-width:760px}
+.note{background:var(--amber-bg);color:var(--amber);border:1px solid #f0dfae;border-radius:10px;padding:10px 14px;font-size:12.5px;font-weight:600;margin-bottom:26px;max-width:980px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.run{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;transition:.15s;position:relative}
+.run:hover{border-color:var(--green);box-shadow:0 4px 18px rgba(22,160,106,.10);transform:translateY(-1px)}
+.run .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.run .v{font-weight:800;font-size:16px}
+.badge{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:99px}
+.badge.latest{background:#e8f5ee;color:var(--green-d)}
+.badge.archive{background:#f0f2f4;color:var(--muted)}
+.badge.prov{background:var(--amber-bg);color:var(--amber)}
+.meta{font-size:13px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+.desc{font-size:13.5px;color:#3a4a55;margin-top:8px}
+.arrow{position:absolute;right:18px;top:18px;color:var(--green);font-size:18px;font-weight:700}
+.foot{margin-top:34px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.soon{opacity:.55;pointer-events:none}
+</style></head><body>
+
+<div class="nav"><div class="in">
+  <span class="brand"><svg style="height:26px;width:auto;display:block" viewBox="0 0 104 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M78.0563 7.28786C77.7143 7.03453 77.3245 6.90648 76.8856 6.90648C76.0089 6.90648 75.5707 7.44977 75.5707 8.53587V10.1959H78.9861V13.4237H75.5707V25.536H72.1398V13.4237H69.8199V10.1959H72.1398V8.10552C72.1398 6.69136 72.5259 5.57974 73.2977 4.76994C74.0697 3.96063 75.0274 3.55566 76.171 3.55566C77.1046 3.55566 77.853 3.69412 78.4152 3.97066C78.8652 4.19243 79.2317 4.43076 79.5171 4.68518L78.0563 7.28786ZM47.8396 25.535H51.7185V4.20114H47.8396V25.535ZM40.4703 21.4441C39.6729 22.3335 38.6766 22.7783 37.4808 22.7783C36.2648 22.7783 35.2685 22.3387 34.4912 21.4594C33.7139 20.5806 33.3253 19.456 33.3253 18.0859C33.3253 16.7366 33.7139 15.6224 34.4912 14.7431C35.2685 13.8642 36.2648 13.4244 37.4808 13.4244C38.6766 13.4244 39.6729 13.8642 40.4703 14.7431C41.2672 15.6224 41.666 16.7366 41.666 18.0859C41.666 19.4354 41.2672 20.5547 40.4703 21.4441ZM41.4577 11.093C40.2815 10.3777 38.9562 10.0198 37.4817 10.0198C36.0266 10.0198 34.7061 10.3777 33.5206 11.093C32.3345 11.8089 31.4077 12.7799 30.7403 14.0066C30.0723 15.2333 29.7388 16.5931 29.7388 18.0853C29.7388 19.578 30.0723 20.9428 30.7403 22.1796C31.4077 23.4168 32.3294 24.393 33.5056 25.1084C34.6813 25.8239 36.0065 26.1818 37.4817 26.1818C38.9562 26.1818 40.2815 25.8239 41.4577 25.1084C42.6334 24.393 43.5601 23.4168 44.2379 22.1796C44.9152 20.9428 45.2543 19.578 45.2543 18.0853C45.2543 16.5931 44.9152 15.2333 44.2379 14.0066C43.5601 12.7799 42.6334 11.8089 41.4577 11.093ZM85.3357 25.535H81.4568V4.20114H85.3357V25.535ZM99.2024 10.0198V17.8808C99.2024 19.1347 98.8883 20.1004 98.2605 20.7788C97.6324 21.4568 96.8102 21.796 95.7935 21.796C94.8366 21.796 94.0987 21.5185 93.5807 20.9637C93.062 20.4088 92.8031 19.4738 92.8031 18.1582V10.0198H89.2147V18.7748C89.2147 20.9535 89.6977 22.5774 90.6649 23.6457C91.6317 24.7146 92.9624 25.2487 94.6571 25.2487C95.7135 25.2487 96.5906 25.069 97.2886 24.7092C97.9862 24.3499 98.614 23.8205 99.1725 23.1216L99.2024 23.2141V24.8479C99.2024 26.122 98.8883 27.1032 98.2605 27.792C97.6324 28.4803 96.77 28.8247 95.6737 28.8247C94.171 28.8247 93.1875 28.2526 92.7199 27.1138L89.7546 28.6852C90.1545 29.4528 90.6868 30.1111 91.3528 30.659C92.4391 31.553 93.8795 32.0001 95.6737 32.0001C97.9062 32.0001 99.6509 31.3474 100.907 30.0424C102.163 28.737 102.791 26.9953 102.791 24.8171V10.0198H99.2024ZM63.5744 20.3843C63.5744 21.2637 63.2795 21.9537 62.6901 22.4545C62.1002 22.9557 61.3683 23.2059 60.4944 23.2059C59.6607 23.2059 59.005 23.0271 58.5276 22.6691C58.0496 22.3118 57.8111 21.8364 57.8111 21.2431C57.8111 20.6096 58.0293 20.1238 58.4666 19.7864C58.9036 19.449 59.5998 19.2089 60.5556 19.0656L63.5744 18.6057V20.3843ZM65.4346 11.4458C64.2349 10.495 62.7206 10.0198 60.8909 10.0198C59.1018 10.0198 57.6993 10.4031 56.6827 11.1698C55.6743 11.93 54.9569 13.0784 54.5287 14.6127L57.7937 15.2085C57.9356 14.5095 58.2198 13.9696 58.6496 13.5924C59.1271 13.1737 59.8337 12.964 60.7691 12.964C62.6393 12.964 63.5745 13.8944 63.5745 15.7546V15.9387L60.3116 16.3986C58.0749 16.7053 56.515 17.3033 55.6307 18.1927C54.7464 19.082 54.3042 20.1708 54.3042 21.4588C54.3042 22.3995 54.5377 23.2276 55.0056 23.9429C55.4731 24.6588 56.1034 25.2108 56.8961 25.599C57.6892 25.9872 58.563 26.1818 59.5187 26.1818C61.4904 26.1818 62.9035 25.5789 63.7574 24.3723L64.1538 25.7523H67.2338V15.6934C67.2338 13.8126 66.6341 12.3965 65.4346 11.4458ZM13.1151 13.519C17.302 14.3547 20.3139 13.9602 22.2514 12.3347V4.20114H25.8592V25.535H22.2514V16.3925V16.1184C20.7622 16.8201 19.0142 17.1731 16.9913 17.1731C15.7959 17.1731 14.5039 17.0492 13.1151 16.8046V25.535H9.50866V15.9599C9.03462 15.8241 8.55231 15.6785 8.0594 15.5198C5.47279 14.6879 2.15403 15.0945 0.723524 15.7075L0 12.5309C2.07157 11.8148 5.76141 11.3847 8.9963 12.4255C9.16891 12.481 9.33908 12.534 9.50866 12.5865V4.20114H13.1151V12.9485V13.519Z" fill="#E6485C"/>
+</svg></span>
+  <span class="spacer"></span>
+  <div class="seg" id="langseg"><button data-lang="en" class="on">EN</button><button data-lang="es">ES</button></div>
+</div></div>
+
+<div class="wrap">
+  <h1 data-i18n="title">Pricing Benchmark — Runs</h1>
+  <p class="tagline" data-i18n="tagline">Each run is an immutable snapshot: both competitors captured under a single as-of date. This page always lists the latest version first. v0.x = working runs; v1.0 ships with the final sealed run.</p>
+
+  <div class="note" data-i18n="note">⚠ Working document. Holafly prices are a provisional model curve (Jun 22) until the published-prices export lands. Numbers are sealed with the final run.</div>
+
+  <div class="grid">
+  <a class="run" href="https://guidomautino.github.io/holafly-pricing-dashboards/benchmark-v0-2-5/">
+    <div class="top"><span class="v">Benchmark v0.2.5</span><span class="badge latest" data-i18n="latest">Latest</span><span class="badge prov" data-i18n="prov">HF provisional</span></div>
+    <div class="meta" data-i18n="v025meta">as-of <b>Jul 3, 2026</b> · Airalo + Saily · the .xlsx export now ships with the full color semaphore</div>
+    <div class="desc" data-i18n="v025desc">Same price data as v0.2.2-v0.2.4. The one-click export is now identical to the canonical file: 7 sheets, native percent format, and the green/amber sign coloring with legend and highlighted summary rows.</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run" href="https://guidomautino.github.io/holafly-pricing-dashboards/benchmark-v0-2-4/">
+    <div class="top"><span class="v">Benchmark v0.2.4</span><span class="badge archive" data-i18n="archive">Archive</span></div>
+    <div class="meta" data-i18n="v024meta">as-of <b>Jul 3, 2026</b> · Airalo + Saily · the .xlsx export now ships the Brand Pricelist tabs (effective + list)</div>
+    <div class="desc" data-i18n="v024desc">Superseded by v0.2.5: its one-click export ships without the color coding (numbers correct). The export grows to 7 sheets: two Pricelist tabs for Brand (one on effective price, one on list with its caveat), a combined all-destinations median, and native percent format that survives Google Sheets.</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run" href="https://guidomautino.github.io/holafly-pricing-dashboards/benchmark-v0-2-3/">
+    <div class="top"><span class="v">Benchmark v0.2.3</span><span class="badge archive" data-i18n="archive">Archive</span></div>
+    <div class="meta" data-i18n="v023meta">as-of <b>Jul 3, 2026</b> · Airalo + Saily · adds one-click .xlsx export from Real travel days + a Same day filter</div>
+    <div class="desc" data-i18n="v023desc">Superseded by v0.2.4. Same data as v0.2.2. The export ships 5 sheets (list, effective, AlwaysOn valuation, raw layer, read-me) behind a reading guide; the Same day filter shows only trips that match an exact block.</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run" href="https://guidomautino.github.io/holafly-pricing-dashboards/benchmark-v0-2-2/">
+    <div class="top"><span class="v">Benchmark v0.2.2</span><span class="badge archive" data-i18n="archive">Archive</span></div>
+    <div class="meta" data-i18n="v022meta">as-of <b>Jul 3, 2026</b> · Airalo + Saily · adds the AlwaysOn lens in Real Travel Days</div>
+    <div class="desc" data-i18n="v022desc">Superseded by v0.2.3. Same data as v0.2.1, plus an optional lens that adds k × each player's own 1GB price (1/6/12 months) to mirror Holafly's free AlwaysOn. Default off, original prices always visible.</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run" href="https://guidomautino.github.io/holafly-pricing-dashboards/benchmark-v0-2-1/">
+    <div class="top"><span class="v">Benchmark v0.2.1</span><span class="badge archive" data-i18n="archive">Archive</span></div>
+    <div class="meta" data-i18n="v021meta">as-of <b>Jul 3, 2026</b> · Airalo + Saily · HF day-1 exceptions verified on live render (Jul 7, PPC-90)</div>
+    <div class="desc" data-i18n="v021desc">Superseded by v0.2.2. Holafly day-1 prices corrected in 9 destinations (measured on the live render).</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run" href="https://guidomautino.github.io/holafly-pricing-dashboards/benchmark-v0-2/">
+    <div class="top"><span class="v">Benchmark v0.2</span><span class="badge archive" data-i18n="archive">Archive</span></div>
+    <div class="meta" data-i18n="v02meta">as-of <b>Jul 3, 2026</b> · Airalo + Saily, fresh-vs-fresh · 6 views · EN/ES</div>
+    <div class="desc" data-i18n="v02desc">Frozen snapshot. Superseded by v0.2.1 (HF day-1 was stale in 9 destinations).</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run" href="https://guidomautino.github.io/holafly-pricing-dashboards/benchmark-holafly-v4/">
+    <div class="top"><span class="v">Benchmark v0.1</span><span class="badge archive" data-i18n="archive">Archive</span></div>
+    <div class="meta" data-i18n="v01meta">as-of <b>Jun 22, 2026</b> · Airalo + Saily · 5 tabs (build v4)</div>
+    <div class="desc" data-i18n="v01desc">Frozen snapshot. Superseded by v0.2; kept for run-over-run reference.</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run" href="https://app.notion.com/p/holafly/Competitors-18feea72a188806e8681f85006d37464" target="_blank">
+    <div class="top"><span class="v">Competitors Intelligence Hub</span><span class="badge archive" data-i18n="research">Research team</span></div>
+    <div class="meta" data-i18n="hubmeta">Company, product, tech, support, brand &amp; adoption intel · 8 providers · sourced &amp; confidence-flagged</div>
+    <div class="desc" data-i18n="hubdesc">Complementary scope: company intelligence lives there; render-validated pricing lives here.</div>
+    <span class="arrow">→</span>
+  </a>
+
+  <a class="run soon" href="#">
+    <div class="top"><span class="v" data-i18n="phname">Price history view</span><span class="badge archive" data-i18n="coming">Coming — Phase 3</span></div>
+    <div class="meta" data-i18n="phmeta">Run-over-run price evolution per market · powered by the runs warehouse</div>
+  </a>
+  </div>
+
+  <div class="foot" data-i18n="foot">Owner: Guido Mautino · Published snapshots are never edited in place; each refresh creates a new versioned path.</div>
+</div>
+
+<script>
+const I18N = {
+  es: {
+    title: "Pricing Benchmark — Corridas",
+    tagline: "Cada corrida es un snapshot inmutable: ambos competidores capturados bajo una misma fecha as-of. Esta página siempre lista la última versión primero. v0.x = corridas de trabajo; v1.0 sale con el final run sellado.",
+    note: "⚠ Documento de trabajo. Los precios de Holafly son una curva modelo provisional (22-jun) hasta que exista el export de precios publicados. Los números se sellan con el final run.",
+    latest: "Última", prov: "HF provisional", archive: "Archivo", research: "Equipo Research", coming: "Próximamente — Fase 3",
+    v025meta: "as-of <b>3 jul 2026</b> · Airalo + Saily · el export .xlsx ahora sale con el semáforo de color completo",
+    v025desc: "Misma data de precios que v0.2.2-v0.2.4. El export de un click ahora es idéntico al archivo canónico: 7 hojas, formato de porcentaje nativo, y el coloreo verde/ámbar por signo con leyenda y filas de resumen destacadas.",
+    v024meta: "as-of <b>3 jul 2026</b · Airalo + Saily · el export .xlsx ahora trae las tabs Pricelist de Brand (efectivo + lista)",
+    v024desc: "Reemplazado por v0.2.5: su export de un click sale sin el coloreo (números correctos). El export crece a 7 hojas: dos tabs Pricelist para Brand (una sobre efectivo y una sobre lista con su salvedad), una mediana combinada de todos los destinos, y formato de porcentaje nativo que sobrevive Google Sheets.",
+    v023meta: "as-of <b>3 jul 2026</b · Airalo + Saily · suma export .xlsx de un click desde Días reales + filtro Mismo día",
+    v023desc: "Reemplazado por v0.2.4. Misma data que v0.2.2. El export trae 5 hojas (lista, efectivo, valuación AlwaysOn, capa raw, léeme) detrás de una guía de lectura; el filtro Mismo día muestra solo los viajes que caen exactos en un bloque.",
+    v022meta: "as-of <b>3 jul 2026</b · Airalo + Saily · suma la lente AlwaysOn en Días reales",
+    v022desc: "Reemplazado por v0.2.3. Misma data que v0.2.1, más una lente opcional que suma k × el precio del propio 1GB de cada player (1/6/12 meses) para replicar el AlwaysOn gratis de Holafly. Default apagada, precios originales siempre visibles.",
+    v021meta: "as-of <b>3 jul 2026</b> · Airalo + Saily · excepciones día-1 de HF verificadas en render vivo (7 jul, PPC-90)",
+    v021desc: "Reemplazado por v0.2.2. Precios día-1 de Holafly corregidos en 9 destinos (medidos en render vivo).",
+    v02meta: "as-of <b>3 jul 2026</b> · Airalo + Saily, fresh-vs-fresh · 6 vistas · EN/ES",
+    v02desc: "Snapshot congelado. Reemplazado por v0.2.1 (el día-1 de HF estaba desactualizado en 9 destinos).",
+    v01meta: "as-of <b>22 jun 2026</b> · Airalo + Saily · 5 tabs (build v4)",
+    v01desc: "Snapshot congelado. Reemplazado por v0.2; se conserva como referencia entre corridas.",
+    hubmeta: "Intel de compañía, producto, tech, soporte, marca y adopción · 8 providers · con fuentes y semáforo de confianza",
+    hubdesc: "Alcance complementario: la inteligencia de compañía vive allá; el pricing validado contra render vive acá.",
+    phname: "Vista de historial de precios",
+    phmeta: "Evolución de precios corrida a corrida por mercado · alimentada por el warehouse de corridas",
+    foot: "Owner: Guido Mautino · Los snapshots publicados nunca se editan in place; cada refresh crea un nuevo path versionado."
+  },
+  en: {}
+};
+document.querySelectorAll('[data-i18n]').forEach(el => { I18N.en[el.dataset.i18n] = el.innerHTML; });
+document.getElementById('langseg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#langseg button').forEach(x => x.classList.toggle('on', x === b));
+  const dict = I18N[b.dataset.lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => { if (dict[el.dataset.i18n]) el.innerHTML = dict[el.dataset.i18n]; });
+  document.documentElement.lang = b.dataset.lang;
+});
+</script>
+</body></html>

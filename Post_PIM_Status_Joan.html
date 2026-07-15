@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tanda post-PIM · Estado</title>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--rojo:#E6485C;--rosa:#F06478;--tinta:#292B2E;--gris:#7c7f83;--linea:#E4E6EA;--verde:#177245;--verdebg:#EAF3EE;--amar:#FFE977;--amarbg:#FFF6D9;--ocre:#8a6d00;--suave:#fafafa}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Mulish',-apple-system,sans-serif;color:var(--tinta);background:#fff;padding:44px 40px 60px;max-width:1500px;margin:0 auto;line-height:1.55}
+body.lang-en .es{display:none!important}body.lang-es .en{display:none!important}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:26px}
+.topbar .mono{color:var(--rojo)}
+h1{font-size:31px;font-weight:900;line-height:1.14;margin:9px 0 8px}h1 em{font-style:normal;color:var(--rojo)}
+.sub{color:var(--gris);font-size:14.5px;max-width:900px}
+.toggle{display:flex;border:1px solid var(--linea);border-radius:22px;overflow:hidden;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px}
+.toggle button{border:0;background:#fff;color:var(--gris);padding:8px 16px;cursor:pointer;font-family:inherit;font-size:inherit;letter-spacing:.06em}
+.toggle button.on{background:var(--tinta);color:#fff}
+h3.sec{font-size:13px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--rojo);margin:40px 0 14px;border-top:2px solid var(--tinta);padding-top:14px}
+details.card{border:1px solid var(--linea);border-radius:12px;margin:16px 0;overflow:hidden}
+summary{display:flex;justify-content:space-between;align-items:center;background:var(--tinta);color:#fff;padding:17px 26px;flex-wrap:wrap;gap:8px;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary h2{font-size:19px;font-weight:800}summary h2 small{color:var(--rosa);font-weight:600;font-size:13px;margin-left:10px}
+summary .abrir{font-family:'JetBrains Mono',monospace;font-size:11px;color:#bbb;margin-left:auto;margin-right:12px}
+details[open] summary .abrir::after{content:"▾"}details:not([open]) summary .abrir::after{content:"▸"}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;padding:5px 12px;border-radius:20px;background:var(--verde);color:#fff;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--linea)}
+.stat{background:var(--suave);padding:18px 22px}
+.stat .mono{color:var(--gris);display:block;margin-bottom:6px}
+.stat.ela{background:#fff1f3}.stat.ela .mono{color:var(--rojo)}
+.stat.gain{background:var(--verdebg)}.stat.gain .mono{color:var(--verde)}
+.stat .big{font-size:16.5px;font-weight:900;line-height:1.25}.stat .big em{font-style:normal;color:var(--rojo)}.stat.gain .big em{color:var(--verde)}
+.stat p{font-size:11px;color:var(--gris);margin-top:6px;line-height:1.4}
+.est{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.04em;padding:1px 5px;border-radius:8px;background:var(--amarbg);color:var(--ocre);vertical-align:middle}
+.be{background:var(--tinta);color:#fff;padding:18px 26px;display:grid;grid-template-columns:160px 1fr 1fr 1fr;gap:26px;align-items:center}
+.be .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;line-height:1.35;color:var(--rosa)}
+.be .lbl .desc{display:block;color:#c9cbce;font-weight:400;text-transform:none;letter-spacing:0;margin-top:4px}
+.be .becell .mono{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:#a9abae;display:block;margin-bottom:4px}
+.be .becell .v{font-size:19px;font-weight:900}.be .becell .v small{font-size:11px;font-weight:600;color:#c9cbce}
+.be .becell .sub2{font-size:10.5px;color:#a9abae;margin-top:3px;line-height:1.35}
+.filas{padding:8px 26px 18px}
+.fila{display:grid;grid-template-columns:160px 1fr;gap:18px;padding:13px 0;border-bottom:1px solid var(--linea);font-size:13.5px}
+.fila:last-child{border-bottom:0}.fila .mono{color:var(--gris);padding-top:3px}
+b.r{color:var(--rojo)}b.g{color:var(--verde)}
+table.sum{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px}
+table.sum th{background:var(--tinta);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:12px 12px;text-align:left;vertical-align:bottom}
+table.sum td{padding:15px 12px;border-bottom:1px solid var(--linea);vertical-align:top}
+table.sum td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.hero td:first-child{border-left:3px solid var(--verde)}
+tr.prov td{color:#9a9da1;background:#fcfcfc}tr.prov td:first-child{border-left:3px solid var(--amar)}
+.dest{font-weight:800;color:var(--tinta);white-space:nowrap}tr.prov .dest{color:#9a9da1}
+.pos{color:var(--verde);font-weight:700}.neg{color:var(--rojo);font-weight:700}
+.small{display:block;font-weight:400;color:var(--gris);font-size:10.5px;margin-top:3px}tr.prov .small{color:#b4b6b9}
+.tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.05em;padding:2px 6px;border-radius:10px;margin-left:6px}
+.tag.v{background:var(--verdebg);color:var(--verde)}.tag.p{background:var(--amarbg);color:var(--ocre)}
+.leyenda{font-size:12px;color:var(--gris);background:var(--suave);border:1px solid var(--linea);border-radius:8px;padding:12px 18px;margin-top:16px;line-height:1.6}
+</style></head><body class="lang-es">
+<div class="topbar"><div>
+<div class="mono">Pricing · Hub · <span class="es">estado para aprobación</span><span class="en">status for approval</span></div>
+<h1>Tanda post-PIM · <em>Marruecos + Canadá</em></h1>
+<p class="sub"><span class="es">Dos modelos post-migración para tu OK. Cada número sale del sistema validado: la curva chequeada celda por celda contra el JSON publicado (~2.250 valores por modelo), y el scope €/órdenes/AOV del export Foundational (ene-jun 2026, anualizado). <b style="color:var(--verde)">Verde = validado por el Hub</b> · <b style="color:var(--ocre)">Amarillo = provisorio</b>. La curva completa por moneda vive en la tab <b>Monotonicidad</b> de cada Sheet.</span><span class="en">Two post-migration models for your sign-off. Every number comes from validated sources: the curve checked cell-by-cell against the published JSON (~2,250 values per model), and the scope (revenue/orders/AOV) from the Foundational export (Jan-Jun 2026, annualised). <b style="color:var(--verde)">Green = Hub-validated</b> · <b style="color:var(--ocre)">Amber = provisional</b>. The full per-currency curve lives in each Sheet's <b>Monotonicidad</b> tab.</span></p>
+</div>
+<div class="toggle"><button id="bes" class="on" onclick="setLang('es')">ES</button><button id="ben" onclick="setLang('en')">EN</button></div>
+</div>
+
+<h3 class="sec">1 · <span class="es">Modelos validados</span><span class="en">Validated models</span></h3>
+
+<details class="card" open>
+<summary><h2>🇲🇦 <span class="es">Marruecos · Suba de precio</span><span class="en">Morocco · Price increase</span> <small>EXP-013 · +21% · v9</small></h2><span class="abrir"></span><span class="chip"><span class="es">VALIDADO</span><span class="en">VALIDATED</span></span></summary>
+<div class="stats">
+<div class="stat"><span class="mono"><span class="es">El movimiento</span><span class="en">The move</span></span><div class="big">+21% → <em>+15,76%</em> <span class="est">EST</span></div><p><span class="es">Curva entera, d1 3,79→5,50. Validada vs JSON 2250/2250. Scope €13,9M/año · 747K órd/año · AOV €18,7 → ~€21,6 <span class="est">EST</span>.</span><span class="en">Full curve, d1 3.79→5.50. Validated vs JSON 2250/2250. Scope €13.9M/yr · 747K ord/yr · AOV €18.7 → ~€21.6 <span class="est">EST</span>.</span></p></div>
+<div class="stat"><span class="mono"><span class="es">Qué esperamos · anual</span><span class="en">What we expect · annual</span></span><div class="big">Rev <em>+€0,4-0,7M</em> <small>(+3 a 5%)</small><br>Órd <em>−9 a −13%</em></div><p><span class="es">A ε esperada 0,6-0,8 (apuesta a inelasticidad). El resultado se sostiene en el margen. <span class="est">EST</span></span><span class="en">At expected ε 0.6-0.8 (bet on inelasticity). The result rests on margin. <span class="est">EST</span></span></p></div>
+<div class="stat ela"><span class="mono"><span class="es">Elasticidad</span><span class="en">Elasticity</span></span><div class="big">ε ≈ <em>0,6-1</em></div><p><span class="es">Solo cierra en revenue si la ε real &lt; 0,864.</span><span class="en">Only clears on revenue if real ε &lt; 0.864.</span></p></div>
+<div class="stat gain"><span class="mono"><span class="es">El margen · el win</span><span class="en">Margin · the win</span></span><div class="big">GM 0,49 → <em>sube</em></div><p><span class="es">Nuestro peor margen. Cada +1% de precio ≈ +2% de margen. GM€ +15,6% a ε 0,8. <span class="est">EST</span></span><span class="en">Our lowest margin. Every +1% price ≈ +2% margin. GM€ +15.6% at ε 0.8. <span class="est">EST</span></span></p></div>
+</div>
+<div class="be">
+<div class="lbl">BREAK-EVEN vs <span class="es">HOY</span><span class="en">TODAY</span><span class="desc"><span class="es">cuánto pueden CAER las órdenes antes de perder cada métrica</span><span class="en">how much orders can FALL before losing each metric</span></span></div>
+<div class="becell"><span class="mono">Revenue</span><div class="v">−13,6% <small><span class="es">órd</span><span class="en">ord</span></small></div><div class="sub2"><span class="es">órdenes caen &lt; 13,6% (ε 0,864) → facturás igual o más</span><span class="en">orders fall &lt; 13.6% (ε 0.864) → revenue holds or grows</span></div></div>
+<div class="becell"><span class="mono"><span class="es">Órdenes</span><span class="en">Orders</span></span><div class="v">−9 a −13% <small><span class="es">esperado</span><span class="en">expected</span></small></div><div class="sub2"><span class="es">la caída de diseño en la zona ε 0,6-0,8</span><span class="en">the by-design drop in the ε 0.6-0.8 zone</span></div></div>
+<div class="becell"><span class="mono">Gross Margin €</span><div class="v">−24,4% <small><span class="es">órd</span><span class="en">ord</span></small></div><div class="sub2"><span class="es">órdenes caen &lt; 24,4% (ε 1,55) → el margen € no baja</span><span class="en">orders fall &lt; 24.4% (ε 1.55) → margin € holds</span></div></div>
+</div>
+<div class="filas">
+<div class="fila"><span class="mono"><span class="es">Competencia</span><span class="en">Competition</span></span><span><span class="es">Hoy <b>muy por debajo de Airalo</b> → post-suba sigue más barato (<b>−23/−16%</b>). Cruza <b class="r">arriba de la lista de Saily +10%</b> en d10-30: riesgo vigilado.</span><span class="en">Today <b>well below Airalo</b> → post-increase still cheaper (<b>−23/−16%</b>). Crosses <b class="r">above Saily list +10%</b> at d10-30: watched.</span></span></div>
+<div class="fila"><span class="mono"><span class="es">Salida (gatillos)</span><span class="en">Exit triggers</span></span><span><span class="es"><b class="r">SCALE</b> revenue ≥ 0 y caída de órdenes &lt; 14% · <b class="r">MAINTAIN</b> caída 14-25,1% · <b class="r">Rollback</b> incondicional si GM€ vs contrafactual &lt; 0.</span><span class="en"><b class="r">SCALE</b> revenue ≥ 0 and orders fall &lt; 14% · <b class="r">MAINTAIN</b> fall 14-25.1% · <b class="r">Rollback</b> unconditional if GM€ vs counterfactual &lt; 0.</span></span></div>
+<div class="fila"><span class="mono"><span class="es">Medición</span><span class="en">Measurement</span></span><span><span class="es">OLS + tendencia + DID + YoY. Control {Egipto, Brasil, Japón}. Sesgo −2,9/−5,7% declarado, se re-valida en vuelo.</span><span class="en">OLS + trend + DID + YoY. Control {Egypt, Brazil, Japan}. Bias −2.9/−5.7% declared, re-validated in-flight.</span></span></div>
+<div class="fila"><span class="mono"><span class="es">Residuos (export)</span><span class="en">Residuals (export)</span></span><span><span class="es">9 monedas finas: <b class="g">arranque limpio, 0 quiebres</b>. Único &gt;2%: <b>AED/QAR d4 +2,78%</b> (Golfo, &lt;0,3% del mix, redondeo estructural). Cola ≤0,9%, tolerada.</span><span class="en">9 fine currencies: <b class="g">clean start, 0 breaks</b>. Only &gt;2%: <b>AED/QAR d4 +2.78%</b> (Gulf, &lt;0.3% of mix, structural rounding). Tail ≤0.9%, tolerated.</span></span></div>
+</div>
+</details>
+
+<details class="card">
+<summary><h2>🇨🇦 <span class="es">Canadá · Baja de precio</span><span class="en">Canada · Price cut</span> <small>EXP-016 · −11% · v5</small></h2><span class="abrir"></span><span class="chip"><span class="es">VALIDADO</span><span class="en">VALIDATED</span></span></summary>
+<div class="stats">
+<div class="stat"><span class="mono"><span class="es">El movimiento</span><span class="en">The move</span></span><div class="big">−11% → <em>−10,18%</em> <span class="est">EST</span></div><p><span class="es">Curva d2-90, d1 ancla €6,90 (no baja). Validada vs JSON 2220/2250. Scope €4,1M/año · 128K órd/año · AOV €32,3 → ~€29 <span class="est">EST</span>.</span><span class="en">Curve d2-90, d1 anchor €6.90 (no cut). Validated vs JSON 2220/2250. Scope €4.1M/yr · 128K ord/yr · AOV €32.3 → ~€29 <span class="est">EST</span>.</span></p></div>
+<div class="stat"><span class="mono"><span class="es">Qué esperamos · anual</span><span class="en">What we expect · annual</span></span><div class="big">Rev <em>+€241K</em> <small>(+5,8%)</small><br>Órd <em>+17,8%</em></div><p><span class="es">A ε aspiración 1,75. El volumen ES el mecanismo. <span class="est">EST</span></span><span class="en">At aspirational ε 1.75. Volume IS the mechanism. <span class="est">EST</span></span></p></div>
+<div class="stat ela"><span class="mono"><span class="es">Elasticidad</span><span class="en">Elasticity</span></span><div class="big">ε ≈ <em>1,75</em></div><p><span class="es">Aspiración de tanda. Break-even revenue ε 1,11 · margen€ ε 1,62.</span><span class="en">Batch aspiration. Break-even revenue ε 1.11 · margin€ ε 1.62.</span></p></div>
+<div class="stat gain"><span class="mono"><span class="es">El margen · el win</span><span class="en">Margin · the win</span></span><div class="big">GM <em>70-72%</em> <span class="est">EST</span></div><p><span class="es">El GM más alto de la tanda → break-even generoso. GM€ +1,2% a ε 1,75. <span class="est">EST</span></span><span class="en">Highest GM of the batch → generous break-even. GM€ +1.2% at ε 1.75. <span class="est">EST</span></span></p></div>
+</div>
+<div class="be">
+<div class="lbl">BREAK-EVEN vs <span class="es">HOY</span><span class="en">TODAY</span><span class="desc"><span class="es">cuánto tienen que SUBIR las órdenes para no perder cada métrica</span><span class="en">how much orders must RISE to not lose each metric</span></span></div>
+<div class="becell"><span class="mono">Revenue</span><div class="v">+11,3% <small><span class="es">órd</span><span class="en">ord</span></small></div><div class="sub2"><span class="es">órdenes ≥ +11,3% (ε 1,11) → facturás igual o más</span><span class="en">orders ≥ +11.3% (ε 1.11) → revenue holds or grows</span></div></div>
+<div class="becell"><span class="mono"><span class="es">Órdenes</span><span class="en">Orders</span></span><div class="v">+17,8% <small><span class="es">esperado</span><span class="en">expected</span></small></div><div class="sub2"><span class="es">el lift a ε 1,75</span><span class="en">the lift at ε 1.75</span></div></div>
+<div class="becell"><span class="mono">Gross Margin €</span><div class="v">+19,7% <small><span class="es">órd</span><span class="en">ord</span></small></div><div class="sub2"><span class="es">órdenes ≥ +19,7% (ε 1,62) → el margen € no baja</span><span class="en">orders ≥ +19.7% (ε 1.62) → margin € holds</span></div></div>
+</div>
+<div class="filas">
+<div class="fila"><span class="mono"><span class="es">Competencia</span><span class="en">Competition</span></span><span><span class="es">Hoy premium <b>+11,5% vs Airalo</b> (el 72% del revenue en d7-30). Post-baja lo lleva a <b class="g">~paridad con Airalo</b>.</span><span class="en">Today premium <b>+11.5% vs Airalo</b> (72% of revenue in d7-30). Post-cut brings it to <b class="g">~parity with Airalo</b>.</span></span></div>
+<div class="fila"><span class="mono"><span class="es">Salida (gatillos)</span><span class="en">Exit triggers</span></span><span><span class="es"><b class="r">SCALE</b> empate del margen € (+4,68% revenue, ε 1,62). Guardrails: GM scope −2pp · refunds ≤+1pp · mix largo ≥−15%. Rollback formulado.</span><span class="en"><b class="r">SCALE</b> margin € break-even (+4.68% revenue, ε 1.62). Guardrails: GM scope −2pp · refunds ≤+1pp · long mix ≥−15%. Rollback formulated.</span></span></div>
+<div class="fila"><span class="mono"><span class="es">Medición</span><span class="en">Measurement</span></span><span><span class="es">3 capas: OLS CF estacional (4 controles) + DID + YoY-DID. Control {Albania, Turquía, Grecia, Indonesia}, re-lock ~22-jul.</span><span class="en">3 layers: seasonal OLS CF (4 controls) + DID + YoY-DID. Control {Albania, Turkey, Greece, Indonesia}, re-lock ~Jul-22.</span></span></div>
+<div class="fila"><span class="mono"><span class="es">Residuos (export)</span><span class="en">Residuals (export)</span></span><span><span class="es">Finas: <b class="g">arranque limpio</b>. Quiebres solo en cola (d19+): <b>USD +1,77% · CHF +1,97% · CAD +2,33%</b>, redondeo por moneda, tolerados. Ninguno pasa ~2,8%.</span><span class="en">Fine: <b class="g">clean start</b>. Breaks only in tail (d19+): <b>USD +1.77% · CHF +1.97% · CAD +2.33%</b>, per-currency rounding, tolerated. None above ~2.8%.</span></span></div>
+<div class="fila"><span class="mono"><span class="es">Antes de producción</span><span class="en">Before production</span></span><span><span class="es">Gate: separación P-14 → P-14-CA + verificar que Egipto/Costa Rica no se movieron.</span><span class="en">Gate: split P-14 → P-14-CA + verify Egypt/Costa Rica didn't move.</span></span></div>
+</div>
+</details>
+
+<h3 class="sec">2 · <span class="es">Summary — los 5 frentes</span><span class="en">Summary — the 5 fronts</span></h3>
+<table class="sum">
+<tr><th><span class="es">Destino</span><span class="en">Destination</span></th><th><span class="es">Movimiento</span><span class="en">Move</span></th><th><span class="es">Precio nuevo (AOV)</span><span class="en">New price (AOV)</span></th><th><span class="es">Posición vs competencia</span><span class="en">Position vs competition</span></th><th><span class="es">Qué esperamos / año</span><span class="en">What we expect / yr</span></th><th><span class="es">GM esperado</span><span class="en">Expected GM</span></th><th><span class="es">ε break-even</span><span class="en">Break-even ε</span></th></tr>
+<tr class="hero">
+<td><span class="dest">🇲🇦 <span class="es">Marruecos</span><span class="en">Morocco</span></span><span class="tag v"><span class="es">validado</span><span class="en">validated</span></span></td>
+<td>+21% <span class="es">nominal</span><span class="en">nominal</span><span class="small">+15,76% <span class="es">efectivo</span><span class="en">effective</span></span></td>
+<td class="num">~€21,6<span class="small"><span class="es">hoy €18,7 · EST</span><span class="en">today €18.7 · EST</span></span></td>
+<td><b class="g"><span class="es">debajo de Airalo</span><span class="en">below Airalo</span></b> −23/−16%<span class="small"><span class="es">cruza Saily lista +10%</span><span class="en">crosses Saily list +10%</span></span></td>
+<td><span class="pos">+€0,4-0,7M</span><span class="small"><span class="es">órd</span><span class="en">ord</span> <span class="neg">−9 a −13%</span> · EST</span></td>
+<td>0,49 ↑<span class="small"><span class="es">sube por diseño</span><span class="en">up by design</span></span></td>
+<td>0,864 rev<span class="small">1,55 <span class="es">margen</span><span class="en">margin</span></span></td>
+</tr>
+<tr class="hero">
+<td><span class="dest">🇨🇦 <span class="es">Canadá</span><span class="en">Canada</span></span><span class="tag v"><span class="es">validado</span><span class="en">validated</span></span></td>
+<td>−11% <span class="es">nominal</span><span class="en">nominal</span><span class="small">−10,18% <span class="es">efectivo</span><span class="en">effective</span></span></td>
+<td class="num">~€29<span class="small"><span class="es">hoy €32,3 · EST</span><span class="en">today €32.3 · EST</span></span></td>
+<td><b class="g">~<span class="es">paridad</span><span class="en">parity</span> Airalo</b><span class="small"><span class="es">premium +11,5% → paridad</span><span class="en">premium +11.5% → parity</span></span></td>
+<td><span class="pos">+€241K</span><span class="small"><span class="es">órd</span><span class="en">ord</span> <span class="pos">+17,8%</span> · <span class="es">a ε 1,75</span><span class="en">at ε 1.75</span> · EST</span></td>
+<td>70-72%<span class="small">EST</span></td>
+<td>1,11 rev<span class="small">1,62 <span class="es">margen</span><span class="en">margin</span></span></td>
+</tr>
+<tr class="prov">
+<td><span class="dest">🇵🇦 Panamá · 015</span><span class="tag p"><span class="es">provisorio</span><span class="en">provisional</span></span></td>
+<td><span class="es">fix d2-5</span><span class="en">fix d2-5</span><span class="small"><span class="es">corrección de curva</span><span class="en">curve fix</span></span></td>
+<td class="num"><span class="es">d1 clavado 5,90</span><span class="en">d1 anchored 5.90</span></td>
+<td>d3-7 <span class="es">pegado a</span><span class="en">tied to</span> Airalo</td>
+<td><span class="es">pendiente gate del Hub</span><span class="en">pending Hub gate</span></td><td>—</td><td>—</td>
+</tr>
+<tr class="prov">
+<td><span class="dest">🇵🇪 <span class="es">Perú</span><span class="en">Peru</span></span><span class="tag p"><span class="es">provisorio</span><span class="en">provisional</span></span></td>
+<td>−10% <span class="es">curva 2-90</span><span class="en">curve 2-90</span></td>
+<td class="num"><span class="es">d1 clavado 5,90</span><span class="en">d1 anchored 5.90</span></td>
+<td>0/+6% vs Airalo</td>
+<td><span class="es">pendiente gate del Hub</span><span class="en">pending Hub gate</span></td><td>—</td><td>—</td>
+</tr>
+<tr class="prov">
+<td><span class="dest">🇲🇽 México</span><span class="tag p"><span class="es">provisorio</span><span class="en">provisional</span></span></td>
+<td>−12% · <span class="es">sin causal</span><span class="en">no causal</span></td>
+<td class="num">—</td>
+<td>+4% vs Airalo</td>
+<td><span class="es">pendiente gate del Hub</span><span class="en">pending Hub gate</span></td><td>—</td><td>—</td>
+</tr>
+</table>
+
+<div class="leyenda">
+<span class="es"><b>Cómo leer:</b> <b>Qué esperamos</b> = proyección anual a la ε asumida (baseline Foundational constante). <b>ε break-even</b> = la elasticidad a la que se empata contra hoy. <b style="color:var(--verde)">Verde = validado por el Hub contra el JSON publicado + workbook</b> · <b style="color:var(--ocre)">Amarillo = provisorio, pendiente del gate del Hub</b>.<br><b>Marca <span class="est">EST</span>:</b> los números de impacto en € usan el scope Foundational anualizado (ene-jun 2026 ×2) + GM de BQ (COGS caído); se recalibran con consumo real a los 14 días. La <b>curva y los precios publicados son firmes</b> (validados contra el sistema); lo <span class="est">EST</span> es solo la economía.</span>
+<span class="en"><b>How to read:</b> <b>What we expect</b> = annual projection at the assumed ε (constant Foundational baseline). <b>Break-even ε</b> = the elasticity that ties vs today. <b style="color:var(--verde)">Green = Hub-validated vs published JSON + workbook</b> · <b style="color:var(--ocre)">Amber = provisional, pending Hub gate</b>.<br><b><span class="est">EST</span> mark:</b> the € impact figures use the annualised Foundational scope (Jan-Jun 2026 ×2) + BQ GM (COGS down); recalibrated with real consumption at day 14. The <b>curve and published prices are firm</b> (validated against the system); only the economics are <span class="est">EST</span>.</span>
+</div>
+<script>
+function setLang(l){document.body.className='lang-'+l;document.getElementById('bes').classList.toggle('on',l==='es');document.getElementById('ben').classList.toggle('on',l==='en');document.documentElement.lang=l;}
+</script>
+</body></html>

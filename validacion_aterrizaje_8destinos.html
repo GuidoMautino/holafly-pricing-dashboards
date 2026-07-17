@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Validación aterrizaje de precios · 17-jul-2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F4F7F5;color:#1a2420;line-height:1.5;padding:32px 20px}
+.wrap{max-width:960px;margin:0 auto}
+.head{margin-bottom:8px}
+.head h1{font-size:22px;font-weight:700;letter-spacing:-.4px}
+.head .sub{color:#5a6b62;font-size:13px;margin-top:4px}
+.verdict{background:linear-gradient(135deg,#0F7A50,#0c6644);color:#fff;border-radius:14px;padding:24px 26px;margin:20px 0 10px}
+.verdict .big{font-size:19px;font-weight:700;margin-bottom:6px}
+.verdict .n{font-size:44px;font-weight:800;letter-spacing:-1px;line-height:1}
+.verdict .nl{font-size:13px;opacity:.9}
+.verdict-grid{display:flex;gap:34px;align-items:center;flex-wrap:wrap}
+.verdict p{font-size:14px;opacity:.95;max-width:520px}
+.amber{background:#FFF7E6;border:1px solid #F0D48A;border-radius:10px;padding:13px 16px;font-size:13px;color:#6b5311;margin:14px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}.verdict-grid{gap:18px}}
+.card{background:#fff;border:1px solid #e4ebe7;border-radius:12px;padding:16px 18px}
+.card.val{border-left:4px solid #0F7A50}
+.card.landing{border-left:4px solid #37A06B}
+.card.early{border-left:4px solid #C7A94b}
+.card.none{border-left:4px solid #b9c2bc}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.ct{display:flex;flex-direction:column}
+.dest{font-size:16px;font-weight:700}
+.model{font-size:11px;color:#7a8880;margin-top:1px}
+.badge{font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.4px;white-space:nowrap}
+.badge.val{background:#E3F3EA;color:#0F7A50}
+.badge.landing{background:#E9F5EE;color:#2b7d54}
+.badge.early{background:#FBF3DF;color:#8a6d1a}
+.badge.none{background:#eef1ef;color:#7a8880}
+.metrics{display:flex;gap:22px;margin-bottom:12px}
+.metric{display:flex;flex-direction:column}
+.mv{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.ml{font-size:10.5px;color:#7a8880;text-transform:uppercase;letter-spacing:.3px}
+.bar{height:7px;background:#eef1ef;border-radius:4px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#37A06B,#0F7A50)}
+.barlbl{font-size:11.5px;color:#6a776f;margin-top:6px}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:12.5px;color:#0F7A50;font-weight:600}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+th{text-align:left;color:#8a968f;font-weight:600;padding:5px 6px;border-bottom:1px solid #eef1ef;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px}
+td{padding:5px 6px;border-bottom:1px solid #f4f7f5}
+td.old{color:#9aa5a0}
+td.new{font-weight:700;color:#12352a}
+td.pct{font-weight:700;text-align:right}
+.foot{margin-top:24px;padding-top:16px;border-top:1px solid #e4ebe7;font-size:11.5px;color:#7a8880}
+.foot b{color:#4a5a52}
+</style></head><body><div class="wrap">
+<div class="head">
+  <h1>Aterrizaje de precios en producción — 8 destinos</h1>
+  <div class="sub">Cruce producción (BigQuery, checkout PIM) vs columna <b>Mono</b> del diseño publicado · método LEARN-395 (pre/post, single-eSIM, sin descuentos) · export hasta 17-jul 09:38 UTC</div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-grid">
+    <div><div class="n">260/260</div><div class="nl">celdas día×moneda con precio nuevo = diseño</div></div>
+    <div>
+      <div class="big">Cero desvíos de pricing.</div>
+      <p>Todavía no cayeron demasiadas órdenes con el precio nuevo —el cambio tiene horas— pero en <b>cada celda donde ya aterrizó, producción matchea el diseño publicado exacto</b>. Ningún precio publicado se aparta de la columna Mono. Lo pendiente es puro volumen, no error.</p>
+    </div>
+  </div>
+</div>
+
+<div class="amber">⚠️ Lectura honesta del alcance: los 4 destinos de hoy (17-jul) recién arrancan — Perú y Puerto Rico con pocas órdenes nuevas. El veredicto "sin desvíos" es sólido sobre lo que ya cayó; la validación de la <b>curva completa</b> (90 días) de esos cierra con un re-pull en unas horas. Morocco y Canada (cambio de ayer) ya están mayormente volcados y validados.</div>
+
+<div class="grid">
+
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Morocco</span><span class="model">modelo v9 FINAL</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#9A6A00">+14,8%</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">78/78</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">6</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:93%"></div></div>
+      <div class="barlbl">78 de 84 celdas con precio nuevo ya visible · cambio 16-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d1</td><td class='old'>3,79</td><td class='new'>5,5</td><td class='pct' style='color:#9A6A00'>+45,1%</td></tr><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>11,37</td><td class='new'>13,5</td><td class='pct' style='color:#9A6A00'>+18,7%</td></tr><tr><td>EUR</td><td>UE</td><td>d5</td><td class='old'>18,5</td><td class='new'>21,5</td><td class='pct' style='color:#9A6A00'>+16,2%</td></tr><tr><td>EUR</td><td>UE</td><td>d7</td><td class='old'>25,5</td><td class='new'>28,9</td><td class='pct' style='color:#9A6A00'>+13,3%</td></tr><tr><td>EUR</td><td>UE</td><td>d10</td><td class='old'>33,9</td><td class='new'>38,9</td><td class='pct' style='color:#9A6A00'>+14,7%</td></tr><tr><td>EUR</td><td>UE</td><td>d15</td><td class='old'>46,9</td><td class='new'>53,9</td><td class='pct' style='color:#9A6A00'>+14,9%</td></tr><tr><td>EUR</td><td>UE</td><td>d20</td><td class='old'>56,9</td><td class='new'>64,9</td><td class='pct' style='color:#9A6A00'>+14,1%</td></tr><tr><td>EUR</td><td>UE</td><td>d30</td><td class='old'>68,9</td><td class='new'>78,9</td><td class='pct' style='color:#9A6A00'>+14,5%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Canada</span><span class="model">modelo v6</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#0F7A50">-11,1%</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">111/111</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">6</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:95%"></div></div>
+      <div class="barlbl">111 de 117 celdas con precio nuevo ya visible · cambio 16-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>18,9</td><td class='new'>16,9</td><td class='pct' style='color:#0F7A50'>-10,6%</td></tr><tr><td>EUR</td><td>UE</td><td>d5</td><td class='old'>26,9</td><td class='new'>23,9</td><td class='pct' style='color:#0F7A50'>-11,2%</td></tr><tr><td>EUR</td><td>UE</td><td>d7</td><td class='old'>33,9</td><td class='new'>30,5</td><td class='pct' style='color:#0F7A50'>-10,0%</td></tr><tr><td>EUR</td><td>UE</td><td>d10</td><td class='old'>36,9</td><td class='new'>32,5</td><td class='pct' style='color:#0F7A50'>-11,9%</td></tr><tr><td>EUR</td><td>UE</td><td>d15</td><td class='old'>46,9</td><td class='new'>41,9</td><td class='pct' style='color:#0F7A50'>-10,7%</td></tr><tr><td>EUR</td><td>UE</td><td>d20</td><td class='old'>59,5</td><td class='new'>52,9</td><td class='pct' style='color:#0F7A50'>-11,1%</td></tr><tr><td>EUR</td><td>UE</td><td>d30</td><td class='old'>90,5</td><td class='new'>78,9</td><td class='pct' style='color:#0F7A50'>-12,8%</td></tr><tr><td>GBP</td><td>UE</td><td>d3</td><td class='old'>17,0</td><td class='new'>15,0</td><td class='pct' style='color:#0F7A50'>-11,8%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="card landing">
+      <div class="card-head">
+        <div class="ct"><span class="dest">México</span><span class="model">modelo v6 (espejo JSON)</span></div>
+        <span class="badge landing">ATERRIZANDO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#0F7A50">-12,1%</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">18/18</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">34</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:35%"></div></div>
+      <div class="barlbl">18 de 52 celdas con precio nuevo ya visible · cambio 17-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d1</td><td class='old'>5,9</td><td class='new'>4,9</td><td class='pct' style='color:#0F7A50'>-16,9%</td></tr><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>11,9</td><td class='new'>10,5</td><td class='pct' style='color:#0F7A50'>-11,8%</td></tr><tr><td>EUR</td><td>UE</td><td>d5</td><td class='old'>18,5</td><td class='new'>16,5</td><td class='pct' style='color:#0F7A50'>-10,8%</td></tr><tr><td>EUR</td><td>UE</td><td>d7</td><td class='old'>25,5</td><td class='new'>22,5</td><td class='pct' style='color:#0F7A50'>-11,8%</td></tr><tr><td>EUR</td><td>UE</td><td>d10</td><td class='old'>33,9</td><td class='new'>29,9</td><td class='pct' style='color:#0F7A50'>-11,8%</td></tr><tr><td>EUR</td><td>UE</td><td>d15</td><td class='old'>46,9</td><td class='new'>40,9</td><td class='pct' style='color:#0F7A50'>-12,8%</td></tr><tr><td>EUR</td><td>UE</td><td>d20</td><td class='old'>56,9</td><td class='new'>49,9</td><td class='pct' style='color:#0F7A50'>-12,3%</td></tr><tr><td>EUR</td><td>UE</td><td>d30</td><td class='old'>68,9</td><td class='new'>60,5</td><td class='pct' style='color:#0F7A50'>-12,2%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="card landing">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Serbia</span><span class="model">modelo curva Panamá</span></div>
+        <span class="badge landing">ATERRIZANDO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#0F7A50">-11,3%</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">12/12</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">3</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:80%"></div></div>
+      <div class="barlbl">12 de 15 celdas con precio nuevo ya visible · cambio 17-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>18,9</td><td class='new'>16,9</td><td class='pct' style='color:#0F7A50'>-10,6%</td></tr><tr><td>GBP</td><td>UE</td><td>d3</td><td class='old'>17,0</td><td class='new'>15,0</td><td class='pct' style='color:#0F7A50'>-11,8%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="card landing">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Montenegro</span><span class="model">modelo curva Panamá</span></div>
+        <span class="badge landing">ATERRIZANDO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#0F7A50">-6,3%</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">19/19</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">2</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:90%"></div></div>
+      <div class="barlbl">19 de 21 celdas con precio nuevo ya visible · cambio 17-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>18,9</td><td class='new'>16,9</td><td class='pct' style='color:#0F7A50'>-10,6%</td></tr><tr><td>GBP</td><td>UE</td><td>d3</td><td class='old'>17,0</td><td class='new'>15,0</td><td class='pct' style='color:#0F7A50'>-11,8%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="card landing">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Panamá</span><span class="model">modelo OPCIÓN1</span></div>
+        <span class="badge landing">ATERRIZANDO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#0F7A50">-7,0%</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">14/14</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">2</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:88%"></div></div>
+      <div class="barlbl">14 de 16 celdas con precio nuevo ya visible · cambio 17-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>18,9</td><td class='new'>16,9</td><td class='pct' style='color:#0F7A50'>-10,6%</td></tr><tr><td>GBP</td><td>no-UE</td><td>d3</td><td class='old'>17,0</td><td class='new'>15,0</td><td class='pct' style='color:#0F7A50'>-11,8%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="card early">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Perú</span><span class="model">modelo P-28 v11</span></div>
+        <span class="badge early">SEÑAL INICIAL</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#0F7A50">-10,8%</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">5/5</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">22</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:19%"></div></div>
+      <div class="barlbl">5 de 27 celdas con precio nuevo ya visible · cambio 17-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>18,5</td><td class='new'>15,5</td><td class='pct' style='color:#0F7A50'>-16,2%</td></tr><tr><td>EUR</td><td>UE</td><td>d5</td><td class='old'>26,9</td><td class='new'>23,9</td><td class='pct' style='color:#0F7A50'>-11,2%</td></tr><tr><td>EUR</td><td>UE</td><td>d7</td><td class='old'>33,9</td><td class='new'>30,5</td><td class='pct' style='color:#0F7A50'>-10,0%</td></tr><tr><td>EUR</td><td>UE</td><td>d10</td><td class='old'>36,9</td><td class='new'>32,9</td><td class='pct' style='color:#0F7A50'>-10,8%</td></tr><tr><td>EUR</td><td>UE</td><td>d15</td><td class='old'>46,9</td><td class='new'>41,9</td><td class='pct' style='color:#0F7A50'>-10,7%</td></tr><tr><td>EUR</td><td>UE</td><td>d20</td><td class='old'>56,9</td><td class='new'>50,9</td><td class='pct' style='color:#0F7A50'>-10,5%</td></tr><tr><td>EUR</td><td>UE</td><td>d30</td><td class='old'>82,9</td><td class='new'>74,5</td><td class='pct' style='color:#0F7A50'>-10,1%</td></tr><tr><td>GBP</td><td>no-UE</td><td>d3</td><td class='old'>16,0</td><td class='new'>14,0</td><td class='pct' style='color:#0F7A50'>-12,5%</td></tr></tbody></table>
+      </details>
+    </div>
+    <div class="card early">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Puerto Rico</span><span class="model">modelo curva Panamá</span></div>
+        <span class="badge early">SEÑAL INICIAL</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv" style="color:#0F7A50">—</span><span class="ml">Δ mediana</span></div>
+        <div class="metric"><span class="mv">3/3</span><span class="ml">= diseño</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">aún en viejo</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">3 de 3 celdas con precio nuevo ya visible · cambio 17-jul</div>
+      <details><summary>ver muestra de precios (viejo → nuevo vs Mono)</summary>
+        <table><thead><tr><th>Mon</th><th>Región</th><th>Día</th><th>Viejo</th><th>Nuevo=Mono</th><th>Δ</th></tr></thead>
+        <tbody><tr><td>EUR</td><td>UE</td><td>d3</td><td class='old'>18,9</td><td class='new'>16,9</td><td class='pct' style='color:#0F7A50'>-10,6%</td></tr></tbody></table>
+      </details>
+    </div>
+</div>
+
+<div class="foot">
+<b>Método:</b> LEARN-395 · cohorte confirmada, orden de un solo eSIM (<code>COUNT(*)=1</code>), <code>total_discount=0</code>, split comprador UE/no-UE, roaming dedup. Precio nuevo = el que matchea Mono donde ya aparece; convivencia viejo/nuevo = señal de aterrizaje. &nbsp;·&nbsp; <b>Modelos:</b> Perú P-28 v11 · México v6 (espejo JSON) · Canada v6 · Morocco v9 FINAL · Panamá OPCIÓN1 (curva compartida con Montenegro/Serbia/Puerto Rico). &nbsp;·&nbsp; <b>Ventana:</b> 26-jun a 17-jul 09:38 UTC. &nbsp;·&nbsp; Monedas mostradas: EUR/USD/GBP/CAD. &nbsp;·&nbsp; Δ mediana = cambio vs precio pre-cambio de cada celda.
+</div>
+</div></body></html>

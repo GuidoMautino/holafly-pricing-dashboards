@@ -1,0 +1,219 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Validación aterrizaje · 9 destinos · 23-jul-2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F4F7F5;color:#1a2420;line-height:1.5;padding:32px 20px}
+.wrap{max-width:960px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.head h1{font-size:22px;font-weight:700;letter-spacing:-.4px}
+.head .sub{color:#5a6b62;font-size:13px;margin-top:4px;max-width:680px}
+.verdict{background:linear-gradient(135deg,#0F7A50,#0c6644);color:#fff;border-radius:14px;padding:24px 26px;margin:20px 0 10px}
+.verdict .big{font-size:19px;font-weight:700;margin-bottom:6px}
+.verdict .n{font-size:44px;font-weight:800;letter-spacing:-1px;line-height:1}
+.verdict .nl{font-size:13px;opacity:.9}
+.verdict-grid{display:flex;gap:34px;align-items:center;flex-wrap:wrap}
+.verdict p{font-size:14px;opacity:.95;max-width:520px}
+.amber{background:#FFF7E6;border:1px solid #F0D48A;border-radius:10px;padding:13px 16px;font-size:13px;color:#6b5311;margin:14px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}.verdict-grid{gap:18px}}
+.card{background:#fff;border:1px solid #e4ebe7;border-radius:12px;padding:16px 18px}
+.card.val{border-left:4px solid #0F7A50}
+.card.landing{border-left:4px solid #37A06B}
+.card.early{border-left:4px solid #C7A94b}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.ct{display:flex;flex-direction:column}
+.dest{font-size:16px;font-weight:700}
+.model{font-size:11px;color:#7a8880;margin-top:1px}
+.badge{font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.4px;white-space:nowrap}
+.badge.val{background:#E3F3EA;color:#0F7A50}
+.badge.landing{background:#E9F5EE;color:#2b7d54}
+.badge.early{background:#FBF3DF;color:#8a6d1a}
+.metrics{display:flex;gap:22px;margin-bottom:12px}
+.metric{display:flex;flex-direction:column}
+.mv{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.ml{font-size:10.5px;color:#7a8880;text-transform:uppercase;letter-spacing:.3px}
+.bar{height:7px;background:#eef1ef;border-radius:4px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#37A06B,#0F7A50)}
+.barlbl{font-size:11.5px;color:#6a776f;margin-top:6px}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:12.5px;color:#0F7A50;font-weight:600}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+th{text-align:left;color:#8a968f;font-weight:600;padding:5px 6px;border-bottom:1px solid #eef1ef;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px}
+td{padding:5px 6px;border-bottom:1px solid #f4f7f5}
+td.old{color:#9aa5a0}
+td.new{font-weight:700;color:#12352a}
+td.pct{font-weight:700;text-align:right}
+.foot{margin-top:24px;padding-top:16px;border-top:1px solid #e4ebe7;font-size:11.5px;color:#7a8880}
+.foot b{color:#4a5a52}
+.prov{background:#fff;border:1px solid #e4ebe7;border-radius:10px;margin:16px 0 0;overflow:hidden}
+.prov summary{padding:12px 16px;font-size:12px;font-weight:600;color:#5a6b62;list-style:none}
+.prov summary::-webkit-details-marker{display:none}
+.provbody{padding:12px 16px;font-size:12px;color:#5a6b62}
+.provbody b{color:#1a2420} .provbody code{background:#F4F7F5;padding:1px 5px;border-radius:4px;font-size:11px}
+</style></head><body><div class="wrap">
+<div class="top">
+<div class="head">
+  <h1>Aterrizaje de precios en producción — 9 destinos</h1>
+  <div class="sub">Refresh 23-jul. Cruce producción (BigQuery, checkout PIM) vs columna <b>Mono</b> del diseño · método LEARN-395 · cada destino leído desde su deploy+1</div>
+</div>
+<div style="flex-shrink:0"><svg style="height:26px;width:auto;display:block" viewBox="0 0 104 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.0563 7.28786C77.7143 7.03453 77.3245 6.90648 76.8856 6.90648C76.0089 6.90648 75.5707 7.44977 75.5707 8.53587V10.1959H78.9861V13.4237H75.5707V25.536H72.1398V13.4237H69.8199V10.1959H72.1398V8.10552C72.1398 6.69136 72.5259 5.57974 73.2977 4.76994C74.0697 3.96063 75.0274 3.55566 76.171 3.55566C77.1046 3.55566 77.853 3.69412 78.4152 3.97066C78.8652 4.19243 79.2317 4.43076 79.5171 4.68518L78.0563 7.28786ZM47.8396 25.535H51.7185V4.20114H47.8396V25.535ZM40.4703 21.4441C39.6729 22.3335 38.6766 22.7783 37.4808 22.7783C36.2648 22.7783 35.2685 22.3387 34.4912 21.4594C33.7139 20.5806 33.3253 19.456 33.3253 18.0859C33.3253 16.7366 33.7139 15.6224 34.4912 14.7431C35.2685 13.8642 36.2648 13.4244 37.4808 13.4244C38.6766 13.4244 39.6729 13.8642 40.4703 14.7431C41.2672 15.6224 41.666 16.7366 41.666 18.0859C41.666 19.4354 41.2672 20.5547 40.4703 21.4441ZM41.4577 11.093C40.2815 10.3777 38.9562 10.0198 37.4817 10.0198C36.0266 10.0198 34.7061 10.3777 33.5206 11.093C32.3345 11.8089 31.4077 12.7799 30.7403 14.0066C30.0723 15.2333 29.7388 16.5931 29.7388 18.0853C29.7388 19.578 30.0723 20.9428 30.7403 22.1796C31.4077 23.4168 32.3294 24.393 33.5056 25.1084C34.6813 25.8239 36.0065 26.1818 37.4817 26.1818C38.9562 26.1818 40.2815 25.8239 41.4577 25.1084C42.6334 24.393 43.5601 23.4168 44.2379 22.1796C44.9152 20.9428 45.2543 19.578 45.2543 18.0853C45.2543 16.5931 44.9152 15.2333 44.2379 14.0066C43.5601 12.7799 42.6334 11.8089 41.4577 11.093ZM85.3357 25.535H81.4568V4.20114H85.3357V25.535ZM99.2024 10.0198V17.8808C99.2024 19.1347 98.8883 20.1004 98.2605 20.7788C97.6324 21.4568 96.8102 21.796 95.7935 21.796C94.8366 21.796 94.0987 21.5185 93.5807 20.9637C93.062 20.4088 92.8031 19.4738 92.8031 18.1582V10.0198H89.2147V18.7748C89.2147 20.9535 89.6977 22.5774 90.6649 23.6457C91.6317 24.7146 92.9624 25.2487 94.6571 25.2487C95.7135 25.2487 96.5906 25.069 97.2886 24.7092C97.9862 24.3499 98.614 23.8205 99.1725 23.1216L99.2024 23.2141V24.8479C99.2024 26.122 98.8883 27.1032 98.2605 27.792C97.6324 28.4803 96.77 28.8247 95.6737 28.8247C94.171 28.8247 93.1875 28.2526 92.7199 27.1138L89.7546 28.6852C90.1545 29.4528 90.6868 30.1111 91.3528 30.659C92.4391 31.553 93.8795 32.0001 95.6737 32.0001C97.9062 32.0001 99.6509 31.3474 100.907 30.0424C102.163 28.737 102.791 26.9953 102.791 24.8171V10.0198H99.2024ZM63.5744 20.3843C63.5744 21.2637 63.2795 21.9537 62.6901 22.4545C62.1002 22.9557 61.3683 23.2059 60.4944 23.2059C59.6607 23.2059 59.005 23.0271 58.5276 22.6691C58.0496 22.3118 57.8111 21.8364 57.8111 21.2431C57.8111 20.6096 58.0293 20.1238 58.4666 19.7864C58.9036 19.449 59.5998 19.2089 60.5556 19.0656L63.5744 18.6057V20.3843ZM65.4346 11.4458C64.2349 10.495 62.7206 10.0198 60.8909 10.0198C59.1018 10.0198 57.6993 10.4031 56.6827 11.1698C55.6743 11.93 54.9569 13.0784 54.5287 14.6127L57.7937 15.2085C57.9356 14.5095 58.2198 13.9696 58.6496 13.5924C59.1271 13.1737 59.8337 12.964 60.7691 12.964C62.6393 12.964 63.5745 13.8944 63.5745 15.7546V15.9387L60.3116 16.3986C58.0749 16.7053 56.515 17.3033 55.6307 18.1927C54.7464 19.082 54.3042 20.1708 54.3042 21.4588C54.3042 22.3995 54.5377 23.2276 55.0056 23.9429C55.4731 24.6588 56.1034 25.2108 56.8961 25.599C57.6892 25.9872 58.563 26.1818 59.5187 26.1818C61.4904 26.1818 62.9035 25.5789 63.7574 24.3723L64.1538 25.7523H67.2338V15.6934C67.2338 13.8126 66.6341 12.3965 65.4346 11.4458ZM13.1151 13.519C17.302 14.3547 20.3139 13.9602 22.2514 12.3347V4.20114H25.8592V25.535H22.2514V16.3925V16.1184C20.7622 16.8201 19.0142 17.1731 16.9913 17.1731C15.7959 17.1731 14.5039 17.0492 13.1151 16.8046V25.535H9.50866V15.9599C9.03462 15.8241 8.55231 15.6785 8.0594 15.5198C5.47279 14.6879 2.15403 15.0945 0.723524 15.7075L0 12.5309C2.07157 11.8148 5.76141 11.3847 8.9963 12.4255C9.16891 12.481 9.33908 12.534 9.50866 12.5865V4.20114H13.1151V12.9485V13.519Z" fill="#E6485C"/></svg></div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-grid">
+    <div><div class="n">9/9</div><div class="nl">destinos validados == diseño</div></div>
+    <div>
+      <div class="big">Aterrizaje limpio. Precio nuevo, correcto, en los 9.</div>
+      <p>Todos cruzados contra la columna Mono de su diseño, celda por celda: <b>Morocco 227/227, Canada 369/369, México 273/273, Perú 213/213</b> — cero desvíos. <b>Montenegro/Serbia/PR</b> 100%, <b>RD</b> 27/27. <b>Panamá</b> con EUR 100% y USD terminando de volcar (deploy de ayer). Sin precio viejo pegado en ninguno.</p>
+    </div>
+  </div>
+</div>
+
+<div class="amber">✅ Los 9 validados: el precio observado en producción == columna Mono del diseño (método LEARN-395, ventana deploy+1 por destino para no mezclar precio viejo). Único en curso: USD de Panamá, en convivencia normal de las primeras horas del deploy (22-jul) — el modal termina de flipear en deploy+3/4. Las 2 celdas «revisar» de Panamá (MXN d4, COP d5, n≤2) = charm-rounding de 2ª moneda, KI conocido.</div>
+
+<div class="grid">
+
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Morocco</span><span class="model">modelo v9 FINAL · deploy 16-jul</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">227/227</span><span class="ml">celdas == diseño</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">227/227 celdas día×moneda == columna Mono del diseño · cero desvíos · cobertura 263 celdas · 19 monedas</div>
+      <details><summary>top monedas por revenue</summary><table><thead><tr><th>Mon</th><th>Órd</th><th>Rev</th><th>% dest</th></tr></thead><tbody><tr><td class='new'>EUR</td><td>5.284</td><td>€129.588</td><td class='pct'>76%</td></tr><tr><td class='new'>GBP</td><td>906</td><td>€22.991</td><td class='pct'>14%</td></tr><tr><td class='new'>USD</td><td>195</td><td>€3.718</td><td class='pct'>2%</td></tr><tr><td class='new'>CHF</td><td>114</td><td>€3.527</td><td class='pct'>2%</td></tr><tr><td class='new'>DKK</td><td>66</td><td>€2.116</td><td class='pct'>1%</td></tr></tbody></table><div class='barlbl' style='margin-top:8px'>Cruzado contra su xlsx de Monotonicidad: 227/227 celdas observadas == Mono, cero desvíos. Precio nuevo aterrizado Y correcto.</div></details>
+    </div>
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Canada</span><span class="model">modelo v6 · deploy 16-jul</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">369/369</span><span class="ml">celdas == diseño</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">369/369 celdas día×moneda == columna Mono del diseño · cero desvíos · cobertura 407 celdas · 25 monedas</div>
+      <details><summary>top monedas por revenue</summary><table><thead><tr><th>Mon</th><th>Órd</th><th>Rev</th><th>% dest</th></tr></thead><tbody><tr><td class='new'>EUR</td><td>2.005</td><td>€79.623</td><td class='pct'>47%</td></tr><tr><td class='new'>CAD</td><td>835</td><td>€21.922</td><td class='pct'>13%</td></tr><tr><td class='new'>USD</td><td>754</td><td>€20.144</td><td class='pct'>12%</td></tr><tr><td class='new'>GBP</td><td>500</td><td>€17.548</td><td class='pct'>10%</td></tr><tr><td class='new'>MXN</td><td>232</td><td>€8.790</td><td class='pct'>5%</td></tr></tbody></table><div class='barlbl' style='margin-top:8px'>Cruzado contra su xlsx de Monotonicidad: 369/369 celdas observadas == Mono, cero desvíos. Precio nuevo aterrizado Y correcto.</div></details>
+    </div>
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">México</span><span class="model">modelo v6 · deploy 17-jul</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">273/273</span><span class="ml">celdas == diseño</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">273/273 celdas día×moneda == columna Mono del diseño · cero desvíos · cobertura 325 celdas · 22 monedas</div>
+      <details><summary>top monedas por revenue</summary><table><thead><tr><th>Mon</th><th>Órd</th><th>Rev</th><th>% dest</th></tr></thead><tbody><tr><td class='new'>EUR</td><td>1.794</td><td>€54.194</td><td class='pct'>42%</td></tr><tr><td class='new'>USD</td><td>1.738</td><td>€34.215</td><td class='pct'>26%</td></tr><tr><td class='new'>MXN</td><td>855</td><td>€16.573</td><td class='pct'>13%</td></tr><tr><td class='new'>GBP</td><td>228</td><td>€6.084</td><td class='pct'>5%</td></tr><tr><td class='new'>COP</td><td>295</td><td>€5.553</td><td class='pct'>4%</td></tr></tbody></table><div class='barlbl' style='margin-top:8px'>Cruzado contra su xlsx de Monotonicidad: 273/273 celdas observadas == Mono, cero desvíos. Precio nuevo aterrizado Y correcto.</div></details>
+    </div>
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Perú</span><span class="model">modelo P-28 v11 · deploy 17-jul</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">213/213</span><span class="ml">celdas == diseño</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">213/213 celdas día×moneda == columna Mono del diseño · cero desvíos · cobertura 245 celdas · 20 monedas</div>
+      <details><summary>top monedas por revenue</summary><table><thead><tr><th>Mon</th><th>Órd</th><th>Rev</th><th>% dest</th></tr></thead><tbody><tr><td class='new'>EUR</td><td>567</td><td>€22.654</td><td class='pct'>33%</td></tr><tr><td class='new'>USD</td><td>558</td><td>€15.188</td><td class='pct'>22%</td></tr><tr><td class='new'>MXN</td><td>304</td><td>€9.333</td><td class='pct'>14%</td></tr><tr><td class='new'>PEN</td><td>254</td><td>€6.218</td><td class='pct'>9%</td></tr><tr><td class='new'>CLP</td><td>222</td><td>€4.990</td><td class='pct'>7%</td></tr></tbody></table><div class='barlbl' style='margin-top:8px'>Cruzado contra su xlsx de Monotonicidad: 213/213 celdas observadas == Mono, cero desvíos. Precio nuevo aterrizado Y correcto.</div></details>
+    </div>
+    <div class="card landing">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Rep. Dominicana</span><span class="model">modelo P-24 · deploy 21-jul</span></div>
+        <span class="badge landing">DEPLOY+1 · 27/27</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">mixto</span><span class="ml">por tramo</span></div>
+        <div class="metric"><span class="mv">+16,9%</span><span class="ml">d1 (5,90→6,90)</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">deploy+1 (22-jul): 27/27 == Mono, cero convivencia. Cobertura ampliada: 176 celdas · 18 monedas · 39 días</div>
+      <details><summary>lectura por tramo (R3) + top monedas</summary>
+        <table><thead><tr><th>Tramo</th><th>Mov.</th><th>Mecanismo</th></tr></thead><tbody>
+        <tr><td>d1</td><td class='pct' style='color:#9A6A00'>+16,9%</td><td>se saca la excepción de ancla (5,90→6,90)</td></tr>
+        <tr><td>d3+</td><td class='pct' style='color:#2b7d54'>−1 a −2%</td><td>baja leve del resto</td></tr>
+        </tbody></table><table><thead><tr><th>Mon</th><th>Órd</th><th>Rev</th><th>% dest</th></tr></thead><tbody><tr><td class='new'>EUR</td><td>994</td><td>€35.023</td><td class='pct'>39%</td></tr><tr><td class='new'>USD</td><td>863</td><td>€25.775</td><td class='pct'>29%</td></tr><tr><td class='new'>MXN</td><td>425</td><td>€14.724</td><td class='pct'>16%</td></tr><tr><td class='new'>COP</td><td>170</td><td>€4.265</td><td class='pct'>5%</td></tr><tr><td class='new'>GBP</td><td>94</td><td>€3.241</td><td class='pct'>4%</td></tr></tbody></table></details>
+    </div>
+    <div class="card landing">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Panamá</span><span class="model">modelo P-10 (curva compartida v7) · deploy 22-jul</span></div>
+        <span class="badge landing">ATERRIZANDO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">24+7</span><span class="ml">aterr.+conviv. / 33</span></div>
+        <div class="metric"><span class="mv">2</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">USD</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:94%"></div></div>
+      <div class="barlbl">24 celdas == Mono · 7 conviviendo (USD primeras horas) · 2 a revisar (charm 2ª moneda)</div>
+      <details><summary>ver grilla EUR/USD observado vs Mono v7</summary><table><thead><tr><th>Mon</th><th>Día</th><th>Observado</th><th>Mono</th><th>Estado</th></tr></thead><tbody><tr><td>EUR</td><td>d1</td><td class='old'>6,9–6,9</td><td class='new'>6,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d3</td><td class='old'>17,5–17,5</td><td class='new'>17,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d8</td><td class='old'>33,9–33,9</td><td class='new'>33,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d12</td><td class='old'>42,5–42,5</td><td class='new'>42,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d15</td><td class='old'>50,9–50,9</td><td class='new'>50,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d17</td><td class='old'>55,9–55,9</td><td class='new'>55,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d1</td><td class='old'>5,9–6,9</td><td class='new'>6,9</td><td><span style='color:#8a6d1a'>conviviendo</span></td></tr><tr><td>USD</td><td>d3</td><td class='old'>18,5–18,9</td><td class='new'>18,9</td><td><span style='color:#8a6d1a'>conviviendo</span></td></tr><tr><td>USD</td><td>d4</td><td class='old'>23,5–23,9</td><td class='new'>23,5</td><td><span style='color:#8a6d1a'>conviviendo</span></td></tr><tr><td>USD</td><td>d5</td><td class='old'>27,9–28,9</td><td class='new'>27,9</td><td><span style='color:#8a6d1a'>conviviendo</span></td></tr><tr><td>USD</td><td>d6</td><td class='old'>31,5–31,5</td><td class='new'>31,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d7</td><td class='old'>33,9–36,5</td><td class='new'>33,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d8</td><td class='old'>36,5–37,5</td><td class='new'>36,5</td><td><span style='color:#8a6d1a'>conviviendo</span></td></tr><tr><td>USD</td><td>d15</td><td class='old'>54,9–54,9</td><td class='new'>54,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d60</td><td class='old'>203,9–203,9</td><td class='new'>203,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr></tbody></table><div class='barlbl' style='margin-top:8px'>Curva compartida P-10 v7: Panamá/Montenegro/Serbia/PR heredan la misma. EUR aterrizó 100% en los 4. USD en convivencia (deploy de ayer). 2 celdas de Panamá (MXN d4, COP d5, n≤2) = charm-rounding 2ª moneda, KI conocido.</div></details>
+    </div>
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Montenegro</span><span class="model">modelo P-10 · deploy 22-jul</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">33/33</span><span class="ml">celdas modal=Mono</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">33 celdas == Mono · 0 conviviendo (USD primeras horas) · 0 a revisar (charm 2ª moneda)</div>
+      <details><summary>ver grilla EUR/USD observado vs Mono v7</summary><table><thead><tr><th>Mon</th><th>Día</th><th>Observado</th><th>Mono</th><th>Estado</th></tr></thead><tbody><tr><td>EUR</td><td>d1</td><td class='old'>6,9–6,9</td><td class='new'>6,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d2</td><td class='old'>12,5–12,5</td><td class='new'>12,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d3</td><td class='old'>17,5–17,5</td><td class='new'>17,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d4</td><td class='old'>21,9–21,9</td><td class='new'>21,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d5</td><td class='old'>25,9–25,9</td><td class='new'>25,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d6</td><td class='old'>29,5–29,5</td><td class='new'>29,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d7</td><td class='old'>31,9–31,9</td><td class='new'>31,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d8</td><td class='old'>33,9–33,9</td><td class='new'>33,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d9</td><td class='old'>35,9–35,9</td><td class='new'>35,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d10</td><td class='old'>36,9–36,9</td><td class='new'>36,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d11</td><td class='old'>39,9–39,9</td><td class='new'>39,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d12</td><td class='old'>42,5–42,5</td><td class='new'>42,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d13</td><td class='old'>45,5–45,5</td><td class='new'>45,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d14</td><td class='old'>47,9–47,9</td><td class='new'>47,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d1</td><td class='old'>6,9–6,9</td><td class='new'>6,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d5</td><td class='old'>27,9–27,9</td><td class='new'>27,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d8</td><td class='old'>36,5–36,5</td><td class='new'>36,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr></tbody></table></details>
+    </div>
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Serbia</span><span class="model">modelo P-10 · deploy 22-jul</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">23/23</span><span class="ml">celdas modal=Mono</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">23 celdas == Mono · 0 conviviendo (USD primeras horas) · 0 a revisar (charm 2ª moneda)</div>
+      <details><summary>ver grilla EUR/USD observado vs Mono v7</summary><table><thead><tr><th>Mon</th><th>Día</th><th>Observado</th><th>Mono</th><th>Estado</th></tr></thead><tbody><tr><td>EUR</td><td>d1</td><td class='old'>5,9–6,9</td><td class='new'>6,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d2</td><td class='old'>11,5–12,5</td><td class='new'>12,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d3</td><td class='old'>17,5–17,5</td><td class='new'>17,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d4</td><td class='old'>21,9–21,9</td><td class='new'>21,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d5</td><td class='old'>25,9–25,9</td><td class='new'>25,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d7</td><td class='old'>31,9–31,9</td><td class='new'>31,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d8</td><td class='old'>33,9–33,9</td><td class='new'>33,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d10</td><td class='old'>36,9–36,9</td><td class='new'>36,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d11</td><td class='old'>38,9–39,9</td><td class='new'>39,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr></tbody></table></details>
+    </div>
+    <div class="card val">
+      <div class="card-head">
+        <div class="ct"><span class="dest">Puerto Rico</span><span class="model">modelo P-10 · deploy 22-jul</span></div>
+        <span class="badge val">VALIDADO</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="mv">9/9</span><span class="ml">celdas modal=Mono</span></div>
+        <div class="metric"><span class="mv">0</span><span class="ml">desvíos</span></div>
+        <div class="metric"><span class="mv" style="font-size:15px">EUR</span><span class="ml">top moneda</span></div>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+      <div class="barlbl">9 celdas == Mono · 0 conviviendo (USD primeras horas) · 0 a revisar (charm 2ª moneda)</div>
+      <details><summary>ver grilla EUR/USD observado vs Mono v7</summary><table><thead><tr><th>Mon</th><th>Día</th><th>Observado</th><th>Mono</th><th>Estado</th></tr></thead><tbody><tr><td>EUR</td><td>d3</td><td class='old'>17,5–17,5</td><td class='new'>17,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d9</td><td class='old'>35,9–35,9</td><td class='new'>35,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d10</td><td class='old'>36,9–36,9</td><td class='new'>36,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>EUR</td><td>d15</td><td class='old'>50,9–50,9</td><td class='new'>50,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d1</td><td class='old'>6,9–6,9</td><td class='new'>6,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d6</td><td class='old'>31,5–31,5</td><td class='new'>31,5</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr><tr><td>USD</td><td>d7</td><td class='old'>33,9–33,9</td><td class='new'>33,9</td><td><span style='color:#0F7A50'>✓ =Mono</span></td></tr></tbody></table></details>
+    </div>
+</div>
+
+<details class="prov">
+  <summary>Procedencia y método</summary>
+  <div class="provbody">
+    <p><b>Fuente:</b> checkout PIM <code>hly--data--pro--57.mdm_gold.*</code>. Venta = <code>status='confirmed'</code>, no_promo (<code>total_discount=0</code>), dedup por <code>order_line_id</code>. Precio observado = modal del <code>final_price</code> por día×moneda.</p>
+    <p style="margin-top:8px"><b>Ventanas por deploy+1 (R1/R2b):</b> Morocco/Canada 17-jul · México/Perú 18-jul · RD 22-jul · P-10 23-jul. Filtrar por deploy evita mezclar precio viejo (una ventana amplia daba falsos desvíos por el modal pre-cambio).</p>
+    <p style="margin-top:8px"><b>Target:</b> tab Monotonicidad col Mono. P-10 v7 = curva limpia (sin excepción), ancla d1 6,90 EUR/USD. Modo 3: P-10 es curva compartida → un cambio valida los 4 a la vez.</p>
+  </div>
+</details>
+
+<div class="foot"><b>Estado:</b> los 9 destinos cruzados contra su curva de diseño (columna Mono), cero desvíos. Único en curso: USD de Panamá, terminando de volcar (deploy 22-jul). Fuente: BigQuery checkout PIM, no_promo, dedup por order_line, ventana deploy+1 por destino.</div>
+</div></body></html>

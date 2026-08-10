@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluación metodológica de pricing · Holafly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#E6485C;
+  --charcoal:#292B2E;
+  --paper:#FFFCF7;
+  --paper-warm:#F7F2EA;
+  --yellow:#FFE7A0;
+  --green:#2E7D52;
+  --green-bg:#EAF5EE;
+  --amber:#B87400;
+  --amber-bg:#FDF3E0;
+  --red-bg:#FCEDEE;
+  --line:rgba(41,43,46,.12);
+  --muted:rgba(41,43,46,.62);
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --pad: 96px max(28px, calc((100vw - 1180px)/2));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{
+  margin:0;background:var(--paper);color:var(--charcoal);
+  font-family:'Mulish',system-ui,sans-serif;font-size:17.5px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.num,table,.stat-v,.figure-bar b,.ev-code{font-variant-numeric:tabular-nums}
+
+header{
+  position:sticky;top:0;z-index:50;background:rgba(255,252,247,.94);
+  backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line);
+}
+.hbar{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:13px max(28px, calc((100vw - 1180px)/2))}
+.brand{display:flex;align-items:baseline;gap:10px;font-weight:900;letter-spacing:-.02em;font-size:19px}
+.brand span{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.16em;
+  color:var(--pink);border:1px solid var(--pink);border-radius:3px;padding:2px 6px;
+}
+nav{display:flex;gap:18px;margin-left:auto;flex-wrap:wrap}
+nav a{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:1.5px solid transparent;
+  transition:color .18s var(--ease-out),border-color .18s var(--ease-out);
+}
+@media (hover:hover){nav a:hover{color:var(--charcoal);border-bottom-color:var(--pink)}}
+nav a:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:2px}
+
+section{padding:var(--pad)}
+.warm{background:var(--paper-warm)}
+.dark{background:var(--charcoal);color:var(--paper)}
+.dark .kicker{color:#FFB3BC}
+.wrap{max-width:1180px;margin:0 auto}
+.kicker{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.18em;
+  color:var(--pink);text-transform:uppercase;margin:0 0 14px;
+}
+h1{font-size:clamp(40px,5vw,72px);line-height:1.02;letter-spacing:-.035em;font-weight:900;margin:0 0 26px;max-width:16ch}
+h2{font-size:clamp(30px,3.4vw,48px);line-height:1.08;letter-spacing:-.03em;font-weight:900;margin:0 0 26px;max-width:20ch}
+h3{font-size:20px;line-height:1.3;letter-spacing:-.015em;font-weight:800;margin:38px 0 8px}
+p{max-width:780px;margin:0 0 18px}
+.lead{font-size:21.5px;line-height:1.55;max-width:830px}
+.mark{background:linear-gradient(transparent 62%,var(--yellow) 62%);padding:0 2px}
+strong{font-weight:800}
+
+.grid{display:grid;gap:18px;margin:30px 0}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 26px;box-shadow:0 1px 2px rgba(41,43,46,.04)}
+.card p{margin:0;font-size:16.5px}
+.card p + p{margin-top:12px}
+.card h4{margin:0 0 10px;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.card.bar-red{border-top:4px solid var(--pink)}
+.card.bar-amber{border-top:4px solid var(--amber)}
+.card.bar-green{border-top:4px solid var(--green)}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:12px}
+.t-red{background:var(--red-bg);color:var(--pink)}
+.t-amber{background:var(--amber-bg);color:var(--amber)}
+.t-green{background:var(--green-bg);color:var(--green)}
+
+/* evidencia: ya lo teníamos */
+.ev{border-top:1px solid var(--line);padding:20px 0;display:grid;grid-template-columns:186px 1fr;gap:24px;align-items:start}
+.ev:last-of-type{border-bottom:1px solid var(--line)}
+@media(max-width:820px){.ev{grid-template-columns:1fr;gap:8px}}
+.ev-code{
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.04em;
+  color:var(--green);background:var(--green-bg);border:1px solid rgba(46,125,82,.24);
+  border-radius:6px;padding:7px 10px;display:inline-block;line-height:1.35;
+}
+.ev-code em{display:block;font-style:normal;color:rgba(41,43,46,.55);font-weight:400;font-size:10.5px;letter-spacing:.06em;margin-top:3px}
+.ev h4{margin:0 0 6px;font-size:17.5px;font-weight:800;letter-spacing:-.015em}
+.ev p{margin:0;font-size:16.5px;max-width:840px}
+.ev .ph{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:8px;display:block}
+
+.change{display:grid;grid-template-columns:56px 1fr;gap:20px;align-items:start;padding:24px 0;border-top:1px solid var(--line)}
+.change:last-child{border-bottom:1px solid var(--line)}
+.change .n{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;color:var(--pink);line-height:1;padding-top:4px}
+.change h4{margin:0 0 8px;font-size:19px;font-weight:800;letter-spacing:-.015em}
+.change p{margin:0;font-size:16.5px;max-width:840px}
+.change p + p{margin-top:10px}
+
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:30px 0}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.stats{grid-template-columns:1fr}}
+.stats.s3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.stats.s3{grid-template-columns:1fr}}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.dark .stat{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+.stat-v{font-size:36px;font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:8px}
+.stat-l{font-size:14.5px;color:var(--muted);line-height:1.45}
+.dark .stat-l{color:rgba(255,252,247,.72)}
+
+table.data{border-collapse:collapse;width:100%;max-width:860px;margin:26px 0;font-size:15.5px}
+table.data th,table.data td{text-align:right;padding:11px 14px;border-bottom:1px solid var(--line)}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data thead th{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;border-bottom:2px solid var(--charcoal);
+}
+table.data tbody tr:last-child td{border-bottom:none}
+table.data .hi{color:var(--pink);font-weight:800}
+
+.figure{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:30px 0;max-width:860px}
+.figure .cap{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.figure-bar{display:grid;grid-template-columns:190px 1fr;gap:16px;align-items:center;margin-bottom:14px;font-size:15.5px}
+@media(max-width:640px){.figure-bar{grid-template-columns:1fr;gap:4px}}
+.figure-bar .lbl{color:var(--muted)}
+.figure-bar .track{display:flex;align-items:center;gap:12px}
+.figure-bar .fill{height:26px;border-radius:5px}
+.f-grey{background:var(--charcoal);opacity:.82}
+.f-pink{background:var(--pink)}
+.figure-bar b{font-weight:800;font-size:16px}
+.figure .note{font-size:14.5px;color:var(--muted);margin:16px 0 0;max-width:none}
+
+.callout{border-left:4px solid var(--pink);background:#fff;border-radius:0 12px 12px 0;padding:22px 26px;margin:28px 0;max-width:870px}
+.callout p{margin:0;font-size:17px}
+.callout p + p{margin-top:12px}
+.callout.amber{border-left-color:var(--amber);background:var(--amber-bg)}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+
+ul.clean{list-style:none;padding:0;margin:20px 0;max-width:830px}
+ul.clean li{position:relative;padding-left:26px;margin-bottom:12px;max-width:none}
+ul.clean li::before{content:"";position:absolute;left:6px;top:11px;width:7px;height:7px;border-radius:50%;background:var(--pink)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:22px 0;max-width:820px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;margin-bottom:14px}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;
+  background:var(--charcoal);color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:13px;
+  display:flex;align-items:center;justify-content:center;font-weight:600;
+}
+
+details.tech{border:1px solid var(--line);border-radius:12px;background:#fff;margin:22px 0;max-width:900px}
+details.tech summary{cursor:pointer;padding:18px 24px;font-weight:800;font-size:17px;list-style:none;display:flex;align-items:center;gap:12px}
+details.tech summary::-webkit-details-marker{display:none}
+details.tech summary::before{content:"+";font-family:'JetBrains Mono',monospace;color:var(--pink);font-size:20px;line-height:1}
+details.tech[open] summary::before{content:"–"}
+details.tech summary:focus-visible{outline:2px solid var(--pink);outline-offset:-2px;border-radius:12px}
+details.tech .body{padding:0 24px 24px}
+.math{font-family:'JetBrains Mono',monospace;font-size:16px;background:var(--paper-warm);border-radius:8px;padding:14px 18px;margin:14px 0;display:inline-block}
+
+a{color:var(--pink)}
+.ftr{padding:36px max(28px, calc((100vw - 1180px)/2));border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.08em;color:var(--muted);display:flex;gap:26px;flex-wrap:wrap}
+summary{transition:transform .16s var(--ease-out)}
+summary:active{transform:scale(0.97)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{header{position:static}details.tech{border:none}details.tech .body{display:block!important}section{padding:24px 0;break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="brand">holafly <span>Pricing</span></div>
+    <nav>
+      <a href="#hallazgos">Hallazgos</a>
+      <a href="#yateniamos">Ya lo teníamos</a>
+      <a href="#cogs">COGS</a>
+      <a href="#fondo">Problema de fondo</a>
+      <a href="#nuevo">Lo nuevo</a>
+      <a href="#pedimos">Los 3 pedidos</a>
+      <a href="#anexo">Anexo</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section>
+  <div class="wrap">
+    <p class="kicker">Evaluación externa · Product Hackers · 4 de agosto de 2026</p>
+    <h1>Qué nos dijeron y qué hacemos</h1>
+    <p class="lead">Product Hackers auditó cuatro experimentos, UK, USA, Perú y Marruecos, leyendo nuestra documentación de Notion. Esto es el resumen, cruzado contra nuestro sistema de specs y contra los datos, al <span class="num">10 de agosto</span>.</p>
+
+    <div class="callout">
+      <p><strong>El titular.</strong> El método está bien planteado y ocho de sus doce recomendaciones ya estaban resueltas en nuestro sistema, con número y fecha, antes de que ellos escribieran el informe. Auditaron el Notion, y el Notion no refleja el sistema.</p>
+      <p>Lo que sí encontraron, y no escribieron con ese nombre, es un problema de resolución: venimos midiendo cambios de precio de <span class="num">3%</span> a <span class="num">6%</span> con un instrumento cuyo margen de error es más grande que eso. Es pesar una carta con una balanza de camiones. Por eso tres cierres seguidos terminaron sin veredicto concluyente.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-v">12</div>
+        <div class="stat-l">recomendaciones del informe</div>
+      </div>
+      <div class="stat">
+        <div class="stat-v" style="color:var(--green)">8</div>
+        <div class="stat-l">ya resueltas en nuestro sistema, o inaplicables por error del informe</div>
+      </div>
+      <div class="stat">
+        <div class="stat-v">4</div>
+        <div class="stat-l">nuevas, que adoptamos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-v" style="color:var(--pink)">1</div>
+        <div class="stat-l">hallazgo propio, más grave que cualquiera de los doce</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HALLAZGOS -->
+<section class="warm" id="hallazgos">
+  <div class="wrap">
+    <p class="kicker">01 · Qué encontraron</p>
+    <h2>Diseño sólido, tres señalamientos</h2>
+    <p>La lectura general es favorable: el diseño está bien pensado y la disciplina crece de un experimento al siguiente.</p>
+
+    <div class="grid g3">
+      <div class="card bar-red">
+        <span class="tag t-red">Fuente de datos</span>
+        <h4>COGS Hub sin fuente confiable de margen</h4>
+        <p>Tercera aparición en tres experimentos. El diagnóstico que citan quedó viejo: el mecanismo real lo encontramos el <span class="num">4 de agosto</span>. Ver sección 03.</p>
+      </div>
+      <div class="card bar-amber">
+        <span class="tag t-amber">Modelo</span>
+        <h4>El modelo de Perú se inventa un efecto</h4>
+        <p>Corrido en un período sin cambios reporta <span class="num">+5,3%</span> contra una barra de éxito de <span class="num">+5,4%</span>. Ya estaba documentado como LEARN-399 desde el <span class="num">17 de julio</span>, con la cota <span class="num">+9,2%</span> que ellos no vieron.</p>
+      </div>
+      <div class="card bar-red">
+        <span class="tag t-red">Proceso</span>
+        <h4>Marruecos lanzó con un riesgo alto sin resolver</h4>
+        <p>Agosto es temporada Marhaba, los viajes de la diáspora marroquí, y el chequeo contra <span class="num">2025</span> quedó pendiente. Este señalamiento es correcto y no teníamos regla que lo impidiera.</p>
+      </div>
+    </div>
+
+    <h3>Dónde el informe se equivoca</h3>
+    <ul class="clean">
+      <li><strong>Mezclaron dos versiones del experimento de USA.</strong> Lo que critican, control Perú con series que divergen <span class="num">42%</span>, es la V1, que nunca se lanzó. La V2 que sí corrió usa México, con <span class="num">14,3%</span> de divergencia, dentro de umbral.</li>
+      <li><strong>Le atribuyeron a UK un dato de cobertura de Adobe</strong> que pertenece al experimento de USA.</li>
+      <li><strong>El diagnóstico del COGS que citan ya no es el vigente.</strong></li>
+    </ul>
+  </div>
+</section>
+
+<!-- YA LO TENIAMOS -->
+<section id="yateniamos">
+  <div class="wrap">
+    <p class="kicker">02 · Lo que ya teníamos identificado</p>
+    <h2>Ocho de doce, con número y fecha</h2>
+    <p>Cada línea es un aprendizaje ya capturado en nuestro sistema de specs, con su fecha de captura y el caso que lo originó. Todos son anteriores al informe. La evidencia es verificable en el spec, no es una afirmación.</p>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-365<em>6 jul 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>Gate de poder antes de fijar la métrica primaria</h4>
+        <p>Correr el mínimo detectable de la métrica primaria contra el volumen real del destino ANTES de lockearla. Si no alcanza significancia en horizonte práctico, la decisión se re-ancla pre-lanzamiento. Caso Perú: ARPU con <span class="num">18,3%</span> a <span class="num">14</span> días contra objetivo <span class="num">+5,5%</span>, inconfirmable, se pasó a revenue vs contrafactual con <span class="num">7,9%</span>.</p>
+        <span class="ph">Cubre la recomendación 1 del informe</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-366<em>6 jul 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>Los umbrales de veredicto se derivan del break-even del propio diseño</h4>
+        <p>Nunca heredados de otro experimento ni redondeados a mano. Caso: el <span class="num">+5,8%</span> huérfano se reemplazó por el punto margen-neutral formulado.</p>
+        <span class="ph">Cubre parte de la recomendación 1</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-382<em>13 jul 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>Ningún control set se lockea sin placebo hacia delante</h4>
+        <p>Con barra pre-declarada: fantasma a D+28 menor que la mitad del mínimo detectable, más sanity anual estructural por candidato. El informe pide pre-declarar el umbral de validez del control; está pre-declarado desde julio.</p>
+        <span class="ph">Cubre la recomendación 5</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-383<em>13 jul 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>Tendencia lineal prohibida en el contrafactual hacia delante</h4>
+        <p>Es exactamente el hallazgo que el informe presenta sobre Perú: la especificación con tendencia extrapola la rampa y fabrica un efecto falso. Nosotros lo prohibimos como regla tres semanas antes del informe.</p>
+        <span class="ph">Anticipa el hallazgo del placebo de Perú</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-388<em>13 jul 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>Gates contra presión de calendario, con firma nominal</h4>
+        <p>Un gate solo se relaja por decisión explícita del aprobador que lo puso, con el costo cuantificado delante. Caso textual en el spec: adelantar Perú dos semanas deja el baseline en <span class="num">26</span> días en vez de <span class="num">42</span>, con el mínimo detectable ~<span class="num">12%</span> peor, y lo firma Joan, no es default. Incluye el re-etiquetado a decisión de pricing sin medición cuando no hay medición válida, con el caso México.</p>
+        <span class="ph">Cubre las recomendaciones 11 y parte de la 4</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-399<em>17 jul 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>Protocolo de lectura con fantasma positivo</h4>
+        <p>Cuando el fantasma se parece a la barra de decisión y al mínimo detectable, las lecturas tempranas son solo direccionales y la red de seguridad pasa a ser margen por consumo real más comparación anual. Incluye lo que el informe no vio: el sesgo positivo <strong>enmascara daño real</strong>, una caída verdadera de <span class="num">8%</span> puede leerse como <span class="num">3%</span>.</p>
+        <span class="ph">Anticipa y extiende el hallazgo del informe sobre Perú</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-405<em>20 jul 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>El mínimo detectable se valida contra varianza fuera de muestra</h4>
+        <p>Las series diarias están autocorrelacionadas, así que el cálculo en muestra sobre-cuenta el N efectivo y devuelve un mínimo detectable más chico que el real. Todo mínimo que gatee un lanzamiento se valida por bloques. Caso México: <span class="num">12,6%</span> de dispersión en <span class="num">24</span> meses, clasificado como inmedible.</p>
+        <span class="ph">Va más lejos que la recomendación 1 del informe</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-325<em>17 jun 2026 · frontier doc</em></span></div>
+      <div>
+        <h4>Reducción de varianza como palanca de viabilidad</h4>
+        <p>Winsorización y CUPED están capturados desde junio como palanca que puede recortar ~<span class="num">50%</span> el tiempo de test, marcados PROVISIONAL y a validar con datos propios. El informe los propone; nosotros ya sabíamos que existen y por qué todavía no los adoptamos.</p>
+        <span class="ph">Cubre la recomendación 6</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-364<em>6 jul 2026 · data_checklist v1.25</em></span></div>
+      <div>
+        <h4>COGS Hub en cuarentena como fuente de margen</h4>
+        <p>El guardrail de margen ya corre por el método de consumo real desde julio, no por el Hub. El informe recomienda bloquear el guardrail cuya fuente está rota; ya estaba bloqueado.</p>
+        <span class="ph">Cubre la recomendación 10</span>
+      </div>
+    </div>
+
+    <div class="ev">
+      <div><span class="ev-code">LEARN-227<em>21 may 2026 · calc_spec §12</em></span></div>
+      <div>
+        <h4>Piso del <span class="num">10%</span> para interpretar elasticidad</h4>
+        <p>Por debajo de <span class="num">10%</span> de cambio de precio observado, la elasticidad es artefacto numérico. Es el origen de por qué las correcciones de tipo de cambio no son interpretables como experimento.</p>
+        <span class="ph">Es el diagnóstico de fondo, escrito en mayo</span>
+      </div>
+    </div>
+
+    <div class="callout green" style="margin-top:34px">
+      <p><strong>Cómo leer esto.</strong> El sistema ya había anticipado la mayor parte del informe. El gap real es otro y es arreglable: la superficie documental que ve un externo, el Notion, no muestra lo que el sistema sabe. El mismo gap explica que Perú y Marruecos tengan cinco páginas de diseño cada uno y ninguna de resultado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COGS -->
+<section class="warm" id="cogs">
+  <div class="wrap">
+    <p class="kicker">03 · El hallazgo propio</p>
+    <h2>La fórmula de margen se rompe cuando falta el costo</h2>
+
+    <p>El <span class="num">6 de julio</span> le llevamos el tema a Fernando: el dashboard mostraba margen negativo masivo y parecía revenue faltante del checkout nuevo. Esa es la versión que leyó Product Hackers.</p>
+
+    <p>El <span class="num">4 de agosto</span> encontramos el mecanismo real. <strong>Cuando el costo de una fila viene vacío, la resta da vacío y esa fila aporta cero al margen, pero su revenue igual entra al total.</strong> El resultado es exacto y no aproximado: el margen publicado queda multiplicado por la fracción del revenue que sí tiene costo.</p>
+
+    <p>El <span class="num">10 de agosto</span> lo medimos sobre nuestras propias tablas. Confirmado.</p>
+
+    <table class="data">
+      <thead>
+        <tr><th>Destino</th><th>Cobertura de costo</th><th>GM publicado</th><th>GM sobre lo que sí tiene costo</th><th>Brecha</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Curaçao</td><td>53,8%</td><td>35,55%</td><td>90,04%</td><td class="hi">54,5 pp</td></tr>
+        <tr><td>Bonaire</td><td>33,3%</td><td>21,47%</td><td>74,28%</td><td class="hi">52,8 pp</td></tr>
+        <tr><td>Escandinavia</td><td>70,7%</td><td>60,64%</td><td>84,36%</td><td class="hi">23,7 pp</td></tr>
+        <tr><td>Faroe Islands</td><td>72,3%</td><td>69,49%</td><td>89,42%</td><td class="hi">19,9 pp</td></tr>
+        <tr><td>Antillas Neerlandesas</td><td>81,4%</td><td>44,96%</td><td>48,77%</td><td>3,8 pp</td></tr>
+        <tr><td>Guam</td><td>91,3%</td><td>45,72%</td><td>47,23%</td><td>1,5 pp</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid g3">
+      <div class="card bar-green">
+        <span class="tag t-green">Tranquilidad</span>
+        <h4>Ningún experimento nuestro está afectado</h4>
+        <p>Marruecos, Colombia, Reino Unido y Canadá tienen cobertura <span class="num">100%</span>. Estados Unidos <span class="num">93,4%</span> con <span class="num">0,3</span> puntos de brecha. Ninguna conclusión de experimento está en riesgo.</p>
+      </div>
+      <div class="card bar-amber">
+        <span class="tag t-amber">Alcance</span>
+        <h4>A nivel compañía es chico, en destinos puntuales es enorme</h4>
+        <p>Solo el <span class="num">0,18%</span> del revenue vive en filas sin costo. Pero está concentrado: en Curaçao el margen que muestra la fuente oficial está mal por <span class="num">54</span> puntos. Ese número no existe.</p>
+      </div>
+      <div class="card bar-red">
+        <span class="tag t-red">Lo incómodo</span>
+        <h4>Nuestro propio spec ordena la fórmula rota</h4>
+        <p>El checklist de recolección de datos manda usar exactamente esa forma, con dos advertencias en negrita. Y la fórmula alternativa tampoco sirve: infla el margen, en Curaçao daría <span class="num">96%</span>.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>La regla que sale de acá.</strong> Ninguna de las dos formas es correcta cuando falta el dato. La única defendible es excluir esas filas de las dos puntas del cociente y declarar la cobertura al lado. Por debajo de un umbral de cobertura no se publica un punto de margen, se publica una banda o nada.</p>
+    </div>
+
+    <div class="callout amber">
+      <p><strong>Chequeo abierto sobre Marruecos, decide el jueves.</strong> Con cobertura <span class="num">100%</span>, la tabla de consumo devuelve un margen de <span class="num">16,95%</span> contra el <span class="num">48,76%</span> que usó el brief. Por LEARN-375 el ratio de ventana es un piso contaminado, así que no es una contradicción. Pero la brecha mueve el break-even de elasticidad de <span class="num">1,55</span> a <span class="num">3,06</span>. Corresponde correr el método de cohorte madura antes de la decisión formal.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA DE FONDO -->
+<section id="fondo">
+  <div class="wrap">
+    <p class="kicker">04 · El problema de fondo</p>
+    <h2>Buscábamos la mitad de lo mínimo visible</h2>
+
+    <p>En Perú el cambio más chico que podemos detectar en ARPU es <span class="num">18%</span> a <span class="num">14</span> días. Los movimientos que estuvimos probando son de <span class="num">3%</span> a <span class="num">6%</span>.</p>
+
+    <p>No es un problema de qué métrica elegimos. En el cierre de USA los tres modelos fallaron el mismo umbral de ajuste: el de revenue explicaba <span class="num">15%</span> del movimiento diario, el de órdenes <span class="num">24%</span>, el de ticket promedio <span class="num">3%</span>. Nuestro piso para aceptarlos era <span class="num">30%</span>.</p>
+
+    <div class="figure">
+      <p class="cap">UK · lo que el instrumento podía ver vs lo que buscábamos</p>
+      <div class="figure-bar">
+        <div class="lbl">Mínimo detectable</div>
+        <div class="track"><div class="fill f-grey" style="width:min(100%,420px)"></div><b>15%</b></div>
+      </div>
+      <div class="figure-bar">
+        <div class="lbl">Efecto que buscábamos</div>
+        <div class="track"><div class="fill f-pink" style="width:min(53.3%,224px)"></div><b>8%</b></div>
+      </div>
+      <p class="note">El margen de error del modelo era <span class="num">€0,97</span> por día contra un efecto buscado de <span class="num">€0,39</span>. El ruido era dos veces y media el efecto, y aun así cerramos como "no cumplido por dos décimas".</p>
+    </div>
+
+    <div class="callout">
+      <p><strong>La regla ya la teníamos escrita desde mayo.</strong> LEARN-227: por debajo de <span class="num">10%</span> de cambio efectivo, la elasticidad no se puede interpretar. El experimento de USA movió <span class="num">4,66%</span>. Lo que faltaba no era la regla, era usarla como criterio de arranque.</p>
+    </div>
+
+    <h3>Lo que el informe no vio y está en nuestros propios documentos</h3>
+    <div class="grid g3">
+      <div class="card">
+        <h4>El caso base de Perú pierde plata</h4>
+        <p>Con la elasticidad esperada, revenue <span class="num">+0,8%</span> y margen <span class="num">−4,4%</span>. El escenario que se comunicó como expectativa es el aspiracional.</p>
+      </div>
+      <div class="card">
+        <h4>El sesgo también puede tapar daño real</h4>
+        <p>Una caída verdadera de <span class="num">8%</span> puede leerse como <span class="num">3%</span>. Documentado en LEARN-399 desde julio.</p>
+      </div>
+      <div class="card">
+        <h4>Ningún control de Perú pasa nuestro propio umbral</h4>
+        <p>Ninguno tiene divergencia por debajo de <span class="num">20%</span>, que es el límite de validez que definimos nosotros.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LO NUEVO -->
+<section class="warm" id="nuevo">
+  <div class="wrap">
+    <p class="kicker">05 · Lo que sí es nuevo</p>
+    <h2>Cuatro cambios que adoptamos</h2>
+
+    <div class="change">
+      <div class="n">01</div>
+      <div>
+        <h4>Ningún riesgo alto abierto al momento de lanzar</h4>
+        <p>Si un confusor está marcado como riesgo alto, o su chequeo está resuelto antes de la fecha de lanzamiento, o se retrasa el lanzamiento, o se lo baja de categoría con justificación escrita. Es el señalamiento más justo del informe y es la regla más barata de las cuatro. Caso fundacional: Marhaba en Marruecos.</p>
+      </div>
+    </div>
+
+    <div class="change">
+      <div class="n">02</div>
+      <div>
+        <h4>El denominador de la métrica de decisión es el scope tratado</h4>
+        <p>En UK decidimos sobre el ARPU de todo el funnel de libras cuando el cambio tocaba solo los planes de <span class="num">1</span> a <span class="num">3</span> días. El resto entró al promedio y aportó ruido. En el brief queda escrito qué porcentaje del revenue de la fuente corresponde a lo que cambiamos.</p>
+        <p><em>Corrección de dato asociada:</em> el cierre de UK dice <span class="num">3,4%</span> donde nuestro snapshot dice <span class="num">8,5%</span> para los planes de <span class="num">1</span> a <span class="num">3</span> días y <span class="num">3,4%</span> solo para el bucket de un día.</p>
+      </div>
+    </div>
+
+    <div class="change">
+      <div class="n">03</div>
+      <div>
+        <h4>Cuarto veredicto: extender</h4>
+        <p>En UK el bug de plataforma contaminó el canal App desde el día <span class="num">7</span>, y App era el <span class="num">65%</span> del volumen tratado. Cerramos con datos parciales e inventamos un veredicto que no estaba en el brief. Queda pre-declarado: si un canal o segmento que pesa más del <span class="num">30%</span> del volumen tratado se contamina antes del cierre, el checkpoint se extiende hasta tener ventana limpia.</p>
+      </div>
+    </div>
+
+    <div class="change">
+      <div class="n">04</div>
+      <div>
+        <h4>Reportar rangos, no un número pelado</h4>
+        <p>Declarar "no cumplido" solo si el resultado cae claramente fuera del margen de error del modelo. UK cerró como no cumplido por dos décimas con un ruido dos veces y media mayor que el efecto buscado.</p>
+      </div>
+    </div>
+
+    <h3>Y el cambio de disciplina que no está en el informe</h3>
+    <p><strong>Menos diseño escrito, más lectura escrita.</strong> Perú y Marruecos tienen cinco páginas de diseño cada uno y ninguna de resultado, con las lecturas de la primera y la segunda semana ya vencidas. Es el mismo gap que hizo que el auditor externo no viera lo que el sistema ya sabía.</p>
+  </div>
+</section>
+
+<!-- MEDICION Y A/B -->
+<section>
+  <div class="wrap">
+    <p class="kicker">06 · Cómo mejoramos la medición</p>
+    <h2>Dos carriles, y no se confunden</h2>
+
+    <h3>Para medir precio: comparar dentro del mismo destino</h3>
+    <p>Lo mejor que produjo el sistema este año salió del cierre de USA: comparamos las órdenes en dólares contra las órdenes en otras monedas del mismo país. Cada destino es su propio control y la estacionalidad se cancela sola. Cuando el cambio de precio toca una sola moneda o un solo segmento, esa comparación está disponible desde el día uno. Está probada, no depende de nadie, y se declara en el próximo brief.</p>
+    <p>Más adelante, cuando PIM lo permita, evaluamos sortear destinos en vez de elegirlos: tomar los elegibles de un cambio que aplica a muchos, sortear la mitad al tratamiento, y que la comparabilidad deje de ser un argumento para pasar a ser consecuencia del sorteo. Hoy no está en condiciones de comprometerse.</p>
+
+    <h3>Para presentación de precio: abrir el carril de test A/B</h3>
+    <p>Un test A/B compara dos grupos al mismo tiempo, así que el ruido de la estacionalidad se cancela solo. En terminaciones de precio, cómo se presenta el precio en la ficha, profundidad de descuento y bundles, eso vive a nivel usuario, no genera dos precios comparables, no necesita permiso de nadie y tenemos volumen de sobra para tener potencia real. Hoy no lo usamos.</p>
+
+    <div class="callout amber">
+      <p><strong>Lo que A/B no resuelve.</strong> Nuestras preguntas grandes son de catálogo y no de persona: un tipo de cambio, una curva completa de precios. Para testear eso con A/B hay que mostrarle a dos personas del mismo país precios distintos por el mismo producto en el mismo momento, que es lo que la normativa europea de precios mira con lupa. Abrimos el carril A/B porque tiene valor propio, no porque arregle la medición de precio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PEDIMOS -->
+<section class="dark" id="pedimos">
+  <div class="wrap">
+    <p class="kicker">07 · Qué necesitamos</p>
+    <h2>Tres decisiones</h2>
+
+    <div class="stats s3">
+      <div class="stat">
+        <div class="stat-v">01</div>
+        <div class="stat-l">El defecto de la fórmula de margen convertido en ticket de Data, con dueño y fecha. No es una nota metodológica que se repite en cada brief: la fuente oficial publica márgenes que no existen.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-v">02</div>
+        <div class="stat-l">Una definición de compañía sobre si estamos dispuestos a mostrar precios distintos a personas distintas. Es lo que habilita o cierra el carril de test A/B para precio.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-v">03</div>
+        <div class="stat-l">Luz verde para abrir el carril de test A/B en presentación de precio. Arranca la semana que viene y no depende de nadie más.</div>
+      </div>
+    </div>
+
+    <h3>El cierre</h3>
+    <p>Cada mejora que le sumemos al modelo es optimizar algo que no es el cuello de botella. El cuello de botella es el tamaño de la apuesta y la cantidad de lugares donde la hacemos.</p>
+    <p>El rigor no fue en vano, fue justamente el rigor lo que nos dejó ver que no vemos. El placebo de Perú detectó su propio fantasma antes de lanzar. El umbral de ajuste rechazó su propio modelo tres veces seguidas en vez de dejarlo pasar. Ocho de las doce recomendaciones de la consultora ya estaban escritas en el sistema, con fecha anterior a su informe. Un sistema más flojo habría cerrado los tres experimentos como éxitos, con un número lindo en una slide, y nadie se hubiera enterado.</p>
+    <p class="lead" style="margin-top:26px"><strong>La pregunta para los próximos seis meses se mueve de lugar. Deja de ser cómo medimos mejor y pasa a ser cuánto estamos dispuestos a mover, y en cuántos lugares a la vez.</strong></p>
+  </div>
+</section>
+
+<!-- ANEXO -->
+<section id="anexo">
+  <div class="wrap">
+    <p class="kicker">Anexo</p>
+    <h2>Cómo se calcula si un experimento se puede medir</h2>
+    <p>Se hace antes de tocar un precio, con datos que ya tenemos. Es el gate que ya está en el sistema como LEARN-365.</p>
+
+    <details class="tech" open>
+      <summary>La idea, en criollo</summary>
+      <div class="body">
+        <p>Para saber si un cambio de precio funcionó necesitamos saber qué habría pasado sin el cambio. Para eso armamos un adivinador: una regla construida con el pasado que predice el revenue de cada día según el día de la semana, la temporada y demás.</p>
+        <p>Antes de lanzar, le tomamos examen. Le pedimos que adivine días que ya conocemos. Si le erra por mucho, ese error va a tapar el efecto del precio y nunca vamos a poder concluir nada.</p>
+        <ul class="clean">
+          <li><strong>R², la nota.</strong> De todo el subir y bajar del revenue diario, qué parte logra explicar la regla. Va de <span class="num">0</span> a <span class="num">1</span>. Si da <span class="num">0,06</span> explica el <span class="num">6%</span> y el resto es misterio.</li>
+          <li><strong>Desviación residual.</strong> Por cuánto le erra en un día típico, medido en euros.</li>
+          <li><strong>Mínimo detectable.</strong> El efecto más chico que podríamos llegar a ver por encima de ese error.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="tech" open>
+      <summary>La cuenta, con nuestro caso de UK</summary>
+      <div class="body">
+        <p>El error típico era <span class="num">€0,97</span> por día. Leíamos <span class="num">14</span> días. Al promediar días el error se achica dividiendo por la raíz de la cantidad de días.</p>
+        <div class="math">€0,97 ÷ √14 = €0,26</div>
+        <p>Para afirmar algo con <span class="num">95%</span> de confianza y <span class="num">80%</span> de chance de detectarlo si existe, el efecto tiene que ser <span class="num">2,8</span> veces eso.</p>
+        <div class="math">€0,26 × 2,8 = €0,73</div>
+        <p>Sobre un ARPU base de <span class="num">€4,85</span>, eso es un <span class="num">15%</span>.</p>
+        <p><strong>Ese experimento solo podía detectar cambios del <span class="num">15%</span> para arriba. Buscábamos un <span class="num">8%</span>, que en euros eran <span class="num">€0,39</span>.</strong></p>
+      </div>
+    </details>
+
+    <details class="tech">
+      <summary>Los cuatro pasos</summary>
+      <div class="body">
+        <ol class="steps">
+          <li>Entrenar el modelo con el período previo, dejando afuera los últimos treinta días.</li>
+          <li>Pedirle que prediga esos treinta días que no vio. De ahí salen el R² y la desviación.</li>
+          <li>Calcular el mínimo detectable: <span class="num">2,8</span> × (desviación ÷ √días de lectura), y pasarlo a porcentaje dividiendo por el valor base.</li>
+          <li>Compararlo con el efecto esperado. Si el mínimo es mayor, el experimento ya está perdido antes de arrancar.</li>
+        </ol>
+        <p>El <span class="num">2,8</span> asume que los errores de días distintos son independientes, y en una serie diaria real están correlacionados, así que el mínimo verdadero es peor que el de la fórmula. Por eso LEARN-405 exige validarlo contra varianza por bloques. Ese <span class="num">15%</span> de UK es el piso optimista.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<div class="ftr">
+  <span>Evaluación metodológica de pricing</span>
+  <span>Guido Mautino · Pricing</span>
+  <span>10 de agosto de 2026</span>
+  <span>Fuente externa: Product Hackers, 4 de agosto de 2026</span>
+</div>
+
+</body>
+</html>

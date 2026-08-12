@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" data-active="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Measuring price changes · Holafly Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#E6485C; --charcoal:#292B2E; --paper:#FFFCF7; --paper-warm:#F7F2EA;
+  --yellow:#FFE7A0; --green:#2E7D52; --green-bg:#EAF5EE; --amber:#B87400; --amber-bg:#FDF3E0;
+  --blue:#2C5AA0; --blue-bg:#EAF0F9; --grey:#9A9A96;
+  --line:rgba(41,43,46,.12); --muted:rgba(41,43,46,.6);
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --pad: clamp(56px,7vw,104px) max(24px, calc((100vw - 1480px)/2));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:82px}
+body{margin:0;background:var(--paper);color:var(--charcoal);
+  font-family:'Mulish',system-ui,sans-serif;font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.num,.stat-v,.figure-bar b,.mx-n{font-variant-numeric:tabular-nums}
+
+header{position:sticky;top:0;z-index:50;background:rgba(255,252,247,.95);
+  backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:11px max(24px, calc((100vw - 1480px)/2))}
+.brand{display:flex;align-items:baseline;gap:10px;font-weight:900;letter-spacing:-.02em;font-size:18px}
+.brand span{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.16em;
+  color:var(--pink);border:1px solid var(--pink);border-radius:3px;padding:2px 6px}
+.langbtn{margin-left:auto;display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#fff}
+.langbtn button{border:0;background:transparent;cursor:pointer;padding:6px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);
+  transition:background .18s var(--ease-out),color .18s var(--ease-out),transform .16s var(--ease-out)}
+.langbtn button[aria-pressed="true"]{background:var(--charcoal);color:var(--paper)}
+.langbtn button:active{transform:scale(0.97)}
+.langbtn button:focus-visible{outline:2px solid var(--pink);outline-offset:-2px}
+
+section{padding:var(--pad)}
+.warm{background:var(--paper-warm)}
+.dark{background:var(--charcoal);color:var(--paper)}
+.dark .kicker{color:#FFB3BC}
+.wrap{max-width:1480px;margin:0 auto}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.18em;
+  color:var(--pink);text-transform:uppercase;margin:0 0 12px}
+h1{font-size:clamp(32px,4.6vw,66px);line-height:1.05;letter-spacing:-.035em;font-weight:900;margin:0 0 20px;max-width:17ch}
+h2{font-size:clamp(24px,3vw,42px);line-height:1.12;letter-spacing:-.03em;font-weight:900;margin:0 0 18px;max-width:22ch}
+p{max-width:70ch;margin:0 0 16px}
+.wrap>div>p{max-width:min(68ch,760px)}
+.wrap>div>p.lead{max-width:min(56ch,800px)}
+.lead{font-size:clamp(18px,1.35vw,21px);line-height:1.5;max-width:min(56ch,820px)}
+strong{font-weight:800}
+.mark{background:linear-gradient(transparent 62%,var(--yellow) 62%);padding:0 2px}
+
+/* BLUF box */
+.bluf{border:2px solid var(--charcoal);border-radius:16px;padding:clamp(22px,2.4vw,34px);margin:26px 0;max-width:1000px;background:#fff}
+.bluf .tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin:0 0 12px}
+.bluf p{font-size:clamp(17px,1.3vw,20px);line-height:1.5;margin:0;max-width:62ch}
+.bluf p+p{margin-top:12px}
+
+/* 60-second summary */
+.tldr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:26px 0}
+@media(max-width:1180px){.tldr{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.tldr{grid-template-columns:1fr}}
+.tldr>div{padding:20px 22px;border:1px solid var(--line);border-radius:13px;background:#fff}
+.tldr .q{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+.tldr .a{margin:0;font-size:16px;line-height:1.5;max-width:none}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:24px 0}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){.stats{grid-template-columns:1fr}}
+.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px 20px}
+.dark .stat{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+.stat-v{font-size:32px;font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:6px}
+.stat-l{font-size:14px;color:var(--muted);line-height:1.4}
+.dark .stat-l{color:rgba(255,252,247,.72)}
+
+/* matrix of 12 */
+.mx{margin:28px 0;max-width:1000px}
+.mx-row{display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.mx-sq{display:flex;gap:5px}
+.mx-sq i{width:26px;height:26px;border-radius:5px;display:block}
+.s-green{background:var(--green)} .s-blue{background:var(--blue)} .s-grey{background:var(--grey)}
+.mx-n{font-size:19px;font-weight:900;letter-spacing:-.02em;min-width:22px}
+.mx-lbl{font-size:16px}
+@media(max-width:560px){.mx-sq i{width:20px;height:20px}}
+
+/* key number */
+.keynum{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;
+  background:var(--charcoal);color:var(--paper);border-radius:16px;padding:clamp(22px,2.4vw,32px);margin:24px 0;max-width:900px}
+@media(max-width:680px){.keynum{grid-template-columns:1fr;gap:12px}}
+.keynum .kv{font-size:clamp(40px,5.4vw,60px);font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--yellow);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.keynum p{margin:0;font-size:17px;line-height:1.5;max-width:none}
+.keynum .sub{color:rgba(255,252,247,.72);font-size:15px;margin-top:8px}
+
+/* figure */
+.figure{background:#fff;border:1px solid var(--line);border-radius:14px;padding:clamp(20px,2vw,28px);margin:24px 0;max-width:900px}
+.figure .cap{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
+.figure-bar{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:14px;align-items:center;margin-bottom:12px;font-size:15px}
+@media(max-width:600px){.figure-bar{grid-template-columns:1fr;gap:4px}}
+.figure-bar .lbl{color:var(--muted)}
+.figure-bar .track{display:flex;align-items:center;gap:12px}
+.figure-bar .fill{height:24px;border-radius:5px;min-width:40px}
+.f-grey{background:var(--charcoal);opacity:.82}
+.f-pink{background:var(--pink)}
+.figure-bar b{font-weight:800;font-size:16px}
+
+/* details */
+details{border:1px solid var(--line);border-radius:12px;background:#fff;margin:20px 0;max-width:1180px}
+.dark details{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}
+details summary{cursor:pointer;padding:15px 22px;font-weight:800;font-size:16px;list-style:none;display:flex;align-items:center;gap:11px;
+  transition:transform .16s var(--ease-out)}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"+";font-family:'JetBrains Mono',monospace;color:var(--pink);font-size:19px;line-height:1}
+details[open] summary::before{content:"–"}
+.dark details summary::before{color:var(--yellow)}
+details summary:active{transform:scale(0.995)}
+details summary:focus-visible{outline:2px solid var(--pink);outline-offset:-2px;border-radius:12px}
+details .body{padding:2px 22px 20px;overflow-x:auto}
+details .body p{font-size:16px;max-width:74ch}
+
+table.rec{border-collapse:collapse;width:100%;min-width:620px;font-size:15.5px}
+table.rec td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.rec tr:last-child td{border-bottom:0}
+table.rec td:first-child{width:40%;font-weight:700}
+table.rec td:last-child{width:22%}
+.pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:20px;white-space:nowrap}
+.p-green{background:var(--green-bg);color:var(--green)}
+.p-blue{background:var(--blue-bg);color:var(--blue)}
+.p-amber{background:var(--amber-bg);color:var(--amber)}
+.p-grey{background:rgba(41,43,46,.07);color:var(--muted)}
+
+.callout{border-left:4px solid var(--pink);background:#fff;border-radius:0 12px 12px 0;padding:20px 24px;margin:24px 0;max-width:min(920px,72ch)}
+.callout p{margin:0;font-size:16.5px;max-width:none}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.dark .callout{background:rgba(255,255,255,.07);border-left-color:var(--yellow)}
+
+.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:26px 0}
+@media(max-width:860px){.split{grid-template-columns:1fr}}
+.unit{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}
+.dark .unit{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.18)}
+.unit .tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin:0 0 8px}
+.dark .unit .tag{color:var(--yellow)}
+.unit h4{margin:0 0 10px;font-size:21px;font-weight:900;letter-spacing:-.02em}
+.unit p{margin:0;font-size:16px;max-width:none}
+
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:26px 0}
+@media(max-width:1080px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.grid3{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.dark .card{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+.card h4{margin:0 0 9px;font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.card p{margin:0;font-size:15.5px;max-width:none}
+
+ul.clean{list-style:none;padding:0;margin:16px 0;max-width:76ch}
+ul.clean li{position:relative;padding-left:24px;margin-bottom:10px;max-width:72ch;font-size:16.5px}
+ul.clean li::before{content:"";position:absolute;left:5px;top:10px;width:7px;height:7px;border-radius:50%;background:var(--pink)}
+.dark ul.clean li::before{background:var(--yellow)}
+
+.ftr{padding:30px max(24px, calc((100vw - 1480px)/2));border-top:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--muted);display:flex;gap:22px;flex-wrap:wrap}
+
+[data-lang="es"]{display:none}
+html[data-active="es"] [data-lang="en"]{display:none}
+html[data-active="es"] [data-lang="es"]{display:block}
+html[data-active="es"] span[data-lang="es"]{display:inline}
+span[data-lang="en"]{display:inline}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{header{position:static}.langbtn{display:none}[data-lang="es"]{display:block!important}
+  details .body{display:block!important}section{padding:20px 0;break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="brand">holafly <span>Pricing</span></div>
+    <div class="langbtn" role="group" aria-label="Language">
+      <button id="btn-en" aria-pressed="true">EN</button>
+      <button id="btn-es" aria-pressed="false">ES</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ HERO · BLUF ══════════ -->
+<section>
+  <div class="wrap">
+    <div data-lang="en">
+      <p class="kicker">Pricing · Method review with Product Hackers · August 2026</p>
+      <h1>Leaving the counterfactual path in pricing</h1>
+
+      <div class="bluf">
+        <p class="tag">Bottom line</p>
+        <p>We asked Product Hackers, our growth agency, to review how we measure price experiments. The goal we set was specific: more certainty per experiment, and more of them.</p>
+        <p><strong>Their review confirms the method is sound and at its ceiling. Our proposal is to stop investing in it and move pricing to <span class="mark">randomised testing</span>, meaning A/B tests and similar methods.</strong></p>
+      </div>
+
+      <div class="tldr">
+        <div><p class="q">Why we asked</p><p class="a">To raise the certainty of our experiments and unlock a faster cadence. We brought the question to a partner who already works with us on growth.</p></div>
+        <div><p class="q">What came back</p><p class="a">Twelve recommendations. We checked each against what our experiments already do: seven were in place, four are new and adopted, one does not apply.</p></div>
+        <div><p class="q">What the review does not fix</p><p class="a">Nothing in it changes the ceiling. To read a price change cleanly this method needs a move of <span class="num">15-18%</span>. We move <span class="num">3%</span> to <span class="num">6%</span>.</p></div>
+        <div><p class="q">What we propose</p><p class="a">Retire estimated comparisons for pricing. Use A/B tests wherever assignment can be randomised. Everything else stops being an experiment and becomes a decision with monitoring.</p></div>
+      </div>
+
+      <p style="color:var(--muted);font-size:15.5px">Everything below is optional depth. Sections open on click.</p>
+    </div>
+
+    <div data-lang="es">
+      <p class="kicker">Pricing · Revisión de método con Product Hackers · Agosto 2026</p>
+      <h1>Salir del camino contrafactual en pricing</h1>
+
+      <div class="bluf">
+        <p class="tag">Conclusión</p>
+        <p>Le pedimos a Product Hackers, nuestra agencia de growth, que revisara cómo medimos los experimentos de precio. El objetivo que fijamos fue concreto: más certeza por experimento, y más cantidad de experimentos.</p>
+        <p><strong>Su revisión confirma que el método es sólido y está en su techo. Nuestra propuesta es dejar de invertir en él y llevar pricing a <span class="mark">testeo aleatorizado</span>, es decir tests A/B y métodos similares.</strong></p>
+      </div>
+
+      <div class="tldr">
+        <div><p class="q">Por qué lo pedimos</p><p class="a">Para subir la certeza de nuestros experimentos y habilitar una cadencia más rápida. Llevamos la pregunta a un socio que ya trabaja con nosotros en growth.</p></div>
+        <div><p class="q">Qué volvió</p><p class="a">Doce recomendaciones. Chequeamos cada una contra lo que nuestros experimentos ya hacen: siete estaban, cuatro son nuevas y adoptadas, una no aplica.</p></div>
+        <div><p class="q">Qué no arregla la revisión</p><p class="a">Nada de lo que trae cambia el techo. Para leer limpio un cambio de precio este método necesita un movimiento del <span class="num">15-18%</span>. Nosotros movemos del <span class="num">3%</span> al <span class="num">6%</span>.</p></div>
+        <div><p class="q">Qué proponemos</p><p class="a">Retirar las comparaciones estimadas para pricing. Usar tests A/B donde la asignación se pueda sortear. Todo lo demás deja de ser experimento y pasa a ser decisión con seguimiento.</p></div>
+      </div>
+
+      <p style="color:var(--muted);font-size:15.5px">Todo lo de abajo es profundidad opcional. Las secciones se abren al hacer clic.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 01 · THE CEILING ══════════ -->
+<section class="warm">
+  <div class="wrap">
+    <div data-lang="en">
+      <p class="kicker">01 · The ceiling</p>
+      <h2>Weighing a letter on a truck scale</h2>
+      <p>We cannot split a market in two, so we build an estimate of what would have happened without the change and compare against it. That estimate carries its own error. When the error is larger than the effect, the comparison cannot separate one from the other.</p>
+
+      <div class="figure">
+        <p class="cap">A real experiment, United Kingdom</p>
+        <div class="figure-bar">
+          <div class="lbl">Smallest effect detectable</div>
+          <div class="track"><div class="fill f-grey" style="width:min(100%,360px)"></div><b>15%</b></div>
+        </div>
+        <div class="figure-bar">
+          <div class="lbl">Effect we were looking for</div>
+          <div class="track"><div class="fill f-pink" style="width:min(53.3%,192px)"></div><b>8%</b></div>
+        </div>
+      </div>
+
+      <div class="keynum">
+        <div class="kv">15-18%</div>
+        <div>
+          <p><strong>That is how much we would have to move a price for this method to read it cleanly</strong>, once statistical noise and outside factors are accounted for.</p>
+          <p class="sub">The moves worth making are <span class="num">3%</span> to <span class="num">6%</span>. Nobody should move a price by <span class="num">18%</span> to satisfy a measurement method.</p>
+        </div>
+      </div>
+
+      <p>The design carries this limit regardless of how well it is executed. Three experiments closed without a conclusive verdict, each after a full cycle of work.</p>
+
+      <div class="callout">
+        <p><strong>The cost shows up in cadence too.</strong> Each of those closes took three weeks of work to arrive at "inconclusive", and that capacity does not come back. The design could not answer the question from the start, and we spent the cycle anyway.</p>
+      </div>
+
+      <details>
+        <summary>Why more rigour does not fix it</summary>
+        <div class="body">
+          <p>In our lower volume markets the smallest detectable change sits near <span class="num">18%</span>, while the price moves worth making run from <span class="num">3%</span> to <span class="num">6%</span>. No amount of extra care fixes an instrument whose resolution is coarser than the thing being measured.</p>
+          <p>The system reported honestly that it could not conclude, instead of dressing up the result. A looser process would have closed all three as wins and nobody would ever have known. The decisions were still made, on judgment and guardrails, which is the right call when measurement falls short.</p>
+        </div>
+      </details>
+    </div>
+
+    <div data-lang="es">
+      <p class="kicker">01 · El techo</p>
+      <h2>Pesar una carta con una balanza de camiones</h2>
+      <p>No podemos partir un mercado en dos, así que construimos una estimación de qué habría pasado sin el cambio y comparamos contra eso. Esa estimación carga su propio error. Cuando el error es más grande que el efecto, la comparación no puede separar una cosa de la otra.</p>
+
+      <div class="figure">
+        <p class="cap">Un experimento real, Reino Unido</p>
+        <div class="figure-bar">
+          <div class="lbl">Efecto más chico detectable</div>
+          <div class="track"><div class="fill f-grey" style="width:min(100%,360px)"></div><b>15%</b></div>
+        </div>
+        <div class="figure-bar">
+          <div class="lbl">Efecto que buscábamos</div>
+          <div class="track"><div class="fill f-pink" style="width:min(53.3%,192px)"></div><b>8%</b></div>
+        </div>
+      </div>
+
+      <div class="keynum">
+        <div class="kv">15-18%</div>
+        <div>
+          <p><strong>Eso es cuánto tendríamos que mover un precio para que este método lo lea limpio</strong>, una vez contemplados el ruido estadístico y los factores externos.</p>
+          <p class="sub">Los movimientos que vale la pena hacer son del <span class="num">3%</span> al <span class="num">6%</span>. Nadie debería mover un precio <span class="num">18%</span> para satisfacer a un método de medición.</p>
+        </div>
+      </div>
+
+      <p>El diseño carga ese límite por bien que se lo ejecute. Tres experimentos cerraron sin veredicto concluyente, cada uno después de un ciclo completo de trabajo.</p>
+
+      <div class="callout">
+        <p><strong>El costo también aparece en la cadencia.</strong> Cada uno de esos cierres consumió tres semanas de trabajo para llegar a un "no concluyente", y esa capacidad no vuelve. El diseño no podía responder la pregunta desde el arranque, y gastamos el ciclo igual.</p>
+      </div>
+
+      <details>
+        <summary>Por qué más rigor no lo arregla</summary>
+        <div class="body">
+          <p>En nuestros mercados de menor volumen el cambio más chico detectable ronda el <span class="num">18%</span>, mientras que los movimientos de precio que vale la pena hacer van del <span class="num">3%</span> al <span class="num">6%</span>. Ninguna cantidad de cuidado extra arregla un instrumento cuya resolución es más gruesa que lo que se quiere medir.</p>
+          <p>El sistema reportó honestamente que no podía concluir, en vez de vestir el resultado. Un proceso más flojo habría cerrado los tres como éxitos y nadie se hubiera enterado nunca. Las decisiones se tomaron igual, con criterio y guardrails, que es lo correcto cuando la medición no alcanza.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 02 · THE REVIEW ══════════ -->
+<section>
+  <div class="wrap">
+    <div data-lang="en">
+      <p class="kicker">02 · What came back, and how we read it</p>
+      <h2>Twelve recommendations, checked one by one</h2>
+
+      <div class="mx">
+        <div class="mx-row">
+          <div class="mx-sq"><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i></div>
+          <span class="mx-n">7</span><span class="mx-lbl">already built into the process, running today</span>
+        </div>
+        <div class="mx-row">
+          <div class="mx-sq"><i class="s-blue"></i><i class="s-blue"></i><i class="s-blue"></i><i class="s-blue"></i></div>
+          <span class="mx-n">4</span><span class="mx-lbl">genuinely new, adopted</span>
+        </div>
+        <div class="mx-row">
+          <div class="mx-sq"><i class="s-grey"></i></div>
+          <span class="mx-n">1</span><span class="mx-lbl">does not apply</span>
+        </div>
+      </div>
+
+      <p>We did not take the twelve at face value. We ran each one against what our experiments already do, which is how we can place seven of them as already in production before the review began.</p>
+
+      <p>Worth noting for anyone reading the report on its own: it was produced from our project documentation, which lags behind what the working system actually does. That gap is ours and we are closing it, but it explains why several practices already in use did not surface.</p>
+
+      <div class="callout green">
+        <p><strong>The important part is what the twelve do not contain.</strong> None of them challenges the causal approach, and none of them lifts the ceiling. They are about precision, reporting discipline and data plumbing. Adopting all twelve would leave us exactly where we are: measuring a <span class="num">4%</span> move with an instrument that resolves <span class="num">15%</span>.</p>
+      </div>
+
+      <details>
+        <summary>See all twelve and where each stands</summary>
+        <div class="body">
+          <table class="rec"><tbody>
+            <tr><td>Check the reference model works before trusting it with the decision</td><td>Measure whether the comparison estimate predicts well. If it does not, it does not decide.</td><td><span class="pill p-green">Already in</span></td></tr>
+            <tr><td>Report the result as a range, not an exact number</td><td>Say "not met" only if the result falls clearly outside the margin of error.</td><td><span class="pill p-blue">Adopted</span></td></tr>
+            <tr><td>Measure on what we actually changed</td><td>If the change touches part of the catalogue, compute on that part. The rest adds noise.</td><td><span class="pill p-blue">Adopted</span></td></tr>
+            <tr><td>A fourth verdict: extend</td><td>If a large channel gets contaminated mid window, extend rather than close on partial data.</td><td><span class="pill p-blue">Adopted</span></td></tr>
+            <tr><td>Define upfront what makes a comparison market valid</td><td>Criteria and fallback written before the test, never after seeing the result.</td><td><span class="pill p-green">Already in</span></td></tr>
+            <tr><td>Techniques to reduce noise in the data</td><td>Trim extreme values before averaging, use history to sharpen the comparison.</td><td><span class="pill p-amber">One yes, one pending</span></td></tr>
+            <tr><td>Separate automatic brakes from closing decisions</td><td>A collapse reverts the price on its own. The verdict is debated at the checkpoint.</td><td><span class="pill p-green">Already in</span></td></tr>
+            <tr><td>Clarify which version of the experiment is current</td><td>A preliminary version was reviewed that had been replaced before production.</td><td><span class="pill p-grey">Does not apply</span></td></tr>
+            <tr><td>One data source per metric</td><td>Every metric has a declared origin, never mixed inside one reading.</td><td><span class="pill p-green">Already in</span></td></tr>
+            <tr><td>Do not launch with a brake whose sensor is broken</td><td>Unreliable source feeding a brake means the brake is blocked until fixed.</td><td><span class="pill p-green">Already in</span></td></tr>
+            <tr><td>Explicit sign off when the calendar cuts precision</td><td>Pulling a launch forward costs sensitivity. Whoever decides signs it.</td><td><span class="pill p-green">Already in</span></td></tr>
+            <tr><td>No high risk factor launches unresolved</td><td>Flagged high risk is checked before launch, or the launch waits.</td><td><span class="pill p-blue">Adopted</span></td></tr>
+          </tbody></table>
+        </div>
+      </details>
+
+      <details>
+        <summary>What the system already does, in numbers</summary>
+        <div class="body">
+          <div class="stats">
+            <div class="stat"><div class="stat-v">16</div><div class="stat-l">checks a hypothesis clears before launch</div></div>
+            <div class="stat"><div class="stat-v">4</div><div class="stat-l">layers of evidence that must agree</div></div>
+            <div class="stat"><div class="stat-v">31</div><div class="stat-l">standing disciplines applied automatically</div></div>
+            <div class="stat"><div class="stat-v">379</div><div class="stat-l">documented learnings, each traceable to its experiment</div></div>
+          </div>
+          <p>Comparison markets are picked by measured criteria, not resemblance. The model is tested against a period where nothing changed, to confirm it does not invent effects. Success thresholds come from the economics of each destination and are never inherited. Automatic reversal triggers run separately from the closing verdict. Every number carries a traceable origin, and headline figures are re derived by an independent path before publication.</p>
+          <p>None of it was built in one pass. It compounds: <span class="num">46</span> learnings captured in April, <span class="num">67</span> in May, <span class="num">59</span> in June, <span class="num">130</span> in July, <span class="num">39</span> so far in August. That accumulated craft is what tells us the ceiling is real rather than a gap in our execution.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>One thing we found ourselves</summary>
+        <div class="body">
+          <p>Reviewing the margin source, we found that sales missing their cost figure drop out of the calculation's numerator while their revenue stays in the denominator, which pushes the published margin down. It touches under <span class="num">1%</span> of company revenue and none of our experiment markets, so no conclusion changes. We corrected our side and flagged the source.</p>
+          <p><strong>The reusable lesson.</strong> A gap in a dataset does not always show up as a gap. Sometimes it shows up as a figure that looks reasonable and is simply wrong. Reporting coverage next to the metric is a cheap defence.</p>
+        </div>
+      </details>
+    </div>
+
+    <div data-lang="es">
+      <p class="kicker">02 · Qué volvió, y cómo lo leímos</p>
+      <h2>Doce recomendaciones, chequeadas una por una</h2>
+
+      <div class="mx">
+        <div class="mx-row">
+          <div class="mx-sq"><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i><i class="s-green"></i></div>
+          <span class="mx-n">7</span><span class="mx-lbl">ya estaban dentro del proceso, corriendo hoy</span>
+        </div>
+        <div class="mx-row">
+          <div class="mx-sq"><i class="s-blue"></i><i class="s-blue"></i><i class="s-blue"></i><i class="s-blue"></i></div>
+          <span class="mx-n">4</span><span class="mx-lbl">genuinamente nuevas, adoptadas</span>
+        </div>
+        <div class="mx-row">
+          <div class="mx-sq"><i class="s-grey"></i></div>
+          <span class="mx-n">1</span><span class="mx-lbl">no aplica</span>
+        </div>
+      </div>
+
+      <p>No tomamos las doce como venían. Corrimos cada una contra lo que nuestros experimentos ya hacen, que es cómo podemos ubicar siete de ellas como ya en producción antes de que la revisión empezara.</p>
+
+      <p>Vale aclararlo para quien lea el informe por su cuenta: se produjo a partir de nuestra documentación de proyecto, que va por detrás de lo que el sistema de trabajo realmente hace. Ese desfase es nuestro y lo estamos cerrando, pero explica por qué varias prácticas ya en uso no aparecieron.</p>
+
+      <div class="callout green">
+        <p><strong>Lo importante es lo que las doce no contienen.</strong> Ninguna cuestiona el enfoque causal, y ninguna levanta el techo. Son de precisión, disciplina de reporte y plomería de datos. Adoptar las doce nos dejaría exactamente donde estamos: midiendo un movimiento del <span class="num">4%</span> con un instrumento que resuelve <span class="num">15%</span>.</p>
+      </div>
+
+      <details>
+        <summary>Ver las doce y dónde está cada una</summary>
+        <div class="body">
+          <table class="rec"><tbody>
+            <tr><td>Comprobar que el modelo de referencia sirve antes de confiarle la decisión</td><td>Medir si la estimación de comparación predice bien. Si no, no decide.</td><td><span class="pill p-green">Ya estaba</span></td></tr>
+            <tr><td>Reportar el resultado como rango y no como número exacto</td><td>Decir "no cumplido" solo si cae claramente fuera del margen de error.</td><td><span class="pill p-blue">Adoptado</span></td></tr>
+            <tr><td>Medir sobre lo que efectivamente cambiamos</td><td>Si el cambio toca una parte del catálogo, calcular sobre esa parte. El resto agrega ruido.</td><td><span class="pill p-blue">Adoptado</span></td></tr>
+            <tr><td>Un cuarto veredicto: extender</td><td>Si un canal grande se contamina a mitad de ventana, extender en vez de cerrar con datos parciales.</td><td><span class="pill p-blue">Adoptado</span></td></tr>
+            <tr><td>Definir de antemano qué hace válido a un mercado de comparación</td><td>Criterios y plan B escritos antes de la prueba, nunca después de ver el resultado.</td><td><span class="pill p-green">Ya estaba</span></td></tr>
+            <tr><td>Técnicas para reducir el ruido de los datos</td><td>Recortar valores extremos antes de promediar, usar el historial para afinar la comparación.</td><td><span class="pill p-amber">Una sí, una pendiente</span></td></tr>
+            <tr><td>Separar frenos automáticos de decisiones de cierre</td><td>Un derrumbe revierte el precio solo. El veredicto se discute en el checkpoint.</td><td><span class="pill p-green">Ya estaba</span></td></tr>
+            <tr><td>Aclarar qué versión del experimento está vigente</td><td>Se revisó una versión preliminar que había sido reemplazada antes de producción.</td><td><span class="pill p-grey">No aplica</span></td></tr>
+            <tr><td>Una fuente de datos por métrica</td><td>Cada métrica tiene origen declarado, nunca mezclado dentro de una lectura.</td><td><span class="pill p-green">Ya estaba</span></td></tr>
+            <tr><td>No lanzar con un freno cuyo sensor está roto</td><td>Fuente no confiable alimentando un freno significa freno bloqueado hasta arreglarlo.</td><td><span class="pill p-green">Ya estaba</span></td></tr>
+            <tr><td>Firma explícita cuando el calendario recorta la precisión</td><td>Adelantar un lanzamiento cuesta sensibilidad. Lo firma quien decide.</td><td><span class="pill p-green">Ya estaba</span></td></tr>
+            <tr><td>Ningún riesgo alto se lanza sin resolver</td><td>Un riesgo alto se chequea antes de lanzar, o el lanzamiento espera.</td><td><span class="pill p-blue">Adoptado</span></td></tr>
+          </tbody></table>
+        </div>
+      </details>
+
+      <details>
+        <summary>Qué hace el sistema hoy, en números</summary>
+        <div class="body">
+          <div class="stats">
+            <div class="stat"><div class="stat-v">16</div><div class="stat-l">chequeos que una hipótesis pasa antes de lanzarse</div></div>
+            <div class="stat"><div class="stat-v">4</div><div class="stat-l">capas de evidencia que tienen que coincidir</div></div>
+            <div class="stat"><div class="stat-v">31</div><div class="stat-l">disciplinas permanentes aplicadas de forma automática</div></div>
+            <div class="stat"><div class="stat-v">379</div><div class="stat-l">aprendizajes documentados, cada uno trazable a su experimento</div></div>
+          </div>
+          <p>Los mercados de comparación se eligen por criterios medidos, no por parecido. El modelo se prueba contra un período donde no cambió nada, para confirmar que no inventa efectos. Los umbrales de éxito salen de la economía de cada destino y nunca se heredan. Los disparadores de reversión automática corren separados del veredicto de cierre. Todo número lleva un origen trazable, y las cifras titulares se re-derivan por un camino independiente antes de publicarse.</p>
+          <p>Nada de esto se construyó de una pasada. Se acumula: <span class="num">46</span> aprendizajes capturados en abril, <span class="num">67</span> en mayo, <span class="num">59</span> en junio, <span class="num">130</span> en julio, <span class="num">39</span> en lo que va de agosto. Ese oficio acumulado es lo que nos permite decir que el techo es real y no un hueco de nuestra ejecución.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Una cosa que encontramos nosotros</summary>
+        <div class="body">
+          <p>Revisando la fuente de margen encontramos que las ventas sin dato de costo salen del numerador del cálculo mientras su ingreso queda en el denominador, lo que empuja el margen publicado hacia abajo. Toca menos del <span class="num">1%</span> del ingreso de la compañía y ninguno de nuestros mercados de experimento, así que ninguna conclusión cambia. Corregimos nuestro lado y avisamos de la fuente.</p>
+          <p><strong>La lección reutilizable.</strong> Un hueco en un set de datos no siempre aparece como hueco. A veces aparece como una cifra que se ve razonable y sencillamente está mal. Reportar la cobertura al lado de la métrica es una defensa barata.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 03 · THE PROPOSAL ══════════ -->
+<section class="dark">
+  <div class="wrap">
+    <div data-lang="en">
+      <p class="kicker">03 · The proposal</p>
+      <h2>Stop estimating the comparison. Draw it.</h2>
+      <p class="lead">Our recommendation is to leave the current approach behind. For pricing we propose retiring estimated comparisons, difference in differences and mirror control markets as the way we establish causality, and replacing them with randomised assignment: A/B tests and the family of methods built on the same idea.</p>
+      <p>Every difficulty in this document comes from the same root: we did not choose who receives the change, so we spend a full cycle building a comparison we then have to defend. Drawing the groups at random removes that entire class of work, including for factors we never measured and do not know exist.</p>
+
+      <div class="split">
+        <div class="unit">
+          <p class="tag">Where it starts</p>
+          <h4>A/B tests: split users into groups</h4>
+          <p>Price endings, how the price is presented, discount depth, bundling. Two groups drawn at random see two versions at the same time, so seasonality cancels itself and the result is causal by construction. We have the traffic to read these fast, and it creates no two comparable prices for the same product. <strong>This surface is unused today and needs no permission to open.</strong></p>
+        </div>
+        <div class="unit">
+          <p class="tag">What it unlocks</p>
+          <h4>Cadence, not just certainty</h4>
+          <p>An A/B test reads in days rather than a full experiment cycle, and it runs in parallel with the catalogue rather than competing for it. That is where the extra cadence comes from: a second stream, with cleaner answers, that does not consume the markets our pricing work needs.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p><strong>And what cannot be randomised.</strong> An exchange rate or a full price curve applies to a whole market at once. Until there is a company position on showing different prices to different people, those moves stop being run as experiments. They get executed as business decisions with monitoring and automatic brakes, and are reported as such. Calling them that is accurate, and it frees the cycles we were spending on measurement nobody could read.</p>
+      </div>
+
+      <details>
+        <summary>What we would need</summary>
+        <div class="body">
+          <ul class="clean">
+            <li><strong>A testing platform</strong> wired to the data we already hold, and the first set of tests defined. This can begin without waiting for anything else.</li>
+            <li><strong>A company position</strong> on whether we are willing to show different prices to different people. A yes extends randomisation to price itself. A no is also an answer, and it lets us stop revisiting it.</li>
+            <li><strong>Agreement on the classification</strong>, so that catalogue level moves reported as decisions with monitoring are received as such, and not read as experiments that failed to conclude.</li>
+          </ul>
+          <p style="margin-top:14px">Drawing whole markets into randomised groups is technically valid and we are not proposing it now: it would commit a large share of the catalogue to a single question for the length of the window, which is the opposite of what we are trying to buy.</p>
+        </div>
+      </details>
+    </div>
+
+    <div data-lang="es">
+      <p class="kicker">03 · La propuesta</p>
+      <h2>Dejar de estimar la comparación. Sortearla.</h2>
+      <p class="lead">Nuestra recomendación es dejar atrás el enfoque actual. Para pricing proponemos retirar las comparaciones estimadas, la diferencia en diferencias y los mercados de control espejo como la forma en que establecemos causalidad, y reemplazarlos por asignación aleatoria: tests A/B y la familia de métodos construidos sobre la misma idea.</p>
+      <p>Toda dificultad de este documento viene de la misma raíz: no elegimos quién recibe el cambio, así que gastamos un ciclo completo construyendo una comparación que después hay que defender. Sortear los grupos al azar elimina toda esa clase de trabajo, incluso para factores que nunca medimos y que no sabemos que existen.</p>
+
+      <div class="split">
+        <div class="unit">
+          <p class="tag">Por dónde empieza</p>
+          <h4>Tests A/B: dividir usuarios en grupos</h4>
+          <p>Terminaciones de precio, cómo se presenta el precio, profundidad de descuento, bundles. Dos grupos sorteados al azar ven dos versiones al mismo tiempo, así que la estacionalidad se cancela sola y el resultado es causal por construcción. Tenemos el tráfico para leerlos rápido, y no genera dos precios comparables para el mismo producto. <strong>Esa superficie hoy está sin usar y no necesita permiso para abrirse.</strong></p>
+        </div>
+        <div class="unit">
+          <p class="tag">Qué habilita</p>
+          <h4>Cadencia, no solo certeza</h4>
+          <p>Un test A/B se lee en días en vez de un ciclo completo de experimento, y corre en paralelo al catálogo en lugar de competir por él. De ahí sale la cadencia extra: un segundo flujo, con respuestas más limpias, que no consume los mercados que nuestro trabajo de pricing necesita.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p><strong>Y lo que no se puede sortear.</strong> Un tipo de cambio o una curva completa de precios aplica a un mercado entero a la vez. Hasta que exista una posición de compañía sobre mostrar precios distintos a personas distintas, esos movimientos dejan de correrse como experimentos. Se ejecutan como decisiones de negocio con seguimiento y frenos automáticos, y se reportan así. Llamarlas así es lo correcto, y libera los ciclos que gastábamos en una medición que nadie podía leer.</p>
+      </div>
+
+      <details>
+        <summary>Qué necesitaríamos</summary>
+        <div class="body">
+          <ul class="clean">
+            <li><strong>Una plataforma de testing</strong> conectada a los datos que ya tenemos, y el primer set de tests definido. Puede empezar sin esperar nada más.</li>
+            <li><strong>Una posición de compañía</strong> sobre si estamos dispuestos a mostrar precios distintos a personas distintas. Un sí extiende la aleatorización al precio mismo. Un no también es respuesta, y permite dejar de volver sobre el tema.</li>
+            <li><strong>Acuerdo sobre la clasificación</strong>, para que los movimientos de catálogo reportados como decisiones con seguimiento se reciban como tales, y no se lean como experimentos que no lograron concluir.</li>
+          </ul>
+          <p style="margin-top:14px">Sortear mercados enteros en grupos aleatorios es técnicamente válido y no lo estamos proponiendo ahora: comprometería una porción grande del catálogo a una sola pregunta durante toda la ventana, que es lo contrario de lo que estamos tratando de comprar.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 04 · TRAVELS ══════════ -->
+<section>
+  <div class="wrap">
+    <div data-lang="en">
+      <p class="kicker">04 · Beyond pricing</p>
+      <h2>Three ideas that travel</h2>
+      <div class="grid3">
+        <div class="card">
+          <h4>Decide before you start whether it can be measured</h4>
+          <p>Compare the effect you expect against the precision you have. If the effect is smaller, what you have is a decision with monitoring rather than an experiment, and that is fine as long as it gets called by its name before the cycle is spent.</p>
+        </div>
+        <div class="card">
+          <h4>The denominator decides as much as the numerator</h4>
+          <p>Measuring a change against a total that includes everything you did not touch dilutes the signal until it disappears. True for pricing, product releases and campaigns.</p>
+        </div>
+        <div class="card">
+          <h4>Drawing beats arguing</h4>
+          <p>Any estimated comparison is a claim you then have to defend. A random draw makes comparability a property of the design, including for variables nobody thought to measure.</p>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:28px"><strong>For the next six months the question worth asking is which pricing decisions we can put into an A/B test, and how soon we can start.</strong></p>
+    </div>
+    <div data-lang="es">
+      <p class="kicker">04 · Más allá de pricing</p>
+      <h2>Tres ideas que viajan</h2>
+      <div class="grid3">
+        <div class="card">
+          <h4>Decidir antes de empezar si se puede medir</h4>
+          <p>Comparar el efecto que esperás contra la precisión que tenés. Si el efecto es más chico, lo que tenés es una decisión con seguimiento y no un experimento, y está bien mientras se la llame por su nombre antes de gastar el ciclo.</p>
+        </div>
+        <div class="card">
+          <h4>El denominador decide tanto como el numerador</h4>
+          <p>Medir un cambio contra un total que incluye todo lo que no tocaste diluye la señal hasta hacerla desaparecer. Vale para pricing, releases de producto y campañas.</p>
+        </div>
+        <div class="card">
+          <h4>Sortear le gana a argumentar</h4>
+          <p>Cualquier comparación estimada es una afirmación que después hay que defender. Un sorteo convierte la comparabilidad en una propiedad del diseño, incluso para variables que nadie pensó en medir.</p>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:28px"><strong>Para los próximos seis meses la pregunta que vale es qué decisiones de pricing podemos poner en un test A/B, y qué tan pronto podemos arrancar.</strong></p>
+    </div>
+  </div>
+</section>
+
+<div class="ftr">
+  <span data-lang="en">Pricing method review with Product Hackers</span>
+  <span data-lang="es">Revisión de método de pricing con Product Hackers</span>
+  <span>Guido Mautino · Pricing</span>
+  <span data-lang="en">August 2026</span>
+  <span data-lang="es">Agosto 2026</span>
+</div>
+
+<script>
+(function(){
+  var html=document.documentElement, es=document.getElementById('btn-es'), en=document.getElementById('btn-en');
+  function set(l){
+    html.setAttribute('data-active',l);
+    html.setAttribute('lang', l==='es'?'es':'en');
+    es.setAttribute('aria-pressed', l==='es'?'true':'false');
+    en.setAttribute('aria-pressed', l==='en'?'true':'false');
+  }
+  es.addEventListener('click',function(){set('es')});
+  en.addEventListener('click',function(){set('en')});
+  set('en');
+})();
+</script>
+</body>
+</html>

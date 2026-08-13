@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ola de precios de julio 2026 · Lectura de cierre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f6f4;color:#1a1a1a;font:400 16.5px/1.62 Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1010px;margin:0 auto;padding:0 32px 90px}
+header{background:#1a1a1a;color:#fff} header .wrap{padding:50px 32px 38px}
+.kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8f8f8f;font-weight:600;margin:0 0 15px}
+header h1{font-size:33px;line-height:1.24;font-weight:700;margin:0 0 15px;letter-spacing:-.02em}
+header .sub{margin:0;color:#c9c9c9;font-size:16.5px;max-width:76ch}
+.vent{margin:24px 0 0;padding-top:16px;border-top:1px solid #343434;display:flex;gap:34px;flex-wrap:wrap}
+.vent div{font-size:13px;color:#c9c9c9}
+.vent span{display:block;font:600 10.5px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8f8f8f;margin-bottom:3px}
+section{margin:0 0 46px} section.first{margin-top:42px}
+h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a86;font-weight:600;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid #dedede}
+p{margin:0 0 14px}
+.lead{font-size:21px;line-height:1.48;font-weight:500;letter-spacing:-.012em;margin-bottom:18px}
+.card{background:#fff;border:1px solid #e4e4e0;border-radius:12px;padding:24px 22px}
+.n{font-size:14px;color:#6e6e6a;line-height:1.58;margin:15px 0 16px} .n b{color:#3a3a38}
+.blk{background:#fff;border:1px solid #e4e4e0;border-radius:12px;padding:8px 22px 14px;margin:0 0 14px}
+.blk h3{font:600 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;margin:16px 0 4px;color:#2c6b3c}
+.blk.r h3{color:#eb6834}
+.blk h3 i{font-style:normal;color:#a8a8a4;letter-spacing:0;text-transform:none;font-weight:500;font-size:13px;margin-left:8px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:10px 6px;border-bottom:1px solid #f0f0ee;text-align:left;vertical-align:middle}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:"JetBrains Mono",monospace;font-weight:600;white-space:nowrap}
+tbody th{font-weight:600;white-space:nowrap}
+td.rc{color:#43433f;font-size:14.5px}
+.tg{display:inline-block;margin-left:8px;font:600 10px Inter,sans-serif;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;vertical-align:1px}
+.tRollOut{background:#e4f0e6;color:#2c6b3c} .tRollBack{background:#fae3e1;color:#a5322a} .titerateup{background:#fdeadc;color:#a2521f}
+.fi{background:#fff;border:1px solid #e4e4e0;border-radius:12px;padding:26px 26px 24px;margin:0 0 14px}
+.fh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:0 0 6px}
+.fh h3{font-size:26px;font-weight:700;margin:0;letter-spacing:-.02em}
+.chip{font:500 11.5px "JetBrains Mono",monospace;color:#6e6e6a;background:#f4f4f1;border-radius:5px;padding:3px 8px;margin-left:auto}
+.ver{font-size:19px;font-weight:600;margin:0 0 18px;letter-spacing:-.012em}
+.duo{display:flex;border:1px solid #ececea;border-radius:10px;overflow:hidden;margin:0 0 14px}
+.duo div{flex:1;padding:14px 18px}
+.duo div+div{border-left:1px solid #ececea;background:#fbfbfa}
+.duo span{display:block;font:600 10.5px Inter,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#8a8a86;margin-bottom:5px}
+.duo b{font:700 27px/1 Inter,sans-serif;letter-spacing:-.02em}
+.sec{margin:18px 0 0;padding-top:16px;border-top:1px solid #efefec}
+.sec h4{font:600 10.5px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8a8a86;margin:0 0 9px}
+.cue{margin:0;font-size:15px;color:#43433f;line-height:1.6}
+.mini{font-size:14px} .mini th{font-weight:500;color:#54544f;width:40%}
+.mini td.num{width:16%;font-size:13.5px} .mini td.d{color:#1a1a1a}
+.mini td.el{text-align:left;font-family:Inter,sans-serif;font-weight:400;white-space:normal;color:#43433f}
+.na{color:#8a8a86;font-size:13.5px}
+.pq{color:#7a7a76;font-size:13.5px;line-height:1.45;display:block;margin-top:2px}
+.ud{color:#a8a8a4;font-size:11px;font-family:Inter,sans-serif;font-weight:500}
+.mini thead th{font:600 10px Inter,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#a8a8a4;padding-bottom:4px;border-bottom:1px solid #e8e8e4}
+.mini tr.hi th,.mini tr.hi td{background:#fdf0c8}
+.mini tr.hi th{font-weight:700;color:#1a1a1a;border-radius:5px 0 0 5px}
+.mini tr.hi td.d{border-radius:0 5px 5px 0;font-weight:700}
+.ojo{display:inline-block;margin-left:9px;font:700 9.5px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a2521f;background:#fff;border:1px solid #e8d9b0;border-radius:4px;padding:1px 6px;vertical-align:1px}
+.pie{margin:11px 0 0;font-size:14px;color:#43433f;padding-left:12px;border-left:2px solid #f0d98a}
+.sm2{display:grid;grid-template-columns:1fr 1fr;gap:2px 26px}
+.sm2 .u{padding:10px 0 6px;border-bottom:1px solid #f2f2f0}
+.sm2 .u h5{font:600 14px Inter,sans-serif;margin:0 0 1px}
+.sm2 .u p{margin:0 0 4px;font-size:12.5px;color:#8a8a86}
+.alerta{background:#fff;border:1px solid #e4e4e0;border-left:4px solid #1a1a1a;border-radius:12px;padding:26px 26px 24px}
+.lead2{font-size:22px;line-height:1.42;font-weight:700;letter-spacing:-.018em;margin:0 0 16px}
+.alerta p{font-size:15.5px;color:#43433f;line-height:1.6}
+.alerta .cierre{margin:18px 0 0;padding-top:16px;border-top:1px solid #ececea;color:#1a1a1a}
+details.det{margin:16px 0 0}
+details.det>summary,details.det2>summary{cursor:pointer;list-style:none;font:600 13.5px Inter,sans-serif;color:#2a78d6;padding:9px 0}
+details.det>summary::-webkit-details-marker,details.det2>summary::-webkit-details-marker{display:none}
+details.det>summary::before,details.det2>summary::before{content:"+";display:inline-block;width:17px;height:17px;line-height:15px;text-align:center;border:1px solid #c9dcf3;border-radius:4px;margin-right:9px;font-weight:700;color:#2a78d6;vertical-align:1px}
+details[open].det>summary::before,details[open].det2>summary::before{content:"−"}
+details.det>.dc,details.det>.card{margin-top:6px}
+details.det>.dc p{font-size:15px;color:#43433f}
+details.det2>summary{color:#43433f;font-weight:500;font-size:14.5px}
+details.det2>summary b{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:13.5px;color:#1a1a1a}
+.mas{display:block;font-size:12.5px;color:#2a78d6;font-weight:600;margin:2px 0 0 26px}
+details.det2 .mini{margin-top:8px}
+.acc{margin:20px 0 0;padding-top:16px;border-top:2px solid #1a1a1a}
+.acc span{display:block;font:600 10.5px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8a8a86;margin-bottom:5px}
+.acc p{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.lim p{font-size:15px;margin:0 0 13px;padding-bottom:13px;border-bottom:1px solid #efefec}
+.lim p:last-child{border:0;margin:0;padding:0}
+.box{background:#fff;border:1px solid #e4e4e0;border-left:3px solid #2a78d6;border-radius:10px;padding:20px 22px;margin:16px 0 0}
+.box h4{font:600 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#2a78d6;margin:0 0 9px}
+.box p{font-size:15px} .box p:last-child{margin-bottom:0}
+footer{margin-top:52px;padding-top:20px;border-top:1px solid #dedede;font-size:12.5px;color:#8a8a86;line-height:1.62}
+code{font:500 12px "JetBrains Mono",monospace;background:#efefec;padding:1px 5px;border-radius:3px;color:#54544f}
+mark{background:#fdf0c8;padding:1px 3px}
+</style></head><body>
+
+<header><div class="wrap">
+ <p class="kicker">Pricing · ola de julio 2026 · lectura de cierre</p>
+ <h1>El crecimiento de julio ya venía dado. El volumen casi no se movió.</h1>
+ <p class="sub">Complemento al monitoring de Fernando. Su tabla mide qué pasó después de cada cambio.
+ Esto separa cuánto de ese movimiento ya estaba puesto por la temporada de cada destino y por el
+ crecimiento del negocio.</p>
+ <div class="vent">
+  <div><span>Ventana pre</span>desde el 24 de junio, el cutover de checkout</div>
+  <div><span>Ventana post</span>desde que lanzó cada uno, hasta el 11 de agosto</div>
+  <div><span>Por qué el 11</span>es el último día con tráfico cargado. El 12 y el 13 ya tienen órdenes pero todavía no tienen sesiones</div>
+  <div><span>Escrito el</span>13 de agosto de 2026</div>
+ </div>
+</div></header>
+
+<div class="wrap">
+
+<section class="first">
+ <h2>Antes de leer nada de esto</h2>
+ <div class="alerta">
+  <p class="lead2">Ninguno de estos ocho resultados es significativo, y con este diseño no lo va a ser.</p>
+  <p>Comparamos un antes y un después en el mismo destino. <b>No hay grupo de control.</b> La temporada de cada
+  destino y el crecimiento del negocio los podemos descontar, y es lo que hace este documento. La inversión en ads,
+  los movimientos de competidores, las campañas, los cambios de producto y la mezcla de mercados emisores no.
+  Cualquiera de esos puede explicar lo que acá termina quedando del lado del precio.</p>
+  <p>Entonces esto es <b>direccional</b>. Sirve para ordenar prioridades, para poner la plata en escala y para
+  descartar lecturas falsas, como el +31,9% de Suiza que resultó ser su agosto. <b>No sirve para afirmar cuánta
+  demanda mueve un punto de precio</b>, que era la pregunta original.</p>
+  <p class="cierre">La conclusión de proceso, y es la más importante de todas: <b>hasta que no podamos correr A/B con
+  asignación aleatoria, no recomendamos seguir moviendo precio para medir elasticidad.</b> Distinto es moverlo para
+  decidir posición. Si la decisión es cerrar la distancia contra competencia, eso es una decisión de negocio, se toma
+  con el benchmark en la mano y no necesita este instrumento.</p>
+ </div>
+</section>
+
+<section>
+ <h2>La decisión, en una pantalla</h2>
+ <div class="blk">
+  <h3>Coincidimos con el tag que ya está puesto <i>seis de ocho</i></h3>
+  <table><tbody><tr><th scope="row">USA<span class="tg tRollBack">RollBack</span></th><td class="rc"><b>Revertir, pero entender primero.</b><br><span class="pq">Le tocaba crecer 24,1% y creció 10,3%, con el recorte más chico. Nada lo explica todavía.</span></td><td class="num">28.634<br><span class="ud">€/día</span></td></tr><tr><th scope="row">México<span class="tg tRollBack">RollBack</span></th><td class="rc"><b>Revertir, y no volver a recortar sin saber qué pasó.</b><br><span class="pq">El recorte más grande de la ola movió la conversión un punto y medio.</span></td><td class="num">5.300<br><span class="ud">€/día</span></td></tr><tr><th scope="row">España<span class="tg tRollBack">RollBack</span></th><td class="rc"><b>Revertir.</b><br><span class="pq">El volumen no respondió y cada sesión deja 18% menos que antes.</span></td><td class="num">3.563<br><span class="ud">€/día</span></td></tr><tr><th scope="row">Canadá<span class="tg titerateup">iterate up</span></th><td class="rc"><b>Recuperar parte del precio.</b><br><span class="pq">Su +20,1% es su julio. La conversión bajó 10% y el tráfico subió 34%.</span></td><td class="num">3.551<br><span class="ud">€/día</span></td></tr><tr><th scope="row">Italia<span class="tg titerateup">iterate up</span></th><td class="rc"><b>Recuperar parte del precio, o alinear criterio con España.</b><br><span class="pq">Los mismos números que España, que está tagueada RollBack.</span></td><td class="num">2.408<br><span class="ud">€/día</span></td></tr><tr><th scope="row">Perú<span class="tg titerateup">iterate up</span></th><td class="rc"><b>Recuperar parte del precio.</b><br><span class="pq">Su +22,8% es su agosto. Y su LTV cayó 17%.</span></td><td class="num">1.654<br><span class="ud">€/día</span></td></tr></tbody></table>
+ </div>
+ <div class="blk r">
+  <h3>Revisaríamos el tag <i>dos de ocho</i></h3>
+  <table><tbody><tr><th scope="row">Marruecos<span class="tg tRollOut">RollOut</span></th><td class="rc"><b>Definir si se sostiene por margen. Es la única tensión real.</b><br><span class="pq">El ticket sube 27% y cada sesión rinde 11% más, pero se fue más volumen del que eso compensa.</span></td><td class="num">3.062<br><span class="ud">€/día</span></td></tr><tr><th scope="row">Suiza<span class="tg tRollOut">RollOut</span></th><td class="rc"><b>Revisar el RollOut. Es el aporte más concreto de esta lectura.</b><br><span class="pq">Su +31,9%, el más grande de la ola, es su agosto: vende 74% más que un mes típico.</span></td><td class="num">1.052<br><span class="ud">€/día</span></td></tr></tbody></table>
+ </div>
+ <p class="n">La última columna es cuánta facturación por día separa lo que se facturó de lo que se habría facturado
+ sin tocar el precio. Los ocho juntos suman <b>49.224 euros por día</b>.</p>
+</section>
+
+<section>
+ <h2>Por qué</h2>
+ <p class="lead">Los ocho crecieron. Pero a los ocho les tocaba crecer igual, por su temporada y porque el negocio
+ venía creciendo. <mark>En cinco no queda nada por encima de eso</mark>, y en tres el número queda por debajo.</p>
+ <div class="card"><svg viewBox="0 0 1000 602" width="100%" role="img" aria-label="Lo que le tocaba crecer contra lo que creció, por destino">
+<defs><style>.nm{font:600 15px Inter,sans-serif;fill:#1a1a1a}.sm{font:500 11px Inter,sans-serif;fill:#9a9a96}.vv{font:600 12px "JetBrains Mono",monospace}.lg{font:600 10.5px Inter,sans-serif;letter-spacing:.07em;fill:#7a7a76}</style></defs>
+<line x1="280" y1="44" x2="280" y2="546" stroke="#1a1a1a"/>
+<text x="150" y="69" class="nm" text-anchor="end">USA</text>
+<text x="150" y="85" class="sm" text-anchor="end">precio −5,39%</text>
+<rect x="280" y="54" width="361.2" height="15" fill="#b8b8b2"/>
+<text x="649.2" y="66" class="vv" fill="#6e6e6a">+24,1%</text>
+<rect x="280.0" y="72" width="154.5" height="15" fill="#eb6834"/>
+<text x="442.5" y="84" class="vv" fill="#eb6834">+10,3%</text>
+<line x1="20" y1="105" x2="980" y2="105" stroke="#f2f2f0"/>
+<text x="150" y="133" class="nm" text-anchor="end">México</text>
+<text x="150" y="149" class="sm" text-anchor="end">precio −12,42%</text>
+<rect x="280" y="118" width="279.5" height="15" fill="#b8b8b2"/>
+<text x="567.5" y="130" class="vv" fill="#6e6e6a">+18,6%</text>
+<rect x="280.0" y="136" width="204.0" height="15" fill="#eb6834"/>
+<text x="492.0" y="148" class="vv" fill="#eb6834">+13,6%</text>
+<line x1="20" y1="169" x2="980" y2="169" stroke="#f2f2f0"/>
+<text x="150" y="197" class="nm" text-anchor="end">España</text>
+<text x="150" y="213" class="sm" text-anchor="end">precio −10,11%</text>
+<rect x="280" y="182" width="178.4" height="15" fill="#b8b8b2"/>
+<text x="466.4" y="194" class="vv" fill="#6e6e6a">+11,9%</text>
+<rect x="280.0" y="200" width="198.0" height="15" fill="#2a78d6"/>
+<text x="486.0" y="212" class="vv" fill="#2a78d6">+13,2%</text>
+<line x1="20" y1="233" x2="980" y2="233" stroke="#f2f2f0"/>
+<text x="150" y="261" class="nm" text-anchor="end">Canadá</text>
+<text x="150" y="277" class="sm" text-anchor="end">precio −10,18%</text>
+<rect x="280" y="246" width="292.7" height="15" fill="#b8b8b2"/>
+<text x="580.7" y="258" class="vv" fill="#6e6e6a">+19,5%</text>
+<rect x="280.0" y="264" width="301.5" height="15" fill="#2a78d6"/>
+<text x="589.5" y="276" class="vv" fill="#2a78d6">+20,1%</text>
+<line x1="20" y1="297" x2="980" y2="297" stroke="#f2f2f0"/>
+<text x="150" y="325" class="nm" text-anchor="end">Marruecos</text>
+<text x="150" y="341" class="sm" text-anchor="end">precio +15,76%</text>
+<rect x="280" y="310" width="194.8" height="15" fill="#b8b8b2"/>
+<text x="482.8" y="322" class="vv" fill="#6e6e6a">+13,0%</text>
+<rect x="119.5" y="328" width="160.5" height="15" fill="#eb6834"/>
+<text x="128.5" y="340" class="vv" fill="#fff">−10,7%</text>
+<line x1="20" y1="361" x2="980" y2="361" stroke="#f2f2f0"/>
+<text x="150" y="389" class="nm" text-anchor="end">Italia</text>
+<text x="150" y="405" class="sm" text-anchor="end">precio −10,40%</text>
+<rect x="280" y="374" width="204.3" height="15" fill="#b8b8b2"/>
+<text x="492.3" y="386" class="vv" fill="#6e6e6a">+13,6%</text>
+<rect x="280.0" y="392" width="222.0" height="15" fill="#2a78d6"/>
+<text x="510.0" y="404" class="vv" fill="#2a78d6">+14,8%</text>
+<line x1="20" y1="425" x2="980" y2="425" stroke="#f2f2f0"/>
+<text x="150" y="453" class="nm" text-anchor="end">Perú</text>
+<text x="150" y="469" class="sm" text-anchor="end">precio −10,89%</text>
+<rect x="280" y="438" width="330.5" height="15" fill="#b8b8b2"/>
+<text x="618.5" y="450" class="vv" fill="#6e6e6a">+22,0%</text>
+<rect x="280.0" y="456" width="342.0" height="15" fill="#2a78d6"/>
+<text x="630.0" y="468" class="vv" fill="#2a78d6">+22,8%</text>
+<line x1="20" y1="489" x2="980" y2="489" stroke="#f2f2f0"/>
+<text x="150" y="517" class="nm" text-anchor="end">Suiza</text>
+<text x="150" y="533" class="sm" text-anchor="end">precio −4,34%</text>
+<rect x="280" y="502" width="490.5" height="15" fill="#b8b8b2"/>
+<text x="778.5" y="514" class="vv" fill="#6e6e6a">+32,7%</text>
+<rect x="280.0" y="520" width="478.5" height="15" fill="#eb6834"/>
+<text x="766.5" y="532" class="vv" fill="#eb6834">+31,9%</text>
+<rect x="20" y="583" width="16" height="11" fill="#b8b8b2"/>
+<text x="42" y="593" class="lg">LE TOCABA CRECER</text>
+<rect x="192" y="583" width="16" height="11" fill="#2a78d6"/>
+<rect x="212" y="583" width="16" height="11" fill="#eb6834"/>
+<text x="234" y="593" class="lg">CRECIÓ</text>
+<text x="980" y="593" class="lg" text-anchor="end">ÓRDENES POR DÍA, DESPUÉS DEL CAMBIO CONTRA ANTES</text>
+</svg></div>
+ <p class="n"><b>Cómo se lee.</b> La barra gris es cuánto iba a crecer ese destino igual. La de abajo es cuánto
+ creció de verdad. Cuando la de abajo es más corta, creció menos de lo que le tocaba.</p>
+ <p>Y hay un número que sale del propio sheet: <b>comparada contra el promedio de las semanas previas, la
+ conversión bajó en seis de los siete recortes</b>. El único que subió es Suiza, 4%. Si el precio fuera lo que movió
+ el volumen, la conversión tendría que haber subido. Lo que subió fue el tráfico, entre 15% y 34% según el destino.</p>
+</section>
+
+<section>
+ <h2>Cuánto pesa cada uno</h2>
+ <div class="card"><svg viewBox="0 0 1000 330" width="100%" role="img" aria-label="Euros por día que separan lo facturado de lo esperable">
+<defs><style>.nm{font:600 13.5px Inter,sans-serif;fill:#1a1a1a}.vv{font:600 11.5px "JetBrains Mono",monospace;fill:#1a1a1a}.sm{font:500 11px Inter,sans-serif;fill:#9a9a96}.lg{font:600 10.5px Inter,sans-serif;letter-spacing:.07em;fill:#7a7a76}</style></defs>
+<text x="150" y="47" class="nm" text-anchor="end">USA</text>
+<rect x="170" y="34" width="520.0" height="16" fill="#eb6834" opacity="0.95"/>
+<text x="702.0" y="47" class="vv">28.634 €/día</text>
+<text x="976" y="47" class="sm" text-anchor="end">58% del total</text>
+<text x="150" y="81" class="nm" text-anchor="end">México</text>
+<rect x="170" y="68" width="96.2" height="16" fill="#eb6834" opacity="0.5"/>
+<text x="278.2" y="81" class="vv">5.300 €/día</text>
+<text x="976" y="81" class="sm" text-anchor="end">11% del total</text>
+<text x="150" y="115" class="nm" text-anchor="end">España</text>
+<rect x="170" y="102" width="64.7" height="16" fill="#eb6834" opacity="0.5"/>
+<text x="246.7" y="115" class="vv">3.563 €/día</text>
+<text x="976" y="115" class="sm" text-anchor="end">7% del total</text>
+<text x="150" y="149" class="nm" text-anchor="end">Canadá</text>
+<rect x="170" y="136" width="64.5" height="16" fill="#eb6834" opacity="0.5"/>
+<text x="246.5" y="149" class="vv">3.551 €/día</text>
+<text x="976" y="149" class="sm" text-anchor="end">7% del total</text>
+<text x="150" y="183" class="nm" text-anchor="end">Marruecos</text>
+<rect x="170" y="170" width="55.6" height="16" fill="#eb6834" opacity="0.5"/>
+<text x="237.6" y="183" class="vv">3.062 €/día</text>
+<text x="976" y="183" class="sm" text-anchor="end">6% del total</text>
+<text x="150" y="217" class="nm" text-anchor="end">Italia</text>
+<rect x="170" y="204" width="43.7" height="16" fill="#eb6834" opacity="0.5"/>
+<text x="225.7" y="217" class="vv">2.408 €/día</text>
+<text x="976" y="217" class="sm" text-anchor="end">5% del total</text>
+<text x="150" y="251" class="nm" text-anchor="end">Perú</text>
+<rect x="170" y="238" width="30.0" height="16" fill="#eb6834" opacity="0.5"/>
+<text x="212.0" y="251" class="vv">1.654 €/día</text>
+<text x="976" y="251" class="sm" text-anchor="end">3% del total</text>
+<text x="150" y="285" class="nm" text-anchor="end">Suiza</text>
+<rect x="170" y="272" width="19.1" height="16" fill="#eb6834" opacity="0.5"/>
+<text x="201.1" y="285" class="vv">1.052 €/día</text>
+<text x="976" y="285" class="sm" text-anchor="end">2% del total</text>
+<text x="170" y="322" class="lg">LOS OCHO JUNTOS · 49.224 €/DÍA</text>
+</svg></div>
+ <p class="n">Euros por día que separan lo facturado de lo que se habría facturado sin tocar el precio, en la ventana
+ de cada destino. <b>Es el supuesto más favorable posible al precio</b>: le atribuye todo lo que no explican la
+ temporada ni el crecimiento del negocio. Aun así, los ocho dan negativo.</p>
+ <p>USA factura 151.650 euros por día, 4,2 veces el segundo, y su brecha sola es el
+ 58% de la ola. También es el que menos entendemos. Lo primero de la lista no es
+ revertir USA, es entender USA.</p>
+</section>
+
+<section>
+ <h2>De dónde sale eso de que "le tocaba crecer"</h2>
+ <p>Cada destino tiene su propio calendario y no lo mueve el precio, lo mueve cuándo viaja la gente a cada lugar.
+ Suiza vende 74% más en agosto que en un mes suyo cualquiera. Marruecos vende 22% menos en julio, porque su
+ temporada es primavera y otoño. Son dos negocios distintos aunque los dos sean eSIM.</p>
+ <p>El índice dice cuánto vende cada mes contra un mes cualquiera de ese mismo destino:
+ <b>1,00 es su mes típico y 1,74 es 74% arriba</b>. Cada destino se compara contra sí mismo, nunca contra otro.</p>
+ <div class="card"><div class="sm2"><div class="u"><h5>Canadá</h5><p>julio 1,79 · agosto 1,88</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de Canadá">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="59.2" width="22" height="16.8" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="59.8" width="22" height="16.2" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="59.5" width="22" height="16.5" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="55.0" width="22" height="21.0" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="47.5" width="22" height="28.5" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="38.8" width="22" height="37.2" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="22.3" width="22" height="53.7" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="19.6" width="22" height="56.4" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="34.6" width="22" height="41.4" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="45.7" width="22" height="30.3" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="57.7" width="22" height="18.3" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="52.3" width="22" height="23.7" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div><div class="u"><h5>Suiza</h5><p>julio 1,40 · agosto 1,74</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de Suiza">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="52.0" width="22" height="24.0" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="51.4" width="22" height="24.6" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="50.8" width="22" height="25.2" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="52.3" width="22" height="23.7" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="50.2" width="22" height="25.8" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="47.2" width="22" height="28.8" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="34.0" width="22" height="42.0" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="23.8" width="22" height="52.2" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="45.7" width="22" height="30.3" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="51.1" width="22" height="24.9" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="52.9" width="22" height="23.1" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="40.9" width="22" height="35.1" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div><div class="u"><h5>Italia</h5><p>julio 1,53 · agosto 1,53</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de Italia">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="58.6" width="22" height="17.4" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="59.8" width="22" height="16.2" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="55.6" width="22" height="20.4" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="49.0" width="22" height="27.0" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="44.2" width="22" height="31.8" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="40.3" width="22" height="35.7" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="30.1" width="22" height="45.9" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="30.1" width="22" height="45.9" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="31.6" width="22" height="44.4" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="42.4" width="22" height="33.6" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="54.4" width="22" height="21.6" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="56.2" width="22" height="19.8" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div><div class="u"><h5>España</h5><p>julio 1,42 · agosto 1,40</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de España">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="54.7" width="22" height="21.3" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="58.3" width="22" height="17.7" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="54.7" width="22" height="21.3" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="49.0" width="22" height="27.0" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="43.9" width="22" height="32.1" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="40.9" width="22" height="35.1" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="33.4" width="22" height="42.6" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="34.0" width="22" height="42.0" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="37.0" width="22" height="39.0" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="41.5" width="22" height="34.5" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="51.7" width="22" height="24.3" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="52.9" width="22" height="23.1" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div><div class="u"><h5>Perú</h5><p>julio 1,17 · agosto 1,40</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de Perú">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="54.7" width="22" height="21.3" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="57.4" width="22" height="18.6" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="49.6" width="22" height="26.4" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="44.2" width="22" height="31.8" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="46.0" width="22" height="30.0" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="47.5" width="22" height="28.5" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="40.9" width="22" height="35.1" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="34.0" width="22" height="42.0" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="39.1" width="22" height="36.9" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="42.1" width="22" height="33.9" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="46.0" width="22" height="30.0" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="50.8" width="22" height="25.2" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div><div class="u"><h5>USA</h5><p>julio 1,11 · agosto 1,29</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de USA">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="53.5" width="22" height="22.5" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="53.5" width="22" height="22.5" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="48.1" width="22" height="27.9" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="43.0" width="22" height="33.0" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="48.1" width="22" height="27.9" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="49.9" width="22" height="26.1" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="42.7" width="22" height="33.3" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="37.3" width="22" height="38.7" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="43.3" width="22" height="32.7" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="41.2" width="22" height="34.8" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="47.5" width="22" height="28.5" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="44.2" width="22" height="31.8" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div><div class="u"><h5>México</h5><p>julio 0,95 · agosto 1,07</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de México">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="43.9" width="22" height="32.1" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="46.0" width="22" height="30.0" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="41.8" width="22" height="34.2" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="46.3" width="22" height="29.7" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="52.3" width="22" height="23.7" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="52.6" width="22" height="23.4" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="47.5" width="22" height="28.5" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="43.9" width="22" height="32.1" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="52.3" width="22" height="23.7" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="42.4" width="22" height="33.6" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="42.7" width="22" height="33.3" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="40.6" width="22" height="35.4" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div><div class="u"><h5>Marruecos</h5><p>julio 0,78 · agosto 0,92</p><svg viewBox="0 0 430 104" width="100%" role="img" aria-label="Estacionalidad de Marruecos">
+<defs><style>.m2{font:500 9.5px Inter,sans-serif;fill:#b4b4b0}.m3{font:700 9.5px Inter,sans-serif;fill:#1a1a1a}</style></defs>
+<rect x="215.0" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<rect x="249.8" y="16" width="34.8" height="60" fill="#fdf0c8"/>
+<line x1="6" y1="46.0" x2="424" y2="46.0" stroke="#d4d4d0" stroke-dasharray="3 3"/>
+<rect x="12.4" y="49.9" width="22" height="26.1" fill="#c8c8c2"/>
+<text x="23.4" y="89" class="m2" text-anchor="middle">E</text>
+<rect x="47.2" y="45.7" width="22" height="30.3" fill="#c8c8c2"/>
+<text x="58.2" y="89" class="m2" text-anchor="middle">F</text>
+<rect x="82.1" y="42.1" width="22" height="33.9" fill="#c8c8c2"/>
+<text x="93.1" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="116.9" y="38.5" width="22" height="37.5" fill="#c8c8c2"/>
+<text x="127.9" y="89" class="m2" text-anchor="middle">A</text>
+<rect x="151.8" y="43.9" width="22" height="32.1" fill="#c8c8c2"/>
+<text x="162.8" y="89" class="m2" text-anchor="middle">M</text>
+<rect x="186.6" y="52.6" width="22" height="23.4" fill="#c8c8c2"/>
+<text x="197.6" y="89" class="m2" text-anchor="middle">J</text>
+<rect x="221.4" y="52.6" width="22" height="23.4" fill="#1a1a1a"/>
+<text x="232.4" y="89" class="m3" text-anchor="middle">J</text>
+<rect x="256.2" y="48.4" width="22" height="27.6" fill="#1a1a1a"/>
+<text x="267.2" y="89" class="m3" text-anchor="middle">A</text>
+<rect x="291.1" y="44.8" width="22" height="31.2" fill="#c8c8c2"/>
+<text x="302.1" y="89" class="m2" text-anchor="middle">S</text>
+<rect x="325.9" y="40.9" width="22" height="35.1" fill="#c8c8c2"/>
+<text x="336.9" y="89" class="m2" text-anchor="middle">O</text>
+<rect x="360.8" y="46.9" width="22" height="29.1" fill="#c8c8c2"/>
+<text x="371.8" y="89" class="m2" text-anchor="middle">N</text>
+<rect x="395.6" y="46.0" width="22" height="30.0" fill="#c8c8c2"/>
+<text x="406.6" y="89" class="m2" text-anchor="middle">D</text>
+</svg></div></div></div>
+ <p class="n">Los doce meses de cada destino. En amarillo julio y agosto, que son los meses que cubren las ventanas
+ de esta ola. Ordenados por su índice de agosto.</p>
+ <details class="det">
+  <summary>Cómo se calcula, y cómo lo validamos</summary>
+  <div class="dc">
+  <p>Tomamos las órdenes mes a mes de cada destino desde enero de 2023, le sacamos su tendencia de fondo con una
+  media móvil centrada de doce meses, y nos quedamos con lo que sobra en cada mes. Eso es el índice.</p>
+  <p>Antes de aplicarlo a los ocho pedimos ocho destinos con expectativa a priori, para poder equivocarnos:
+  España y Suiza con pico en julio y agosto, Egipto con valle en junio por el calor, Tailandia con pico en
+  diciembre, Brasil con pico en enero por el verano austral, Japón con doble pico en marzo y octubre.
+  <b>Los ocho dieron lo esperado.</b> Y la forma se repite año a año: las correlaciones entre 2023, 2024 y 2025
+  van de 0,76 a 0,99, con una sola excepción, Brasil 2023, que era su año de lanzamiento y quedó afuera del cálculo.</p>
+  <p>El límite es que <b>la curva se está aplanando</b>. El índice de julio baja año a año en siete de los ocho,
+  porque Holafly vende cada vez más todo el año. Suiza pasó de 1,70 a 1,41 a 1,28 en julio. Por eso los años
+  recientes pesan más que los viejos, y por eso no sirve ir más atrás de 2023.</p>
+  </div>
+ </details>
+</section>
+
+<section>
+ <h2>Destino por destino</h2>
+ <article class="fi" id="USA">
+ <div class="fh"><h3>USA</h3><span class="tg tRollBack">RollBack</span>
+  <span class="chip">precio −5,39% · lanzó el 24 de julio · 19 días corridos · 151.650 €/día</span></div>
+ <p class="ver">El más grande de todos y el que menos se entiende.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+24,1%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#eb6834">+10,3%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 24,1% y creció 10,3%. Es la separación más grande de las ocho, y con el recorte más chico. Vinieron 17% más sesiones y la conversión bajó 6%.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de USA">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="77.6" x2="924" y2="77.6" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="69.6" class="ay">un mes típico de USA = 1,00</text>
+<rect x="52.2" y="91.7" width="30" height="42.3" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="91.7" width="30" height="42.3" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="81.5" width="30" height="52.5" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="71.9" width="30" height="62.1" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="81.5" width="30" height="52.5" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="84.9" width="30" height="49.1" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="71.4" width="30" height="62.6" fill="#1a1a1a"/>
+<text x="514.2" y="64.4" class="gv" text-anchor="middle">1,11</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="61.2" width="30" height="72.8" fill="#1a1a1a"/>
+<text x="588.8" y="54.2" class="gv" text-anchor="middle">1,29</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="72.5" width="30" height="61.5" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="68.6" width="30" height="65.4" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="80.4" width="30" height="53.6" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="74.2" width="30" height="59.8" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Su agosto es 1,29 y su julio 1,11. Es una curva suave, no tiene un pico que explique una caída de esta magnitud.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 5,39% abajo cada orden deja menos, así que necesitaba <b>5,7% más de órdenes</b> de las que ya iba a tener. Consiguió −11,1%.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá la conversión: <b>28,4% → 26,7%</b>, −6,0%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr><th>Sesiones por día</th><td class="num">16.863</td><td class="num">19.751</td><td class="num d">+17,1%</td></tr>
+   <tr class="hi"><th>Conversión</th><td class="num">28,4%</td><td class="num">26,7%</td><td class="num d">−6,0%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">28,5 €</td><td class="num">28,7 €</td><td class="num d">+0,7%</td></tr>
+   <tr><th>Revenue por sesión</th><td class="num">8,10 €</td><td class="num">7,70 €</td><td class="num d">−4,9%</td></tr>
+   <tr><th>LTV de clientes nuevos</th><td class="num">38,4 €</td><td class="num">36,6 €</td><td class="num d">−4,7%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">+5,9%</td><td class="num">−1,2%</td><td class="num d">−7,1 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><span class="na">no se puede calcular: sale con el signo cambiado y el sheet la marca como confundida</span></td></tr>
+  </tbody></table></details>
+  <p class="pie">Con el recorte más chico de la ola, la conversión igual bajó 6%.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">Un recorte de 5,4% no puede hacer caer la demanda once puntos. La elasticidad del sheet tampoco lo puede leer: sale con el signo cambiado y la marca como confundida. Acá se movió algo más, y es el destino donde más caro sale no saber qué: su brecha sola es el 58% de la ola.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Revertir, pero entender primero.</p></div>
+</article><article class="fi" id="MEX">
+ <div class="fh"><h3>México</h3><span class="tg tRollBack">RollBack</span>
+  <span class="chip">precio −12,42% · lanzó el 16 de julio · 27 días corridos · 27.492 €/día</span></div>
+ <p class="ver">El recorte más profundo, y la conversión no se movió.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+18,6%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#eb6834">+13,6%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 18,6% y creció 13,6%. Vinieron 15% más sesiones y la conversión bajó 1%. Bajamos el precio 12,4%, el más grande de la ola, y la conversión quedó donde estaba.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de México">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="77.6" x2="924" y2="77.6" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="69.6" class="ay">un mes típico de México = 1,00</text>
+<rect x="52.2" y="73.6" width="30" height="60.4" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="77.6" width="30" height="56.4" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="69.7" width="30" height="64.3" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="78.2" width="30" height="55.8" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="89.4" width="30" height="44.6" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="90.0" width="30" height="44.0" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="80.4" width="30" height="53.6" fill="#1a1a1a"/>
+<text x="514.2" y="73.4" class="gv" text-anchor="middle">0,95</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="73.6" width="30" height="60.4" fill="#1a1a1a"/>
+<text x="588.8" y="66.6" class="gv" text-anchor="middle">1,07</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="89.4" width="30" height="44.6" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="70.8" width="30" height="63.2" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="71.4" width="30" height="62.6" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="67.4" width="30" height="66.6" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Su julio es 0,95 y su agosto 1,07. Es la curva más chata de las ocho: México vende parejo todo el año y su pico es diciembre, no el verano.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 12,42% abajo cada orden deja menos, así que necesitaba <b>14,2% más de órdenes</b> de las que ya iba a tener. Consiguió −4,3%.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá la conversión: <b>20,6% → 20,3%</b>, −1,5%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr><th>Sesiones por día</th><td class="num">4.700</td><td class="num">5.404</td><td class="num d">+15,0%</td></tr>
+   <tr class="hi"><th>Conversión</th><td class="num">20,6%</td><td class="num">20,3%</td><td class="num d">−1,5%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">24,9 €</td><td class="num">25,1 €</td><td class="num d">+0,8%</td></tr>
+   <tr><th>Revenue por sesión</th><td class="num">5,10 €</td><td class="num">5,10 €</td><td class="num d">−0,8%</td></tr>
+   <tr><th>LTV de clientes nuevos</th><td class="num">24,5 €</td><td class="num">22,9 €</td><td class="num d">−6,2%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">+13,9%</td><td class="num">+0,2%</td><td class="num d">−13,7 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><span class="na">no se puede calcular: sale con el signo cambiado y el sheet la marca como confundida</span></td></tr>
+  </tbody></table></details>
+  <p class="pie">Bajamos 12,4% y la conversión se movió un punto y medio. Es lo más raro de la ola.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">El AOV quedó clavado en 25 euros pese al recorte, y eso también es raro. Su elasticidad sale con el signo cambiado y el sheet la marca como confundida. El RollBack está bien; lo que falta es entender por qué un descuento de 12,4% no movió nada.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Revertir, y no volver a recortar sin saber qué pasó.</p></div>
+</article><article class="fi" id="ESP">
+ <div class="fh"><h3>España</h3><span class="tg tRollBack">RollBack</span>
+  <span class="chip">precio −10,11% · lanzó el 24 de julio · 19 días corridos · 35.832 €/día</span></div>
+ <p class="ver">El más limpio de leer, y no alcanzó.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+11,9%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#2a78d6">+13,2%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 11,9% y creció 13,2%. Vinieron 24% más sesiones y la conversión bajó 8%.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de España">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="77.6" x2="924" y2="77.6" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="69.6" class="ay">un mes típico de España = 1,00</text>
+<rect x="52.2" y="93.9" width="30" height="40.1" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="100.7" width="30" height="33.3" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="93.9" width="30" height="40.1" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="83.2" width="30" height="50.8" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="73.6" width="30" height="60.4" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="68.0" width="30" height="66.0" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="53.9" width="30" height="80.1" fill="#1a1a1a"/>
+<text x="514.2" y="46.9" class="gv" text-anchor="middle">1,42</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="55.0" width="30" height="79.0" fill="#1a1a1a"/>
+<text x="588.8" y="48.0" class="gv" text-anchor="middle">1,40</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="60.7" width="30" height="73.3" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="69.1" width="30" height="64.9" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="88.3" width="30" height="45.7" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="90.6" width="30" height="43.4" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Julio 1,42 y agosto 1,40 son su temporada alta, pero la ventana arranca el 24 de julio, o sea ya adentro de los dos meses altos. Por eso lo que le tocaba crecer es lo más bajo de las ocho y su lectura es la más confiable.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 10,11% abajo cada orden deja menos, así que necesitaba <b>11,2% más de órdenes</b> de las que ya iba a tener. Consiguió 1,2%.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá el revenue por sesión: <b>6,20 € → 5,00 €</b>, −18,4%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr><th>Sesiones por día</th><td class="num">5.759</td><td class="num">7.126</td><td class="num d">+23,7%</td></tr>
+   <tr><th>Conversión</th><td class="num">26,3%</td><td class="num">24,1%</td><td class="num d">−8,4%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">23,4 €</td><td class="num">20,9 €</td><td class="num d">−10,7%</td></tr>
+   <tr class="hi"><th>Revenue por sesión</th><td class="num">6,20 €</td><td class="num">5,00 €</td><td class="num d">−18,4%</td></tr>
+   <tr><th>LTV de clientes nuevos</th><td class="num">31,7 €</td><td class="num">27,9 €</td><td class="num d">−12,1%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">+11,1%</td><td class="num">−1,0%</td><td class="num d">−12,1 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><span class="na">no se puede calcular: sale con el signo cambiado y el sheet la marca como confundida</span></td></tr>
+  </tbody></table></details>
+  <p class="pie">Cada sesión deja 18% menos plata que antes. Es la caída más grande de las ocho.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">Su revenue por sesión cayó 18%, la peor de las ocho, y su LTV 12%. Bajamos el precio 10,1%, la conversión bajó y cada sesión deja menos plata. No hay ninguna lectura de esto que sostenga el recorte.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Revertir.</p></div>
+</article><article class="fi" id="CAN">
+ <div class="fh"><h3>Canadá</h3><span class="tg titerateup">iterate up</span>
+  <span class="chip">precio −10,18% · lanzó el 15 de julio · 28 días corridos · 32.977 €/día</span></div>
+ <p class="ver">Vino un tercio más de gente y compró una proporción menor.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+19,5%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#2a78d6">+20,1%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 19,5% y creció 20,1%. Vinieron 34% más sesiones, el salto de tráfico más grande de la ola, y la conversión bajó 10%.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de Canadá">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="79.5" x2="924" y2="79.5" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="71.5" class="ay">un mes típico de Canadá = 1,00</text>
+<rect x="52.2" y="103.5" width="30" height="30.5" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="104.6" width="30" height="29.4" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="104.0" width="30" height="30.0" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="95.9" width="30" height="38.1" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="82.3" width="30" height="51.7" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="66.5" width="30" height="67.5" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="36.5" width="30" height="97.5" fill="#1a1a1a"/>
+<text x="514.2" y="29.5" class="gv" text-anchor="middle">1,79</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="31.6" width="30" height="102.4" fill="#1a1a1a"/>
+<text x="588.8" y="24.6" class="gv" text-anchor="middle">1,88</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="58.9" width="30" height="75.1" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="79.0" width="30" height="55.0" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="100.8" width="30" height="33.2" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="91.0" width="30" height="43.0" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Julio 1,79 y agosto 1,88 son sus dos meses más altos del año. Canadá viaja en verano y la ventana cae entera adentro de su temporada.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 10,18% abajo cada orden deja menos, así que necesitaba <b>11,3% más de órdenes</b> de las que ya iba a tener. Consiguió 0,5%.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá sesiones por día: <b>3.899 → 5.219</b>, +33,9%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr class="hi"><th>Sesiones por día</th><td class="num">3.899</td><td class="num">5.219</td><td class="num d">+33,9%</td></tr>
+   <tr><th>Conversión</th><td class="num">20,1%</td><td class="num">18,0%</td><td class="num d">−10,4%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">37,3 €</td><td class="num">35,1 €</td><td class="num d">−5,9%</td></tr>
+   <tr><th>Revenue por sesión</th><td class="num">7,50 €</td><td class="num">6,30 €</td><td class="num d">−15,5%</td></tr>
+   <tr><th>LTV de clientes nuevos</th><td class="num">40,2 €</td><td class="num">36,0 €</td><td class="num d">−10,3%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">+10,9%</td><td class="num">−0,9%</td><td class="num d">−11,8 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><b>0,22</b></td></tr>
+  </tbody></table></details>
+  <p class="pie">Todo el crecimiento salió de acá, no del precio: el tráfico saltó un tercio.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">Su elasticidad da 0,22 cuando para empatar en facturación necesitaba pasar de 1,11. Su revenue por sesión cayó 15% y su LTV 10%. Lo único que el recorte compró fue posición: pasó de estar 10,9% arriba de la competencia a estar 0,9% abajo. Cuánto precio recuperar es una decisión de dónde queremos quedar parados, no de volumen.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Recuperar parte del precio.</p></div>
+</article><article class="fi" id="MAR">
+ <div class="fh"><h3>Marruecos</h3><span class="tg tRollOut">RollOut</span>
+  <span class="chip">precio +15,76% · lanzó el 15 de julio · 28 días corridos · 33.140 €/día</span></div>
+ <p class="ver">La única donde el sheet y esta lectura no coinciden, y las dos tienen razón.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+13,0%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#eb6834">−10,7%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 13,0% y cayó 10,7%. Es la única subida de precio de la ola. Las sesiones quedaron planas, más 2%, y la conversión bajó 13%.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de Marruecos">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="77.6" x2="924" y2="77.6" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="69.6" class="ay">un mes típico de Marruecos = 1,00</text>
+<rect x="52.2" y="84.9" width="30" height="49.1" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="77.0" width="30" height="57.0" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="70.3" width="30" height="63.7" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="63.5" width="30" height="70.5" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="73.6" width="30" height="60.4" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="90.0" width="30" height="44.0" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="90.0" width="30" height="44.0" fill="#1a1a1a"/>
+<text x="514.2" y="83.0" class="gv" text-anchor="middle">0,78</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="82.1" width="30" height="51.9" fill="#1a1a1a"/>
+<text x="588.8" y="75.1" class="gv" text-anchor="middle">0,92</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="75.3" width="30" height="58.7" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="68.0" width="30" height="66.0" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="79.3" width="30" height="54.7" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="77.6" width="30" height="56.4" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Julio es 0,78, su mes más bajo del año. Marruecos vende en primavera y otoño, no en pleno verano. O sea que también le jugaba en contra la temporada, y aun así el número queda muy por debajo.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 15,76% arriba cada orden deja más, así que podía perder hasta <b>13,6% de órdenes</b> y facturar lo mismo. Perdió más que eso.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá el revenue por sesión: <b>5,60 € → 6,20 €</b>, +11,3%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr><th>Sesiones por día</th><td class="num">5.217</td><td class="num">5.330</td><td class="num d">+2,2%</td></tr>
+   <tr><th>Conversión</th><td class="num">28,7%</td><td class="num">25,1%</td><td class="num d">−12,5%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">19,5 €</td><td class="num">24,8 €</td><td class="num d">+27,2%</td></tr>
+   <tr class="hi"><th>Revenue por sesión</th><td class="num">5,60 €</td><td class="num">6,20 €</td><td class="num d">+11,3%</td></tr>
+   <tr><th>LTV de clientes nuevos</th><td class="num">18,6 €</td><td class="num">22,0 €</td><td class="num d">+18,2%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">−27,4%</td><td class="num">−15,1%</td><td class="num d">+12,3 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><b>3,97</b></td></tr>
+  </tbody></table></details>
+  <p class="pie">Este es el número que sostiene el RollOut, y es cierto: cada sesión rinde 11% más.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">En el sheet Marruecos se ve verde, y es cierto: el ticket subió de 19,5 a 24,8 euros, el revenue por sesión 11% y el LTV 18%. Cada sesión rinde más. Lo que el sheet no muestra es cuánto volumen se fue para conseguirlo. Su elasticidad da 3,97 cuando para que una subida aguante en facturación tenía que quedar por debajo de 0,86: es la señal más grande de las ocho. Facturación dice revertir, margen por unidad dice sostener. Esa la decide el negocio.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Definir si se sostiene por margen. Es la única tensión real.</p></div>
+</article><article class="fi" id="ITA">
+ <div class="fh"><h3>Italia</h3><span class="tg titerateup">iterate up</span>
+  <span class="chip">precio −10,40% · lanzó el 24 de julio · 19 días corridos · 22.975 €/día</span></div>
+ <p class="ver">Los mismos números que España, con otra etiqueta.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+13,6%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#2a78d6">+14,8%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 13,6% y creció 14,8%. Vinieron 23% más sesiones y la conversión bajó 7%.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de Italia">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="77.6" x2="924" y2="77.6" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="69.6" class="ay">un mes típico de Italia = 1,00</text>
+<rect x="52.2" y="101.3" width="30" height="32.7" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="103.5" width="30" height="30.5" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="95.6" width="30" height="38.4" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="83.2" width="30" height="50.8" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="74.2" width="30" height="59.8" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="66.9" width="30" height="67.1" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="47.7" width="30" height="86.3" fill="#1a1a1a"/>
+<text x="514.2" y="40.7" class="gv" text-anchor="middle">1,53</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="47.7" width="30" height="86.3" fill="#1a1a1a"/>
+<text x="588.8" y="40.7" class="gv" text-anchor="middle">1,53</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="50.5" width="30" height="83.5" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="70.8" width="30" height="63.2" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="93.4" width="30" height="40.6" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="96.8" width="30" height="37.2" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Julio y agosto empatados en 1,53 son su pico del año. Igual que España, la ventana arranca ya adentro.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 10,40% abajo cada orden deja menos, así que necesitaba <b>11,6% más de órdenes</b> de las que ya iba a tener. Consiguió 1,0%.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá el revenue por sesión: <b>5,80 € → 4,90 €</b>, −16,0%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr><th>Sesiones por día</th><td class="num">3.801</td><td class="num">4.685</td><td class="num d">+23,2%</td></tr>
+   <tr><th>Conversión</th><td class="num">23,2%</td><td class="num">21,6%</td><td class="num d">−6,9%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">25,2 €</td><td class="num">22,7 €</td><td class="num d">−9,9%</td></tr>
+   <tr class="hi"><th>Revenue por sesión</th><td class="num">5,80 €</td><td class="num">4,90 €</td><td class="num d">−16,0%</td></tr>
+   <tr><th>LTV de clientes nuevos</th><td class="num">35,7 €</td><td class="num">32,1 €</td><td class="num d">−10,3%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">+12,5%</td><td class="num">+0,3%</td><td class="num d">−12,2 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><span class="na">no se puede calcular: sale con el signo cambiado y el sheet la marca como confundida</span></td></tr>
+  </tbody></table></details>
+  <p class="pie">Cada sesión deja 16% menos, casi lo mismo que España.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">Recorte 10,4% contra 10,11% de España, revenue por sesión −16% contra −18%, LTV −10% contra −12%, elasticidad que no lee en las dos. España quedó tagueada RollBack e Italia iterate up. Si hay un criterio detrás conviene escribirlo, y si no lo hay conviene alinearlo antes de la mesa.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Recuperar parte del precio, o alinear criterio con España.</p></div>
+</article><article class="fi" id="PER">
+ <div class="fh"><h3>Perú</h3><span class="tg titerateup">iterate up</span>
+  <span class="chip">precio −10,89% · lanzó el 16 de julio · 27 días corridos · 14.390 €/día</span></div>
+ <p class="ver">Vino 27% más gente, y su LTV se cayó.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+22,0%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#2a78d6">+22,8%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 22,0% y creció 22,8%. Vinieron 27% más sesiones y la conversión bajó 3%.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de Perú">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="77.6" x2="924" y2="77.6" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="69.6" class="ay">un mes típico de Perú = 1,00</text>
+<rect x="52.2" y="93.9" width="30" height="40.1" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="99.0" width="30" height="35.0" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="84.4" width="30" height="49.6" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="74.2" width="30" height="59.8" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="77.6" width="30" height="56.4" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="80.4" width="30" height="53.6" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="68.0" width="30" height="66.0" fill="#1a1a1a"/>
+<text x="514.2" y="61.0" class="gv" text-anchor="middle">1,17</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="55.0" width="30" height="79.0" fill="#1a1a1a"/>
+<text x="588.8" y="48.0" class="gv" text-anchor="middle">1,40</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="64.6" width="30" height="69.4" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="70.3" width="30" height="63.7" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="77.6" width="30" height="56.4" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="86.6" width="30" height="47.4" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Agosto 1,40 y julio 1,17: Perú entra en su mes más alto del año justo adentro de la ventana.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 10,89% abajo cada orden deja menos, así que necesitaba <b>12,2% más de órdenes</b> de las que ya iba a tener. Consiguió 0,7%.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá el LTV: <b>26,0 € → 21,6 €</b>, −17,1%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr><th>Sesiones por día</th><td class="num">1.579</td><td class="num">2.003</td><td class="num d">+26,8%</td></tr>
+   <tr><th>Conversión</th><td class="num">23,1%</td><td class="num">22,4%</td><td class="num d">−3,0%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">33,5 €</td><td class="num">32,1 €</td><td class="num d">−4,2%</td></tr>
+   <tr><th>Revenue por sesión</th><td class="num">7,70 €</td><td class="num">7,20 €</td><td class="num d">−7,0%</td></tr>
+   <tr class="hi"><th>LTV de clientes nuevos</th><td class="num">26,0 €</td><td class="num">21,6 €</td><td class="num d">−17,1%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">+17,1%</td><td class="num">+4,3%</td><td class="num d">−12,8 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><b>0,38</b></td></tr>
+  </tbody></table></details>
+  <p class="pie">El descuento trajo clientes que valen 17% menos. La caída más grande de la ola.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">Su elasticidad da 0,38 cuando necesitaba pasar de 1,12. Y tiene la caída de LTV más grande de la ola, de 26,0 a 21,6 euros, 17% abajo: el descuento trajo clientes que valen menos. El recorte lo dejó a 4,3% arriba de la competencia, contra 17,1% antes.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Recuperar parte del precio.</p></div>
+</article><article class="fi" id="CHE">
+ <div class="fh"><h3>Suiza</h3><span class="tg tRollOut">RollOut</span>
+  <span class="chip">precio −4,34% · lanzó el 24 de julio · 19 días corridos · 20.391 €/día</span></div>
+ <p class="ver">El crecimiento más grande de la ola es su agosto.</p>
+
+ <div class="duo">
+  <div><span>Le tocaba crecer en órdenes por día</span><b style="color:#6e6e6a">+32,7%</b></div>
+  <div><span>Creció en órdenes por día</span><b style="color:#eb6834">+31,9%</b></div>
+ </div>
+ <p class="cue">Le tocaba crecer 32,7% y creció 31,9%. Vinieron 27% más sesiones. Es el único de los ocho donde la conversión subió, 4%, y es el número que sostiene su tag.</p>
+
+ <div class="sec"><h4>Su año, mes por mes</h4>
+  <svg viewBox="0 0 940 176" width="100%" role="img" aria-label="Estacionalidad mes a mes de Suiza">
+<defs><style>.mo{font:600 11px Inter,sans-serif;fill:#9a9a96}.mh{font:700 11px Inter,sans-serif;fill:#1a1a1a}.gv{font:600 10.5px "JetBrains Mono",monospace;fill:#1a1a1a}.ay{font:500 10px Inter,sans-serif;fill:#aeaea9}</style></defs>
+<rect x="477.0" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<rect x="551.5" y="24" width="74.5" height="110" fill="#fdf0c8"/>
+<line x1="30" y1="77.6" x2="924" y2="77.6" stroke="#c9c9c5" stroke-dasharray="4 3"/>
+<text x="30" y="69.6" class="ay">un mes típico de Suiza = 1,00</text>
+<rect x="52.2" y="88.9" width="30" height="45.1" fill="#c4c4be"/>
+<text x="67.2" y="151" class="mo" text-anchor="middle">E</text>
+<rect x="126.8" y="87.7" width="30" height="46.3" fill="#c4c4be"/>
+<text x="141.8" y="151" class="mo" text-anchor="middle">F</text>
+<rect x="201.2" y="86.6" width="30" height="47.4" fill="#c4c4be"/>
+<text x="216.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="275.8" y="89.4" width="30" height="44.6" fill="#c4c4be"/>
+<text x="290.8" y="151" class="mo" text-anchor="middle">A</text>
+<rect x="350.2" y="85.5" width="30" height="48.5" fill="#c4c4be"/>
+<text x="365.2" y="151" class="mo" text-anchor="middle">M</text>
+<rect x="424.8" y="79.8" width="30" height="54.2" fill="#c4c4be"/>
+<text x="439.8" y="151" class="mo" text-anchor="middle">J</text>
+<rect x="499.2" y="55.0" width="30" height="79.0" fill="#1a1a1a"/>
+<text x="514.2" y="48.0" class="gv" text-anchor="middle">1,40</text>
+<text x="514.2" y="151" class="mh" text-anchor="middle">J</text>
+<rect x="573.8" y="35.8" width="30" height="98.2" fill="#1a1a1a"/>
+<text x="588.8" y="28.8" class="gv" text-anchor="middle">1,74</text>
+<text x="588.8" y="151" class="mh" text-anchor="middle">A</text>
+<rect x="648.2" y="77.0" width="30" height="57.0" fill="#c4c4be"/>
+<text x="663.2" y="151" class="mo" text-anchor="middle">S</text>
+<rect x="722.8" y="87.2" width="30" height="46.8" fill="#c4c4be"/>
+<text x="737.8" y="151" class="mo" text-anchor="middle">O</text>
+<rect x="797.2" y="90.6" width="30" height="43.4" fill="#c4c4be"/>
+<text x="812.2" y="151" class="mo" text-anchor="middle">N</text>
+<rect x="871.8" y="68.0" width="30" height="66.0" fill="#c4c4be"/>
+<text x="886.8" y="151" class="mo" text-anchor="middle">D</text>
+</svg>
+  <p class="cue" style="margin-top:4px">Agosto 1,74 y julio 1,40 son sus dos meses más altos del año, y agosto es el pico. Suiza es el destino con la temporada más marcada de las ocho: su agosto vende 74% más que un mes típico. La ventana cae justo encima.</p></div>
+
+ <div class="sec"><h4>Qué necesitaba para no perder plata</h4>
+  <p class="cue">Con el precio 4,34% abajo cada orden deja menos, así que necesitaba <b>4,5% más de órdenes</b> de las que ya iba a tener. Consiguió −0,6%.</p></div>
+
+ <div class="sec"><h4>Sus números en el sheet</h4>
+  <details class="det2"><summary>Mirá la conversión: <b>39,2% → 40,7%</b>, +3,8%<span class="mas">los seis números del sheet</span></summary>
+  <table class="mini"><thead><tr><th></th><th class="num">antes</th><th class="num">después</th><th class="num">cambio</th></tr></thead><tbody>
+   <tr><th>Sesiones por día</th><td class="num">3.102</td><td class="num">3.943</td><td class="num d">+27,1%</td></tr>
+   <tr class="hi"><th>Conversión</th><td class="num">39,2%</td><td class="num">40,7%</td><td class="num d">+3,8%</td></tr>
+   <tr><th>Ticket medio</th><td class="num">13,3 €</td><td class="num">12,7 €</td><td class="num d">−4,5%</td></tr>
+   <tr><th>Revenue por sesión</th><td class="num">5,20 €</td><td class="num">5,20 €</td><td class="num d">−0,6%</td></tr>
+   <tr><th>LTV de clientes nuevos</th><td class="num">18,1 €</td><td class="num">17,0 €</td><td class="num d">−5,8%</td></tr>
+   <tr><th>Distancia a la competencia</th><td class="num">+5,0%</td><td class="num">−1,1%</td><td class="num d">−6,1 pp</td></tr>
+   <tr><th>Elasticidad implícita</th><td class="num el" colspan="3"><span class="na">no se puede calcular: sale con el signo cambiado y el sheet la marca como confundida</span></td></tr>
+  </tbody></table></details>
+  <p class="pie">Su único número en verde, y es el que sostiene el RollOut.</p></div>
+
+ <div class="sec"><h4>Qué leemos</h4><p class="cue">Ese +4% de conversión es su único número en verde. El revenue por sesión quedó igual, el LTV bajó 6%, el ticket 4%, y el gap contra competencia se cerró seis puntos. El +31,9% que justifica el RollOut es el mes, no el precio.</p></div>
+
+ <div class="acc"><span>Qué recomendamos</span><p>Revisar el RollOut. Es el aporte más concreto de esta lectura.</p></div>
+</article>
+</section>
+
+<section>
+ <h2>Los cinco límites, en detalle</h2>
+ <details class="det"><summary>Qué queda afuera y por qué</summary><div class="card lim">
+  <p><b>Esto no es causalidad.</b> Sacamos temporada y crecimiento del negocio, que son las dos fuentes de ruido más
+  grandes. Quedan afuera ads, competidores, cambios de producto y campañas, y no revisamos si alguno se movió en la
+  ventana. Todo lo que queda después de esas dos correcciones puede ser precio o puede ser cualquiera de esas.</p>
+  <p><b>Tres destinos quedan por debajo de lo que les tocaba y eso no lo produjo el descuento.</b> USA, México y
+  Suiza. Un recorte de precio no hace caer la demanda. Ahí se movió otra cosa, y en USA es donde más caro sale
+  no saberlo.</p>
+  <p><b>La temporada de cada destino se está aplanando año a año.</b> El índice de julio baja de forma sostenida en
+  siete de los ocho, porque Holafly vende cada vez más todo el año. Por eso los años recientes pesan más en el
+  cálculo y no sirve ir más atrás de 2023.</p>
+  <p><b>El crecimiento del negocio sale de 97 destinos, no de los 137 con volumen suficiente.</b> El resto no tiene
+  historia para calcular su curva. Los que quedan afuera son los más nuevos y los que más crecen, así que la
+  tendencia real es probablemente mayor y todos quedarían algo peor, no mejor.</p>
+  <p><b>Cuatro destinos tienen 19 días de ventana y cuatro tienen 27 o 28.</b> España, Italia, USA y Suiza lanzaron
+  el 24 de julio y todavía no llegaron a los 28 días. Su lectura es más frágil que la de los otros cuatro.</p>
+ </div></details>
+</section>
+
+<footer>
+ <b>Fuentes y método.</b> Órdenes, sesiones, facturación, conversión y ticket medio: tab <code>bq_data</code> del sheet
+ <i>Pricing Experiments Monitoring</i>, sin modificar, reconstruida día por día con las ventanas de la tab <code>kpi</code>.
+ Las ocho reconstrucciones dan conversión y ticket idénticos a los publicados, sin días faltantes. LTV: tab
+ <code>bq_ltv</code>. Precio efectivo y fechas de lanzamiento: tab <code>Parameters</code>, columnas <code>dp_eff</code>
+ y <code>launch_date</code>. Elasticidad implícita: fórmula de <code>kpi!C15</code>, replicada al centésimo en los tres
+ destinos donde el sheet la publica. Temporada de cada destino: serie mensual de órdenes desde enero de 2023 sobre
+ <code>dp_revenue.fct_revenue_prorated_product</code> con los mismos seis filtros del sheet, descompuesta con media móvil
+ centrada de doce meses y ponderación por recencia del año. Crecimiento del negocio: la misma corrección aplicada a los
+ destinos que no cambiaron precio, mediana de 97 con al menos 25 meses de historia. Cierre de ventana anclado en
+ <code>Parameters!B1</code>, el último día con tráfico cargado.
+</footer>
+
+</div></body></html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Precios por país en el mercado de eSIM de viaje</title>
+<style>
+:root{
+  --green:#16a06a;
+  --green-d:#0f7a50;
+  --ink:#16242f;
+  --muted:#6b7c8a;
+  --line:#e7edf1;
+  --bg:#f7f9fb;
+  --card:#fff;
+  --red:#e15241;
+  --red-d:#b3382b;
+  --red-bg:#fce9e7;
+  --amber:#e8a317;
+  --amber-d:#8a5a00;
+  --amber-bg:#fdf3dd;
+  --blue:#3949ab;
+  --blue-bg:#e8eaf6;
+  --title:#1c3d5a;
+  --green-bg:#e6f5ee;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px 64px}
+a{color:var(--green-d)}
+
+/* ---------- header ---------- */
+header.top{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;margin-bottom:22px;
+}
+.brandline{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1.doc{font-size:20px;line-height:1.3;margin:6px 0 2px;color:var(--title);font-weight:650}
+.docsub{font-size:13px;color:var(--muted)}
+.langtoggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.langtoggle button{
+  font:inherit;font-size:12.5px;font-weight:600;letter-spacing:.03em;
+  padding:7px 14px;border:0;background:transparent;color:var(--muted);cursor:pointer;
+}
+.langtoggle button[aria-pressed="true"]{background:var(--green);color:#fff}
+.langtoggle button:focus-visible{outline:2px solid var(--green-d);outline-offset:-2px}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px 24px;margin-bottom:18px;
+}
+.card.tight{padding:18px 20px}
+h2.sec{font-size:15px;margin:0 0 4px;color:var(--title);font-weight:650;letter-spacing:.01em}
+.seclead{font-size:13px;color:var(--muted);margin:0 0 16px}
+
+/* ---------- N0 headline ---------- */
+.n0 .verdict{font-size:26px;line-height:1.28;font-weight:650;margin:0 0 10px;letter-spacing:-.01em}
+.n0 .verdict em{font-style:normal;color:var(--green-d)}
+.n0 .vsub{font-size:14.5px;color:var(--muted);margin:0 0 20px;max-width:64ch}
+.partition{display:flex;gap:10px;flex-wrap:wrap}
+.pcell{
+  flex:1 1 180px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);
+}
+.pcell .pnum{font-size:26px;font-weight:680;line-height:1;font-variant-numeric:tabular-nums}
+.pcell .plabel{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-top:6px}
+.pcell .pdesc{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.pcell.is-measured .pnum,.pcell.is-measured .plabel{color:var(--green-d)}
+.pcell.is-inferred .pnum,.pcell.is-inferred .plabel{color:var(--blue)}
+.pcell.is-undet .pnum,.pcell.is-undet .plabel{color:var(--amber-d)}
+.prov{font-size:12px;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+
+/* ---------- chips ---------- */
+.chip{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:3px 8px;border-radius:999px;white-space:nowrap;
+}
+.chip-measured{background:var(--green-bg);color:var(--green-d)}
+.chip-inferred{background:var(--blue-bg);color:var(--blue)}
+.chip-undet{background:var(--amber-bg);color:var(--amber-d)}
+.chip-alert{background:var(--red-bg);color:var(--red-d)}
+
+/* ---------- two questions ---------- */
+.qgrid{display:flex;gap:14px;flex-wrap:wrap}
+.qbox{flex:1 1 320px;border:1px solid var(--line);border-radius:10px;padding:16px 18px;background:var(--bg)}
+.qbox .q{font-size:14px;font-weight:620;margin:0 0 8px;line-height:1.4}
+.qbox .a{font-size:20px;font-weight:680;margin:0 0 6px;line-height:1.2}
+.qbox.yes .a{color:var(--green-d)}
+.qbox.no .a{color:var(--amber-d)}
+.qbox .detail{font-size:13px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+.closing{font-size:14px;margin:18px 0 0;padding-top:16px;border-top:1px solid var(--line);max-width:72ch}
+
+/* ---------- table ----------
+   No overflow on the wrapper: it would neutralise position:sticky on the header.
+   Corners are rounded on the extreme cells instead. */
+.tablewrap{border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+thead th{
+  position:sticky;top:0;background:var(--card);z-index:2;
+  text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  font-weight:700;padding:11px 14px;border-bottom:1px solid var(--line);
+}
+thead th:first-child{border-top-left-radius:10px}
+thead th:last-child{border-top-right-radius:10px}
+tbody tr:last-child td:first-child{border-bottom-left-radius:10px}
+tbody tr:last-child td:last-child{border-bottom-right-radius:10px}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr.rowmain.alt td{background:var(--bg)}
+tbody tr.rowmain{cursor:pointer}
+tbody tr.rowmain:hover td{background:#eef4f8}
+tbody tr:last-child td{border-bottom:0}
+td.name{font-weight:620;white-space:nowrap}
+.tw{display:inline-block;width:11px;margin-right:5px;color:var(--muted);font-size:10px;letter-spacing:0}
+td.num{text-align:right;white-space:nowrap;color:var(--muted)}
+tr.rowdetail td{background:#fbfdfe;font-size:13px;color:var(--ink);padding:0 14px 14px 30px}
+tr.rowdetail dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px}
+tr.rowdetail dt{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700;padding-top:2px;white-space:nowrap}
+tr.rowdetail dd{margin:0;line-height:1.5}
+tr.grouprow{cursor:pointer}
+tr.grouprow td{background:#fbfdfe;padding:14px;vertical-align:middle}
+tr.grouprow:hover td{background:#eef4f8}
+tr.grouprow:focus-visible{outline:2px solid var(--green-d);outline-offset:-2px}
+td.gname{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--title)}
+td.gverdict{font-size:13px;color:var(--muted)}
+tr.grouprow td.num{font-size:12px;color:var(--muted)}
+
+/* case fold inside the trust box */
+details.inlinecase{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+details.inlinecase>summary{
+  list-style:none;cursor:pointer;font-size:13px;font-weight:620;color:var(--green-d);
+  display:inline-flex;align-items:center;gap:6px;
+}
+details.inlinecase>summary::-webkit-details-marker{display:none}
+details.inlinecase>summary::before{content:"▸";font-size:10px}
+details.inlinecase[open]>summary::before{content:"▾"}
+details.inlinecase>summary:focus-visible{outline:2px solid var(--green-d);outline-offset:2px;border-radius:4px}
+.casebody{margin-top:12px}
+
+/* ---------- trust box ---------- */
+.trust{border-left:3px solid var(--green)}
+.trust .tlead{font-size:15px;font-weight:620;margin:0 0 12px;line-height:1.45}
+.trust p{margin:0 0 11px;max-width:74ch;font-size:14px}
+.trust p:last-child{margin-bottom:0}
+.trust .kicker{font-weight:620;color:var(--green-d)}
+
+/* ---------- accordion ---------- */
+details.acc{border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:12px}
+details.acc>summary{
+  list-style:none;cursor:pointer;padding:16px 22px;font-size:14px;font-weight:620;color:var(--title);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::after{content:"+";color:var(--muted);font-weight:600;font-size:16px}
+details.acc[open]>summary::after{content:"–"}
+details.acc>summary:focus-visible{outline:2px solid var(--green-d);outline-offset:-2px;border-radius:12px}
+.accbody{padding:0 22px 20px;font-size:13.5px}
+.accbody h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px;font-weight:700}
+.accbody h3:first-child{margin-top:0}
+.accbody p{margin:0 0 10px;max-width:76ch}
+.accbody ul{margin:0 0 10px;padding-left:18px}
+.accbody li{margin-bottom:5px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0 0 10px;font-variant-numeric:tabular-nums}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600}
+
+footer.foot{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+@media (max-width:640px){
+  .n0 .verdict{font-size:21px}
+  .wrap{padding:18px 14px 48px}
+  .card{padding:18px 16px}
+  td.num{display:none}
+  thead th.num{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <div class="brandline" id="brandline"></div>
+    <h1 class="doc" id="doctitle"></h1>
+    <div class="docsub" id="docsub"></div>
+  </div>
+  <div class="langtoggle" role="group" aria-label="Language">
+    <button type="button" data-lang="es">ES</button>
+    <button type="button" data-lang="en">EN</button>
+  </div>
+</header>
+
+<section class="card n0" id="v-headline"></section>
+<section class="card" id="v-message"></section>
+<section class="card" id="v-table"></section>
+<section class="card trust" id="v-trust"></section>
+<div id="v-method"></div>
+<footer class="foot" id="v-footer"></footer>
+
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================================
+   DATA — language-neutral. Numbers and identities live here only once.
+   ========================================================================= */
+var DATA = {
+  captureDate: "2026-08-14",
+  originsVerified: 8,
+  originsDiscarded: 2,
+  totalAssessed: 30,
+  measured: 15,
+  inferred: 11,
+  undetermined: 4,
+  comparisons: 380,
+  signalsFound: 1,
+  signalsSurviving: 0,
+  groups: ["curr", "global", "telcoM", "telcoI", "undet"],
+  players: [
+    // --- currency-display group (measured)
+    {id:"airalo",    name:"Airalo",              g:"curr",   ev:"measured", cells:"18/18", origins:7},
+    {id:"saily",     name:"Saily",               g:"curr",   ev:"measured", cells:"54/54", origins:7},
+    {id:"nomad",     name:"Nomad",               g:"curr",   ev:"measured", cells:"24/24", origins:2},
+    {id:"yesim",     name:"Yesim",               g:"curr",   ev:"measured", cells:"36/36", origins:2},
+    {id:"simify",    name:"Simify",              g:"curr",   ev:"measured", cells:"9/9",   origins:2},
+    // --- single global price (measured)
+    {id:"maya",      name:"Maya Mobile",         g:"global", ev:"measured", cells:"8/8",   origins:4},
+    {id:"mobimatter",name:"MobiMatter",          g:"global", ev:"measured", cells:"31/31", origins:3},
+    {id:"roamless",  name:"Roamless",            g:"global", ev:"measured", cells:"14/14", origins:3},
+    {id:"flexiroam", name:"Flexiroam",           g:"global", ev:"measured", cells:"24/24", origins:6},
+    {id:"jetpac",    name:"Jetpac",              g:"global", ev:"measured", cells:"9/9",   origins:3},
+    {id:"firsty",    name:"Firsty",              g:"global", ev:"measured", cells:"6/6",   origins:3},
+    {id:"americachip",name:"America Chip",       g:"global", ev:"measured", cells:"11/11", origins:8},
+    // --- telcos measured
+    {id:"telekom",   name:"Deutsche Telekom",    g:"telcoM", ev:"measured", cellsK:"cFullPage", origins:2},
+    {id:"vodauk",    name:"Vodafone UK",         g:"telcoM", ev:"measured", cellsK:"cFullPage", origins:2},
+    {id:"movistar",  name:"Movistar España",     g:"telcoM", ev:"measured", cellsK:"cFullPage", origins:2},
+    // --- telcos inferred
+    {id:"vodaes",    name:"Vodafone España",     g:"telcoI", ev:"inferred"},
+    {id:"orangees",  name:"Orange España",       g:"telcoI", ev:"inferred"},
+    {id:"verizon",   name:"Verizon",             g:"telcoI", ev:"inferred"},
+    {id:"att",       name:"AT&T",                g:"telcoI", ev:"inferred"},
+    {id:"tmobile",   name:"T-Mobile US",         g:"telcoI", ev:"inferred"},
+    {id:"vodathree", name:"VodafoneThree UK",    g:"telcoI", ev:"inferred"},
+    {id:"virgin",    name:"Virgin Media O2",     g:"telcoI", ev:"inferred"},
+    {id:"telstra",   name:"Telstra",             g:"telcoI", ev:"inferred"},
+    {id:"optus",     name:"Optus",               g:"telcoI", ev:"inferred"},
+    {id:"tpg",       name:"TPG / Vodafone AU",   g:"telcoI", ev:"inferred"},
+    {id:"o2de",      name:"O2 Telefónica DE",    g:"telcoI", ev:"inferred"},
+    // --- undetermined
+    {id:"gigsky",    name:"GigSky",              g:"undet",  ev:"undetermined"},
+    {id:"truely",    name:"Truely",              g:"undet",  ev:"undetermined"},
+    {id:"revolut",   name:"Revolut",             g:"undet",  ev:"undetermined"},
+    {id:"trifa",     name:"Trifa",               g:"undet",  ev:"undetermined"}
+  ]
+};
+
+/* =========================================================================
+   I18N — every visible string. No loose if-else anywhere in render code.
+   ========================================================================= */
+var I18N = {
+  es: {
+    htmlLang:"es",
+    brandline:"Estudio de precios competitivos",
+    doctitle:"Precios por país en el mercado de eSIM de viaje",
+    docsub:"Resultados del 14 de agosto de 2026",
+
+    verdictA:"Ningún competidor cobra un precio distinto",
+    verdictB:"según el país desde el que se lo consulta.",
+    vsub:"Se evaluaron 30 competidores del mercado de eSIM y roaming internacional. Lo que cambia con el país del visitante es la moneda en la que se muestra el precio, el idioma de la página y poco más. El precio no.",
+    pMeasured:"Medido",
+    pInferred:"Inferido",
+    pUndet:"No determinable",
+    pMeasuredD:"Comparación directa entre países, con la misma moneda en pantalla.",
+    pInferredD:"Operadores de telefonía cubiertos por su modelo de negocio, no medidos uno por uno.",
+    pUndetD:"Su web no publica una lista de precios comparable.",
+    prov:"Medido el 14 de agosto de 2026 con Firecrawl desde 8 países (orígenes) verificados: Estados Unidos, España, Alemania, Reino Unido, Brasil, Australia, Japón y Turquía (otros 2 se descartaron por fallas del instrumento). Aproximadamente 380 comparaciones, todas con la misma moneda en pantalla.",
+
+    msgTitle:"Dos preguntas que parecen la misma y no lo son",
+    msgLead:"Es la distinción que decide cómo leer todo el resto del informe.",
+    q1:"¿Un competidor le cobra más a un cliente por ser español, brasileño o japonés?",
+    a1:"No",
+    d1:"Igualada la moneda que se muestra en pantalla, el precio es idéntico desde cualquiera de los 8 países verificados. Sin excepción, en 15 competidores medidos.",
+    q2:"¿Un cliente europeo que no cambia la moneda termina pagando más?",
+    a2:"Sí, entre 3% y 5%",
+    d2:"Un brasileño paga 0,7% más. La diferencia aparece al convertir a una moneda común el precio que ve cada cliente por defecto.",
+    closing:"La primera pregunta es sobre discriminación por origen, y la respuesta es que no existe. La segunda es sobre política de conversión de divisa: el cliente europeo ve el precio convertido a euros con un recargo sobre el tipo de cambio de mercado. Eso no se resuelve navegando desde otro país. Se resuelve cambiando el selector de moneda del propio sitio.",
+
+    tblTitle:"Qué hace cada competidor con el precio",
+    tblLead:"Cinco grupos, 30 competidores. Hacé clic en un grupo para ver quiénes lo componen, y en un competidor para ver el detalle de lo que se comparó.",
+    nComp:"competidores",
+    trustMore:"Ver el caso completo",
+    thName:"Competidor",
+    thVerdict:"Qué hace con el precio",
+    thEvidence:"Evidencia",
+    thCells:"Comparaciones idénticas",
+    naShort:"n/d",
+    cFullPage:"Página completa idéntica",
+    dlWhat:"Qué se comparó",
+    dlHow:"Cómo se igualó la moneda",
+    dlResult:"Resultado",
+    dlNote:"Nota",
+
+    gCurr:"Cambian la moneda, no el precio",
+    gGlobal:"Precio único global, una sola moneda",
+    gTelcoM:"Operadores de telefonía · medidos",
+    gTelcoI:"Operadores de telefonía · cubiertos por modelo de negocio",
+    gUndet:"Sin respuesta posible desde la web",
+
+    vCurr:"Muestra otra moneda según el país. Igualada la moneda, el precio es el mismo.",
+    vGlobal:"Muestra la misma moneda a todo el mundo, con el mismo precio.",
+    vTelcoM:"Precio idéntico para el visitante local y el extranjero.",
+    vTelcoI:"El precio depende del abono contratado, dato que la web no puede leer de un visitante.",
+    vUndet:"Su web no entrega una lista de precios comparable.",
+
+    trustTitle:"Por qué este resultado se puede firmar",
+    trustLead:"Durante el estudio apareció una señal que parecía probar lo contrario. La verificamos y no era cierta.",
+    trustP1:"Un competidor regional pareció cobrarle a Brasil entre 10% y 12% más que a Estados Unidos y Alemania, según el producto. Tenía todas las marcas de ser real: dos países distintos coincidían entre sí, Brasil repitió el mismo precio en dos consultas separadas, y la dirección web era la misma para todos.",
+    trustP2:"No era real. Una hora más tarde, consultando cinco países en el mismo instante, los cinco mostraron el precio alto. Lo que había pasado es que el competidor estaba subiendo precios, y el aumento llegó primero a los servidores que atienden a Brasil.",
+    trustP3:"La diferencia era de tiempo, no de geografía. Consultar los países con minutos de distancia bastó para que un cambio de precio en curso pareciera una decisión comercial contra Brasil.",
+    trustP4:"La única señal positiva de todo el estudio fue sometida a una segunda prueba y no sobrevivió. Ese es el estándar con el que se emite el resultado principal.",
+
+    accMethod:"Cómo se hizo la medición",
+    accLimits:"Qué no se pudo responder",
+    accScope:"Alcance y conteo",
+
+    mWhat:"Qué se midió",
+    mWhatP:"Para cada competidor se abrió la misma página de precios desde varios países, en el mismo momento, y se comparó el precio del mismo producto. La comparación solo cuenta como válida cuando los dos países ven el precio en la misma moneda. Cuando la moneda no coincidía se la igualó, ya sea usando el selector de moneda del propio sitio o buscando un tercer país que ya mostrara la moneda de referencia.",
+    mWhy:"Por qué no alcanza con convertir",
+    mWhyP:"Convertir un precio en euros a dólares para compararlo introduce el tipo de cambio como variable y ya no permite afirmar nada sobre el precio. Por eso toda comparación que necesitó conversión está marcada como inferida y no sostiene el resultado principal.",
+    mInstr:"Verificación del instrumento",
+    mInstrP:"Las mediciones se hicieron con Firecrawl, un servicio de captura web con salidas por país. Antes y después de cada tanda de mediciones se comprobó desde qué país estaba saliendo realmente la consulta. De 10 países probados, 8 respondieron correctamente y son los que se usaron: Estados Unidos, España, Alemania, Reino Unido, Brasil, Australia, Japón y Turquía. Los otros dos, India y Argentina, reportaban un país y salían por otro, en silencio y sin ninguna señal de error. Se descartaron, y no se usó ningún dato tomado a través de ellos. Sin esta comprobación, una consulta que decía venir de Argentina y en realidad salía de Estados Unidos habría entrado al informe como si fuera una medición válida.",
+    mSimult:"Medición simultánea",
+    mSimultP:"Los países de una misma comparación se consultan en paralelo, no uno después del otro. Medir con minutos de diferencia permite que un cambio de precio en curso se confunda con una diferencia geográfica, que es exactamente lo que ocurrió en el caso descrito arriba.",
+    mEvid:"Marco de evidencia",
+    mEvidP:"Medido significa comparación directa entre países con la misma moneda en pantalla. Inferido significa que hubo que apoyarse en una conversión de moneda o en el modelo de negocio del competidor. No determinable significa que la web no entrega una lista de precios comparable. Cada afirmación del informe lleva su marca.",
+
+    lGig:"GigSky · la lista de precios de su web en inglés se arma en el navegador y nunca llega completa. Sobre la única versión legible de su sitio, los precios son idénticos entre países.",
+    lTru:"Truely · el bloque de precios falla y devuelve una tabla vacía desde todos los países probados, con y sin espera adicional.",
+    lRev:"Revolut · los precios viven dentro de su aplicación móvil, no en la web. Existen páginas por mercado con precios de entrada distintos, pero la ubicación del visitante no lleva a ellas.",
+    lTri:"Trifa · no tiene página pública de precios. Su web es una pantalla de descarga de la aplicación.",
+    lPend:"Tres verificaciones quedan pendientes y requieren un navegador manual: confirmar si los planes de entrada de Revolut son el mismo producto en cada mercado, leer el importe final en la pantalla de pago de un competidor para confirmar el recargo de conversión, y recuperar la lista de precios de los dos competidores cuya web no la entrega.",
+
+    sScope:"Alcance",
+    sScopeP:"Se evaluaron 30 competidores: operadores de eSIM de viaje, marketplaces, operadores de telefonía tradicional y una entidad financiera con producto de datos. Se midieron dos destinos de referencia, Estados Unidos y España, más Japón como control adicional en los dos competidores de mayor volumen.",
+    sExcl:"Fuera del alcance",
+    sExclP:"Dos competidores más quedaron fuera del conteo y se declaran para que las cifras cierren: uno no publica ningún precio en su web sin iniciar sesión, y del otro no se llegó a verificar nada.",
+    kDate:"Fecha de medición",
+    kOrigins:"Países verificados",
+    kDisc:"Países descartados",
+    kComp:"Comparaciones de precio",
+    kSignals:"Señales de precio por país encontradas",
+    kSurv:"Señales que sobrevivieron a la verificación",
+    kAssessed:"Competidores evaluados",
+
+    footer:"Documento interno. Los precios citados corresponden a la medición del 14 de agosto de 2026 y cambian sin aviso."
+  },
+
+  en: {
+    htmlLang:"en",
+    brandline:"Competitive pricing study",
+    doctitle:"Country-based pricing in the travel eSIM market",
+    docsub:"Findings as of 14 August 2026",
+
+    verdictA:"No competitor charges a different price",
+    verdictB:"based on the country you browse from.",
+    vsub:"Thirty competitors across travel eSIM and international roaming were assessed. What changes with the visitor's country is the currency the price is displayed in, the page language, and little else. Not the price.",
+    pMeasured:"Measured",
+    pInferred:"Inferred",
+    pUndet:"Not determinable",
+    pMeasuredD:"Direct country-to-country comparison, with the same currency on screen.",
+    pInferredD:"Mobile carriers covered by their business model, not measured one by one.",
+    pUndetD:"Their website does not publish a comparable price list.",
+    prov:"Measured on 14 August 2026 with Firecrawl from 8 verified countries (origins): the United States, Spain, Germany, the United Kingdom, Brazil, Australia, Japan and Türkiye (2 more were discarded for instrument faults). Roughly 380 comparisons, all with the same currency on screen.",
+
+    msgTitle:"Two questions that look alike and are not",
+    msgLead:"This distinction decides how to read everything else in this report.",
+    q1:"Does a competitor charge more to a customer for being Spanish, Brazilian or Japanese?",
+    a1:"No",
+    d1:"With the on-screen currency matched, the price is identical from any of the 8 verified countries. Without exception, across 15 measured competitors.",
+    q2:"Does a European customer who never switches currency end up paying more?",
+    a2:"Yes, 3% to 5%",
+    d2:"A Brazilian customer pays 0.7% more. The gap appears once you convert to a common currency the price each customer sees by default.",
+    closing:"The first question is about discrimination by origin, and the answer is that it does not exist. The second is about currency conversion policy: the European customer sees the price converted to euros with a margin over the market exchange rate. That is not solved by browsing from another country. It is solved by changing the currency selector on the site itself.",
+
+    tblTitle:"What each competitor does with price",
+    tblLead:"Five groups, 30 competitors. Click a group to see who is in it, and a competitor to see the detail of what was compared.",
+    nComp:"competitors",
+    trustMore:"See the full case",
+    thName:"Competitor",
+    thVerdict:"What it does with price",
+    thEvidence:"Evidence",
+    thCells:"Identical comparisons",
+    naShort:"n/a",
+    cFullPage:"Full page identical",
+    dlWhat:"What was compared",
+    dlHow:"How currency was matched",
+    dlResult:"Result",
+    dlNote:"Note",
+
+    gCurr:"They change the currency, not the price",
+    gGlobal:"Single global price, one currency",
+    gTelcoM:"Mobile carriers · measured",
+    gTelcoI:"Mobile carriers · covered by business model",
+    gUndet:"No answer available from the web",
+
+    vCurr:"Shows a different currency by country. With currency matched, the price is the same.",
+    vGlobal:"Shows the same currency to everyone, at the same price.",
+    vTelcoM:"Identical price for the local visitor and the foreign one.",
+    vTelcoI:"Price depends on the customer's own plan, which the site cannot read from a visitor.",
+    vUndet:"Their website does not return a comparable price list.",
+
+    trustTitle:"Why this result can be signed off",
+    trustLead:"During the study one signal appeared to prove the opposite. We verified it and it was not true.",
+    trustP1:"A regional competitor appeared to charge Brazil between 10% and 12% more than the United States and Germany, depending on the product. It carried every mark of being real: two separate countries agreed with each other, Brazil repeated the same price across two separate checks, and the web address was the same for everyone.",
+    trustP2:"It was not real. An hour later, checking five countries at the very same instant, all five showed the higher price. What had happened is that the competitor was raising prices, and the increase reached the servers that serve Brazil first.",
+    trustP3:"The difference was in time, not in geography. Checking the countries minutes apart was enough for a price change in progress to look like a commercial decision against Brazil.",
+    trustP4:"The only positive signal in the entire study was put through a second test and did not survive it. That is the standard behind the headline result.",
+
+    accMethod:"How the measurement was done",
+    accLimits:"What could not be answered",
+    accScope:"Scope and counts",
+
+    mWhat:"What was measured",
+    mWhatP:"For each competitor, the same pricing page was opened from several countries at the same moment, and the price of the same product was compared. A comparison only counts as valid when both countries see the price in the same currency. Where the currency did not match, it was matched, either by using the site's own currency selector or by finding a third country that already displayed the reference currency.",
+    mWhy:"Why converting is not enough",
+    mWhyP:"Converting a euro price into dollars to compare it introduces the exchange rate as a variable, and no longer supports any claim about price. That is why every comparison that required conversion is marked as inferred and does not carry the headline result.",
+    mInstr:"Instrument verification",
+    mInstrP:"Measurements were made with Firecrawl, a web capture service with per-country exit points. Before and after each batch of measurements, we checked which country the request was actually coming from. Of 10 countries tested, 8 answered correctly and are the ones used: the United States, Spain, Germany, the United Kingdom, Brazil, Australia, Japan and Türkiye. The other two, India and Argentina, reported one country while exiting through another, silently and with no error signal whatsoever. They were discarded, and no data taken through them was used. Without this check, a request claiming to come from Argentina while actually exiting through the United States would have entered this report as a valid measurement.",
+    mSimult:"Simultaneous measurement",
+    mSimultP:"The countries in a single comparison are checked in parallel, not one after another. Measuring minutes apart allows a price change in progress to be mistaken for a geographic difference, which is exactly what happened in the case described above.",
+    mEvid:"Evidence framework",
+    mEvidP:"Measured means a direct country-to-country comparison with the same currency on screen. Inferred means the finding leaned on a currency conversion or on the competitor's business model. Not determinable means the website does not return a comparable price list. Every claim in this report carries its mark.",
+
+    lGig:"GigSky · the price list on its English site is built in the browser and never arrives complete. On the one readable version of its site, prices are identical across countries.",
+    lTru:"Truely · the pricing block fails and returns an empty table from every country tested, with and without additional wait time.",
+    lRev:"Revolut · prices live inside its mobile app, not on the web. Per-market pages with different entry prices do exist, but the visitor's location does not lead to them.",
+    lTri:"Trifa · has no public pricing page. Its website is an app download screen.",
+    lPend:"Three checks remain open and require a manual browser: confirming whether Revolut's entry plans are the same product in each market, reading the final amount on a competitor's payment screen to confirm the conversion margin, and recovering the price list of the two competitors whose sites do not deliver it.",
+
+    sScope:"Scope",
+    sScopeP:"Thirty competitors were assessed: travel eSIM providers, marketplaces, traditional mobile carriers and one financial institution with a data product. Two reference destinations were measured, the United States and Spain, plus Japan as an additional control on the two highest-volume competitors.",
+    sExcl:"Outside the count",
+    sExclP:"Two further competitors fall outside the count and are declared so the figures reconcile: one publishes no price at all without signing in, and nothing was verified about the other.",
+    kDate:"Measurement date",
+    kOrigins:"Verified countries",
+    kDisc:"Discarded countries",
+    kComp:"Price comparisons",
+    kSignals:"Country-pricing signals found",
+    kSurv:"Signals surviving verification",
+    kAssessed:"Competitors assessed",
+
+    footer:"Internal document. Prices cited reflect the 14 August 2026 measurement and change without notice."
+  }
+};
+
+/* Per-player detail copy, keyed by player id then language. */
+var DETAIL = {
+  airalo:{
+    es:{what:"Planes ilimitados a Estados Unidos, España y Japón, desde 7 países.",how:"Con el selector de moneda del propio sitio, que ofrece 17 divisas.",result:"18 de 18 comparaciones idénticas.",note:"Que el cliente pueda elegir la moneda ya indica que no es una barrera de precio."},
+    en:{what:"Unlimited plans to the United States, Spain and Japan, from 7 countries.",how:"Using the site's own currency selector, which offers 17 currencies.",result:"18 of 18 comparisons identical.",note:"The fact that customers can pick their currency already shows it is not a price barrier."}},
+  saily:{
+    es:{what:"Grilla completa a Estados Unidos, España y Japón, desde los 7 países verificados.",how:"Con un parámetro de la propia dirección web que fija el precio en dólares.",result:"54 de 54 comparaciones idénticas.",note:"El identificador interno del plan que el sitio genera al pasar a pagar es exactamente el mismo desde Estados Unidos, Reino Unido, España y Alemania. No es un precio parecido: es el mismo producto."},
+    en:{what:"Full grid to the United States, Spain and Japan, from all 7 verified countries.",how:"Using a parameter in the site's own web address that pins the price to dollars.",result:"54 of 54 comparisons identical.",note:"The internal plan identifier the site generates at checkout is exactly the same from the United States, United Kingdom, Spain and Germany. Not a similar price: the same product."}},
+  nomad:{
+    es:{what:"Planes a Estados Unidos y España.",how:"El sitio no permite fijar la moneda. Se resolvió encontrando un segundo país que ya mostraba dólares.",result:"24 de 24 comparaciones idénticas, promociones incluidas.",note:"Las promociones activas son las mismas para todos los países, incluidos los que ven precios en yenes, dólares australianos y reales."},
+    en:{what:"Plans to the United States and Spain.",how:"The site does not allow pinning the currency. Solved by finding a second country already showing dollars.",result:"24 of 24 comparisons identical, promotions included.",note:"Active promotions are the same for every country, including those seeing prices in yen, Australian dollars and reais."}},
+  yesim:{
+    es:{what:"Planes a Estados Unidos y España.",how:"El sitio no permite fijar la moneda. Se usó un segundo país que ya mostraba dólares.",result:"36 de 36 comparaciones idénticas, incluidos precios tachados y porcentajes de descuento.",note:"La comparación con Alemania quedó como inferida, porque su moneda no se pudo igualar."},
+    en:{what:"Plans to the United States and Spain.",how:"The site does not allow pinning the currency. A second country already showing dollars was used.",result:"36 of 36 comparisons identical, including struck-through prices and discount percentages.",note:"The comparison against Germany remains inferred, because its currency could not be matched."}},
+  simify:{
+    es:{what:"Planes a Estados Unidos y España, desde Estados Unidos y Australia.",how:"Con un parámetro de la dirección web que fija el precio en dólares.",result:"9 de 9 comparaciones idénticas, incluidos precio tachado y porcentaje de descuento.",note:"La promoción es idéntica entre países, con el mismo contador de tiempo restante."},
+    en:{what:"Plans to the United States and Spain, from the United States and Australia.",how:"Using a web address parameter that pins the price to dollars.",result:"9 of 9 comparisons identical, including struck-through price and discount percentage.",note:"The promotion is identical across countries, down to the same countdown timer."}},
+  maya:{
+    es:{what:"Planes a Estados Unidos y España, desde 4 países.",how:"No hizo falta: muestra dólares a todos.",result:"8 de 8 comparaciones idénticas.",note:"El propio sitio lo declara: mismo precio se esté en Francia o en Japón."},
+    en:{what:"Plans to the United States and Spain, from 4 countries.",how:"Not needed: it shows dollars to everyone.",result:"8 of 8 comparisons identical.",note:"The site states it itself: same price whether you are in France or Japan."}},
+  mobimatter:{
+    es:{what:"Ofertas a Estados Unidos y España, desde 3 países.",how:"No hizo falta: muestra dólares a todos. La moneda es una elección del usuario entre 13 divisas.",result:"31 de 31 comparaciones idénticas.",note:"También el orden en que aparecen las ofertas es el mismo desde los tres países."},
+    en:{what:"Offers to the United States and Spain, from 3 countries.",how:"Not needed: it shows dollars to everyone. Currency is a user choice among 13 options.",result:"31 of 31 comparisons identical.",note:"The order in which offers appear is also the same from all three countries."}},
+  roamless:{
+    es:{what:"Planes a Estados Unidos y España, desde 3 países.",how:"No hizo falta: muestra dólares a todos.",result:"14 de 14 comparaciones idénticas.",note:"La promoción de bienvenida es la misma en los tres países, y el enlace de pago que genera el sitio es idéntico."},
+    en:{what:"Plans to the United States and Spain, from 3 countries.",how:"Not needed: it shows dollars to everyone.",result:"14 of 14 comparisons identical.",note:"The welcome promotion is the same in all three countries, and the checkout link the site generates is identical."}},
+  flexiroam:{
+    es:{what:"Planes a Estados Unidos y España, desde 6 países.",how:"No hizo falta: muestra dólares a todos.",result:"24 de 24 comparaciones idénticas.",note:"La ubicación del visitante sí decide el idioma de la página, pero las versiones por idioma llevan exactamente los mismos precios."},
+    en:{what:"Plans to the United States and Spain, from 6 countries.",how:"Not needed: it shows dollars to everyone.",result:"24 of 24 comparisons identical.",note:"The visitor's location does decide the page language, but the language versions carry exactly the same prices."}},
+  jetpac:{
+    es:{what:"Planes a Estados Unidos y España, desde 3 países.",how:"No hizo falta: muestra dólares a todos.",result:"9 de 9 comparaciones idénticas, precio de lista y precio promocional por separado.",note:"Los porcentajes de descuento son los mismos desde todos los países."},
+    en:{what:"Plans to the United States and Spain, from 3 countries.",how:"Not needed: it shows dollars to everyone.",result:"9 of 9 comparisons identical, list price and promotional price tracked separately.",note:"Discount percentages are the same from every country."}},
+  firsty:{
+    es:{what:"Precios de entrada a Estados Unidos y España, desde 3 países.",how:"No hizo falta: muestra euros a todos.",result:"6 de 6 comparaciones idénticas.",note:"Este competidor no publica una lista completa en su web, solo precios de entrada. La comparación es sólida pero menos granular que las demás."},
+    en:{what:"Entry prices to the United States and Spain, from 3 countries.",how:"Not needed: it shows euros to everyone.",result:"6 of 6 comparisons identical.",note:"This competitor does not publish a full list on its website, only entry prices. The comparison is solid but less granular than the others."}},
+  americachip:{
+    es:{what:"Planes a Estados Unidos y Europa, desde 8 países.",how:"No hizo falta: muestra la misma notación a todos.",result:"11 de 11 comparaciones idénticas en la medición simultánea final.",note:"Es el competidor donde apareció la única señal del estudio, que resultó ser un cambio de precio en curso. El detalle está en la sección de verificación."},
+    en:{what:"Plans to the United States and Europe, from 8 countries.",how:"Not needed: it shows the same notation to everyone.",result:"11 of 11 comparisons identical in the final simultaneous measurement.",note:"This is the competitor where the study's only signal appeared, which turned out to be a price change in progress. Detail in the verification section."}},
+  telekom:{
+    es:{what:"Paquetes de datos para viaje a Estados Unidos, desde Alemania y desde Estados Unidos.",how:"No hizo falta: muestra euros a ambos.",result:"La página se sirvió idéntica a los dos países, palabra por palabra. Incluye los tres paquetes para Estados Unidos, de 5,95, 15,95 y 29,95 euros, y las dos tarifas mensuales de viaje, de 14,95 y 49,95 euros.",note:"Es el único operador de telefonía del estudio que publica un paquete con país y precio concretos en texto fijo."},
+    en:{what:"Travel data packs for the United States, from Germany and from the United States.",how:"Not needed: it shows euros to both.",result:"The page was served identically to both countries, word for word. It includes the three United States packs at 5.95, 15.95 and 29.95 euros, and the two monthly travel plans at 14.95 and 49.95 euros.",note:"The only carrier in the study that publishes a pack with a specific country and price in fixed text."}},
+  vodauk:{
+    es:{what:"Pases de viaje y tarifas por zona, desde Reino Unido y desde Estados Unidos.",how:"No hizo falta: muestra libras a ambos.",result:"Todas las cifras de la página coinciden entre los dos países: pase de 8 días a 16 libras, pase de 15 días a 21 libras, 3,83 libras por giga, 3,84 libras por giga pasados los 25 gigas, más la tabla completa de tarifas de llamada por zona.",note:"Su buscador de precio por destino no entrega cifras a una lectura automática, y falla igual desde Reino Unido. Es un límite de captura, no un bloqueo al extranjero."},
+    en:{what:"Travel passes and zone rates, from the United Kingdom and from the United States.",how:"Not needed: it shows pounds to both.",result:"Every figure on the page matches between the two countries: 8-day pass at £16, 15-day pass at £21, £3.83 per gigabyte, £3.84 per gigabyte beyond 25 gigabytes, plus the full zone call-rate table.",note:"Its per-destination price checker does not return figures to automated reading, and fails the same way from the United Kingdom. A capture limitation, not a block on foreign visitors."}},
+  movistar:{
+    es:{what:"Tabla completa de tarifas por zona, desde España y desde Estados Unidos.",how:"No hizo falta: muestra euros a ambos.",result:"Todas las cifras de la página coinciden entre los dos países: 0,15 céntimos por mega en la zona europea, 12,10 euros por mega en el resto del mundo, 500 megas por 6,05 euros al día para Estados Unidos y Suiza, 3 gigas al día por 9 euros en Andorra, 36,30 euros por mega en zona marítima, más la tabla completa de tarifas de llamada con sus costes de establecimiento.",note:"El único elemento de la página que reaccionó al país del visitante fue un video incrustado, que se tradujo. Prueba que la medición estaba detectando la ubicación correctamente: simplemente no había diferencia de precio que detectar."},
+    en:{what:"Full zone rate table, from Spain and from the United States.",how:"Not needed: it shows euros to both.",result:"Every figure on the page matches between the two countries: 0.15 cents per megabyte in the European zone, 12.10 euros per megabyte in the rest of the world, 500 megabytes for 6.05 euros a day for the United States and Switzerland, 3 gigabytes a day for 9 euros in Andorra, 36.30 euros per megabyte at sea, plus the full call-rate table with its connection charges.",note:"The only element on the page that reacted to the visitor's country was an embedded video, which localised. Proof the measurement was detecting location correctly: there simply was no price difference to detect."}},
+  gigsky:{
+    es:{what:"Planes a Estados Unidos y España.",how:"No hizo falta: muestra dólares a todos.",result:"Sobre la única versión legible de su sitio, los precios son idénticos entre países.",note:"La lista de precios de su web en inglés se arma dentro del navegador y nunca llega completa a una lectura automática, ni esperando quince segundos. Sin esa lista no se puede cerrar la comparación."},
+    en:{what:"Plans to the United States and Spain.",how:"Not needed: it shows dollars to everyone.",result:"On the one readable version of its site, prices are identical across countries.",note:"The price list on its English site is assembled inside the browser and never arrives complete to automated reading, not even after fifteen seconds. Without that list the comparison cannot be closed."}},
+  truely:{
+    es:{what:"Se intentó en Estados Unidos y España, desde dos países.",how:"No se llegó a esa instancia.",result:"Sin resultado.",note:"El bloque de precios devuelve un error y una tabla vacía desde todos los países probados, en seis intentos, con y sin espera adicional."},
+    en:{what:"Attempted for the United States and Spain, from two countries.",how:"Never reached that stage.",result:"No result.",note:"The pricing block returns an error and an empty table from every country tested, across six attempts, with and without additional wait time."}},
+  revolut:{
+    es:{what:"Páginas de destino a Estados Unidos y España, desde los 7 países verificados.",how:"No aplicable: la web no muestra precios por plan.",result:"Sin resultado a nivel de producto.",note:"Los precios viven dentro de la aplicación. Existen páginas por mercado con precios de entrada distintos, pero la ubicación del visitante nunca llevó a ellas: los 7 países recibieron siempre la versión británica."},
+    en:{what:"Destination pages for the United States and Spain, from all 7 verified countries.",how:"Not applicable: the website shows no per-plan prices.",result:"No product-level result.",note:"Prices live inside the app. Per-market pages with different entry prices exist, but the visitor's location never led to them: all 7 countries always received the British version."}},
+  trifa:{
+    es:{what:"Se buscó una página pública de precios por destino.",how:"No aplicable.",result:"No existe.",note:"Su web es una pantalla de descarga de la aplicación. El precio solo vive dentro de la app."},
+    en:{what:"A public per-destination pricing page was searched for.",how:"Not applicable.",result:"None exists.",note:"Its website is an app download screen. Price lives only inside the app."}}
+};
+
+var TELCO_INFERRED_DETAIL = {
+  es:{what:"No medido por país.",how:"No aplicable.",result:"Cubierto por extensión del modelo de negocio, no por medición.",note:"Un operador de telefonía le vende roaming a su propio abonado. El precio depende del país donde ese cliente contrató y del abono que tiene, dos datos que la web no puede leer de un visitante anónimo. Los tres operadores que sí se midieron confirmaron esta lectura con precio idéntico al visitante extranjero."},
+  en:{what:"Not measured by country.",how:"Not applicable.",result:"Covered by extension of the business model, not by measurement.",note:"A mobile carrier sells roaming to its own subscriber. The price depends on the country where that customer signed up and on the plan they hold, neither of which the site can read from an anonymous visitor. The three carriers that were measured confirmed this reading, with an identical price for the foreign visitor."}
+};
+
+/* =========================================================================
+   STATE — plain JS variables. No browser storage anywhere.
+   ========================================================================= */
+var state = { lang:"es", groupOpen:{}, expanded:{}, accOpen:{} };
+
+/* =========================================================================
+   HELPERS
+   ========================================================================= */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+var EV_CHIP = { measured:"chip-measured", inferred:"chip-inferred", undetermined:"chip-undet" };
+var EV_LABEL = { measured:"pMeasured", inferred:"pInferred", undetermined:"pUndet" };
+var GROUP_LABEL = { curr:"gCurr", global:"gGlobal", telcoM:"gTelcoM", telcoI:"gTelcoI", undet:"gUndet" };
+var GROUP_VERDICT = { curr:"vCurr", global:"vGlobal", telcoM:"vTelcoM", telcoI:"vTelcoI", undet:"vUndet" };
+
+function detailFor(p, lang){
+  if (DETAIL[p.id]) return DETAIL[p.id][lang];
+  return TELCO_INFERRED_DETAIL[lang];
+}
+
+/* =========================================================================
+   VIEWS — one function per region. render() walks this map.
+   ========================================================================= */
+var VIEWS = {
+
+  "v-headline": function(t){
+    var cells = [
+      { cls:"is-measured", n:DATA.measured,     lab:t.pMeasured, desc:t.pMeasuredD },
+      { cls:"is-inferred", n:DATA.inferred,     lab:t.pInferred, desc:t.pInferredD },
+      { cls:"is-undet",    n:DATA.undetermined, lab:t.pUndet,    desc:t.pUndetD }
+    ];
+    var html = '<p class="verdict"><em>' + esc(t.verdictA) + '</em> ' + esc(t.verdictB) + '</p>';
+    html += '<p class="vsub">' + esc(t.vsub) + '</p>';
+    html += '<div class="partition">';
+    cells.forEach(function(c){
+      html += '<div class="pcell ' + c.cls + '">'
+           +    '<div class="pnum">' + c.n + '</div>'
+           +    '<div class="plabel">' + esc(c.lab) + '</div>'
+           +    '<div class="pdesc">' + esc(c.desc) + '</div>'
+           +  '</div>';
+    });
+    html += '</div>';
+    html += '<p class="prov">' + esc(t.prov) + '</p>';
+    return html;
+  },
+
+  "v-message": function(t){
+    var qs = [
+      { cls:"yes", q:t.q1, a:t.a1, d:t.d1, ev:"measured" },
+      { cls:"no",  q:t.q2, a:t.a2, d:t.d2, ev:"inferred" }
+    ];
+    var html = '<h2 class="sec">' + esc(t.msgTitle) + '</h2>';
+    html += '<p class="seclead">' + esc(t.msgLead) + '</p>';
+    html += '<div class="qgrid">';
+    qs.forEach(function(x){
+      html += '<div class="qbox ' + x.cls + '">'
+           +    '<p class="q">' + esc(x.q) + '</p>'
+           +    '<p class="a">' + esc(x.a) + '</p>'
+           +    '<p class="detail">' + esc(x.d) + '</p>'
+           +    '<span class="chip ' + EV_CHIP[x.ev] + '">' + esc(t[EV_LABEL[x.ev]]) + '</span>'
+           +  '</div>';
+    });
+    html += '</div>';
+    html += '<p class="closing">' + esc(t.closing) + '</p>';
+    return html;
+  },
+
+  "v-table": function(t){
+    var html = '<h2 class="sec">' + esc(t.tblTitle) + '</h2>';
+    html += '<p class="seclead">' + esc(t.tblLead) + '</p>';
+    html += '<div class="tablewrap"><table><thead><tr>'
+         +  '<th>' + esc(t.thName) + '</th>'
+         +  '<th>' + esc(t.thVerdict) + '</th>'
+         +  '<th>' + esc(t.thEvidence) + '</th>'
+         +  '<th class="num">' + esc(t.thCells) + '</th>'
+         +  '</tr></thead><tbody>';
+
+    DATA.groups.forEach(function(g){
+      var rows = DATA.players.filter(function(p){ return p.g === g; });
+      if (!rows.length) return;
+
+      // Executive mode: groups render collapsed. The group row carries the whole
+      // verdict for its members, so the reader gets the answer without expanding.
+      var gOpen = !!state.groupOpen[g];
+      var gEv   = rows[0].ev;
+      html += '<tr class="grouprow" data-gid="' + g + '" tabindex="0" role="button" aria-expanded="' + gOpen + '">'
+           +    '<td class="gname"><span class="tw">' + (gOpen ? "▾" : "▸") + '</span>' + esc(t[GROUP_LABEL[g]]) + '</td>'
+           +    '<td class="gverdict">' + esc(t[GROUP_VERDICT[g]]) + '</td>'
+           +    '<td><span class="chip ' + EV_CHIP[gEv] + '">' + esc(t[EV_LABEL[gEv]]) + '</span></td>'
+           +    '<td class="num">' + rows.length + ' ' + esc(t.nComp) + '</td>'
+           +  '</tr>';
+      if (!gOpen) return;
+
+      // Striping restarts inside each group, over player rows only, so neither the
+      // group headers nor an expanded detail row can shift the pattern.
+      var stripe = 0;
+
+      rows.forEach(function(p){
+        var open = !!state.expanded[p.id];
+        var alt  = (stripe++ % 2 === 1) ? " alt" : "";
+        var cellsTxt = p.cells ? esc(p.cells) : (p.cellsK ? esc(t[p.cellsK]) : esc(t.naShort));
+        html += '<tr class="rowmain' + alt + '" data-pid="' + p.id + '" tabindex="0" role="button" aria-expanded="' + open + '">'
+             +   '<td class="name"><span class="tw">' + (open ? "▾" : "▸") + '</span>' + esc(p.name) + '</td>'
+             +   '<td>' + esc(t[GROUP_VERDICT[p.g]]) + '</td>'
+             +   '<td><span class="chip ' + EV_CHIP[p.ev] + '">' + esc(t[EV_LABEL[p.ev]]) + '</span></td>'
+             +   '<td class="num">' + cellsTxt + '</td>'
+             + '</tr>';
+        if (open){
+          var d = detailFor(p, state.lang);
+          html += '<tr class="rowdetail"><td colspan="4"><dl>'
+               +    '<dt>' + esc(t.dlWhat)   + '</dt><dd>' + esc(d.what)   + '</dd>'
+               +    '<dt>' + esc(t.dlHow)    + '</dt><dd>' + esc(d.how)    + '</dd>'
+               +    '<dt>' + esc(t.dlResult) + '</dt><dd>' + esc(d.result) + '</dd>'
+               +    '<dt>' + esc(t.dlNote)   + '</dt><dd>' + esc(d.note)   + '</dd>'
+               +  '</dl></td></tr>';
+        }
+      });
+    });
+
+    html += '</tbody></table></div>';
+    return html;
+  },
+
+  "v-trust": function(t){
+    // Executive mode: lead + closing stay visible; the full Brazil case folds away.
+    var html = '<h2 class="sec">' + esc(t.trustTitle) + '</h2>';
+    html += '<p class="tlead">' + esc(t.trustLead) + '</p>';
+    html += '<p class="kicker">' + esc(t.trustP4) + '</p>';
+    html += '<details class="inlinecase" data-acc="trustcase"' + (state.accOpen.trustcase ? " open" : "") + '>'
+         +    '<summary>' + esc(t.trustMore) + '</summary>'
+         +    '<div class="casebody">'
+         +      '<p>' + esc(t.trustP1) + '</p>'
+         +      '<p>' + esc(t.trustP2) + '</p>'
+         +      '<p>' + esc(t.trustP3) + '</p>'
+         +    '</div>'
+         +  '</details>';
+    return html;
+  },
+
+  "v-method": function(t){
+    var blocks = [
+      { key:"method", title:t.accMethod, body:
+          '<h3>' + esc(t.mWhat)   + '</h3><p>' + esc(t.mWhatP)   + '</p>'
+        + '<h3>' + esc(t.mWhy)    + '</h3><p>' + esc(t.mWhyP)    + '</p>'
+        + '<h3>' + esc(t.mInstr)  + '</h3><p>' + esc(t.mInstrP)  + '</p>'
+        + '<h3>' + esc(t.mSimult) + '</h3><p>' + esc(t.mSimultP) + '</p>'
+        + '<h3>' + esc(t.mEvid)   + '</h3><p>' + esc(t.mEvidP)   + '</p>' },
+      { key:"limits", title:t.accLimits, body:
+          '<ul><li>' + esc(t.lGig) + '</li><li>' + esc(t.lTru) + '</li>'
+        + '<li>' + esc(t.lRev) + '</li><li>' + esc(t.lTri) + '</li></ul>'
+        + '<p>' + esc(t.lPend) + '</p>' },
+      { key:"scope", title:t.accScope, body:
+          '<h3>' + esc(t.sScope) + '</h3><p>' + esc(t.sScopeP) + '</p>'
+        + '<h3>' + esc(t.sExcl)  + '</h3><p>' + esc(t.sExclP)  + '</p>'
+        + '<dl class="kv">'
+        +   '<dt>' + esc(t.kDate)     + '</dt><dd>' + esc(DATA.captureDate) + '</dd>'
+        +   '<dt>' + esc(t.kAssessed) + '</dt><dd>' + DATA.totalAssessed + '</dd>'
+        +   '<dt>' + esc(t.kOrigins)  + '</dt><dd>' + DATA.originsVerified + '</dd>'
+        +   '<dt>' + esc(t.kDisc)     + '</dt><dd>' + DATA.originsDiscarded + '</dd>'
+        +   '<dt>' + esc(t.kComp)     + '</dt><dd>~' + DATA.comparisons + '</dd>'
+        +   '<dt>' + esc(t.kSignals)  + '</dt><dd>' + DATA.signalsFound + '</dd>'
+        +   '<dt>' + esc(t.kSurv)     + '</dt><dd>' + DATA.signalsSurviving + '</dd>'
+        + '</dl>' }
+    ];
+    var html = "";
+    blocks.forEach(function(b){
+      html += '<details class="acc" data-acc="' + b.key + '"' + (state.accOpen[b.key] ? " open" : "") + '>'
+           +    '<summary>' + esc(b.title) + '</summary>'
+           +    '<div class="accbody">' + b.body + '</div>'
+           +  '</details>';
+    });
+    return html;
+  },
+
+  "v-footer": function(t){ return esc(t.footer); }
+};
+
+/* =========================================================================
+   RENDER — single entry point. Walks the VIEWS map, no branching on language.
+   ========================================================================= */
+function render(){
+  var t = I18N[state.lang];
+  document.documentElement.lang = t.htmlLang;
+  document.title = t.doctitle;
+  document.getElementById("brandline").textContent = t.brandline;
+  document.getElementById("doctitle").textContent  = t.doctitle;
+  document.getElementById("docsub").textContent    = t.docsub;
+
+  Object.keys(VIEWS).forEach(function(id){
+    document.getElementById(id).innerHTML = VIEWS[id](t);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".langtoggle button"), function(b){
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === state.lang));
+  });
+}
+
+/* =========================================================================
+   EVENTS — delegated, so they survive every re-render.
+   ========================================================================= */
+function toggleRow(row){
+  var gid = row.getAttribute("data-gid");
+  var pid = row.getAttribute("data-pid");
+  var sel;
+  if (gid){ state.groupOpen[gid] = !state.groupOpen[gid]; sel = 'tr.grouprow[data-gid="' + gid + '"]'; }
+  else    { state.expanded[pid]  = !state.expanded[pid];  sel = 'tr.rowmain[data-pid="' + pid + '"]'; }
+  render();
+  var back = document.querySelector(sel);
+  if (back) back.focus();
+}
+
+document.addEventListener("click", function(e){
+  var langBtn = e.target.closest(".langtoggle button");
+  if (langBtn){ state.lang = langBtn.getAttribute("data-lang"); render(); return; }
+
+  var row = e.target.closest("tr.grouprow, tr.rowmain");
+  if (row){ toggleRow(row); return; }
+});
+
+document.addEventListener("keydown", function(e){
+  if (e.key !== "Enter" && e.key !== " ") return;
+  var row = e.target.closest && e.target.closest("tr.grouprow, tr.rowmain");
+  if (!row) return;
+  e.preventDefault();
+  toggleRow(row);
+});
+
+document.addEventListener("toggle", function(e){
+  var d = e.target;
+  if (d && d.tagName === "DETAILS" && d.hasAttribute("data-acc")){
+    state.accOpen[d.getAttribute("data-acc")] = d.open;
+  }
+}, true);
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ola de julio — decisión por destino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1d26; --sub:#5a6072; --line:#e6e8ef; --bg:#f7f8fb; --card:#ffffff;
+  --red:#d92d20; --soft:#f2f3f7;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Mulish',sans-serif;background:var(--bg);color:var(--ink);padding:28px 28px 60px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.hdate{font-size:12px;color:var(--sub)}
+.htitle{font-size:13px;font-weight:700;color:var(--sub);letter-spacing:.04em;text-transform:uppercase}
+h1{font-size:23px;font-weight:900;margin:2px 0 4px}
+.sub{font-size:13.5px;color:var(--sub);margin-bottom:8px}
+.estado{font-size:13px;font-weight:700;margin-bottom:20px}
+.estado span{color:var(--red)}
+
+/* fila por destino */
+details.dest{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(20,24,40,.04)}
+details.dest>summary{display:flex;align-items:center;gap:18px;padding:15px 22px;cursor:pointer;list-style:none}
+details.dest>summary::-webkit-details-marker{display:none}
+.iso{flex:0 0 60px;font-size:19px;font-weight:900}
+.chip{flex:0 0 190px;display:inline-block;font-weight:900;font-size:13px;letter-spacing:.02em;padding:8px 14px;border-radius:8px;color:#fff;text-align:center}
+.chip.rb{background:var(--red)}
+.chip.it{background:var(--ink)}
+.chip.tbd{background:#fff;color:var(--sub);border:1.5px dashed #c9cdd8;font-weight:700}
+.oneline{flex:1;font-size:13.5px;color:var(--sub)}
+.oneline b{color:var(--ink)}
+.caret{flex:0 0 auto;font-size:13px;color:var(--sub);transition:transform .15s}
+details.dest[open]>summary .caret{transform:rotate(180deg)}
+.body{padding:0 22px 22px}
+
+/* accion: lo primero y lo mas grande */
+.abar{margin:2px 0 14px;padding:16px 20px;border-radius:12px;background:var(--soft)}
+.abar.rb{border-left:5px solid var(--red)}
+.abar.it{border-left:5px solid var(--ink)}
+.abar .a1{font-size:17.5px;font-weight:900}
+.abar.rb .a1 span{color:var(--red)}
+.abar .a2{font-size:13px;color:var(--sub);margin-top:3px}
+
+/* vistazo: el porque en 3 pasos */
+.vistazo{border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.vtit{font-size:11px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.vstep{display:flex;gap:12px;align-items:baseline;padding:4px 0;font-size:14.5px}
+.vstep .n{flex:0 0 22px;height:22px;border-radius:50%;background:var(--soft);border:1px solid var(--line);color:var(--sub);font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;transform:translateY(3px)}
+.vstep b{font-weight:800}
+.vfin{margin-top:8px;padding-top:10px;border-top:1px solid var(--line);font-size:13.5px;color:#343a49}
+.vfin b{font-weight:800}
+
+/* paneles replegables consistentes */
+details.panel{margin-top:14px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+details.panel>summary{cursor:pointer;list-style:none;padding:13px 18px;font-weight:800;font-size:13.5px;display:flex;align-items:center;gap:10px;background:var(--soft)}
+details.panel>summary::-webkit-details-marker{display:none}
+details.panel>summary .grow{flex:1}
+details.panel>summary .mini{font-weight:600;font-size:12px;color:var(--sub)}
+details.panel>summary .pcaret{font-size:12px;color:var(--sub);transition:transform .15s;display:inline-flex;align-items:center;gap:6px;font-weight:700}
+details.panel[open]>summary .pcaret .arr{display:inline-block;transform:rotate(180deg)}
+details.panel.dark{border-color:var(--ink)}
+details.panel.dark>summary{background:var(--ink);color:#fff}
+details.panel.dark>summary .mini{color:rgba(255,255,255,.75)}
+details.panel.dark>summary .pcaret{color:rgba(255,255,255,.85)}
+.pbody{padding:16px 18px}
+
+.q{margin:6px 0 20px;max-width:880px}
+.q h3{font-size:14.5px;font-weight:800;margin-bottom:6px}
+.q h3 .tag{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;vertical-align:2px;margin-left:8px;letter-spacing:.03em;background:var(--soft);color:var(--sub)}
+.q p{font-size:13.5px;color:#343a49;margin-bottom:8px}
+mark{background:none;color:var(--ink);font-weight:800;padding:0}
+.destacado{background:var(--soft);border-left:3px solid var(--ink);border-radius:8px;padding:14px 16px;margin:10px 0 4px}
+.destacado .dt{font-size:11px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.destacado p{font-size:13.5px;color:#2b2f3c;margin-bottom:6px}
+.destacado p:last-child{margin-bottom:0}
+.raros{border:1px solid var(--line);border-radius:8px;padding:13px 16px;margin:0 0 16px;max-width:880px}
+.raros .dt{font-size:11px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.raros p{font-size:13px;color:#3c4152;margin-bottom:5px}
+.raros p:last-child{margin-bottom:0}
+table{width:100%;max-width:880px;border-collapse:collapse;margin:8px 0 4px;font-size:12.5px}
+th{text-align:left;font-size:10.5px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1.5px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+td.num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.neg{color:var(--red);font-weight:700}
+.nota{font-size:12px;color:var(--sub);margin-top:8px;max-width:880px}
+.nota b{color:#3c4152}
+
+.agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:760px){.agrid{grid-template-columns:repeat(2,1fr)}}
+.ab{background:var(--soft);border-radius:10px;padding:11px 13px}
+.ab .k{font-size:12.5px;font-weight:800}
+.ab .d{font-size:11.5px;color:var(--sub);margin-top:3px}
+.aline{font-size:13px;color:#343a49;margin-bottom:6px}
+.aline b{font-weight:800;color:var(--ink)}
+.pend{font-size:13.5px;color:var(--sub);padding:4px 0 2px}
+/* criterio de decision */
+.criterio{border:1.5px solid var(--ink);border-radius:14px;padding:18px 22px;margin-bottom:18px;background:var(--card)}
+.criterio .ct{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:860px){.cgrid{grid-template-columns:1fr}}
+.citem .ck{font-size:12px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.citem p{font-size:13.5px;color:#2b2f3c}
+.citem p b{font-weight:800}
+.cex{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--sub)}
+.cex b{color:var(--ink)}
+footer{margin-top:20px;font-size:11.5px;color:var(--sub)}
+footer b{color:#3c4152}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><svg style="height:26px;width:auto;display:block" viewBox="0 0 104 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M78.0563 7.28786C77.7143 7.03453 77.3245 6.90648 76.8856 6.90648C76.0089 6.90648 75.5707 7.44977 75.5707 8.53587V10.1959H78.9861V13.4237H75.5707V25.536H72.1398V13.4237H69.8199V10.1959H72.1398V8.10552C72.1398 6.69136 72.5259 5.57974 73.2977 4.76994C74.0697 3.96063 75.0274 3.55566 76.171 3.55566C77.1046 3.55566 77.853 3.69412 78.4152 3.97066C78.8652 4.19243 79.2317 4.43076 79.5171 4.68518L78.0563 7.28786ZM47.8396 25.535H51.7185V4.20114H47.8396V25.535ZM40.4703 21.4441C39.6729 22.3335 38.6766 22.7783 37.4808 22.7783C36.2648 22.7783 35.2685 22.3387 34.4912 21.4594C33.7139 20.5806 33.3253 19.456 33.3253 18.0859C33.3253 16.7366 33.7139 15.6224 34.4912 14.7431C35.2685 13.8642 36.2648 13.4244 37.4808 13.4244C38.6766 13.4244 39.6729 13.8642 40.4703 14.7431C41.2672 15.6224 41.666 16.7366 41.666 18.0859C41.666 19.4354 41.2672 20.5547 40.4703 21.4441ZM41.4577 11.093C40.2815 10.3777 38.9562 10.0198 37.4817 10.0198C36.0266 10.0198 34.7061 10.3777 33.5206 11.093C32.3345 11.8089 31.4077 12.7799 30.7403 14.0066C30.0723 15.2333 29.7388 16.5931 29.7388 18.0853C29.7388 19.578 30.0723 20.9428 30.7403 22.1796C31.4077 23.4168 32.3294 24.393 33.5056 25.1084C34.6813 25.8239 36.0065 26.1818 37.4817 26.1818C38.9562 26.1818 40.2815 25.8239 41.4577 25.1084C42.6334 24.393 43.5601 23.4168 44.2379 22.1796C44.9152 20.9428 45.2543 19.578 45.2543 18.0853C45.2543 16.5931 44.9152 15.2333 44.2379 14.0066C43.5601 12.7799 42.6334 11.8089 41.4577 11.093ZM85.3357 25.535H81.4568V4.20114H85.3357V25.535ZM99.2024 10.0198V17.8808C99.2024 19.1347 98.8883 20.1004 98.2605 20.7788C97.6324 21.4568 96.8102 21.796 95.7935 21.796C94.8366 21.796 94.0987 21.5185 93.5807 20.9637C93.062 20.4088 92.8031 19.4738 92.8031 18.1582V10.0198H89.2147V18.7748C89.2147 20.9535 89.6977 22.5774 90.6649 23.6457C91.6317 24.7146 92.9624 25.2487 94.6571 25.2487C95.7135 25.2487 96.5906 25.069 97.2886 24.7092C97.9862 24.3499 98.614 23.8205 99.1725 23.1216L99.2024 23.2141V24.8479C99.2024 26.122 98.8883 27.1032 98.2605 27.792C97.6324 28.4803 96.77 28.8247 95.6737 28.8247C94.171 28.8247 93.1875 28.2526 92.7199 27.1138L89.7546 28.6852C90.1545 29.4528 90.6868 30.1111 91.3528 30.659C92.4391 31.553 93.8795 32.0001 95.6737 32.0001C97.9062 32.0001 99.6509 31.3474 100.907 30.0424C102.163 28.737 102.791 26.9953 102.791 24.8171V10.0198H99.2024ZM63.5744 20.3843C63.5744 21.2637 63.2795 21.9537 62.6901 22.4545C62.1002 22.9557 61.3683 23.2059 60.4944 23.2059C59.6607 23.2059 59.005 23.0271 58.5276 22.6691C58.0496 22.3118 57.8111 21.8364 57.8111 21.2431C57.8111 20.6096 58.0293 20.1238 58.4666 19.7864C58.9036 19.449 59.5998 19.2089 60.5556 19.0656L63.5744 18.6057V20.3843ZM65.4346 11.4458C64.2349 10.495 62.7206 10.0198 60.8909 10.0198C59.1018 10.0198 57.6993 10.4031 56.6827 11.1698C55.6743 11.93 54.9569 13.0784 54.5287 14.6127L57.7937 15.2085C57.9356 14.5095 58.2198 13.9696 58.6496 13.5924C59.1271 13.1737 59.8337 12.964 60.7691 12.964C62.6393 12.964 63.5745 13.8944 63.5745 15.7546V15.9387L60.3116 16.3986C58.0749 16.7053 56.515 17.3033 55.6307 18.1927C54.7464 19.082 54.3042 20.1708 54.3042 21.4588C54.3042 22.3995 54.5377 23.2276 55.0056 23.9429C55.4731 24.6588 56.1034 25.2108 56.8961 25.599C57.6892 25.9872 58.563 26.1818 59.5187 26.1818C61.4904 26.1818 62.9035 25.5789 63.7574 24.3723L64.1538 25.7523H67.2338V15.6934C67.2338 13.8126 66.6341 12.3965 65.4346 11.4458ZM13.1151 13.519C17.302 14.3547 20.3139 13.9602 22.2514 12.3347V4.20114H25.8592V25.535H22.2514V16.3925V16.1184C20.7622 16.8201 19.0142 17.1731 16.9913 17.1731C15.7959 17.1731 14.5039 17.0492 13.1151 16.8046V25.535H9.50866V15.9599C9.03462 15.8241 8.55231 15.6785 8.0594 15.5198C5.47279 14.6879 2.15403 15.0945 0.723524 15.7075L0 12.5309C2.07157 11.8148 5.76141 11.3847 8.9963 12.4255C9.16891 12.481 9.33908 12.534 9.50866 12.5865V4.20114H13.1151V12.9485V13.519Z" fill="#E6485C"/>
+</svg></div>
+  <div class="hdate">18 ago 2026 · propuesta al equipo</div>
+</header>
+<div class="htitle">Ola de julio · decisión por destino</div>
+<h1>Qué hacemos con cada uno de los 8</h1>
+<div class="sub">Lectura direccional, no causal. Con su OK final procedo con lo propuesto.</div>
+<div class="estado"><span>8 de 8 listas para tu OK</span> · criterio de banda aplicado con precios de competencia al 18/8</div>
+
+<div class="criterio">
+  <div class="ct">El criterio, para que estemos alineados</div>
+  <div class="cgrid">
+    <div class="citem">
+      <div class="ck">1 · Por qué tocamos el precio</div>
+      <p><b>La demanda no respondió:</b> en 7 de 8, el volumen ajustado por temporada no acompañó.
+      Descuento sin respuesta = margen regalado. Se devuelve.</p>
+    </div>
+    <div class="citem">
+      <div class="ck">2 · Cuánto devolvemos</div>
+      <p>Contra <b>Airalo a precios de HOY</b> (18/8, same-day). Precio original ≤ <b>+10%</b> → rollback completo.
+      Más lejos → fixed price aterrizando en <b>~+8/9%</b>. Saily se reporta siempre al lado.</p>
+    </div>
+    <div class="citem">
+      <div class="ck">3 · Qué no es esto</div>
+      <p><b>No es la fase 2 del experimento.</b> Sin A/B nada va a ser concluyente:
+      el precio nuevo es donde vamos a vivir, una sola movida.</p>
+    </div>
+  </div>
+  <div class="cex"><b>Marruecos no entra en la banda:</b> los otros 7 fueron recortes; Marruecos fue una suba de +15,8%
+  y somos más baratos que Airalo con o sin ella. Su decisión se explica en su card: cuánto volumen recuperamos devolviendo la mitad.</div>
+
+</div>
+
+<details class="panel" style="margin-bottom:18px">
+  <summary><span class="grow">La competencia se movió mientras corríamos: diseño (julio) vs 18/8, verificado en los 8</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+  <div class="pbody">
+    <p style="font-size:13.5px;color:#343a49;margin-bottom:10px;max-width:880px">
+    Mismos precios HF en las dos fotos: el corrimiento es todo de ellos. <b>Saily recortó fuerte en Europa y USA; Airalo acompañó.</b>
+    Los gaps de rollback quedaron 2 a 5 puntos peores que en diseño. Las decisiones ya están calculadas sobre el 18/8.</p>
+    <table>
+      <thead><tr><th>Destino</th><th>Airalo</th><th>Saily</th><th>Gap rollback: diseño → hoy</th></tr></thead>
+      <tbody>
+        <tr><td>🇪🇸 ESP</td><td class="neg">Bajó −3% a −6% en todos los días</td><td class="neg">Bajó −8% a −11%</td><td class="num">+10,9% → +15,8%</td></tr>
+        <tr><td>🇮🇹 ITA</td><td class="neg">Bajó −2% a −8%</td><td class="neg">Bajó −8% a −11%</td><td class="num">+12,6% → +15,4%</td></tr>
+        <tr><td>🇨🇭 CHE</td><td class="neg">Bajó −1% a −7%</td><td class="neg">Bajó −3% a −6%</td><td class="num">+5,5% → +8,9%</td></tr>
+        <tr><td>🇺🇸 USA</td><td class="neg">Bajó en d7/d15/d30 (−1% a −7%)</td><td class="neg">Bajó −3% a −14%</td><td class="num">+6,0% → +8,4%</td></tr>
+        <tr><td>🇲🇽 MEX</td><td>Bajó los días cortos, subió d15/d30 (+5% a +8%)</td><td class="neg">Bajó −5% a −10% en cortos</td><td class="num">+14,8% → +17,6%</td></tr>
+        <tr><td>🇵🇪 PER</td><td>Solo movió d3 (−9%)</td><td>Sin base comparable (cobertura nueva)</td><td class="num">+16,3% → +18,0%</td></tr>
+        <tr><td>🇨🇦 CAN</td><td>Sin cambios</td><td>Ruido chico en ambas direcciones</td><td class="num">+10,4% → +10,4%</td></tr>
+        <tr><td>🇲🇦 MAR</td><td>Sin cambios</td><td>Sin cambios</td><td class="num">−25,4% → −25,4%</td></tr>
+      </tbody>
+    </table>
+    <div class="nota"><b>Lectura Marruecos:</b> nadie se movió ahí. La caída de volumen (−21,6% ajustado) no tiene explicación
+    competitiva: fue nuestra suba. La única evidencia limpia de elasticidad de la ola quedó más limpia todavía.</div>
+  </div>
+</details>
+
+
+<details class="dest">
+  <summary>
+    <span class="iso">🇺🇸 USA</span>
+    <span class="chip rb">RollBack</span>
+    <span class="oneline">El −5% no compró volumen y mantenerlo cuesta <b>~25k€/día</b>. El rollback nos deja <b>+8,4% Airalo / +9,2% Saily</b>: dentro de banda.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar rb">
+    <div class="a1">Acción: <span>volver al precio del 23/7</span> esta semana.</div>
+    <div class="a2">Rollback completo del recorte −5% (lanzado 24/7). Más los ajustes que hubieran corrido igual sin experimento (FX).</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Bajamos <b>−5%</b>. Hoy estamos a <b>+1,9% / +2,1%</b> de Airalo y Saily; con el precio viejo estaríamos a <b>+8,4% / +9,2%</b>.</div></div>
+    <div class="vstep"><span class="n">2</span><div>El volumen no respondió: ajustado por temporada, órdenes <b>entre −12% y −25%</b>.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Mantener el precio bajo cuesta <b>hasta ~25k€/día</b> de margen y no compra nada medible.</div></div>
+    <div class="vfin">Rollback queda dentro de la banda (+8,4% vs Airalo, +9,2% vs Saily), pero cerca del borde:
+    si Airalo baja precios, USA es el primero que se sale. El check de competencia a 2 semanas acá pesa doble.
+    Si la paridad importa como estrategia, se decide aparte y con su costo a la vista.</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="raros">
+      <div class="dt">Los dos datos que confunden</div>
+      <p><b>“El GM sube, ¿el recorte está bien?”</b> No: la mejora es mix y temporada. El recorte, solo, resta.</p>
+      <p><b>“Volver a +8% era lo que queríamos evitar.”</b> Cierto. Pero estar pegados tiene precio conocido y beneficio que no apareció.</p>
+    </div>
+
+    <div class="q">
+      <h3>1. ¿El recorte compró volumen? <span class="tag">Cerrada: no</span></h3>
+      <p>Órdenes +10% crudo, ajustado entre <mark>−12% y −25%</mark>. CR y Revenue/Session bajaron
+      con el precio pegado a Airalo y Saily. Si la paridad moviera demanda, algo asomaba.</p>
+      <p>Facturación <mark>−16% vs contrafactual</mark>. Mantener: <mark>hasta ~25k€/día</mark>. Cota máxima, número de verano.</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">Trampa: es neutral</span></h3>
+      <p>78,1% → 81,9% por mix y temporada: el recorte solo resta ~0,8%. <b>Sale de la balanza.</b></p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Queremos paridad como posición? <span class="tag">Abierta: no la decide este experimento</span></h3>
+      <p>Hoy <mark>+1,9% Airalo / +2,1% Saily</mark>. Rollback: <mark>+8,4% / +9,2%</mark>. El motivo original sigue en pie;
+      lo que midió la ventana es que la paridad no pagó en el corto.</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p>Nadie mostró que la paridad valga, y este experimento fue el intento.
+        <b>Si Leadership la quiere como posición, es pricing fijo con costo conocido (~25k€/día), no un experimento.</b>
+        Se demuestra con A/B o viendo si Airalo gana share.</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">4.782</td><td class="num">5.247</td><td>+10% crudo · <span class="neg">−12% a −25%</span> ajustado</td></tr>
+        <tr><td>CR %</td><td class="num">28,4</td><td class="num">27,0</td><td class="neg">−5% con precio más bajo</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">136,2k€</td><td class="num">148,5k€</td><td>+9% crudo · <span class="neg">−16% vs contrafactual</span></td></tr>
+        <tr><td>GM realizado</td><td class="num">78,1%</td><td class="num">81,9%</td><td>Sube por mix/temporada, no por precio</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">+8,4%</td><td class="num">+1,9%</td><td>Rollback vs hoy, precios al 18/8 · 6 días con match</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">+9,2%</td><td class="num">+2,1%</td><td>7 días con match · Saily bajó −3% a −14% durante la ventana</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      
+    </div>
+  </details>
+</div>
+</details>
+<details class="dest">
+  <summary>
+    <span class="iso">🇨🇭 CHE</span>
+    <span class="chip rb">RollBack</span>
+    <span class="oneline">El −4% no mostró retorno y cuesta ~0,9k€/día. El rollback nos deja <b>+8,9% Airalo / +8,5% Saily</b>: dentro de banda.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar rb">
+    <div class="a1">Acción: <span>volver al precio del 23/7</span> esta semana.</div>
+    <div class="a2">Rollback completo del recorte −4% (lanzado 24/7). Nos deja +8,9% vs Airalo y +8,5% vs Saily: dentro de banda.</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Bajamos <b>−4%</b>. Hoy estamos a <b>+2,4% / +2,3%</b> de Airalo y Saily; con el precio viejo estaríamos a <b>+8,9% / +8,5%</b>: dentro de banda.</div></div>
+    <div class="vstep"><span class="n">2</span><div>El volumen ajustado quedó entre <b>0% y −22%</b> según el contrafactual: sin señal que pague el recorte.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Mantener cuesta <b>~0,9k€/día</b> por un −4% sin retorno visible.</div></div>
+    <div class="vfin">Único matiz: el gap por día no es lineal, en d5 el rollback queda <b>+13,9%</b> vs Airalo. Declarado en la card.</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="q">
+      <h3>1. ¿El recorte compró volumen? <span class="tag">Sin señal que pague</span></h3>
+      <p>Órdenes +33% crudo con la temporada más fuerte de la ola: ajustado <mark>0% / −22%</mark> (rango ancho).
+      CR +4%, la única en positivo: débil. Mantener: <mark>~0,9k€/día</mark> [estimación] por un −4% sin retorno visible.</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">Moderado</span></h3>
+      <p><mark>74,4% → 71,0%</mark>, 7% abajo del diseño: iccid fijo sobre el AOV más chico de la ola (13€). Sesgo a devolver todo.</p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Dónde queremos quedar parados? <span class="tag">Dentro de banda: rollback</span></h3>
+      <p>Rollback: <mark>+8,9% Airalo / +8,5% Saily</mark> (mediana +9,2%). Hoy +2,4% / +2,3%.
+      En diseño era +5,5% / +3,7%: los dos bajaron precios durante la ventana.</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p><b>Banda cumplida y sin señal de volumen: retener es margen regalado con precisión.</b>
+        El monitoring proponía −1% a −3%; sin evidencia, rollback completo.</p>
+      </div>
+      <p>No lineal, declarado: en d5 el rollback queda <mark>+13,9%</mark> vs Airalo (d3 +3,5%, d10 +7,4%).</p>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">1.217</td><td class="num">1.615</td><td>+33% crudo · <mark>0% / −22%</mark> ajustado: rango ancho, sin señal que pague</td></tr>
+        <tr><td>CR %</td><td class="num">39,2</td><td class="num">41,0</td><td>+4%: la única que subió en la ola. Débil.</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">16,1k€</td><td class="num">20,4k€</td><td>+27% crudo · entre <span class="neg">−4% y −19%</span> vs contrafactual</td></tr>
+        <tr><td>GM realizado</td><td class="num">74,4%</td><td class="num">71,0%</td><td class="neg">7% abajo del diseño: iccid fijo sobre AOV 13€</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">+8,9%</td><td class="num">+2,4%</td><td>6 días con match · mediana +9,2% · d5 +13,9% declarado</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">+8,5%</td><td class="num">+2,3%</td><td>Prácticamente igual que Airalo</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      
+    </div>
+  </details>
+</div>
+</details>
+<details class="dest">
+  <summary>
+    <span class="iso">🇲🇦 MAR</span>
+    <span class="chip it">Fixed price · ~+8%</span>
+    <span class="oneline">La suba +15,8% gana margen (~+1,2k€/día) pero perdió volumen real. Hoy <b>−13,3% Airalo / +9,8% Saily</b>: devolvemos la mitad, neto ~+8%.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar it">
+    <div class="a1">Acción: bajar ~−7% desde hoy (devolver la mitad de la suba).</div>
+    <div class="a2">La suba fue +15,8%, lanzada el 15/7. Neto final ~+8% sobre el precio original. El monitoring propone sostener la suba completa: la diferencia está en el racional.</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Subimos <b>+15,8%</b>. Hoy seguimos los más baratos vs Airalo (<b>−13,3%</b>) pero quedamos <b>+9,8% arriba de Saily</b>; con el precio viejo: −25,4% / −4,3%.</div></div>
+    <div class="vstep"><span class="n">2</span><div>Acá el volumen sí respondió: ajustado, órdenes <b>−21,6%</b>. Conversión, no tráfico. La única caída real de la ola.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Aun así, mantener la suba <b>gana ~+1,2k€/día</b> de margen: el precio unitario compensa el volumen perdido.</div></div>
+    <div class="vfin">Devolver la mitad busca recomprar volumen quedando cerca de Saily (<b>~+2,5%</b>) y lejos de Airalo (<b>~−20%</b>) [estimación].</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="raros">
+      <div class="dt">El caso espejo de USA</div>
+      <p>En USA bajamos y el volumen no apareció. Acá subimos y el volumen <b>sí</b> se cayó.
+      El único destino de la ola donde el precio mostró dientes.</p>
+    </div>
+
+    <div class="q">
+      <h3>1. ¿La suba perdió volumen? <span class="tag">Cerrada: sí</span></h3>
+      <p>Órdenes −11% con sesiones planas: es <mark>conversión</mark> (CR 28,7% → 25,2%). Ajustado <mark>−21,6%</mark>
+      (el YoY da −71%, solo direccional).</p>
+      <p>En plata: facturación solo <mark>−9,3%</mark>, cada orden vale +15,8% más. Mantener <mark>gana ~+1,2k€/día</mark> [estimación].</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">Trampa: no es el precio</span></h3>
+      <p>71,4% post, pero la mejora es migración de carrier, no precio. Pre excluido (fraude). <b>Acompaña, no decide.</b></p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Dónde queremos quedar parados? <span class="tag">Saily quedó abajo nuestro</span></h3>
+      <p>Airalo: <mark>−25,4% → −13,3%</mark>, seguimos los más baratos. Saily: <mark>−4,3% → +9,8%</mark>, nos cruzó de lado.</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p><b>Devolver la mitad (~+8% neto): recomprar volumen quedando ~+2,5% Saily / ~−20% Airalo [estimación].</b></p>
+        <p>El monitoring propone sostener la suba y la plata de hoy lo avala. Pero la caída es real y es nuestra:
+        diseño vs 18/8 muestra que ni Airalo ni Saily se movieron en Marruecos.</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">1.497</td><td class="num">1.326</td><td class="neg">−11% crudo · −21,6% ajustado: caída real</td></tr>
+        <tr><td>CR % (sesiones planas)</td><td class="num">28,7</td><td class="num">25,2</td><td class="neg">−12%: la caída es conversión, no tráfico</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">29,1k€</td><td class="num">32,7k€</td><td>+12% crudo · <span class="neg">−9,3% vs contrafactual</span> (YoY: −24%, direccional)</td></tr>
+        <tr><td>Margen €/día (mantener vs revertir)</td><td class="num">—</td><td class="num">+1,2k€/día</td><td>Único destino de la ola donde mantener gana [estimación]</td></tr>
+        <tr><td>GM realizado</td><td class="num">excluido</td><td class="num">71,4%</td><td>Pre contaminado (fraude) · mejora = migración de carrier</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">−25,4%</td><td class="num">−13,3%</td><td>4 días con match · no lineal: −17% (d3) a −7% (d10)</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">−4,3%</td><td class="num">+9,8%</td><td>5 días con match · la suba nos dejó arriba de Saily</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      <div class="aline"><b>Extra Marruecos:</b> Saily es la referencia de techo del nuevo precio (~+2,5%). Check puntual a las 2 semanas por si reaccionan a la baja.</div>
+    </div>
+  </details>
+</div>
+</details>
+<details class="dest">
+  <summary>
+    <span class="iso">🇲🇽 MEX</span>
+    <span class="chip it">Fixed price · ~−7%</span>
+    <span class="oneline">El −12% no compró volumen y hoy estamos −5,6% bajo Saily. El rollback nos deja <b>+17,6% Airalo / +8,6% Saily</b>, fuera de banda: neto −7% aterriza en ~+9% / ~+1%.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar it">
+    <div class="a1">Acción: subir ~+6% desde hoy → fixed price, neto ~−7%.</div>
+    <div class="a2">El recorte fue −12%, lanzado el 16/7. Rollback nos dejaría +17,6% Airalo / +8,6% Saily, fuera de banda: el neto −7% aterriza en ~+9% / ~+1%.</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Bajamos <b>−12%</b>. Hoy estamos a <b>+2,3% de Airalo</b> y <b>−5,6% debajo de Saily</b> (regalando); con el precio viejo: +17,6% / +8,6%.</div></div>
+    <div class="vstep"><span class="n">2</span><div>El volumen no respondió: ajustado, órdenes entre <b>−3,9% y −13%</b>. CR plana con −12% de precio.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Rollback total queda <b>fuera de banda</b> (+17,6%). Y el margen real es el más flaco de la ola: GM <b>49,8%</b>, 13% bajo diseño.</div></div>
+    <div class="vfin">El neto −7% aterriza en <b>~+9% vs Airalo</b> y <b>~+1% vs Saily</b> [estimación]. Cambio vs el viernes: era RollBack, la banda lo convierte en fixed.</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="q">
+      <h3>1. ¿El recorte compró volumen? <span class="tag">Cerrada: no</span></h3>
+      <p>Órdenes +14% crudo, ajustado <mark>−3,9% / −13%</mark>. CR plana con −12% de precio.
+      Facturación <mark>−16% a −20% vs contrafactual</mark>. Retener −7% vs rollback: ~1,9k€/día [estimación].</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">El más flaco de la ola</span></h3>
+      <p><mark>51,8% → 49,8%</mark>, 13% abajo del diseño: data 42,5% del revenue, el peor de los 8.
+      <b>Cada punto de precio vale más.</b></p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Dónde queremos quedar parados? <span class="tag">La banda decide</span></h3>
+      <p>Rollback: <mark>+17,6% Airalo / +8,6% Saily</mark>, fuera de banda. Hoy +2,3% / <mark>−5,6%: debajo de Saily, regalando</mark>.</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p><b>Neto −7% → ~+9% Airalo / ~+1% Saily [estimación].</b>
+        Cambio vs el viernes (era RollBack): el same-day mostró el gap real más alto que el weighted.</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">966</td><td class="num">1.102</td><td>+14% crudo · <span class="neg">−3,9% a −13%</span> ajustado</td></tr>
+        <tr><td>CR %</td><td class="num">20,6</td><td class="num">20,1</td><td>−2%: sin respuesta al precio −12%</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">24,1k€</td><td class="num">27,4k€</td><td>+14% crudo · <span class="neg">−16% a −20%</span> vs contrafactual</td></tr>
+        <tr><td>GM realizado</td><td class="num">51,8%</td><td class="num">49,8%</td><td class="neg">13% abajo del diseño · data 42,5%, el peor de la ola</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">+17,6%</td><td class="num">+2,3%</td><td>Rollback vs hoy · 6 días con match</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">+8,6%</td><td class="num">−5,6%</td><td>Hoy estamos debajo de Saily: regalando</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      
+    </div>
+  </details>
+</div>
+</details>
+<details class="dest">
+  <summary>
+    <span class="iso">🇵🇪 PER</span>
+    <span class="chip it">Fixed price · ~−7%</span>
+    <span class="oneline">El −10% no compró volumen. El rollback nos deja <b>+18,0% Airalo / +18,9% Saily</b>, fuera de banda: neto −7% aterriza en ~+10% / ~+11%.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar it">
+    <div class="a1">Acción: subir ~+4/5% desde hoy → fixed price, neto ~−7%.</div>
+    <div class="a2">El recorte fue −10%, lanzado el 16/7. Rollback nos dejaría +18,0% Airalo / +18,9% Saily, fuera de banda: el neto −7% aterriza en ~+10% / ~+11%. Coincide con el extremo del rango del monitoring (−7% a −5%).</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Bajamos <b>−10%</b>. Hoy estamos a <b>+4,0% / +6,3%</b> de Airalo y Saily; con el precio viejo estaríamos a <b>+18,0% / +18,9%</b>.</div></div>
+    <div class="vstep"><span class="n">2</span><div>El volumen no respondió: ajustado, órdenes <b>+2,1%</b> (nuestra curva) y <b>+3%</b> (YoY del monitoring). Ruido.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Rollback total nos devuelve al gap de <b>+18%</b>, fuera de la banda de +10%. Y el margen real quedó flaco: GM <b>61,5% → 54,3%</b>.</div></div>
+    <div class="vfin">Neto −7% → <b>~+10% Airalo / ~+11% Saily</b> [estimación]. Precio fijo, una sola movida.</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="q">
+      <h3>1. ¿El recorte compró volumen? <span class="tag">Cerrada: no</span></h3>
+      <p>Órdenes +25% crudo, era temporada: ajustado <mark>+2,1% / +3%</mark> (dos contrafactuales, coinciden: ruido).
+      Facturación entre <mark>−9% y −4% vs contrafactual</mark>: mantener todo el recorte, ~1,3k€/día [estimación].</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">Acá sí: margen flaco</span></h3>
+      <p><mark>61,5% → 54,3%</mark>, 16% abajo del diseño: costo de data (40% del revenue).
+      <b>Margen flaco → cada punto de precio vale más.</b></p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Dónde queremos quedar parados? <span class="tag">La banda decide</span></h3>
+      <p>Rollback: <mark>+18,0% Airalo / +18,9% Saily</mark>, fuera de banda. Hoy +4,0% / +6,3% (el diseño apuntaba a ~+3%).</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p><b>Neto −7% → ~+10% Airalo / ~+11% Saily [estimación].</b>
+        Coincide con el extremo del rango del monitoring (−7% a −5%).</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">365</td><td class="num">454</td><td>+25% crudo · <mark>+2,1% / +3%</mark> ajustado: ruido</td></tr>
+        <tr><td>CR %</td><td class="num">23,1</td><td class="num">22,3</td><td>−3%: sin respuesta al precio más bajo</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">12,2k€</td><td class="num">14,5k€</td><td>+19% crudo · entre <span class="neg">−9%</span> y −4% vs contrafactual</td></tr>
+        <tr><td>GM realizado</td><td class="num">61,5%</td><td class="num">54,3%</td><td class="neg">16% abajo del diseño: costo de data, no precio</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">+18,0%</td><td class="num">+4,0%</td><td>Rollback vs hoy, precios al 18/8 · 6 días con match</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">+18,9%</td><td class="num">+6,3%</td><td>6 días con match · no lineal: +34% (d5) a −8% (d15-25)</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      
+    </div>
+  </details>
+</div>
+</details>
+<details class="dest">
+  <summary>
+    <span class="iso">🇪🇸 ESP</span>
+    <span class="chip it">Fixed price · ~−6%</span>
+    <span class="oneline">El −10% no compró volumen. El rollback nos deja <b>+15,8% Airalo / +15,5% Saily</b>, fuera de banda: neto −6% aterriza en ~+9% / ~+9%.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar it">
+    <div class="a1">Acción: subir ~+5% desde hoy → fixed price, neto ~−6%.</div>
+    <div class="a2">El recorte fue −10%, lanzado el 24/7. Rollback nos dejaría +15,8% Airalo / +15,5% Saily, fuera de banda: el neto −6% aterriza en ~+9% en ambos.</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Bajamos <b>−10%</b>. Hoy estamos a <b>+3,6% / +1,5%</b> de Airalo y Saily; con el precio viejo estaríamos a <b>+15,8% / +15,5%</b>.</div></div>
+    <div class="vstep"><span class="n">2</span><div>El volumen no respondió: ajustado <b>+1,2% / −1%</b>. CR −8% y Revenue/Session −18%.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Rollback total queda <b>fuera de banda</b> (+15,8%, mediana +17,2%). El neto <b>−6%</b> aterriza en ~+9% en ambos.</div></div>
+    <div class="vfin">Cambio vs el viernes: era RollBack. El same-day v2 mostró el gap real más alto que el weighted, y la banda lo convierte en fixed.</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="q">
+      <h3>1. ¿El recorte compró volumen? <span class="tag">Cerrada: no</span></h3>
+      <p>Órdenes +13% crudo, ajustado <mark>+1,2% / −1%</mark>: ruido. CR −8%, Revenue/Session −18%.
+      Retener −6% cuesta ~2,1k€/día [estimación].</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">Moderado</span></h3>
+      <p><mark>81,0% → 76,4%</mark>, 6% abajo del diseño. Ni el agujero de MEX/PER ni el colchón de USA. Sesgo a devolver.</p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Dónde queremos quedar parados? <span class="tag">La banda decide</span></h3>
+      <p>Rollback: <mark>+15,8% Airalo / +15,5% Saily</mark> (mediana +17,2%), fuera de banda. Hoy +3,6% / +1,5%.</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p><b>Neto −6% → ~+9% Airalo / ~+9% Saily [estimación].</b>
+        Cambio vs el viernes (era RollBack): el same-day dio el gap real más alto que el weighted.</p>
+      </div>
+      <p>No lineal, declarado: d1-3 sin cambio (ancla); el gap post va de +8,2% (d3) a +1,2% (d15).</p>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">1.515</td><td class="num">1.715</td><td>+13% crudo · <mark>+1,2% / −1%</mark> ajustado: ruido</td></tr>
+        <tr><td>CR %</td><td class="num">26,3</td><td class="num">24,3</td><td class="neg">−8% con precio más bajo</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">35,5k€</td><td class="num">35,6k€</td><td>0% crudo · entre <span class="neg">−9%</span> y +2% vs contrafactual</td></tr>
+        <tr><td>GM realizado</td><td class="num">81,0%</td><td class="num">76,4%</td><td>6% abajo del diseño</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">+15,8%</td><td class="num">+3,6%</td><td>Rollback vs hoy · 6 días con match · mediana pre +17,2%</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">+15,5%</td><td class="num">+1,5%</td><td>Saily cobra lo mismo en ESP e ITA (confirmado)</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      
+    </div>
+  </details>
+</div>
+</details>
+<details class="dest">
+  <summary>
+    <span class="iso">🇮🇹 ITA</span>
+    <span class="chip it">Fixed price · ~−5,5%</span>
+    <span class="oneline">El −10% no compró volumen. El rollback nos deja <b>+15,4% Airalo / +15,5% Saily</b>, fuera de banda: neto −5,5% aterriza en ~+9% / ~+9%.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar it">
+    <div class="a1">Acción: subir ~+5,5% desde hoy → fixed price, neto ~−5,5%.</div>
+    <div class="a2">El recorte fue −10%, lanzado el 24/7. Rollback nos dejaría +15,4% Airalo / +15,5% Saily, fuera de banda: el neto −5,5% aterriza en ~+9% en ambos.</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Bajamos <b>−10%</b>. Hoy estamos a <b>+3,3% / +1,5%</b> de Airalo y Saily; con el precio viejo estaríamos a <b>+15,4% / +15,5%</b>.</div></div>
+    <div class="vstep"><span class="n">2</span><div>El volumen no respondió: ajustado <b>+0,2% / −8%</b>. CR y Revenue/Session en contra.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Rollback total queda <b>fuera de banda</b> (+15,4% / +15,5%). El neto <b>−5,5%</b> aterriza en ~+9% en ambos.</div></div>
+    <div class="vfin">El rango del monitoring (−3% a 0) estaba calibrado al weighted; el same-day pide retener más. Misma regla, mejor dato.</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="q">
+      <h3>1. ¿El recorte compró volumen? <span class="tag">Cerrada: no</span></h3>
+      <p>Órdenes +14% crudo, ajustado <mark>+0,2% / −8%</mark>. CR y Revenue/Session en contra.
+      Retener −5,5% cuesta ~1,2k€/día [estimación].</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">Moderado</span></h3>
+      <p><mark>80,7% → 74,4%</mark>, 9% abajo del diseño: el mecánico explica ~1,7%, el resto es costo. Sesgo a devolver.</p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Dónde queremos quedar parados? <span class="tag">La banda decide</span></h3>
+      <p>Rollback: <mark>+15,4% Airalo / +15,5% Saily</mark>, fuera de banda. Hoy +3,3% / +1,5%.</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p><b>Neto −5,5% → ~+9% en ambos [estimación].</b>
+        El rango del monitoring (−3% a 0) estaba calibrado al weighted; el same-day pide más.</p>
+      </div>
+      <p>No lineal, declarado: d1-3 sin cambio (ancla); gap post de +8,2% (d3) a +0,8% (d30).</p>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">881</td><td class="num">1.004</td><td>+14% crudo · <mark>+0,2% / −8%</mark> ajustado</td></tr>
+        <tr><td>CR %</td><td class="num">23,2</td><td class="num">22,1</td><td class="neg">−5% con precio más bajo</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">22,2k€</td><td class="num">22,6k€</td><td>+2% crudo · entre <span class="neg">−10%</span> y −1% vs contrafactual</td></tr>
+        <tr><td>GM realizado</td><td class="num">80,7%</td><td class="num">74,4%</td><td class="neg">9% abajo del diseño</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">+15,4%</td><td class="num">+3,3%</td><td>Rollback vs hoy · 6 días con match · mediana pre +15,1%</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">+15,5%</td><td class="num">+1,5%</td><td>Saily cobra lo mismo en ESP e ITA (confirmado)</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      
+    </div>
+  </details>
+</div>
+</details>
+<details class="dest">
+  <summary>
+    <span class="iso">🇨🇦 CAN</span>
+    <span class="chip it">Fixed price · ~−2%</span>
+    <span class="oneline">El −10% no compró nada (elasticidad 0,03). El rollback nos deja <b>+10,4% Airalo / +19,1% Saily</b>, al borde de la banda: neto −2% aterriza en ~+8% / ~+17%.</span>
+    <span class="caret">▾</span>
+  </summary>
+  <div class="body">
+  
+  <div class="abar it">
+    <div class="a1">Acción: subir ~+9% desde hoy → fixed price, neto ~−2%.</div>
+    <div class="a2">El recorte fue −10%, lanzado el 15/7. Rollback queda +10,4% Airalo / +19,1% Saily, justo en el techo: retener −2% aterriza en ~+8,2% / ~+17%. Rollback completo también es defendible (~0,6k€/día de diferencia).</div>
+  </div>
+  <div class="vistazo">
+    <div class="vtit">Por qué, en tres pasos · gaps vs competencia a precios del 18/8</div>
+    <div class="vstep"><span class="n">1</span><div>Bajamos <b>−10%</b>. Hoy estamos a <b>−1,3% / +6,5%</b> de Airalo y Saily; con el precio viejo estaríamos a <b>+10,4% / +19,1%</b>.</div></div>
+    <div class="vstep"><span class="n">2</span><div>El volumen no respondió: ajustado <b>−1,7% / 0%</b>, elasticidad 0,03. Nada.</div></div>
+    <div class="vstep"><span class="n">3</span><div>Rollback queda <b>+10,4%</b>, justo en el techo. Retener <b>−2%</b> aterriza en ~+8,2% y cumple la banda.</div></div>
+    <div class="vfin">Caso al borde: fixed −2% o rollback completo separados por <b>~0,6k€/día</b>. Elijo la banda; si preferís rollback completo, no me peleo.</div>
+  </div>
+  
+  <details class="panel">
+    <summary><span class="grow">El racional completo: tres preguntas, tres respuestas distintas</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+    <div class="q">
+      <h3>1. ¿El recorte compró volumen? <span class="tag">Cerrada: no</span></h3>
+      <p>Órdenes +18% crudo, ajustado <mark>−1,7% / 0%</mark>: nada. Elasticidad 0,03, la más baja de la ola. CR −9%.
+      Retener −2% cuesta ~0,6k€/día [estimación].</p>
+    </div>
+
+    <div class="q">
+      <h3>2. ¿El GM me dice algo? <span class="tag">Trampa: es neutral</span></h3>
+      <p>62,1% → 69,8% por mix y temporada (el recorte solo resta ~2,3%). <b>Sale de la balanza.</b></p>
+    </div>
+
+    <div class="q">
+      <h3>3. ¿Dónde queremos quedar parados? <span class="tag">Al borde de la banda</span></h3>
+      <p>Rollback: <mark>+10,4% Airalo / +19,1% Saily</mark>. Hoy −1,3% / +6,5%.</p>
+      <div class="destacado">
+        <div class="dt">El punto central</div>
+        <p><b>Retener −2% → ~+8,2% Airalo / ~+17% Saily [estimación]. Rollback completo también es defendible: ~0,6k€/día de diferencia.</b></p>
+        <p>Contra Saily la banda no se cumple en ningún escenario: queda como dato. El monitoring proponía −5%, entre mis dos opciones.</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Pre</th><th>Post</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>Órdenes/día</td><td class="num">782</td><td class="num">919</td><td>+18% crudo · <mark>−1,7% a 0%</mark> ajustado: nada</td></tr>
+        <tr><td>CR %</td><td class="num">20,1</td><td class="num">18,3</td><td class="neg">−9% con precio más bajo</td></tr>
+        <tr><td>Net revenue/día</td><td class="num">29,2k€</td><td class="num">32,0k€</td><td>+10% crudo · entre <span class="neg">−12%</span> y 0% vs contrafactual</td></tr>
+        <tr><td>GM realizado</td><td class="num">62,1%</td><td class="num">69,8%</td><td>Sube por mix/temporada, no por precio</td></tr>
+        <tr><td>Gap vs Airalo (same-day)</td><td class="num">+10,4%</td><td class="num">−1,3%</td><td>Rollback vs hoy · 6 días con match</td></tr>
+        <tr><td>Gap vs Saily (same-day)</td><td class="num">+19,1%</td><td class="num">+6,5%</td><td>7 días con match · caros vs Saily en todos los escenarios</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  
+  <details class="panel dark">
+    <summary><span class="grow">Después del cambio: qué auditamos</span><span class="mini">4 métricas · lectura a los 14 días</span><span class="pcaret">ver detalle <span class="arr">▾</span></span></summary>
+    <div class="pbody">
+      <div class="aline"><b>Mismo monitoring de siempre, nuevo pre/post.</b> Pre = las últimas 2-3 semanas con el precio del experimento. Post = desde que aplicamos el cambio.</div>
+      <div class="agrid">
+        <div class="ab"><div class="k">CV% same-day</div><div class="d">La más limpia: neutraliza tráfico</div></div>
+        <div class="ab"><div class="k">Órdenes vs estacionalidad</div><div class="d">Septiembre cae solo: un crudo va a dar rojo sí o sí</div></div>
+        <div class="ab"><div class="k">ARPU</div><div class="d">Debería moverse mecánico con el precio</div></div>
+        <div class="ab"><div class="k">GM realizado</div><div class="d">Query semanal ya validada (matched, sin promos)</div></div>
+      </div>
+      <div class="aline"><b>Competencia:</b> check de gap same-day a las 2 semanas, por si Airalo o Saily reaccionan.</div>
+      <div class="aline"><b>Timing:</b> no leemos nada antes de 14 días.</div>
+      
+    </div>
+  </details>
+</div>
+</details>
+
+<footer>
+  <b>Fuentes:</b> Pricing Experiments Monitoring (Fer, corte 16/8) · GM realizado: query BQ replicada 18/8 (matched trip_days, base sin promos) · Competencia: tabs Competencia por experimento, precios manuales al 18/8, same-day · Contrafactual estacional: análisis interno multi-año · Ajuste YoY (Adj Δ%): Δ2026 − Δ2025 mismas ventanas, direccional según notas del propio monitoring.
+  Todo direccional hasta tener A/B.
+</footer>
+</div>
+</body>
+</html>

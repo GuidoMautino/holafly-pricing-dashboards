@@ -1,0 +1,348 @@
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PPC-179 · Revenue split AT&T</title>
+<style>
+:root{--green:#16a06a;--green-d:#0f7a50;--ink:#16242f;--muted:#6b7c8a;--line:#e7edf1;--bg:#f7f9fb;--card:#fff;
+--red:#e15241;--red-d:#c0392b;--warn:#e8a317;--warn-t:#8a5a00;--blue:#3949ab;--blue-d:#1c3d5a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;
+color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:40;background:rgba(247,249,251,.9);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.nav .in{max-width:min(1600px,94vw);margin:0 auto;padding:11px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nav .in svg{height:22px;width:auto;flex:none}
+.brand{font-weight:800;font-size:13px;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.navtabs{display:flex;gap:4px;margin-left:8px;flex-wrap:wrap}
+.navtabs button{border:0;background:none;padding:7px 12px;font-size:13.5px;font-weight:600;color:var(--muted);
+cursor:pointer;border-radius:9px;transition:.15s;font-family:inherit}
+.navtabs button:hover{color:var(--ink);background:#eef3f6}
+.navtabs button.on{color:var(--ink);background:#e8f5ee}
+.spacer{flex:1}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);padding:7px 12px;font-size:13px;font-weight:700;color:var(--muted);
+cursor:pointer;transition:.12s;font-family:inherit}
+.seg button.on{background:var(--ink);color:#fff}
+.wrap{max-width:min(1600px,94vw);margin:0 auto;padding:24px 22px 80px}
+.asofbar{font-size:12px;font-weight:700;color:#5a6b78;background:#f2f6f9;border:1px solid #e0e8ee;
+border-radius:8px;padding:7px 11px;margin:0 0 14px}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:-.02em}
+.tagline{color:var(--muted);font-size:15px;margin:0 0 20px;max-width:760px}
+.view{display:none}.view.on{display:block;animation:fadeUp .3s cubic-bezier(.2,.7,.2,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.inftitular{font-size:19px;font-weight:800;line-height:1.45;color:var(--ink);background:#f7fafc;
+border-left:4px solid var(--blue-d);border-radius:0 10px 10px 0;padding:14px 16px;margin:0 0 14px}
+.inftitular.ok{border-left-color:var(--green)}
+.inftitular.warn{border-left-color:var(--warn)}
+.infh{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5a6b78;margin:22px 0 9px}
+.infcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin:0 0 14px}
+.infcard{background:var(--card);border:1px solid #e2e9ee;border-radius:12px;padding:14px 15px;box-shadow:0 1px 3px rgba(20,40,60,.05)}
+.ictit{font-weight:800;font-size:14px;line-height:1.35;color:var(--ink);margin:0 0 6px}
+.ictxt{font-size:13px;line-height:1.6;color:#3d4b56}
+.icsup{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed #e2e9ee}
+.icnum{display:inline-flex;flex-direction:column;background:#f2f6f9;border-radius:8px;padding:5px 9px;min-width:52px}
+.icnum.g{background:#e6f6ee}.icnum.r{background:#fdecea}.icnum.w{background:#fdf3dd}
+.ival{font-size:15px;font-weight:800;color:var(--ink);line-height:1.15;font-variant-numeric:tabular-nums}
+.icnum.g .ival{color:var(--green-d)}.icnum.r .ival{color:var(--red-d)}.icnum.w .ival{color:var(--warn-t)}
+.iclab{font-size:10px;font-weight:700;color:var(--muted);line-height:1.25;margin-top:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.ev{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+padding:3px 9px;border-radius:7px;white-space:nowrap}
+.ev.m{background:#e6f6ee;color:var(--green-d)}
+.ev.i{background:#eef1f8;color:var(--blue)}
+.ev.s{background:#fdf3dd;color:var(--warn-t)}
+.ev.n{background:#fdecea;color:var(--red-d)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+border-radius:12px;overflow:hidden;font-size:13.5px;margin:0 0 10px}
+th{background:#f2f6f9;color:#33424e;font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-weight:800;
+padding:10px 12px;text-align:right;vertical-align:bottom;border-bottom:1px solid var(--line)}
+th:first-child{text-align:left}
+td{padding:9px 12px;text-align:right;font-variant-numeric:tabular-nums;border-top:1px solid #eef2f5}
+td:first-child{text-align:left;font-weight:700}
+tbody tr:nth-child(even) td{background:#fbfcfd}
+tbody tr:hover td{background:#f5f8fa}
+.sublbl td{background:#fff!important;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+color:var(--muted);font-weight:800;padding:4px 12px;border-top:0}
+.neg{color:var(--red-d);font-weight:800}.pos{color:var(--green-d);font-weight:800}
+.g-ok{background:#e6f6ee!important}.g-w{background:#fdf3dd!important}.g-r{background:#fdecea!important}.g-n{background:#f2f6f9!important}
+.note{font-size:12.5px;color:#3d4b56;line-height:1.6;margin:0 0 18px;background:#fbfcfd;
+border:1px solid var(--line);border-radius:10px;padding:11px 14px}
+.note b{color:var(--ink)}
+.infnp{background:#fbfcfd;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:0 0 16px}
+.npitem{border-top:1px solid #eef2f5}.npitem:first-of-type{border-top:0}
+.npitem>summary{cursor:pointer;list-style:none;padding:9px 0;font-size:13.5px;font-weight:700;
+color:var(--ink);display:flex;align-items:center;gap:9px}
+.npitem>summary::-webkit-details-marker{display:none}
+.npitem>summary::after{content:'+';margin-left:auto;color:#8a97a3;font-weight:800}
+.npitem[open]>summary::after{content:'\2212'}
+.npdot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:#8a97a3}
+.npdot.r{background:var(--red-d)}.npdot.w{background:var(--warn)}.npdot.g{background:var(--green)}
+.nptxt{font-size:13px;line-height:1.6;color:#3d4b56;padding:0 0 11px 17px}
+.infmet{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 15px;margin:22px 0 0}
+.infmet>summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:800;font-size:13.5px;display:flex;gap:9px;align-items:center}
+.infmet>summary::-webkit-details-marker{display:none}
+.infmet>summary::after{content:'+';margin-left:auto;color:#8a97a3}
+.infmet[open]>summary::after{content:'\2212'}
+.metbody{padding:0 0 15px;font-size:13px;color:#3d4b56;line-height:1.65;border-top:1px solid var(--line);padding-top:13px}
+.metbody li{margin-bottom:7px}
+.cta{display:inline-block;background:var(--green);color:#fff;text-decoration:none;font-weight:800;font-size:14px;
+padding:12px 20px;border-radius:10px;margin-top:6px}
+.cta:hover{background:var(--green-d)}
+.pager{display:flex;align-items:center;gap:12px;margin:26px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.pager .step{font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.pager .sp{flex:1}
+.pgbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:11px 17px;
+font:inherit;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;transition:.14s;
+display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;min-width:150px}
+.pgbtn:hover{border-color:var(--green);background:#f4fbf7}
+.pgbtn small{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.pgbtn.next{border-color:var(--green);background:#f0f9f4;align-items:flex-end;text-align:right}
+.pgbtn.next:hover{background:#e6f6ee}
+.pgbtn:active{transform:scale(.98)}
+@media(max-width:760px){.wrap{padding:18px 14px 60px}h1{font-size:22px}table{font-size:12px}th,td{padding:7px 8px}
+.nav .in{padding:9px 14px;gap:9px}.navtabs button{padding:6px 9px;font-size:12.5px}}
+</style>
+<div class="nav"><div class="in"><svg width="104" height="32" viewBox="0 0 104 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M78.0563 7.28786C77.7143 7.03453 77.3245 6.90648 76.8856 6.90648C76.0089 6.90648 75.5707 7.44977 75.5707 8.53587V10.1959H78.9861V13.4237H75.5707V25.536H72.1398V13.4237H69.8199V10.1959H72.1398V8.10552C72.1398 6.69136 72.5259 5.57974 73.2977 4.76994C74.0697 3.96063 75.0274 3.55566 76.171 3.55566C77.1046 3.55566 77.853 3.69412 78.4152 3.97066C78.8652 4.19243 79.2317 4.43076 79.5171 4.68518L78.0563 7.28786ZM47.8396 25.535H51.7185V4.20114H47.8396V25.535ZM40.4703 21.4441C39.6729 22.3335 38.6766 22.7783 37.4808 22.7783C36.2648 22.7783 35.2685 22.3387 34.4912 21.4594C33.7139 20.5806 33.3253 19.456 33.3253 18.0859C33.3253 16.7366 33.7139 15.6224 34.4912 14.7431C35.2685 13.8642 36.2648 13.4244 37.4808 13.4244C38.6766 13.4244 39.6729 13.8642 40.4703 14.7431C41.2672 15.6224 41.666 16.7366 41.666 18.0859C41.666 19.4354 41.2672 20.5547 40.4703 21.4441ZM41.4577 11.093C40.2815 10.3777 38.9562 10.0198 37.4817 10.0198C36.0266 10.0198 34.7061 10.3777 33.5206 11.093C32.3345 11.8089 31.4077 12.7799 30.7403 14.0066C30.0723 15.2333 29.7388 16.5931 29.7388 18.0853C29.7388 19.578 30.0723 20.9428 30.7403 22.1796C31.4077 23.4168 32.3294 24.393 33.5056 25.1084C34.6813 25.8239 36.0065 26.1818 37.4817 26.1818C38.9562 26.1818 40.2815 25.8239 41.4577 25.1084C42.6334 24.393 43.5601 23.4168 44.2379 22.1796C44.9152 20.9428 45.2543 19.578 45.2543 18.0853C45.2543 16.5931 44.9152 15.2333 44.2379 14.0066C43.5601 12.7799 42.6334 11.8089 41.4577 11.093ZM85.3357 25.535H81.4568V4.20114H85.3357V25.535ZM99.2024 10.0198V17.8808C99.2024 19.1347 98.8883 20.1004 98.2605 20.7788C97.6324 21.4568 96.8102 21.796 95.7935 21.796C94.8366 21.796 94.0987 21.5185 93.5807 20.9637C93.062 20.4088 92.8031 19.4738 92.8031 18.1582V10.0198H89.2147V18.7748C89.2147 20.9535 89.6977 22.5774 90.6649 23.6457C91.6317 24.7146 92.9624 25.2487 94.6571 25.2487C95.7135 25.2487 96.5906 25.069 97.2886 24.7092C97.9862 24.3499 98.614 23.8205 99.1725 23.1216L99.2024 23.2141V24.8479C99.2024 26.122 98.8883 27.1032 98.2605 27.792C97.6324 28.4803 96.77 28.8247 95.6737 28.8247C94.171 28.8247 93.1875 28.2526 92.7199 27.1138L89.7546 28.6852C90.1545 29.4528 90.6868 30.1111 91.3528 30.659C92.4391 31.553 93.8795 32.0001 95.6737 32.0001C97.9062 32.0001 99.6509 31.3474 100.907 30.0424C102.163 28.737 102.791 26.9953 102.791 24.8171V10.0198H99.2024ZM63.5744 20.3843C63.5744 21.2637 63.2795 21.9537 62.6901 22.4545C62.1002 22.9557 61.3683 23.2059 60.4944 23.2059C59.6607 23.2059 59.005 23.0271 58.5276 22.6691C58.0496 22.3118 57.8111 21.8364 57.8111 21.2431C57.8111 20.6096 58.0293 20.1238 58.4666 19.7864C58.9036 19.449 59.5998 19.2089 60.5556 19.0656L63.5744 18.6057V20.3843ZM65.4346 11.4458C64.2349 10.495 62.7206 10.0198 60.8909 10.0198C59.1018 10.0198 57.6993 10.4031 56.6827 11.1698C55.6743 11.93 54.9569 13.0784 54.5287 14.6127L57.7937 15.2085C57.9356 14.5095 58.2198 13.9696 58.6496 13.5924C59.1271 13.1737 59.8337 12.964 60.7691 12.964C62.6393 12.964 63.5745 13.8944 63.5745 15.7546V15.9387L60.3116 16.3986C58.0749 16.7053 56.515 17.3033 55.6307 18.1927C54.7464 19.082 54.3042 20.1708 54.3042 21.4588C54.3042 22.3995 54.5377 23.2276 55.0056 23.9429C55.4731 24.6588 56.1034 25.2108 56.8961 25.599C57.6892 25.9872 58.563 26.1818 59.5187 26.1818C61.4904 26.1818 62.9035 25.5789 63.7574 24.3723L64.1538 25.7523H67.2338V15.6934C67.2338 13.8126 66.6341 12.3965 65.4346 11.4458ZM13.1151 13.519C17.302 14.3547 20.3139 13.9602 22.2514 12.3347V4.20114H25.8592V25.535H22.2514V16.3925V16.1184C20.7622 16.8201 19.0142 17.1731 16.9913 17.1731C15.7959 17.1731 14.5039 17.0492 13.1151 16.8046V25.535H9.50866V15.9599C9.03462 15.8241 8.55231 15.6785 8.0594 15.5198C5.47279 14.6879 2.15403 15.0945 0.723524 15.7075L0 12.5309C2.07157 11.8148 5.76141 11.3847 8.9963 12.4255C9.16891 12.481 9.33908 12.534 9.50866 12.5865V4.20114H13.1151V12.9485V13.519Z" fill="#E6485C"/>
+</svg><span class="brand">PPC-179 · PRICING</span>
+<div class="navtabs" id="tabs"></div><div class="spacer"></div>
+<div class="seg"><button id="bes" class="on" onclick="setLang('es')">ES</button><button id="ben" onclick="setLang('en')">EN</button></div>
+</div></div>
+<div class="wrap"><div id="app"></div></div>
+<script>const D={"win": {"a": "2026-01-01", "b": "2026-07-31"}, "rev": 20810083.59, "cost": 4440729.16, "mar": 16369354.43, "gm": 0.7866068562005233, "be": 0.2133931437994767, "pt": 208100.8359, "esc": [{"k": "act", "n": "Modelo actual", "en": "Current model", "t": null, "tag": "hoy", "tagEn": "today"}, {"k": "t20", "n": "80/20", "en": "80/20", "t": 0.2, "tag": "no ofrecido", "tagEn": "not offered"}, {"k": "t30", "n": "70/30", "en": "70/30", "t": 0.3, "tag": "LO MÁXIMO OFRECIDO", "tagEn": "BEST OFFERED"}, {"k": "t40", "n": "60/40", "en": "60/40", "t": 0.4, "tag": "no ofrecido", "tagEn": "not offered"}, {"k": "t50", "n": "50/50", "en": "50/50", "t": 0.5, "tag": "propuesta inicial", "tagEn": "initial proposal"}], "cons": {"pl": 3.6729, "fd": 0.1371, "gd": 1.1938, "cgb": 0.4693, "niv": [1.1938, 2, 3, 5, 7, 10]}, "bandas": [{"lab": "1 día", "en": "1 day", "share": 0.019035135263860924, "gd": 1.9201, "l30": 1.3064138077988494, "l50": 2.9215853398678884}, {"lab": "2-3 días", "en": "2-3 days", "share": 0.037994796788884254, "gd": 1.3168, "l30": 1.9024078414660133, "l50": 3.5175793735350522}, {"lab": "4-7 días", "en": "4-7 days", "share": 0.27796062492659185, "gd": 1.1938, "l30": 2.055763903686341, "l50": 3.6210313232473896}, {"lab": "8-14 días", "en": "8-14 days", "share": 0.401106733765313, "gd": 1.2269, "l30": 2.0043255913062006, "l50": 3.4601534199872153}, {"lab": "15-30 días", "en": "15-30 days", "share": 0.21193936841473843, "gd": 1.0189, "l30": 1.7203494566375452, "l50": 2.9243554229703816}, {"lab": "31-90 días", "en": "31-90 days", "share": 0.05196334084061156, "gd": 0.6738, "l30": 1.101768591519284, "l50": 1.8519070956744086}], "comp": [{"n": "Airalo", "md": 0.0922953964194374, "mn": 0.034782608695652195, "mx": 0.10810810810810811, "npts": 6, "t17": 0.10000000000000009, "t815": 0.08567774936061379, "t1630": 0.08676470588235308}, {"n": "Saily", "md": 0.08692454772760727, "mn": 0.06860852781189686, "mx": 0.13952195664257938, "npts": 7, "t17": 0.11998106635650385, "t815": 0.0859550226487319, "t1630": 0.07794888077472617}, {"n": "Nomad", "md": 0.15944055944055946, "mn": 0.08181818181818179, "mx": 0.28125, "npts": 6, "t17": 0.19565217391304346, "t815": 0.14417613636363635, "t1630": 0.1711538461538462}, {"n": "Yesim", "md": 0.3911698169612502, "mn": 0.1206896551724137, "mx": 0.48069679849340874, "npts": 30, "t17": 0.13984674329501923, "t815": 0.3620803474826485, "t1630": 0.43566493955095}], "curva": [{"d": 3, "usd": 11.9, "eur": 11.37, "ud": 3.966666666666667, "ed": 3.7899999999999996, "comp": {"Airalo": 3.8333333333333335, "Saily": null, "Nomad": 3.6666666666666665, "Yesim": 3.48}}, {"d": 5, "usd": 20.5, "eur": 18.5, "ud": 4.1, "ed": 3.7, "comp": {"Airalo": 3.7, "Saily": 3.598, "Nomad": 3.2, "Yesim": 3.4799999999999995}}, {"d": 7, "usd": 27.5, "eur": 25.5, "ud": 3.9285714285714284, "ed": 3.642857142857143, "comp": {"Airalo": 3.5714285714285716, "Saily": 3.57, "Nomad": 3.2857142857142856, "Yesim": 3.48}}, {"d": 10, "usd": 36.5, "eur": 33.9, "ud": 3.65, "ed": 3.3899999999999997, "comp": {"Airalo": 3.4, "Saily": 3.399, "Nomad": 3.2, "Yesim": 2.827}}, {"d": 15, "usd": 50.5, "eur": 46.9, "ud": 3.3666666666666667, "ed": 3.1266666666666665, "comp": {"Airalo": 3.066666666666667, "Saily": 3.0660000000000003, "Nomad": 2.933333333333333, "Yesim": 2.32}}, {"d": 20, "usd": 60.9, "eur": 56.9, "ud": 3.045, "ed": 2.8449999999999998, "comp": {"Airalo": null, "Saily": 2.8495, "Nomad": 2.6, "Yesim": 2.06}}, {"d": 30, "usd": 73.9, "eur": 68.9, "ud": 2.4633333333333334, "ed": 2.296666666666667, "comp": {"Airalo": 2.2666666666666666, "Saily": 2.2663333333333333, "Nomad": null, "Yesim": 1.8}}], "d1": {"gm": 0.786606856, "floor": 0.5435836, "floorShare": 0.019035, "n": 90, "orig": 226, "costShare": 0.8948}, "fup": {"holafly": "10-12", "mercado": "7", "hotspot": "1 GB/día"}, "sube30": 0.6445835572591736, "sube50": 1.8558945183713358, "mkt": {"med": 2.29, "sup": 4.0, "p90": 1.54}, "ord": 868852.7976099993, "aov": 23.951218948990473, "mpo": 18.8401930396358, "dc": 3808632.91, "fc": 633542.0, "esc_blk": [{"es": "1 a 3 días", "en": "1 to 3 days", "rev": 1186797.653153352, "m": 789058.6719305762, "gm": 0.6648636941891711, "tmax": 0.33513630581082887, "take": 0.25, "mn": 890098.239865014, "dif": 101039.56793443777}, {"es": "4 a 30 días", "en": "4 to 30 days", "rev": 18541924.47039944, "m": 14790718.333775464, "gm": 0.7976905718382983, "tmax": 0.20230942816170172, "take": 0.2, "mn": 14833539.576319553, "dif": 42821.24254408851}, {"es": "31 a 90 días", "en": "31 to 90 days", "rev": 1081361.4665121632, "m": 789577.428748796, "gm": 0.7301697473052271, "tmax": 0.2698302526947729, "take": 0.25, "mn": 811021.0998841224, "dif": 21443.67113532638}], "escT": 16534658.91606869, "escDif": 165304.4860686902, "escTake": 0.20544966364218775, "core": {"share": 0.8910067271094243, "tmax": 0.20230942816170172}, "stress": [{"es": "Modelo actual", "en": "Current model", "k": "act", "hoy": 16369354.43, "cons": 12559275.77, "prec": 12106254.4364, "comp": 14616123.944395602}, {"es": "Propuesta 1 · 80/20", "en": "Proposal 1 · 80/20", "k": "t20", "hoy": 16648066.872000001, "cons": 16648066.872000001, "prec": 16648066.872000001, "comp": 15245482.483516484}, {"es": "Propuesta 2 · escalonada", "en": "Proposal 2 · tiered", "k": "t30", "hoy": 16534658.91606869, "cons": 16534658.91606869, "prec": 16534658.91606869, "comp": 15141629.044018947}, {"es": "70/30 · lo máximo ofrecido", "en": "70/30 · best offered", "k": "t30", "hoy": 14567058.512999998, "cons": 14567058.512999998, "prec": 14567058.512999998, "comp": 13339797.17307692}], "vol": [{"usd": 3.9285714285714284, "k": 1.0, "x": 1.0, "cost": 4440729.16, "mact": 16369354.43, "m20": 16648066.872000001, "m30": 14567058.512999998}, {"usd": 3.0, "k": 0.7636363636363637, "x": 1.3095238095238095, "cost": 5815240.566666666, "mact": 14994843.023333333, "m20": 16648066.872000001, "m30": 14567058.512999998}, {"usd": 2.5, "k": 0.6363636363636364, "x": 1.5714285714285714, "cost": 6978288.68, "mact": 13831794.91, "m20": 16648066.872000001, "m30": 14567058.512999998}, {"usd": 2.0, "k": 0.5090909090909091, "x": 1.9642857142857142, "cost": 8722860.85, "mact": 12087222.74, "m20": 16648066.872000001, "m30": 14567058.512999998}, {"usd": 1.5, "k": 0.38181818181818183, "x": 2.619047619047619, "cost": 11630481.133333333, "mact": 9179602.456666667, "m20": 16648066.872000001, "m30": 14567058.512999998}, {"usd": 1.2, "k": 0.3054545454545455, "x": 3.2738095238095237, "cost": 14538101.416666666, "mact": 6271982.173333334, "m20": 16648066.872000001, "m30": 14567058.512999998}], "pb": 3.9285714285714284};const SHEET='https://docs.google.com/spreadsheets/d/19IBvEryfCmWnpKszWVK4AvSWcMJb9QUTjREF4_GUIGM/edit?usp=sharing';let V='res';
+const L=()=>_lang, _l=()=>_lang==='en'?'en-US':'es-ES';
+let _lang='es';
+const E=(a,b)=>_lang==='en'?b:a;
+const eur=v=>(v<0?'−':'')+'€'+Math.abs(Math.round(v)).toLocaleString(_l());
+const eurM=v=>(v<0?'−':'')+'€'+(Math.abs(v)/1e6).toLocaleString(_l(),{minimumFractionDigits:2,maximumFractionDigits:2})+'M';
+const eur2=v=>(v<0?'−':'')+'€'+Math.abs(v).toLocaleString(_l(),{minimumFractionDigits:2,maximumFractionDigits:2});
+const pc=(v,d=1)=>(v*100).toLocaleString(_l(),{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+const pc0=v=>(v>0?'+':'')+Math.round(v*100)+'%';
+const n2=v=>v.toLocaleString(_l(),{minimumFractionDigits:2,maximumFractionDigits:2});
+const BEN={'1 día':'1 day','2-3 días':'2-3 days','4-7 días':'4-7 days','8-14 días':'8-14 days','15-30 días':'15-30 days','31-90 días':'31-90 days'};
+const marAct=g=>D.cons.pl-D.cons.cgb*g-D.cons.fd;
+const EV={m:()=>E('medido','measured'),i:()=>E('inferido','inferred'),s:()=>E('supuesto','assumption'),n:()=>E('no determinable','not determinable')};
+const ev=k=>`<span class="ev ${k}">${EV[k]()}</span>`;
+const TABS=()=>[['res',E('Propuestas','Proposals')],['d1','1st delivery'],['d2','2nd delivery'],['d3','3rd delivery'],['pen',E('Qué falta','What is missing')]];
+const card=(t,x,nums)=>`<div class="infcard"><div class="ictit">${t}</div><div class="ictxt">${x}</div>${nums?`<div class="icsup">${nums}</div>`:''}</div>`;
+const num=(v,l,c='')=>`<div class="icnum ${c}"><span class="ival">${v}</span><span class="iclab">${l}</span></div>`;
+
+function tScen(){
+ let h=`<table><thead><tr><th>${E('Escenario','Scenario')}</th>`;
+ D.esc.forEach(e=>h+=`<th>${e.n}</th>`);h+='</tr></thead><tbody>';
+ h+=`<tr class="sublbl"><td></td>`;
+ D.esc.forEach(e=>h+=`<td style="text-align:center">${E(e.tag,e.tagEn)}</td>`);h+='</tr>';
+ const cls=e=>e.t===null?'g-n':(e.t<D.be?'g-ok':(e.t>=0.5?'g-r':'g-w'));
+ [[E('Margen bruto','Gross margin'),e=>e.t===null?eur(D.mar):eur((1-e.t)*D.rev)],
+  [E('Margen bruto %','Gross margin %'),e=>e.t===null?pc(D.gm,2):pc(1-e.t,2)],
+  [E('Diferencia contra hoy','Difference vs today'),e=>{const v=e.t===null?0:(1-e.t)*D.rev-D.mar;
+    return v===0?'':`<span class="${v<0?'neg':'pos'}">${eur(v)}</span>`}]
+ ].forEach(r=>{h+=`<tr><td>${r[0]}</td>`;D.esc.forEach(e=>h+=`<td class="${cls(e)}">${r[1](e)}</td>`);h+='</tr>'});
+ return h+'</tbody></table>';
+}
+function vRes(){
+ let h=`<div class="inftitular">${E('No cerrar en 50/50. Pedir 80/20, y si no pasa, escalonar por duración sin superar nunca el 21,34%.','Do not settle at 50/50. Ask for 80/20, and if that fails, tier by trip length without ever exceeding 21.34%.')}</div>`;
+ h+=`<div class="chips">${num(pc(D.be,2),E('el techo · nunca pasar de acá','the ceiling · never go above'),'w')}
+ ${num(eur(D.pt),E('vale cada punto de take','value of each take point'))}
+ ${num(pc(D.core.share,0),E('del revenue está en 4 a 30 días','of revenue sits in 4 to 30 days'))}
+ ${num(eurM(0.5*D.rev-D.mar),E('cuesta el 50/50','cost of 50/50'),'r')}</div>`;
+
+ h+=`<div class="infh">${E('Las tres propuestas','The three proposals')}</div><div class="infcards">`;
+ h+=card('1 · '+E('Pedir 80/20','Ask for 80/20'),
+  E('Mejor que hoy desde el día uno. Y libera el consumo: podemos promover hotspot e ilimitado sin que nos cueste margen.',
+    'Better than today from day one. And it frees data use: we can promote hotspot and unlimited without it costing us margin.'),
+  num('+'+eur(0.8*D.rev-D.mar),E('contra hoy','vs today'),'g')+num(eur(0.8*D.rev),E('nuestro margen','our margin'),'g'));
+ h+=card('2 · '+E('Escalonar por duración','Tier by trip length'),
+  E('75/25 en los bordes, 80/20 en el centro. Los tres bloques quedan por encima de hoy.',
+    '75/25 on the edges, 80/20 in the middle. All three blocks end up above today.'),
+  num('+'+eur(D.escDif),E('contra hoy','vs today'),'g')+num(pc(D.escTake,2),E('take equivalente','equivalent take')));
+ h+=card('3 · '+E('No pasar del 21,34%','Never exceed 21.34%'),
+  E('Por encima perdemos plata desde el día uno, sin importar el precio.',
+    'Above it we lose money from day one, whatever the price.'),
+  num(eurM(0.7*D.rev-D.mar),E('cuesta un 70/30','cost of 70/30'),'r')+num(eurM(0.5*D.rev-D.mar),'50/50','r'));
+ h+='</div>';
+
+ // ── P&L
+ h+=`<div class="infh">${E('El P&L bajo cada modelo','The P&L under each model')}</div>`;
+ const cls=e=>e.t===null?'g-n':(e.t<D.be?'g-ok':(e.t>=0.5?'g-r':'g-w'));
+ h+=`<table><thead><tr><th></th>`;
+ D.esc.forEach(e=>h+=`<th>${e.n}</th>`);h+='</tr></thead><tbody>';
+ h+='<tr class="sublbl"><td></td>';
+ D.esc.forEach(e=>h+=`<td style="text-align:center">${E(e.tag,e.tagEn)}</td>`);h+='</tr>';
+ [[E('Revenue neto','Net revenue'),()=>eur(D.rev)],
+  [E('Costo total','Total cost'),e=>e.t===null?eur(-D.cost):eur(-e.t*D.rev)],
+  [E('MARGEN BRUTO','GROSS MARGIN'),e=>e.t===null?eur(D.mar):eur((1-e.t)*D.rev)],
+  [E('Margen bruto %','Gross margin %'),e=>e.t===null?pc(D.gm,2):pc(1-e.t,2)],
+  [E('Contra hoy','vs today'),e=>{const v=e.t===null?0:(1-e.t)*D.rev-D.mar;return v===0?'':`<span class="${v<0?'neg':'pos'}">${eur(v)}</span>`}],
+  ['SEP',null],
+  [E('Órdenes','Orders'),()=>D.ord.toLocaleString(_l(),{maximumFractionDigits:0})],
+  [E('Net AOV','Net AOV'),()=>eur2(D.aov)],
+  [E('MARGEN POR ORDEN','MARGIN PER ORDER'),e=>e.t===null?eur2(D.mpo):eur2((1-e.t)*D.rev/D.ord)],
+  [E('Contra hoy, por orden','vs today, per order'),e=>{const v=e.t===null?0:(1-e.t)*D.rev/D.ord-D.mpo;return v===0?'':`<span class="${v<0?'neg':'pos'}">${eur2(v)}</span>`}]
+ ].forEach(rw=>{
+   if(rw[0]==='SEP'){h+='<tr class="sublbl"><td colspan="6"></td></tr>';return}
+   h+=`<tr><td>${rw[0]}</td>`;D.esc.forEach(e=>h+=`<td class="${cls(e)}">${rw[1](e)}</td>`);h+='</tr>'});
+ h+='</tbody></table>';
+ h+=`<div class="note">${E('El Net AOV no cambia: el precio de venta es el mismo en todos los escenarios. Lo que cambia es cuánto de cada orden nos queda.','Net AOV does not change: the selling price is the same across scenarios. What changes is how much of each order we keep.')}</div>`;
+
+ // ── escalonada
+ h+=`<div class="infh">${E('Si hay que escalonar','If we have to tier')}</div>`;
+ h+=`<table><thead><tr><th>${E('Bloque','Block')}</th><th>${E('% del revenue','% of revenue')}</th><th>${E('Margen hoy','Margin today')}</th><th>${E('Techo del bloque','Block ceiling')}</th><th>${E('Cedemos','We concede')}</th><th>${E('Contra hoy','vs today')}</th></tr></thead><tbody>`;
+ D.esc_blk.forEach(b=>{const cl=b.take===0.20?'g-ok':'g-w';
+  h+=`<tr><td>${E(b.es,b.en)}</td><td>${pc(b.rev/D.rev,1)}</td><td>${pc(b.gm,2)}</td><td>${pc(b.tmax,2)}</td>
+  <td class="${cl}" style="font-weight:800">${(1-b.take)*100}/${b.take*100}</td><td class="${cl} pos">+${eur(b.dif)}</td></tr>`});
+ h+=`<tr style="border-top:2px solid var(--ink)"><td>TOTAL</td><td>${pc(1,1)}</td><td>${pc(D.gm,2)}</td><td>${pc(D.be,2)}</td><td style="font-weight:800">${pc(D.escTake,2)}</td><td class="pos">+${eur(D.escDif)}</td></tr>`;
+ h+='</tbody></table>';
+ h+=`<div class="note">${E(`El techo de cada bloque es uno menos su margen. Como el ${pc(D.core.share,0)} del revenue está en el bloque del medio, que se cierra igual en 80/20, escalonar cede sólo ${eur(0.8*D.rev-D.escT)}. Sirve como moneda de cambio, no como ahorro.`,`Each block ceiling is one minus its margin. Since ${pc(D.core.share,0)} of revenue sits in the middle block, which closes at 80/20 anyway, tiering only concedes ${eur(0.8*D.rev-D.escT)}. It works as a bargaining chip, not as a saving.`)}</div>`;
+
+ // ── stress
+ h+=`<div class="infh">${E('Si el negocio se mueve','If the business moves')}</div>`;
+ h+=`<table><thead><tr><th>${E('Posición','Position')}</th><th>${E('Hoy','Today')}</th><th>${E('Consumo x2','Data use x2')}</th><th>${E('Precio a 2 USD, volumen 1,96x','Price at 2 USD, volume 1.96x')}</th><th>${E('Emparejar con Airalo','Match Airalo')}</th></tr></thead><tbody>`;
+ D.stress.forEach(s2=>{const act=s2.k==='act';
+  h+=`<tr><td>${E(s2.es,s2.en)}</td>`;
+  [s2.hoy,s2.cons,s2.prec,s2.comp].forEach((v,i2)=>{
+    const cl=act?'g-n':(s2.k==='t20'?'g-ok':'g-w');
+    h+=`<td class="${cl} ${act&&i2>0?'neg':''}">${eur(v)}</td>`});
+  h+='</tr>'});
+ h+='</tbody></table>';
+ h+=`<div class="note">${E('Los tres escenarios de revenue split dan el mismo número: el margen no depende de lo que haga el cliente ni del volumen. El modelo actual es el único que se mueve, y siempre para abajo.','The three revenue-split rows give the same figure: margin does not depend on what the customer does or on volume. The current model is the only one that moves, and always downwards.')}</div>`;
+
+ // ── avisos
+ h+=`<div class="infh">${E('Dos avisos · decisiones nuestras, no de la mesa','Two notices · our own calls, not the table\u2019s')}</div><div class="pend"><ul>`;
+ [[E('No promover hotspot hasta cerrar','Do not promote hotspot until we close'),
+   E(`Hoy un cliente que pasa de ${n2(D.cons.gd)} a 3 GB por día nos deja ${eur2(marAct(3))} en vez de ${eur2(marAct(D.cons.gd))}. Bajo revenue split, nada.`,
+     `Today a customer going from ${n2(D.cons.gd)} to 3 GB per day leaves us ${eur2(marAct(3))} instead of ${eur2(marAct(D.cons.gd))}. Under revenue split, nothing.`)],
+  [E('Revisar el descuento por plazo','Review the length-of-stay discount'),
+   E('Contra Yesim el gap es 14% en viajes cortos y 44% en los de 16 a 30 días. No estamos caros en nivel, estamos caros en pendiente.',
+     'Against Yesim the gap is 14% on short trips and 44% on 16-to-30-day ones. We are not expensive in level, we are expensive in slope.')]
+ ].forEach(p=>h+=`<li><b>${p[0]}</b> · ${p[1]}</li>`);
+ h+='</ul></div>';
+ return h;
+}
+function vD1(){
+ let h=`<div class="inftitular ok">${E(`No hay ningún segmento de Estados Unidos con margen bajo 50%. El piso es el plan de 1 día con ${pc(D.d1.floor,2)}.`,`No US segment has margin below 50%. The floor is the 1-day plan at ${pc(D.d1.floor,2)}.`)}</div>`;
+ h+=`<div class="chips">${ev('m')}${num(pc(D.d1.gm,2),E('margen del producto US','US product margin'),'g')}
+ ${num(pc(D.d1.floor,2),E('el piso, plan de 1 día','the floor, 1-day plan'),'g')}
+ ${num(pc(D.d1.floorShare,2),E('cuánto pesa ese piso','weight of that floor'))}
+ ${num(D.d1.orig,E('países de compra abiertos','countries of purchase opened'))}</div>`;
+ h+=`<div class="note">${E('Se abrieron las cinco dimensiones del pedido: duración, destino, país de compra, unidad de negocio y tipo de plan. Ninguna esconde un bolsillo material por debajo del umbral.','All five requested dimensions were opened: trip length, destination, country of purchase, business unit and plan type. None hides a material pocket below the threshold.')}</div>`;
+ h+=`<div class="infh">${E('El P&L bajo cada modelo','The P&L under each model')}</div>`+tScen();
+ h+=`<div class="note">${E(`El punto de equilibrio del take es <b>${pc(D.be,2)}</b>: uno menos nuestro margen. Por encima perdemos plata al precio y consumo de hoy.`,`Break-even take is <b>${pc(D.be,2)}</b>: one minus our margin. Above it we lose money at today's price and data use.`)}</div>`;
+ return h;
+}
+function vD2(){
+ let h=`<div class="inftitular warn">${E('Promover el hotspot con el modelo actual destruye margen. Sólo tiene sentido después de cambiar de modelo.','Promoting hotspot under the current model destroys margin. It only makes sense after switching models.')}</div>`;
+ h+=`<div class="chips">${ev('m')}${num('1 GB',E('límite de hotspot por día','hotspot cap per day'))}
+ ${num(n2(D.cons.gd)+' GB',E('consumo real por día','actual data use per day'),'g')}
+ ${num(eur2(marAct(7)),E('margen a 7 GB por día, modelo actual','margin at 7 GB/day, current model'),'r')}
+ ${num(eur2(marAct(10)),E('margen a 10 GB por día','margin at 10 GB/day'),'r')}</div>`;
+ h+=`<div class="note">${E('Con el modelo actual pagamos por GB: si el cliente consume más, nuestro costo sube y el margen baja. Con revenue split pagamos un porcentaje del precio, así que el margen es el mismo consuma lo que consuma. <b>Promover hotspot es un argumento a favor del revenue split, no una alternativa.</b>','Under the current model we pay per GB: if the customer uses more, our cost rises and margin falls. Under revenue split we pay a share of the price, so margin is the same whatever they use. <b>Promoting hotspot is an argument for the revenue split, not an alternative to it.</b>')}</div>`;
+ h+=`<div class="infh">${E('Margen por día de viaje según cuánto consume el cliente','Margin per travel day by customer data use')}</div>`;
+ h+=`<table><thead><tr><th>${E('Consumo','Data use')}</th><th>${E('Modelo actual','Current model')}</th>`;
+ D.esc.filter(e=>e.t).forEach(e=>h+=`<th>${e.n}</th>`);
+ h+=`<th>${E('Qué nos conviene','What suits us')}</th></tr></thead><tbody>`;
+ D.cons.niv.forEach(g=>{const a=marAct(g),hoy=Math.abs(g-D.cons.gd)<1e-9;
+  const mej=D.esc.filter(e=>e.t&&(1-e.t)*D.cons.pl>a);
+  const q=mej.length===0?E('el modelo actual','the current model'):(mej.length===4?E('cualquier split','any split'):E('split hasta ','split up to ')+mej[mej.length-1].n);
+  h+=`<tr><td>${n2(g)} GB${hoy?` <span style="color:var(--muted);font-weight:400">${E('hoy','today')}</span>`:''}</td>`;
+  h+=`<td class="${a<0?'g-r neg':''}">${eur2(a)}</td>`;
+  D.esc.filter(e=>e.t).forEach(e=>{const m=(1-e.t)*D.cons.pl;h+=`<td class="${m>a?'g-ok pos':''}">${eur2(m)}</td>`});
+  h+=`<td style="text-align:left;font-weight:${mej.length?800:400};color:${mej.length?'var(--green-d)':'var(--muted)'}">${q}</td></tr>`});
+ h+='</tbody></table>';
+ h+=`<div class="note">${E(`Banda de 4 a 7 días, que concentra el ${pc(D.bandas[2].share,0)} del revenue. En verde, cada split que deja más margen que el modelo actual. En rojo, donde el modelo actual pierde plata.`,`4-to-7-day band, which holds ${pc(D.bandas[2].share,0)} of revenue. In green, each split leaving more margin than the current model. In red, where the current model loses money.`)}</div>`;
+ h+=`<div class="infh">${E('Cuánto tendría que subir el consumo para que cada escenario empate','How much data use would have to rise for each scenario to break even')}</div>`;
+ h+=`<table><thead><tr><th>${E('Duración','Trip length')}</th><th>${E('% del revenue','% of revenue')}</th><th>${E('GB por día hoy','GB per day today')}</th><th>${E('70/30 desde','70/30 from')}</th><th>${E('Debe subir','Rise needed')}</th><th>${E('50/50 desde','50/50 from')}</th><th>${E('Debe subir','Rise needed')}</th></tr></thead><tbody>`;
+ D.bandas.forEach(b=>{const f30=b.l30<=b.gd;
+  h+=`<tr><td>${E(b.lab,BEN[b.lab])}</td><td>${pc(b.share,1)}</td><td>${n2(b.gd)}</td>
+  <td class="g-w">${n2(b.l30)}</td><td class="g-w ${f30?'pos':''}">${f30?E('ya conviene','already wins'):pc0(b.l30/b.gd-1)}</td>
+  <td class="g-r">${n2(b.l50)}</td><td class="g-r">${pc0(b.l50/b.gd-1)}</td></tr>`});
+ h+='</tbody></table>';
+ h+=`<div class="note">${ev('n')} ${E(`<b>Falta el volumen real de tethering.</b> El número que veníamos usando promediaba un ${pc(0.1514,2)} real con un cero que significaba "no reportado" de otro sistema. Es el único input pendiente de esta entrega.`,`<b>Real hotspot volume is missing.</b> The figure we were using averaged a real ${pc(0.1514,2)} with a zero that meant "not reported" from another system. It is the only pending input of this delivery.`)}</div>`;
+ return h;
+}
+function vD3(){
+ let h=`<div class="inftitular">${(E('El mercado no está en ','The market is not at ')+n2(D.mkt.sup)+E(` USD por día. En las duraciones que son el ${pc(D.bandas[3].share+D.bandas[4].share,0)} de nuestro revenue, la mediana de los cuatro competidores es `,` USD per day. In the durations holding ${pc(D.bandas[3].share+D.bandas[4].share,0)} of our revenue, the median across the four competitors is `)+n2(D.mkt.med)+'.')}</div>`;
+ h+=`<div class="chips">${ev('m')}${num(n2(D.mkt.med)+' USD',E('mediana del mercado, 8 a 30 días','market median, 8 to 30 days'))}
+ ${num(n2(D.mkt.sup)+' USD',E('el supuesto de partida','the starting assumption'),'w')}
+ ${num(n2(D.mkt.p90)+' USD',E('nuestro precio a 90 días','our price at 90 days'),'g')}
+ ${num(D.fup.holafly+' GB',E('nuestro corte de velocidad','our throttling point'),'g')}</div>`;
+ h+=`<div class="note">${E(`Estamos por encima de los cuatro competidores en todas las duraciones, y es deliberado: <b>no competimos por precio</b>. Nuestro plan corta velocidad alrededor de los ${D.fup.holafly} GB contra ${D.fup.mercado} del resto del mercado. El plan local de AT&T a 1 USD por día no es un competidor de viaje: es el piso que el acuerdo permitiría ofrecer.`,`We sit above all four competitors in every duration, and that is deliberate: <b>we do not compete on price</b>. Our plan throttles at around ${D.fup.holafly} GB against ${D.fup.mercado} for the rest of the market. AT&T's local plan at 1 USD per day is not a travel competitor: it is the floor the deal would let us offer.`)}</div>`;
+ h+=`<div class="infh">${E('Cuánto más caros somos que cada competidor','How much more expensive we are than each competitor')}</div>`;
+ h+=`<table><thead><tr><th>${E('Competidor','Competitor')}</th><th>${E('Duraciones','Durations')}</th><th>${E('Mínimo','Min')}</th><th>${E('Mediana','Median')}</th><th>${E('Máximo','Max')}</th><th>${E('1 a 7 días','1 to 7 days')}</th><th>${E('8 a 15 días','8 to 15 days')}</th><th>${E('16 a 30 días','16 to 30 days')}</th></tr></thead><tbody>`;
+ D.comp.forEach(c=>{h+=`<tr><td>${c.n}</td><td>${c.npts}</td><td>${pc(c.mn)}</td><td style="font-weight:800">${pc(c.md)}</td><td>${pc(c.mx)}</td>`;
+  [c.t17,c.t815,c.t1630].forEach(v=>h+=`<td class="${v>0.25?'g-r neg':''}">${v==null?'·':pc(v)}</td>`);h+='</tr>'});
+ h+='</tbody></table>';
+ h+=`<div class="note">${E(`Contra Airalo y Saily el gap es parejo, cerca de ${pc(D.comp[0].md,0)}. Contra Yesim se dispara con la duración: ${pc(D.comp[3].t17,0)} en viajes cortos y ${pc(D.comp[3].t1630,0)} en los de 16 a 30 días. No estamos caros en nivel, estamos caros en <b>pendiente</b>: descontamos mucho menos por plazo.`,`Against Airalo and Saily the gap is flat, around ${pc(D.comp[0].md,0)}. Against Yesim it widens with trip length: ${pc(D.comp[3].t17,0)} on short trips and ${pc(D.comp[3].t1630,0)} on 16-to-30-day ones. We are not expensive in level, we are expensive in <b>slope</b>: we discount far less for longer stays.`)}</div>`;
+ h+=`<div class="infh">${E('Precio por día de viaje, USD','Price per travel day, USD')}</div>`;
+ h+=`<table><thead><tr><th>${E('Duración','Trip length')}</th><th>Holafly</th>`;
+ ['Airalo','Saily','Nomad','Yesim'].forEach(k=>h+=`<th>${k}</th>`);h+='</tr></thead><tbody>';
+ D.curva.forEach(c=>{h+=`<tr><td>${c.d} ${E('días','days')}</td><td class="g-n" style="font-weight:800">${n2(c.ud)}</td>`;
+  ['Airalo','Saily','Nomad','Yesim'].forEach(k=>h+=`<td>${c.comp[k]==null?'·':n2(c.comp[k])}</td>`);h+='</tr>'});
+ h+='</tbody></table>';
+ h+=`<div class="note">${E(`Bajar el precio manteniendo el volumen destruye margen en euros: a ${n2(2)} USD por día habría que vender ${n2(1.93)} veces más sólo para no perder. Bajo revenue split duele menos, porque el costo baja junto con el precio.`,`Cutting price while holding volume destroys margin in euros: at ${n2(2)} USD per day we would need to sell ${n2(1.93)} times more just to stand still. Under revenue split it hurts less, because cost falls along with price.`)}</div>`;
+
+ h+=`<div class="infh">${E('Si bajamos el precio, cuánto habría que vender para llegar al MISMO revenue de hoy','If we cut price, how much we would have to sell to reach today\u2019s revenue')}</div>`;
+ h+=`<div class="note">${E('El ejercicio mantiene el revenue constante en los 20,81 millones de hoy: la columna de veces dice cuánto volumen adicional hace falta para llegar ahí. Y acá está lo que revela: <b>con el modelo actual, vender más unidades sube el costo de datos en la misma proporción</b>, porque hay más clientes consumiendo. Bajo revenue split el costo es siempre el mismo porcentaje del revenue, así que el margen no se mueve.','The exercise holds revenue constant at today\u2019s €20.81M: the multiple column says how much extra volume is needed to get there. And here is what it reveals: <b>under the current model, selling more units raises data cost in the same proportion</b>, because more customers are consuming. Under revenue split cost is always the same share of revenue, so margin does not move.')}</div>`;
+ h+=`<table><thead><tr><th>${E('Precio por día','Price per day')}</th><th>${E('% del precio de hoy','% of today\u2019s price')}</th><th>${E('Cuánto habría que vender','How much we must sell')}</th><th>${E('Costo con modelo actual','Cost under current model')}</th><th>${E('Margen modelo actual','Current model margin')}</th><th>${E('Margen 80/20','80/20 margin')}</th><th>${E('Margen 70/30','70/30 margin')}</th></tr></thead><tbody>`;
+ D.vol.forEach(v=>{const hoy=Math.abs(v.usd-D.pb)<1e-9;
+  h+=`<tr><td>${n2(v.usd)} USD${hoy?` <span style="color:var(--muted);font-weight:400">${E('hoy','today')}</span>`:''}</td>
+  <td>${pc(v.k,0)}</td><td class="${v.x>2.5?'g-r':'g-w'}" style="font-weight:800">${n2(v.x)}x</td>
+  <td class="g-n">${eur(v.cost)}</td><td class="g-n ${!hoy?'neg':''}">${eur(v.mact)}</td>
+  <td class="g-ok pos">${eur(v.m20)}</td><td class="g-w">${eur(v.m30)}</td></tr>`});
+ h+='</tbody></table>';
+ h+=`<div class="note">${E('<b>El revenue split es inmune a bajar precio y compensar con volumen</b>, porque su costo baja junto con el precio. El modelo actual la castiga. A 2 USD por día con volumen ×1,96 el modelo actual pierde 4,26 millones contra hoy, un 80/20 gana 278 mil, y un 70/30 pierde 1,80 millones: exactamente lo mismo que pierde sin tocar el precio, porque su costo es siempre el 30%.','<b>Revenue split is immune to cutting price and making it up on volume</b>, because its cost falls along with price. The current model punishes it. At 2 USD per day with 1.96x volume the current model loses €4.26M against today, an 80/20 gains €278K, and a 70/30 loses €1.80M: exactly what it loses without touching price at all, because its cost is always 30%.')}</div>`;
+ return h;
+}
+function vPen(){
+ const P=_lang==='en'?[['r','Real hotspot volume','The only pending input. The previous figure averaged a real '+pc(0.1514,2)+' with a "not reported" zero from another system. Blocked by the state of the consumption table, not by method.'],
+  ['w','The architecture of the deal','Whether the revenue split would be direct with AT&T or through the eSIM provider. It changes who signs and what is negotiated. Owner: Carriers.'],
+  ['w','Who absorbs the fixed per-eSIM charge','The whole analysis assumes the provider does. It should be in writing before closing.'],
+  ['w','Consumption table in transition','A production deployment changed the consumption logic. These figures are the baseline of the previous logic, cross-checked against two external sources, not a value to discard.']]:
+ [['r','El volumen real de tethering','Es el único input pendiente. El número anterior promediaba un '+pc(0.1514,2)+' real con un cero de "no reportado" de otro sistema. Bloqueado por el estado de la tabla de consumo, no por falta de método.'],
+  ['w','La arquitectura del acuerdo','Si el revenue split sería directo con AT&T o a través del proveedor de eSIM. Cambia quién firma y qué se negocia. Dueño: Carriers.'],
+  ['w','Quién absorbe el cargo fijo por eSIM','Todo el análisis supone que lo absorbe el proveedor. Conviene dejarlo por escrito antes de cerrar.'],
+  ['w','La tabla de consumo en transición','Un deploy a producción cambió la lógica de consumo. Estos números son la línea base de la lógica anterior, cruzados contra dos fuentes externas, no un valor a descartar.']];
+ let h=`<div class="inftitular warn">${E('Nada de lo que falta cambia la recomendación. El punto de equilibrio y el comportamiento frente al consumo se sostienen en todos los casos.','Nothing missing changes the recommendation. Break-even and the behaviour against data use hold in every case.')}</div><div class="infnp">`;
+ P.forEach(p=>h+=`<details class="npitem"><summary><span class="npdot ${p[0]}"></span>${p[1]}</summary><div class="nptxt">${p[2]}</div></details>`);
+ h+='</div>';
+ h+=`<div class="infh">${E('Marco de evidencia','Evidence framework')}</div>`;
+ h+=`<div class="note">${ev('m')} ${E('sale de una medición con fuente y contraste.','comes from a measurement with a source and a cross-check.')} &nbsp; ${ev('i')} ${E('se deriva de datos medidos.','is derived from measured data.')} &nbsp; ${ev('s')} ${E('es un supuesto declarado, no medido por nosotros.','is a declared assumption, not measured by us.')} &nbsp; ${ev('n')} ${E('no se puede establecer con los datos disponibles.','cannot be established with available data.')}</div>`;
+ h+=`<details class="infmet"><summary>${E('De dónde sale cada número','Where each figure comes from')}</summary><div class="metbody"><ul>`;
+ (_lang==='en'?['Revenue and margin: Gross Margin dashboard export, USA destination view, consumption from 1 Jan to 31 Jul 2026.',
+  'List prices: product catalogue, 26 Aug 2026 snapshot. Same source as the published website price.',
+  'Data use and cost per GB: measured 26 Aug 2026, cross-checked against the COGS export with a €33 difference over €3.88 million, and against the July Carriers report, which records an identical figure by a different route.',
+  'Competitor prices: own benchmark, same exact trip length and same destination, no forced blocks. All in USD, the benchmark currency.',
+  'Throttling point of our plan and of the market: product figures supplied by Pricing, not measured in this document.',
+  'AT&T local plan at 30 USD a month: comes from the framing of the request, not measured by us.']:
+ ['Revenue y margen: export del tablero de Gross Margin, vista destino USA, consumo del 1-ene al 31-jul-2026.',
+  'Precios de lista: catálogo de producto, foto del 26-ago-2026. Misma fuente que el precio publicado en el sitio.',
+  'Consumo y costo por GB: medido el 26-ago-2026, cruzado contra el export de COGS con 33 euros de diferencia sobre 3,88 millones, y contra el informe de Carriers de julio, que registra una cifra idéntica por otro camino.',
+  'Precios de competidores: benchmark propio, misma duración exacta y mismo destino, sin bloques forzados. Todo en USD, que es la moneda del benchmark.',
+  'Punto de corte de velocidad del plan nuestro y del mercado: dato de producto aportado por Pricing, sin medición propia en este documento.',
+  'Plan local de AT&T a 30 USD al mes: viene del planteo del pedido, no lo medimos nosotros.']
+ ).forEach(x=>h+=`<li>${x}</li>`);
+ h+=`</ul><a class="cta" href="${SHEET}" target="_blank">${E('Ver el detalle completo →','See full detail →')}</a></div></details>`;
+ return h;
+}
+function render(){
+ document.getElementById('tabs').innerHTML=TABS().map(t=>`<button class="${t[0]===V?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('');
+ const body={res:vRes,d1:vD1,d2:vD2,d3:vD3,pen:vPen}[V]();
+ document.getElementById('app').innerHTML=
+ `<div class="asofbar">${E('Análisis de Pricing para la negociación de Carriers · producto US stand alone · consumo del 1-ene al 31-jul-2026','Pricing analysis for the Carriers negotiation · US stand-alone product · consumption from 1 Jan to 31 Jul 2026')}</div>
+ <h1>${E('Revenue split con AT&T en Estados Unidos','Revenue split with AT&T in the United States')}</h1>
+ <p class="tagline">${E('Carriers tiene la opción de cerrar un modelo nuevo: revenue split en lugar de pagar un costo por GB. La pregunta es bajo qué condiciones nos deja mejor.','Carriers has the option to close a new model: revenue split instead of paying a cost per GB. The question is under what conditions it leaves us better off.')}</p>
+ <div class="view on">${body}${pager()}</div>`;
+}
+function pager(){
+ const T=TABS(),i=T.findIndex(t=>t[0]===V);
+ const prev=i>0?T[i-1]:null,next=i<T.length-1?T[i+1]:null;
+ let h='<div class="pager">';
+ h+=prev?`<button class="pgbtn" onclick="go('${prev[0]}')"><small>${E('anterior','previous')}</small>${prev[1]}</button>`:'<span></span>';
+ h+=`<span class="sp"></span><span class="step">${i+1} / ${T.length}</span><span class="sp"></span>`;
+ h+=next?`<button class="pgbtn next" onclick="go('${next[0]}')"><small>${E('siguiente','next')}</small>${next[1]} \u2192</button>`
+       :`<a class="cta" href="${SHEET}" target="_blank">${E('Ver el detalle completo \u2192','See full detail \u2192')}</a>`;
+ return h+'</div>';
+}
+function go(v){V=v;render();window.scrollTo({top:0,behavior:'smooth'})}
+function setLang(l){_lang=l;
+ document.getElementById('bes').classList.toggle('on',l==='es');
+ document.getElementById('ben').classList.toggle('on',l==='en');render()}
+render();
+</script>

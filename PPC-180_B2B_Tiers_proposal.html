@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holafly · Daily B2B · Estado (borrador)</title>
+<style>
+:root{
+  --coral:#E6485C; --green:#16A06A; --green-d:#0F7A50; --slate:#5A6B7B; --ink:#16242F;
+  --muted:#6B7C8A; --line:#E7EDF1; --bg:#F7F9FB; --card:#FFFFFF;
+  --amber:#9A6207; --amber-bg:#FFF3E2; --amber-bd:#F2D9AE;
+  --shadow:0 8px 26px rgba(22,36,47,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,system-ui,"Segoe UI",Inter,Roboto,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1480px;margin:0 auto;padding:0 5vw}
+b{font-weight:700}
+header{border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:30}
+.hd{display:flex;align-items:center;gap:16px;padding:16px 5vw;max-width:1480px;margin:0 auto}
+.hd svg{height:27px;width:auto;display:block}
+.crumb{color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;border-left:1px solid var(--line);padding-left:16px}
+.hd .right{margin-left:auto;display:flex;align-items:center;gap:14px;color:var(--muted);font-size:12.5px}
+.ribbon{background:var(--amber-bg);border-bottom:1px solid var(--amber-bd)}
+.ribbon .wrap{padding:12px 5vw;font-size:13.5px;color:var(--amber);font-weight:600;display:flex;gap:9px;align-items:flex-start}
+.hero{padding:56px 0 26px}
+.eyebrow{color:var(--coral);font-weight:800;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:40px;line-height:1.12;margin:16px 0 0;letter-spacing:-.022em;max-width:46ch}
+.lede{font-size:18px;margin-top:16px;max-width:74ch;color:#33414d}
+section{padding:44px 0;border-top:1px solid var(--line)}
+.snum{color:var(--muted);font-weight:800;font-size:12px;letter-spacing:.14em}
+h2{font-size:26px;margin:8px 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:15px;margin:0 0 22px}
+.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.03em;padding:3px 9px;border-radius:999px;vertical-align:middle;margin-left:8px}
+.tag.draft{background:var(--amber-bg);color:var(--amber)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.stat .big{font-size:40px;font-weight:800;color:var(--coral);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .big.g{color:var(--green-d)}
+.stat .lab{color:var(--muted);font-size:13.5px;margin-top:8px}
+.stat .pend{font-size:12px;color:var(--amber);font-weight:700;margin-top:6px}
+.note{background:var(--ink);color:#E3E7EC;border-radius:16px;padding:18px 22px;margin-top:18px;font-size:14.5px} .note b{color:#fff}
+.cmp{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{padding:14px 16px;text-align:center;border-bottom:1px solid var(--line)}
+th{font-weight:800;font-size:13px;color:#fff;line-height:1.25;background:var(--slate)}
+th.h-b2b{background:var(--green)}
+th .th2{display:block;font-size:10.5px;font-weight:600;opacity:.85;margin-top:3px}
+td:first-child,th:first-child{text-align:left} td:first-child{font-weight:700}
+tr:last-child td{border-bottom:0}
+td.win{background:#E7F4EE;color:var(--green-d);font-weight:700}
+td.lose{background:#FBEAEC;color:#B23142;font-weight:700}
+td.par{color:var(--muted)}
+.bigcell{font-size:17px;font-weight:800}
+.msub{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:3px}
+.cmpnote{font-size:12.5px;color:var(--muted);margin-top:12px}
+.num{font-variant-numeric:tabular-nums}
+.tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.tier{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.tier.lead{background:#EAF6F1;border-color:#BFE5D5}
+.tier .price{font-size:38px;font-weight:800;color:var(--green-d);letter-spacing:-.01em}
+.tier .price span{font-size:16px;color:var(--muted);font-weight:600}
+.tier .reg{font-weight:700;margin-top:10px} .tier .meta{color:var(--muted);font-size:13.5px;margin-top:4px}
+.gmbadge{display:inline-block;margin-top:12px;background:#E7F4EE;color:var(--green-d);font-weight:800;font-size:13px;padding:6px 13px;border-radius:999px}
+.decbadge{display:inline-block;margin-top:8px;background:var(--ink);color:#fff;font-weight:800;font-size:11px;letter-spacing:.05em;padding:4px 10px;border-radius:6px}
+.flatwarn{margin-top:16px;background:#FBEAEC;border:1px solid #F4CDD3;color:#B23142;border-radius:14px;padding:14px 18px;font-size:14px;font-weight:600}
+.flatwarn b{color:#9B2230}
+.callout{margin-top:20px;background:#EAF6F1;border:1px solid #BFE5D5;border-radius:16px;padding:20px 22px}
+.callout h3{margin:0 0 8px;font-size:16.5px;color:var(--green-d)}
+.callout p{margin:6px 0;font-size:14.5px;color:#234}
+.aclar{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;padding:4px 0 8px}
+.aclar .box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.aclar .box b{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.aclar .box span{font-size:13.5px;color:#33414d}
+.aclar .box .who{display:block;font-size:12px;color:var(--muted);margin-top:8px}
+.aclar .box.pend{background:var(--amber-bg);border-color:var(--amber-bd)}
+.aclar .box.pend b{color:var(--amber)}
+.aclar .box.pend::before{content:"PENDIENTE";display:inline-block;font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--amber);background:#fff;border:1px solid var(--amber-bd);border-radius:5px;padding:1px 5px;margin-bottom:6px}
+.aclar .box.mesa{background:#FBEAEC;border-color:#F4CDD3}
+.aclar .box.mesa b{color:#B23142}
+.aclar .box.mesa::before{content:"DECISIÓN DE MESA";display:inline-block;font-size:9px;font-weight:800;letter-spacing:.06em;color:#B23142;background:#fff;border:1px solid #F4CDD3;border-radius:5px;padding:1px 5px;margin-bottom:6px}
+details.method{margin-top:16px;background:#F4F6F8;border:1px solid var(--line);border-radius:14px;padding:4px 20px}
+details.method summary{cursor:pointer;font-weight:700;padding:13px 0;list-style:none;color:var(--green-d)}
+details.method summary::-webkit-details-marker{display:none}
+details.method summary::before{content:"▸ ";color:var(--green)}
+details.method[open] summary::before{content:"▾ "}
+details.method .body{font-size:14px;color:#33414d;padding:0 0 16px;line-height:1.6}
+details.method code{background:#E7EDF1;padding:1px 5px;border-radius:5px;font-size:12.5px}
+/* mapa de confianza */
+.cmap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+.cbox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.chip{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:12px}
+.chip .d{width:8px;height:8px;border-radius:50%}
+.chip.ok{background:#E7F4EE;color:var(--green-d)} .chip.ok .d{background:var(--green)}
+.chip.mid{background:var(--amber-bg);color:var(--amber)} .chip.mid .d{background:#E0A52E}
+.chip.gap{background:#FBEAEC;color:#B23142} .chip.gap .d{background:var(--coral)}
+.cbox p{margin:10px 0;font-size:13.5px;line-height:1.5} .cbox p b{color:var(--ink)}
+/* dial interactivo */
+.switch{display:inline-flex;gap:4px;background:#EEF1F5;border-radius:999px;padding:4px;margin:6px 0 16px;flex-wrap:wrap}
+.switch button{border:0;background:transparent;color:var(--muted);font-weight:700;font-size:13.5px;padding:9px 18px;border-radius:999px;cursor:pointer;transition:.15s}
+.switch button.on{background:var(--ink);color:#fff}
+.dialread{margin-top:4px;border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;border:1px solid}
+.dialread.g{background:#EAF6F1;border-color:#BFE5D5;color:#1d5c42}
+.dialread.a{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber)}
+.dialread.r{background:#FBEAEC;border-color:#F4CDD3;color:#B23142}
+/* barras hotspot */
+.gm{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow);margin-top:6px}
+.brow{display:grid;grid-template-columns:230px 1fr 64px;gap:12px;align-items:center;margin:10px 0}
+.brow .who{font-size:13px;font-weight:700} .brow .who .msub{font-weight:400}
+.track{height:14px;background:#EDF1F4;border-radius:999px;overflow:hidden}
+.track>i{display:block;height:100%;border-radius:999px;width:0;transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+.gm.in .track>i{width:var(--w)}
+.bval{font-weight:800;text-align:right;font-size:13.5px;font-variant-numeric:tabular-nums}
+/* hallazgos apilados */
+.stack{position:relative;margin-top:8px}
+.scard{position:sticky;top:calc(86px + var(--i,0)*12px);background:var(--card);border:1px solid var(--line);border-left:6px solid var(--coral);border-radius:20px;box-shadow:var(--shadow);padding:34px 40px;margin-bottom:22px;min-height:190px;display:flex;flex-direction:column;justify-content:center}
+.scard.fin{border-left-color:var(--green)}
+.scard .idx{position:absolute;top:20px;right:30px;font-size:12.5px;font-weight:800;color:var(--muted);letter-spacing:.1em}
+.scard .n{font-size:32px;font-weight:800;color:var(--coral);letter-spacing:-.02em;line-height:1.1;max-width:26ch;margin:0}
+.scard.fin .n{color:var(--green-d)}
+.scard .t{font-size:16px;color:#33414d;margin-top:12px;max-width:70ch;line-height:1.55}
+footer{padding:28px 0 64px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line)}
+.src{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;font-size:13px;color:#33414d} .src div{padding:4px 0}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.track>i{transition:none}}
+@media(max-width:900px){.stats,.tiers,.cmap{grid-template-columns:1fr}h1{font-size:30px}table{font-size:12.5px}th,td{padding:11px 9px}.brow{grid-template-columns:130px 1fr 52px}.scard{padding:26px 22px}.scard .n{font-size:24px}}
+
+.langsw{display:inline-flex;gap:2px;background:#EEF1F5;border-radius:999px;padding:3px}
+.langsw button{border:0;background:transparent;color:var(--muted);font-weight:800;font-size:12px;padding:5px 12px;border-radius:999px;cursor:pointer;transition:.15s}
+.langsw button.on{background:var(--ink);color:#fff}
+.en{display:none}
+body.lang-en .es{display:none}
+body.lang-en .en{display:inline}
+.axisnote{font-size:11.5px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body class="lang-es">
+<header>
+  <div class="hd">
+    <svg viewBox="0 0 104 32" xmlns="http://www.w3.org/2000/svg" aria-label="Holafly"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.0563 7.28786C77.7143 7.03453 77.3245 6.90648 76.8856 6.90648C76.0089 6.90648 75.5707 7.44977 75.5707 8.53587V10.1959H78.9861V13.4237H75.5707V25.536H72.1398V13.4237H69.8199V10.1959H72.1398V8.10552C72.1398 6.69136 72.5259 5.57974 73.2977 4.76994C74.0697 3.96063 75.0274 3.55566 76.171 3.55566C77.1046 3.55566 77.853 3.69412 78.4152 3.97066C78.8652 4.19243 79.2317 4.43076 79.5171 4.68518L78.0563 7.28786ZM47.8396 25.535H51.7185V4.20114H47.8396V25.535ZM40.4703 21.4441C39.6729 22.3335 38.6766 22.7783 37.4808 22.7783C36.2648 22.7783 35.2685 22.3387 34.4912 21.4594C33.7139 20.5806 33.3253 19.456 33.3253 18.0859C33.3253 16.7366 33.7139 15.6224 34.4912 14.7431C35.2685 13.8642 36.2648 13.4244 37.4808 13.4244C38.6766 13.4244 39.6729 13.8642 40.4703 14.7431C41.2672 15.6224 41.666 16.7366 41.666 18.0859C41.666 19.4354 41.2672 20.5547 40.4703 21.4441ZM41.4577 11.093C40.2815 10.3777 38.9562 10.0198 37.4817 10.0198C36.0266 10.0198 34.7061 10.3777 33.5206 11.093C32.3345 11.8089 31.4077 12.7799 30.7403 14.0066C30.0723 15.2333 29.7388 16.5931 29.7388 18.0853C29.7388 19.578 30.0723 20.9428 30.7403 22.1796C31.4077 23.4168 32.3294 24.393 33.5056 25.1084C34.6813 25.8239 36.0065 26.1818 37.4817 26.1818C38.9562 26.1818 40.2815 25.8239 41.4577 25.1084C42.6334 24.393 43.5601 23.4168 44.2379 22.1796C44.9152 20.9428 45.2543 19.578 45.2543 18.0853C45.2543 16.5931 44.9152 15.2333 44.2379 14.0066C43.5601 12.7799 42.6334 11.8089 41.4577 11.093ZM85.3357 25.535H81.4568V4.20114H85.3357V25.535ZM99.2024 10.0198V17.8808C99.2024 19.1347 98.8883 20.1004 98.2605 20.7788C97.6324 21.4568 96.8102 21.796 95.7935 21.796C94.8366 21.796 94.0987 21.5185 93.5807 20.9637C93.062 20.4088 92.8031 19.4738 92.8031 18.1582V10.0198H89.2147V18.7748C89.2147 20.9535 89.6977 22.5774 90.6649 23.6457C91.6317 24.7146 92.9624 25.2487 94.6571 25.2487C95.7135 25.2487 96.5906 25.069 97.2886 24.7092C97.9862 24.3499 98.614 23.8205 99.1725 23.1216L99.2024 23.2141V24.8479C99.2024 26.122 98.8883 27.1032 98.2605 27.792C97.6324 28.4803 96.77 28.8247 95.6737 28.8247C94.171 28.8247 93.1875 28.2526 92.7199 27.1138L89.7546 28.6852C90.1545 29.4528 90.6868 30.1111 91.3528 30.659C92.4391 31.553 93.8795 32.0001 95.6737 32.0001C97.9062 32.0001 99.6509 31.3474 100.907 30.0424C102.163 28.737 102.791 26.9953 102.791 24.8171V10.0198H99.2024ZM63.5744 20.3843C63.5744 21.2637 63.2795 21.9537 62.6901 22.4545C62.1002 22.9557 61.3683 23.2059 60.4944 23.2059C59.6607 23.2059 59.005 23.0271 58.5276 22.6691C58.0496 22.3118 57.8111 21.8364 57.8111 21.2431C57.8111 20.6096 58.0293 20.1238 58.4666 19.7864C58.9036 19.449 59.5998 19.2089 60.5556 19.0656L63.5744 18.6057V20.3843ZM65.4346 11.4458C64.2349 10.495 62.7206 10.0198 60.8909 10.0198C59.1018 10.0198 57.6993 10.4031 56.6827 11.1698C55.6743 11.93 54.9569 13.0784 54.5287 14.6127L57.7937 15.2085C57.9356 14.5095 58.2198 13.9696 58.6496 13.5924C59.1271 13.1737 59.8337 12.964 60.7691 12.964C62.6393 12.964 63.5745 13.8944 63.5745 15.7546V15.9387L60.3116 16.3986C58.0749 16.7053 56.515 17.3033 55.6307 18.1927C54.7464 19.082 54.3042 20.1708 54.3042 21.4588C54.3042 22.3995 54.5377 23.2276 55.0056 23.9429C55.4731 24.6588 56.1034 25.2108 56.8961 25.599C57.6892 25.9872 58.563 26.1818 59.5187 26.1818C61.4904 26.1818 62.9035 25.5789 63.7574 24.3723L64.1538 25.7523H67.2338V15.6934C67.2338 13.8126 66.6341 12.3965 65.4346 11.4458ZM13.1151 13.519C17.302 14.3547 20.3139 13.9602 22.2514 12.3347V4.20114H25.8592V25.535H22.2514V16.3925V16.1184C20.7622 16.8201 19.0142 17.1731 16.9913 17.1731C15.7959 17.1731 14.5039 17.0492 13.1151 16.8046V25.535H9.50866V15.9599C9.03462 15.8241 8.55231 15.6785 8.0594 15.5198C5.47279 14.6879 2.15403 15.0945 0.723524 15.7075L0 12.5309C2.07157 11.8148 5.76141 11.3847 8.9963 12.4255C9.16891 12.481 9.33908 12.534 9.50866 12.5865V4.20114H13.1151V12.9485V13.519Z" fill="#E6485C"/></svg>
+    <div class="crumb"><span class="es">Pricing · Daily B2B · Estado</span><span class="en">Pricing · Daily B2B · Status</span></div>
+    <div class="right"><span><span class="es">borrador · 4-sep-2026</span><span class="en">draft · Sep 4, 2026</span></span><span class="tag" style="margin-left:0;background:#E7F4EE;color:var(--green-d)"><span class="es">VALIDADO · SELLO EN CURSO</span><span class="en">VALIDATED · SIGN-OFF IN PROGRESS</span></span>
+      <div class="langsw" id="langsw"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
+    </div>
+  </div>
+</header>
+
+<div class="ribbon"><div class="wrap">⚠️ <span><span class="es"><b>Validado por Data por camino independiente (~1-3%).</b> Sello final en curso (dos ajustes de la corrida de Data en revisión) y ratificación de mesa pendiente. No citar fuera de este contexto.</span><span class="en"><b>Validated by Data via an independent path (~1-3%).</b> Final sign-off in progress (two adjustments of Data's run under review) and table ratification pending. Do not quote outside this context.</span></span></div></div>
+
+<div class="wrap">
+
+  <div class="hero reveal">
+    <div class="eyebrow"><span class="es">PPC-180 · Refresh de tiers · datos reales del producto</span><span class="en">PPC-180 · Tier refresh · real product data</span></div>
+    <h1><span class="es">El Daily funciona. Recomendamos 2 tiers: 3€ + 4€.</span><span class="en">The Daily works. We recommend 2 tiers: €3 + €4.</span></h1>
+    <p class="lede"><span class="es">Tres meses de datos del producto, no proxies. Recomendación de Pricing: <b>1º 2 tiers (3€ + 4€)</b> — no genera ruido con nuestro propio B2C en decenas de países; <b>2º un precio único de 4€</b> si la mesa prioriza simplicidad. 6€ es el único nivel que los datos descartan.</span><span class="en">Three months of product data, not proxies. Pricing's recommendation: <b>1st, 2 tiers (€3 + €4)</b> — no friction with our own B2C across dozens of countries; <b>2nd, a single €4 price</b> if the table prioritizes simplicity. €6 is the only level the data rules out.</span></p>
+    <div class="stats" style="margin-top:28px">
+      <div class="stat"><div class="big"><span class="count" data-to="55.7" data-dec="1" data-pre="€" data-suf="k">€0k</span></div><div class="lab"><span class="es">net confirmado desde launch (29-may → 31-ago), solo cuentas empresa</span><span class="en">confirmed net since launch (May 29 → Aug 31), business accounts only</span></div><div class="pend" style="color:var(--green-d)"><span class="es">✓ validado por Data (camino independiente)</span><span class="en">✓ validated by Data (independent path)</span></div></div>
+      <div class="stat"><div class="big g"><span class="count" data-to="78.8" data-dec="1" data-suf="%">0%</span></div><div class="lab"><span class="es">margen solo costo de datos, medido. El cargo fijo por eSIM (~3 pts) va aparte, estimado</span><span class="en">data-cost-only margin, measured. The fixed per-eSIM charge (~3 pts) is separate, estimated</span></div><div class="pend" style="color:var(--green-d)"><span class="es">✓ validado por Data (camino independiente)</span><span class="en">✓ validated by Data (independent path)</span></div></div>
+      <div class="stat"><div class="big"><span class="count" data-to="76" data-dec="0" data-suf="%">0%</span></div><div class="lab"><span class="es">de las unidades se activan; 30% de los días vendidos no se usan</span><span class="en">of units activate; 30% of sold days go unused</span></div></div>
+    </div>
+    <details class="method"><summary><span class="es">Mapa de confianza: qué es firme, qué es preliminar, qué falta</span><span class="en">Confidence map: what is solid, preliminary, missing</span></summary><div class="body" style="padding-top:10px">
+      <div class="cmap">
+        <div class="cbox"><span class="chip ok"><span class="d"></span><span class="es">Firme · medido</span><span class="en">Solid · measured</span></span>
+          <p><span class="es"><b>Universo y serie del Daily:</b> cuentas empresa, revenue confirmado, 13 controles internos en verde.</span><span class="en"><b>Daily universe and series:</b> business accounts, confirmed revenue, 13 internal checks green.</span></p>
+          <p><span class="es"><b>Costo por región:</b> consumo real, confirmado por 3 vías (dashboard B2B, Carriers, sheet 12-ago: 75 destinos ±2%).</span><span class="en"><b>Cost per region:</b> real consumption, confirmed via 3 routes (B2B dashboard, Carriers, Aug-12 sheet: 75 destinations ±2%).</span></p>
+          <p><span class="es"><b>Breakevens:</b> catálogo (lista) + pagado de agosto (efectivo), por destino×duración.</span><span class="en"><b>Breakevens:</b> catalog (list) + August paid (effective), by destination×duration.</span></p></div>
+        <div class="cbox"><span class="chip mid"><span class="d"></span><span class="es">Preliminar · con Data</span><span class="en">Preliminary · with Data</span></span>
+          <p><span class="es"><b>El sello final de Data:</b> las dos partes ya cerraron por camino independiente (~1-3%); quedan dos ajustes de la corrida de Data en revisión conjunta.</span><span class="en"><b>Data's final sign-off:</b> both parts already closed via an independent path (~1-3%); two adjustments of Data's run remain under joint review.</span></p>
+          <p><span class="es"><b>El segmento thru-B2C:</b> sigue siendo un máximo por proxy de dominio, pero Data lo reconstruyó de forma independiente con su propia lista (+3,2% en revenue; hotspot 12,45/8,43 confirma la señal).</span><span class="en"><b>The thru-B2C segment:</b> still an upper bound via domain proxy, but Data rebuilt it independently with its own list (+3.2% on revenue; hotspot 12.45/8.43 confirms the signal).</span></p></div>
+        <div class="cbox"><span class="chip gap"><span class="d"></span><span class="es">Falta definir</span><span class="en">To be defined</span></span>
+          <p><span class="es"><b>Ratificar la recomendación en mesa</b> (1º 2 tiers 3+4 · 2º 4€ único).</span><span class="en"><b>Ratify the recommendation at the table</b> (1st 2 tiers 3+4 · 2nd single €4).</span></p>
+          <p><span class="es"><b>Cargo fijo por eSIM:</b> confirmado que NO existe fuente de datos para B2B. El ~3 pts es supuesto nuestro sin respaldo. Gap a plantear al equipo de Data.</span><span class="en"><b>Fixed per-eSIM charge:</b> confirmed that NO data source exists for B2B. The ~3 pts is our unbacked assumption. Gap to raise with the Data team.</span></p>
+          <p><span class="es"><b>Elasticidad:</b> no medida; nada de esta página proyecta volumen.</span><span class="en"><b>Elasticity:</b> not measured; nothing on this page projects volume.</span></p></div>
+      </div>
+    </div></details>
+  </div>
+
+  <!-- 01 -->
+  <section class="reveal">
+    <div class="snum">01 · <span class="es">QUÉ ENTENDIMOS</span><span class="en">WHAT WE LEARNED</span> <span class="tag" style="background:#E7F4EE;color:var(--green-d)"><span class="es">validado por Data ~1-3%</span><span class="en">Data-validated ~1-3%</span></span></div>
+    <h2><span class="es">El producto crece y ya sabemos lo que cuesta</span><span class="en">The product grows and we now know its cost</span></h2>
+    <p class="sub"><span class="es">Solo cuentas empresa. Agosto: más órdenes, viajes más cortos — cambio de ticket, no caída.</span><span class="en">Business accounts only. August: more orders, shorter trips — ticket change, not a decline.</span></p>
+    <div class="cmp"><table>
+      <tr><th><span class="es">Mes</span><span class="en">Month</span></th><th class="num"><span class="es">Órdenes</span><span class="en">Orders</span></th><th class="h-b2b num">Net €</th><th class="num"><span class="es">€/día efectivo</span><span class="en">Effective €/day</span></th><th class="num"><span class="es">Días por orden</span><span class="en">Days per order</span></th></tr>
+      <tr><td><span class="es">Junio</span><span class="en">June</span></td><td class="num">310</td><td class="bigcell num">9.333</td><td class="num">2,72</td><td class="num">11,1</td></tr>
+      <tr><td><span class="es">Julio</span><span class="en">July</span></td><td class="num">582</td><td class="bigcell num">24.846</td><td class="num">2,93</td><td class="num">14,6</td></tr>
+      <tr><td><span class="es">Agosto</span><span class="en">August</span></td><td class="num">631</td><td class="bigcell num">21.482</td><td class="num">2,91</td><td class="num">11,7</td></tr>
+    </table></div>
+    <p class="cmpnote"><span class="es"><b>Por qué el €/día queda bajo 3,00:</b> el precio de lista es 3,00 en todo el mundo; el net descuenta los descuentos por volumen (2,6% del gross jun-ago) y los reembolsos.</span><span class="en"><b>Why €/day sits below 3.00:</b> list price is 3.00 worldwide; net deducts volume discounts (2.6% of gross Jun-Aug) and refunds.</span></p>
+
+    <h2 style="margin-top:38px"><span class="es">El costo real, región por región</span><span class="en">Real cost, region by region</span></h2>
+    <p class="sub"><span class="es">Medido con el consumo del propio Daily, confirmado por tres vías. El proxy de junio sobre-costeaba media planilla.</span><span class="en">Measured with the Daily’s own consumption, confirmed via three routes. June’s proxy over-costed half the sheet.</span></p>
+    <div class="cmp"><table>
+      <tr><th><span class="es">Región</span><span class="en">Region</span></th><th class="num"><span class="es">Proxy junio €/día</span><span class="en">June proxy €/day</span></th><th class="h-b2b num"><span class="es">Real medido €/día</span><span class="en">Measured real €/day</span></th><th><span class="es">Lectura</span><span class="en">Read</span></th></tr>
+      <tr><td><span class="es">Europa · Norteamérica · Oceanía</span><span class="en">Europe · North America · Oceania</span></td><td class="num">0,33 – 0,60</td><td class="win num">0,21 – 0,56</td><td class="par"><span class="es">el 3€ aguanta holgado</span><span class="en">€3 holds comfortably</span></td></tr>
+      <tr><td>Asia</td><td class="num">1,56</td><td class="win num">0,61</td><td><span class="es">sobre-costeada <b>2,5×</b> → entra al 3€</span><span class="en">over-costed <b>2.5×</b> → joins €3</span></td></tr>
+      <tr><td>Latam</td><td class="num">1,55</td><td class="win num">0,95</td><td><span class="es">sobre-costeada <b>1,6×</b></span><span class="en">over-costed <b>1.6×</b></span></td></tr>
+      <tr><td><span class="es">Medio Oriente</span><span class="en">Middle East</span></td><td class="num">2,16</td><td class="win num">1,67</td><td><span class="es">sobre-costeada <b>1,3×</b></span><span class="en">over-costed <b>1.3×</b></span></td></tr>
+      <tr><td><span class="es">África</span><span class="en">Africa</span></td><td class="num">2,45</td><td class="lose num">2,31</td><td class="lose"><span class="es">cara, como se asumió</span><span class="en">expensive, as assumed</span></td></tr>
+    </table></div>
+    <div class="note">🧭 <span class="es"><b>La cola cara no tiene arreglo de ruteo</b> (SEN 9,22 €/día · OMN 3,92 · MUS 3,72 · KEN 3,68 · KAZ 2,41): se resuelve por precio. La única palanca de costo sobre la mesa es <b>Marruecos −60%</b>, en consulta con Carriers.</span><span class="en"><b>The expensive tail has no routing fix</b> (SEN €9.22/day · OMN 3.92 · MUS 3.72 · KEN 3.68 · KAZ 2.41): it gets solved through price. The only cost lever on the table is <b>Morocco −60%</b>, being checked with Carriers.</span></div>
+  </section>
+
+  <!-- 02 -->
+  <section class="reveal">
+    <div class="snum">02 · <span class="es">LAS DOS OPCIONES</span><span class="en">THE TWO OPTIONS</span> <span class="tag draft"><span class="es">datos validados · recomendación a ratificar</span><span class="en">data validated · recommendation to ratify</span></span></div>
+    <h2><span class="es">Dos esquemas vivos, una decisión pendiente</span><span class="en">Two live schemes, one pending decision</span></h2>
+    <p class="sub"><span class="es">Asia ya está decidida al 3€ dentro del esquema de tiers (cuesta 0,61 €/día medido). Recomendamos la opción 1; la 2 queda como alternativa si la mesa prioriza simplicidad.</span><span class="en">Asia is already set at €3 within the tier scheme (measured cost €0.61/day). We recommend option 1; option 2 remains the alternative if the table prioritizes simplicity.</span></p>
+    <div class="tiers">
+      <div class="tier lead"><div class="price">3€ + 4€<span>/<span class="es">día</span><span class="en">day</span></span></div><div class="reg"><span class="es">2 tiers: 3€ (Europa·NA·Oceanía·Asia) + 4€ (Latam·ME·África)</span><span class="en">2 tiers: €3 (Europe·NA·Oceania·Asia) + €4 (Latam·ME·Africa)</span></div><div class="meta"><span class="es">GM <b>75,7%</b> · la mejor historia de precio: el B2C recién alcanza al Daily el día 9-10 en todo el catálogo</span><span class="en">GM <b>75.7%</b> · the best price story: B2C only catches the Daily on day 9-10 across the catalog</span></div><div class="gmbadge"><span class="es">Gana por PRECIO · sin ruido con B2C</span><span class="en">Wins on PRICE · no friction with B2C</span></div><br><span class="decbadge"><span class="es">RECOMENDACIÓN Nº1</span><span class="en">RECOMMENDATION #1</span></span></div>
+      <div class="tier"><div class="price" style="color:var(--slate)">4€<span>/<span class="es">día, único</span><span class="en">day, single</span></span></div><div class="reg"><span class="es">Un solo precio en todo el mundo</span><span class="en">One price worldwide</span></div><div class="meta"><span class="es">GM <b>79,9%</b> · la oferta más simple de explicar y operar. Se vende por conveniencia: quien compare contra B2C pagará un poco menos allá en las zonas baratas</span><span class="en">GM <b>79.9%</b> · the simplest offer to explain and operate. Sells on convenience: whoever compares against B2C will pay a bit less there in cheap zones</span></div><div class="gmbadge"><span class="es">Gana por SIMPLICIDAD y margen</span><span class="en">Wins on SIMPLICITY and margin</span></div><br><span class="decbadge" style="background:var(--slate)"><span class="es">ALTERNATIVA Nº2</span><span class="en">ALTERNATIVE #2</span></span></div>
+    </div>
+
+    <h2 style="margin-top:38px"><span class="es">Probá los niveles</span><span class="en">Try the levels</span></h2>
+    <p class="sub"><span class="es"><b>Breakeven</b> = el día de viaje en que nuestro propio B2C sale más barato que el Daily (lista = precio del sitio; efectivo = lo pagado en agosto, con los descuentos frecuentes de B2C).</span><span class="en"><b>Breakeven</b> = the trip day when our own B2C becomes cheaper than the Daily (list = site price; effective = what was paid in August, with B2C’s frequent discounts).</span></p>
+    <div class="switch" id="dial">
+      <button data-k="p4" class="on"><span class="es">2 tiers · 3€ + 4€</span><span class="en">2 tiers · €3 + €4</span></button>
+      <button data-k="p5"><span class="es">2 tiers · 3€ + 5€</span><span class="en">2 tiers · €3 + €5</span></button>
+      <button data-k="p6"><span class="es">2 tiers · 3€ + 6€</span><span class="en">2 tiers · €3 + €6</span></button>
+      <button data-k="flat"><span class="es">Precio único · 4€</span><span class="en">Single price · €4</span></button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="big g" id="d-gm">75,7%</div><div class="lab"><span class="es">margen solo-data del esquema (hoy, 3€ flat: 73,3%)</span><span class="en">data-only margin of the scheme (today, flat €3: 73.3%)</span></div></div>
+      <div class="stat"><div class="big" id="d-lista"><span class="es">día 10</span><span class="en">day 10</span></div><div class="lab" id="d-listalab"><span class="es">cruce vs LISTA (mediana, tier alto)</span><span class="en">crossover vs LIST (median, high tier)</span></div></div>
+      <div class="stat"><div class="big" id="d-efec"><span class="es">día 9</span><span class="en">day 9</span></div><div class="lab" id="d-efeclab"><span class="es">cruce vs EFECTIVO (mediana, tier alto)</span><span class="en">crossover vs EFFECTIVE (median, high tier)</span></div></div>
+    </div>
+    <div class="dialread g" id="d-read"><b><span class="es">Recomendación Nº1.</span><span class="en">Recommendation #1.</span></b> <span class="es">Pareja con las zonas de 3€ (cruce día 11-17 allá): una sola historia de precio en todo el catálogo.</span><span class="en">On par with the €3 zones (crossover day 11-17 there): one price story across the catalog.</span></div>
+    <details class="method"><summary><span class="es">Ver el cuadro completo y la recomendación con su porqué</span><span class="en">See the full grid and the recommendation with its rationale</span></summary><div class="body">
+      <div class="cmp" style="margin-top:8px"><table>
+        <tr><th><span class="es">Esquema</span><span class="en">Scheme</span></th><th class="h-b2b num"><span class="es">GM solo-data</span><span class="en">Data-only GM</span></th><th class="num"><span class="es">BE lista</span><span class="en">BE list</span></th><th class="num"><span class="es">BE efectivo</span><span class="en">BE effective</span></th><th><span class="es">Lectura</span><span class="en">Read</span></th></tr>
+        <tr><td><span class="es">3€ hoy (flat)</span><span class="en">€3 today (flat)</span></td><td class="num">73,3%</td><td class="par num">—</td><td class="par num"><span class="es">día 14</span><span class="en">day 14</span></td><td class="par"><span class="es">referencia</span><span class="en">reference</span></td></tr>
+        <tr><td><span class="es">2 tiers · alto a 4€</span><span class="en">2 tiers · high at €4</span></td><td class="num">75,7%</td><td class="win num"><span class="es">día 10</span><span class="en">day 10</span></td><td class="win num"><span class="es">día 9</span><span class="en">day 9</span></td><td><span class="es">candidato vivo</span><span class="en">live candidate</span></td></tr>
+        <tr><td><span class="es">2 tiers · alto a 5€</span><span class="en">2 tiers · high at €5</span></td><td class="num">77,8%</td><td class="num"><span class="es">día 6</span><span class="en">day 6</span></td><td class="num"><span class="es">día 6</span><span class="en">day 6</span></td><td class="par"><span class="es">último escalón antes del acantilado</span><span class="en">last step before the cliff</span></td></tr>
+        <tr><td><span class="es">2 tiers · alto a 6€</span><span class="en">2 tiers · high at €6</span></td><td class="num">79,5%</td><td class="lose num"><span class="es">día 4</span><span class="en">day 4</span></td><td class="lose num"><span class="es">día 2</span><span class="en">day 2</span></td><td class="lose"><span class="es">descartado: 52/91 destinos cruzan día 1-2</span><span class="en">ruled out: 52/91 destinations cross day 1-2</span></td></tr>
+        <tr><td><span class="es">Precio único 4€</span><span class="en">Single price €4</span></td><td class="win num">79,9%</td><td class="num"><span class="es">día 1 (zonas hoy-3€)</span><span class="en">day 1 (today-€3 zones)</span></td><td class="num"><span class="es">día 1</span><span class="en">day 1</span></td><td><span class="es">candidato vivo: se vende por conveniencia, no por precio</span><span class="en">live candidate: sells on convenience, not price</span></td></tr>
+      </table></div>
+      <p class="cmpnote"><span class="es">Trade del nivel: a 4€ África queda en 42% solo-data (Latam 76 · ME 58); a 6€ África 62. En zonas de 3€ el B2C de lista recién cruza el día 17 (la intuición de ~16 días del ticket era correcta) y hay 21 destinos donde no cruza en el rango observado. El modelo v12 calcula cualquier nivel en vivo.</span><span class="en">Level trade: at €4 Africa sits at 42% data-only (Latam 76 · ME 58); at €6 Africa 62. In €3 zones list-price B2C only crosses on day 17 (the ticket’s ~16-day intuition was right) and 21 destinations never cross in the observed range. The v12 model computes any level live.</span></p>
+      <p><span class="es"><b>Recomendación de Pricing (5-sep, a ratificar en mesa):</b> 1º <b>2 tiers 3+4</b> — la razón de fondo es no generar ruido con nuestro propio B2C: con precio único, en decenas de países de las zonas baratas el B2C quedaría más barato desde el día 1 y el Daily perdería su ancla de precio. 2º <b>4€ único</b> como alternativa válida si la mesa prioriza la simplicidad comercial y operativa (mejor margen, se vende por conveniencia).</span><span class="en"><b>Pricing's recommendation (Sep 5, to ratify at the table):</b> 1st <b>2 tiers 3+4</b> — the core reason is avoiding friction with our own B2C: with a single price, in dozens of cheap-zone countries B2C would be cheaper from day 1 and the Daily would lose its price anchor. 2nd <b>single €4</b> as a valid alternative if the table prioritizes commercial and operational simplicity (better margin, sells on convenience).</span></p>
+    </div></details>
+    <div class="flatwarn"><span class="es">Los GM comparan estructura sobre el mix observado: <b>la elasticidad no está medida</b> — esto no proyecta revenue.</span><span class="en">GMs compare structure over the observed mix: <b>elasticity is not measured</b> — this does not project revenue.</span></div>
+  </section>
+
+  <!-- 03 -->
+  <section class="reveal">
+    <div class="snum">03 · <span class="es">LA OTRA PATA</span><span class="en">THE OTHER LEG</span> <span class="tag draft"><span class="es">proxy · dominio de email</span><span class="en">proxy · email domain</span></span></div>
+    <h2><span class="es">La oportunidad: empresas que ya compran dentro de B2C</span><span class="en">The opportunity: companies already buying inside B2C</span></h2>
+    <p class="sub"><span class="es">Las 4 unidades del deck de junio, refrescadas con la misma ventana (jun-ago) en toda la fila nueva.</span><span class="en">The 4 units from the June deck, refreshed with the same window (Jun-Aug) across the new row.</span></p>
+    <div class="cmp"><table>
+      <tr>
+        <th><span class="es">Unidad</span><span class="en">Unit</span></th>
+        <th><span class="es">B2C puro</span><span class="en">Pure B2C</span><span class="th2"><span class="es">sin el corp inferido</span><span class="en">without inferred corp</span></span></th>
+        <th style="background:#EE7C8B">B2B-thru-B2C<span class="th2"><span class="es">inferido · dominio</span><span class="en">inferred · domain</span></span></th>
+        <th style="background:var(--coral)">B2B-thru-B2C<span class="th2"><span class="es">cupón · Emilio</span><span class="en">coupon · Emilio</span></span></th>
+        <th class="h-b2b"><span class="es">B2B puro</span><span class="en">Pure B2B</span><span class="th2">Unlimited · AlwaysOn · Daily</span></th>
+      </tr>
+      <tr><td><span class="es">Research de junio (deck v4) · ventana feb-jun</span><span class="en">June research (deck v4) · Feb-Jun window</span></td><td class="num">€114,8M</td><td class="bigcell num" style="background:#FDF4F5">€11,4M<span class="msub"><span class="es">≈ €31,8M run-rate 12m · máximo</span><span class="en">≈ €31.8M 12m run-rate · upper bound</span></span></td><td class="num" style="background:#FDEFF1">€17,9k<span class="msub"><span class="es">mínimo confirmado</span><span class="en">confirmed floor</span></span></td><td class="num">€0,64M</td></tr>
+      <tr><td><span class="es">Refresh 4-sep · ventana jun-ago (core)</span><span class="en">Sep-4 refresh · Jun-Aug window (core)</span></td><td class="num">€87,8M</td><td class="bigcell num" style="background:#FDF4F5">€7,0M<span class="msub"><span class="es">≈ €27,8M anualizado · 7,4% del B2C core</span><span class="en">≈ €27.8M annualized · 7.4% of core B2C</span></span></td><td class="par num">—</td><td class="num">€271k<span class="msub"><span class="es">dashboard web: Unlim 154,5k + renov. 40,4k · Daily 56,5k · AlwaysOn 19,0k</span><span class="en">web dashboard: Unlim 154.5k + renewals 40.4k · Daily 56.5k · AlwaysOn 19.0k</span></span></td></tr>
+    </table></div>
+    <p class="cmpnote"><span class="es"><b>Por qué dominio y cupón no se suman:</b> el dominio sobreestima (también capta universidades y proveedores chicos de internet — por eso es un máximo); el cupón solo cuenta a quienes usaron un código B2B (por eso es un mínimo). El tamaño real está entre los dos. El share corp histórico era 8,8-9,0%; el 7,4% de jun-ago es levemente menor (mix de destinos migrados y/o estacionalidad).</span><span class="en"><b>Why domain and coupon don’t add up:</b> the domain overestimates (it also catches universities and small ISPs — hence an upper bound); the coupon only counts those who used a B2B code (hence a floor). The real size sits between the two. Historical corp share was 8.8-9.0%; Jun-Aug’s 7.4% is slightly lower (migrated-destination mix and/or seasonality).</span></p>
+
+    <h2 style="margin-top:38px"><span class="es">Una señal de comportamiento a favor del proxy</span><span class="en">A behavioral signal in the proxy’s favor</span></h2>
+    <p class="sub"><span class="es"><b>Hotspot</b> = compartir el internet del teléfono con la computadora — típico de quien trabaja en viaje. La barra muestra qué % del tráfico de cada grupo salió por hotspot (jun-ago, salvo indicación):</span><span class="en"><b>Hotspot</b> = sharing the phone’s internet with a laptop — typical of someone working while traveling. Each bar shows what % of the group’s traffic went through hotspot (Jun-Aug unless noted):</span></p>
+    <div class="gm">
+      <div class="brow"><div class="who"><span class="es">B2C consumer</span><span class="en">B2C consumer</span><span class="msub"><span class="es">viajeros particulares</span><span class="en">individual travelers</span></span></div><div class="track"><i style="--w:29.3%;background:#9AA7B2"></i></div><div class="bval">8,8%</div></div>
+      <div class="brow"><div class="who">Corp thru-B2C<span class="msub"><span class="es">el cohort inferido por dominio</span><span class="en">the domain-inferred cohort</span></span></div><div class="track"><i style="--w:42.3%;background:#EE7C8B"></i></div><div class="bval">12,7%</div></div>
+      <div class="brow"><div class="who">Daily B2B<span class="msub"><span class="es">clientes empresa reales</span><span class="en">real business customers</span></span></div><div class="track"><i style="--w:40.3%;background:var(--green)"></i></div><div class="bval">12,1%</div></div>
+      <div class="brow"><div class="who">B2B Unlimited<span class="msub"><span class="es">expatriados / larga estadía</span><span class="en">expats / long stay</span></span></div><div class="track"><i style="--w:86.3%;background:var(--green-d)"></i></div><div class="bval">25,9%</div></div>
+      <div class="axisnote"><span class="es">Barras a escala 0-30%, todas medidas en jun-ago. Lectura: el cohort inferido (12,7%) queda al nivel de los clientes empresa reales del Daily (12,1%) y por encima del consumer (8,8%); el Unlimited B2B (larga estadía, laptop) es otro animal (25,9% global; 29,2% en USA — lo que explica los ~29% de ejercicios centrados en US). El corte USA del Daily da 9,7%: la diferencia es de producto y población, no de geografía. La barra Unlimited se mide por producto (sin filtro de cuenta), convención declarada.</span><span class="en">Bars on a 0-30% scale, all measured in Jun-Aug. Read: the inferred cohort (12.7%) sits at the level of the Daily’s real business customers (12.1%) and above the consumer (8.8%); the B2B Unlimited (long stay, laptops) is another animal (25.9% global; 29.2% in the US — which explains the ~29% of US-centric exercises). The Daily’s own US cut is 9.7%: the gap is about product and population, not geography. The Unlimited bar is measured by product (no account filter), convention declared.</span></div>
+    </div>
+    <div class="flatwarn"><span class="es"><b>Cuán fuerte es esto:</b> señal CONSISTENTE con comportamiento de empresa, no una prueba — y ahora con doble vía: Data reconstruyó el cohort con su propia lista y le dio 12,45% vs 8,43% (nuestro 12,7/8,8). El test de refutación pasó dos veces. Sin intervalos por unidad: según Data, innecesarios (diferencia grande vs miles de líneas por cohorte).</span><span class="en"><b>How strong this is:</b> a signal CONSISTENT with business behavior, not proof — now via two routes: Data rebuilt the cohort with its own list and got 12.45% vs 8.43% (ours: 12.7/8.8). The refutation test passed twice. No per-unit intervals: per Data, unnecessary (large gap vs thousands of lines per cohort).</span></div>
+    <details class="method"><summary><span class="es">El resto del comportamiento del cohort (AOV, duración, descuentos)</span><span class="en">The rest of the cohort’s behavior (AOV, duration, discounts)</span></summary><div class="body">
+      <div class="cmp" style="margin-top:8px"><table>
+        <tr><th><span class="es">Métrica (jun-ago, core)</span><span class="en">Metric (Jun-Aug, core)</span></th><th style="background:#EE7C8B" class="num">Corp thru-B2C</th><th class="num">B2C consumer</th></tr>
+        <tr><td><span class="es">AOV € por orden</span><span class="en">AOV € per order</span></td><td class="win num">34,25 (+18%)</td><td class="num">28,93</td></tr>
+        <tr><td><span class="es">Días vendidos por orden</span><span class="en">Sold days per order</span></td><td class="win num">11,3 (+16%)</td><td class="num">9,7</td></tr>
+        <tr><td><span class="es">% de órdenes con algún descuento</span><span class="en">% of orders using any discount</span></td><td class="win num">31,3</td><td class="num">36,7</td></tr>
+        <tr><td><span class="es">€ por día vendido</span><span class="en">€ per sold day</span></td><td class="num">3,02</td><td class="num">2,99</td></tr>
+        <tr><td><span class="es">GB por día activo (agregado)</span><span class="en">GB per active day (aggregate)</span></td><td class="num">1,01</td><td class="num">1,18</td></tr>
+        <tr><td><span class="es">% de unidades que activan</span><span class="en">% of units that activate</span></td><td class="num">84,3</td><td class="num">85,6</td></tr>
+      </table></div>
+      <p class="cmpnote"><span class="es">El €/día vendido es idéntico al del consumer: el premium de AOV corp es que viaja más largo, no que paga más caro.</span><span class="en">€ per sold day is identical to the consumer’s: the corp AOV premium is longer trips, not higher prices.</span></p>
+    </div></details>
+    <details class="method"><summary><span class="es">Cómo se construyó el cohort y cómo se reprodujo antes de extender</span><span class="en">How the cohort was built and reproduced before extending</span></summary><div class="body">
+      <p><span class="es"><b>Receta (idéntica a junio):</b> dominio del email del viajero, fuera de ~40 proveedores masivos y con ≤1000 cuentas; B2C = viajeros de tenant b2c; una orden es corp si al menos un viajero lo es. En junio triangulaba con el método del equipo B2B (<code>non_corp_domains</code>) con &lt;1% de diferencia.</span><span class="en"><b>Recipe (identical to June):</b> traveler email domain, outside ~40 mass providers and with ≤1000 accounts; B2C = travelers under a b2c tenant; an order is corp if at least one traveler is. In June it triangulated with the B2B team’s method (<code>non_corp_domains</code>) within &lt;1%.</span></p>
+      <p><span class="es"><b>Reproducciones (ventanas clavadas de junio):</b> legacy 12m −0,2% (clava) · core 12m −2,6% (el cap de ≤1000 se evalúa sobre la tabla de hoy, que creció — mecanismo declarado), total +3,4% por backfill.</span><span class="en"><b>Reproductions (June’s pinned windows):</b> legacy 12m −0.2% (matches) · core 12m −2.6% (the ≤1000 cap is evaluated on today’s table, which grew — mechanism declared), total +3.4% from backfill.</span></p>
+      <p><span class="es"><b>Validaciones de método (PPC-179):</b> 0% de inflación por proveedor en nuestros conteos del Daily (por routing sería +111%, por filas +165% — por eso se cuenta por ids únicos) · el "B2B = 0,07% del costo USA" de Data, reproducido: 0,068%.</span><span class="en"><b>Method validations (PPC-179):</b> 0% provider-dimension inflation in our Daily counts (by routing it would be +111%, by raw rows +165% — hence counting by unique ids) · Data’s "B2B = 0.07% of US cost", reproduced: 0.068%.</span></p>
+    </div></details>
+    <div class="flatwarn"><span class="es">Todo este bloque es <b>proxy por dominio</b>: un máximo. Data lo reconstruyó de forma independiente (+3,2%, hotspot confirmado); la confirmación por facturación real sigue sin existir como fuente.</span><span class="en">This whole block is a <b>domain proxy</b>: an upper bound. Data rebuilt it independently (+3.2%, hotspot confirmed); confirmation via real billing still lacks a data source.</span></div>
+  </section>
+
+  <!-- 04 -->
+  <section class="reveal">
+    <div class="snum">04 · <span class="es">QUÉ FALTA</span><span class="en">WHAT’S MISSING</span></div>
+    <h2><span class="es">Pendientes, en orden</span><span class="en">Pending items, in order</span></h2>
+    <div class="aclar">
+      <div class="box mesa"><b><span class="es">Ratificar la recomendación de precio</span><span class="en">Ratify the price recommendation</span></b><span><span class="es">Recomendación de Pricing lista: 1º 2 tiers 3+4 (sin ruido con nuestro B2C en decenas de países) · 2º 4€ único (simplicidad y mejor margen). 6€ descartado por datos. Falta la ratificación de la mesa.</span><span class="en">Pricing's recommendation is set: 1st 2 tiers 3+4 (no friction with our B2C across dozens of countries) · 2nd single €4 (simplicity and better margin). €6 ruled out by data. The table's ratification is missing.</span></span><span class="who">Pricing → <span class="es">mesa</span><span class="en">table</span></span></div>
+      <div class="box pend"><b><span class="es">Sello final de Data</span><span class="en">Data’s final sign-off</span></b><span><span class="es">HECHO en lo grande: las dos partes cerraron por camino independiente (~1-3%; cohort +3,2%; hotspot confirmado). Quedan dos ajustes de la corrida de Data en revisión conjunta antes del sello final.</span><span class="en">DONE in substance: both parts closed via an independent path (~1-3%; cohort +3.2%; hotspot confirmed). Two adjustments of Data’s run remain under joint review before final sign-off.</span></span><span class="who">Fernando (Data)</span></div>
+      <div class="box pend"><b><span class="es">Ruteo de Marruecos</span><span class="en">Morocco routing</span></b><span><span class="es">−60% de costo si el cambio de B2C aplica a la eSIM global. Consulta async enviada.</span><span class="en">−60% cost if the B2C change applies to the global eSIM. Async query sent.</span></span><span class="who">Akshay / Joselyn (Carriers)</span></div>
+      <div class="box pend"><b><span class="es">Cargo fijo por eSIM</span><span class="en">Fixed per-eSIM charge</span></b><span><span class="es">Confirmado: NO existe fuente de datos para B2B (sí para trips B2C). El ~3 pts queda como supuesto sin respaldo, probablemente optimista en activaciones cortas. A plantear con Data como gap del modelo.</span><span class="en">Confirmed: NO data source exists for B2B (one exists for B2C trips). The ~3 pts stays as an unbacked assumption, likely optimistic on short activations. To raise with Data as a model gap.</span></span><span class="who">Fernando (Data)</span></div>
+      <div class="box pend"><b><span class="es">Elasticidad</span><span class="en">Elasticity</span></b><span><span class="es">No medida: los escenarios comparan margen, no proyectan volumen.</span><span class="en">Not measured: scenarios compare margin, they do not project volume.</span></span><span class="who">Pricing · <span class="es">post-decisión</span><span class="en">post-decision</span></span></div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="reveal" style="transform:none">
+    <div class="snum">05 · <span class="es">PARA LLEVARSE</span><span class="en">TAKEAWAYS</span></div>
+    <h2><span class="es">Cuatro cosas, en orden</span><span class="en">Four things, in order</span></h2>
+    <div class="stack">
+      <div class="scard" style="--i:0"><div class="idx">01 / 04</div><div class="n"><span class="es">El Daily funciona y ya sabemos lo que cuesta</span><span class="en">The Daily works and we now know its cost</span></div><div class="t"><span class="es">€55,7k en tres meses, 78,8% de margen solo-data medido, costo confirmado por tres vías. El proxy de junio sobre-costeaba Asia 2,5×: por eso Asia entra al 3€.</span><span class="en">€55.7k in three months, 78.8% measured data-only margin, cost confirmed via three routes. June’s proxy over-costed Asia 2.5×: that’s why Asia joins €3.</span></div></div>
+      <div class="scard" style="--i:1"><div class="idx">02 / 04</div><div class="n"><span class="es">Recomendamos 3+4; la alternativa es 4€ único</span><span class="en">We recommend 3+4; the alternative is single €4</span></div><div class="t"><span class="es">1º 2 tiers 3+4: no genera ruido con nuestro propio B2C (que recién alcanza al Daily el día 9-10 en todo el catálogo). 2º 4€ único: simplicidad y mejor margen (79,9%), vendido por conveniencia. 6€ es el único nivel que los datos descartan.</span><span class="en">1st, 2 tiers 3+4: no friction with our own B2C (which only catches the Daily on day 9-10 across the catalog). 2nd, single €4: simplicity and better margin (79.9%), sold on convenience. €6 is the only level the data rules out.</span></div></div>
+      <div class="scard" style="--i:2"><div class="idx">03 / 04</div><div class="n"><span class="es">Los ~€30M dan señales de ser empresas</span><span class="en">The ~€30M shows signs of being businesses</span></div><div class="t"><span class="es">La oportunidad de junio sigue viva (~€27,8M anualizados, mudada a core) y sumó una señal de comportamiento: su hotspot (12,7%) está al nivel de los clientes empresa reales (12,1%), no del consumer (8,8%). Señal consistente, no prueba — sigue siendo un máximo inferido, y por eso va a validación.</span><span class="en">June’s opportunity is alive (~€27.8M annualized, moved to core) and gained a behavioral signal: its hotspot (12.7%) sits at the level of real business customers (12.1%), not the consumer (8.8%). A consistent signal, not proof — still an inferred upper bound, which is why it goes to validation.</span></div></div>
+      <div class="scard fin" style="--i:3"><div class="idx">04 / 04</div><div class="n"><span class="es">Data validó; falta un verde: la mesa</span><span class="en">Data validated; one green missing: the table</span></div><div class="t"><span class="es">Las dos patas cerraron por camino independiente (~1-3%). Queda ratificar el 3+4 en la mesa (y el sello formal de Data tras dos ajustes menores). Con eso, deck v5 y update de PPC-180.</span><span class="en">Both legs closed via an independent path (~1-3%). What remains: ratifying 3+4 at the table (plus Data’s formal sign-off after two minor adjustments). Then: v5 deck and PPC-180 update.</span></div></div>
+    </div>
+  </section>
+
+  <details class="method"><summary><span class="es">Metodología y procedencia (para auditar)</span><span class="en">Methodology and provenance (for auditing)</span></summary><div class="body">
+    <p><span class="es"><b>Daily:</b> SKU <code>esim-global-trips-b2b</code>, órdenes de tenant b2b, revenue confirmado (fecha de pago) · consumo por línea de orden (fecha de uso); criterios reportados por separado. Reconciliaciones: revenue vs dashboard web 0,95-1,00 · consumo vs dashboard 1,01 jun/ago (jul +9% declarado) · rate card vs Carriers 75 destinos ±2%.</span><span class="en"><b>Daily:</b> SKU <code>esim-global-trips-b2b</code>, b2b-tenant orders, confirmed revenue (payment date) · consumption per order line (usage date); criteria reported separately. Reconciliations: revenue vs web dashboard 0.95-1.00 · consumption vs dashboard 1.01 Jun/Aug (Jul +9% declared) · rate card vs Carriers 75 destinations ±2%.</span></p>
+    <p><span class="es"><b>Breakeven:</b> curva B2C por destino×duración; lista = catálogo 3-sep, mínimo entre SKUs; efectivo = mediana pagada en agosto; cruce = primer día con B2C más barato; señal ≥5 unidades por celda. GM del dial: derivados del bloque de costos reales del v12 (la fila 6€ reproduce el 79,5% publicado; cross-checks en el modelo).</span><span class="en"><b>Breakeven:</b> B2C curve per destination×duration; list = Sep-3 catalog, minimum across SKUs; effective = August paid median; crossover = first day B2C is cheaper; signal ≥5 units per cell. Dial GMs: derived from v12’s real-cost block (the €6 row reproduces the published 79.5%; cross-checks in the model).</span></p>
+    <p><span class="es"><b>Cohort:</b> receta y reproducciones en la sección 03. Marco de evidencia: medido salvo indicación; cargo fijo estimado; proxy de dominio = máximo; elasticidad no determinable. <b>Validación (4-sep):</b> Data reprodujo las dos partes por camino independiente (~1-3%; costo al centavo) y reconstruyó el cohort con su propia lista. Del intercambio quedaron verificados el hallazgo del bundle (−12,5% si se filtra por bundle_name) y el cruce B2B-USA (0,068%, doble sustento). Registro completo (queries, job-ids, CSVs, v12, análisis de la validación) en la carpeta del hilo.</span><span class="en"><b>Cohort:</b> recipe and reproductions in section 03. Evidence frame: measured unless noted; fixed charge estimated; domain proxy = upper bound; elasticity not determinable. <b>Validation (Sep 4):</b> Data reproduced both parts via an independent path (~1-3%; cost to the cent) and rebuilt the cohort with its own list. The exchange verified the bundle finding (−12.5% when filtering by bundle_name) and the B2B-USA cross (0.068%, doubly supported). Full record in the thread folder.</span></p>
+  </div></details>
+
+  <footer>
+    <div class="src">
+      <div><b><span class="es">Estado:</span><span class="en">Status:</span></b> <span class="es">borrador interno · corridas 1-4 sep-2026 · validado por Data por camino independiente (sello final en curso) · pendiente mesa — no citar fuera de este contexto.</span><span class="en">internal draft · runs Sep 1-4, 2026 · Data-validated via independent path (final sign-off in progress) · table pending — do not quote outside this context.</span></div>
+      <div><span class="es">Preparado por Guido Mautino (Pricing) · el deck v5 reemplaza esto tras los dos verdes.</span><span class="en">Prepared by Guido Mautino (Pricing) · the v5 deck replaces this after both greens.</span></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fmt(v,dec){return v.toLocaleString(document.body.classList.contains('lang-en')?'en-US':'es-ES',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+  function countup(el){
+    var to=parseFloat(el.dataset.to),dec=parseInt(el.dataset.dec||'0',10),pre=el.dataset.pre||'',suf=el.dataset.suf||'';
+    if(rm){el.textContent=pre+fmt(to,dec)+suf;return;}
+    var dur=1100,t0=performance.now();
+    function step(t){var p=Math.min(1,(t-t0)/dur);p=1-Math.pow(1-p,3);el.textContent=pre+fmt(to*p,dec)+suf;if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('in');
+      e.target.querySelectorAll&&e.target.querySelectorAll('.count').forEach(function(c){if(!c._done){c._done=1;countup(c);}});
+      io.unobserve(e.target);}
+  });},{threshold:0.15});
+  document.querySelectorAll('.reveal,.gm').forEach(function(el){io.observe(el);});
+
+  var ls=document.getElementById('langsw');
+  if(ls){ls.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    [].forEach.call(ls.children,function(x){x.classList.remove('on');}); b.classList.add('on');
+    document.body.className = b.dataset.l==='en' ? 'lang-en' : 'lang-es';
+    render(cur);
+  });}
+
+  var ES={
+    p4:  {gm:'75,7%', lista:'día 10', efec:'día 9', cls:'g', read:'<b>Recomendación Nº1.</b> Pareja con las zonas de 3€ (cruce día 11-17 allá): una sola historia de precio en todo el catálogo.'},
+    p5:  {gm:'77,8%', lista:'día 6',  efec:'día 6', cls:'a', read:'<b>El último escalón.</b> +2,1 pts de margen sobre el 3+4, pero la ventana de precio del tier alto baja a menos de una semana.'},
+    p6:  {gm:'79,5%', lista:'día 4',  efec:'día 2', cls:'r', read:'<b>Descartado por los datos.</b> 52 de 91 destinos cruzan el día 1-2 (MAR/MEX/BRA/PER/COL el día 1 incluso contra lista): a 6€ el tier alto no puede venderse por precio.'},
+    flat:{gm:'79,9%', lista:'día 1',  efec:'día 1', cls:'a', read:'<b>Alternativa Nº2.</b> La oferta más simple de explicar y operar, y el mejor margen. Se vende por conveniencia (una eSIM global, facturación B2B): quien compare contra B2C pagará un poco menos allá en las zonas baratas — ahí el cruce es el día 1 en 59 de 76 destinos.'}
+  };
+  var EN={
+    p4:  {gm:'75.7%', lista:'day 10', efec:'day 9', cls:'g', read:'<b>Recommendation #1.</b> On par with the €3 zones (crossover day 11-17 there): one price story across the catalog.'},
+    p5:  {gm:'77.8%', lista:'day 6',  efec:'day 6', cls:'a', read:'<b>The last step.</b> +2.1 margin pts over 3+4, but the high tier’s price window drops under a week.'},
+    p6:  {gm:'79.5%', lista:'day 4',  efec:'day 2', cls:'r', read:'<b>Ruled out by the data.</b> 52 of 91 destinations cross on day 1-2 (MAR/MEX/BRA/PER/COL on day 1 even vs list): at €6 the high tier cannot be sold on price.'},
+    flat:{gm:'79.9%', lista:'day 1',  efec:'day 1', cls:'a', read:'<b>Alternative #2.</b> The simplest offer to explain and operate, and the best margin. It sells on convenience (one global eSIM, B2B billing): whoever compares against B2C will pay a bit less there in cheap zones — crossover is day 1 in 59 of 76 destinations.'}
+  };
+  var cur='p4';
+  function render(k){
+    cur=k;
+    var en=document.body.classList.contains('lang-en');
+    var d=(en?EN:ES)[k], flat=(k==='flat');
+    document.getElementById('d-gm').textContent=d.gm;
+    document.getElementById('d-lista').textContent=d.lista;
+    document.getElementById('d-efec').textContent=d.efec;
+    var zl=en?(flat?'crossover vs LIST (median, today-€3 zones)':'crossover vs LIST (median, high tier)')
+             :(flat?'cruce vs LISTA (mediana, zonas hoy-3€)':'cruce vs LISTA (mediana, tier alto)');
+    var ze=en?(flat?'crossover vs EFFECTIVE (median, today-€3 zones)':'crossover vs EFFECTIVE (median, high tier)')
+             :(flat?'cruce vs EFECTIVO (mediana, zonas hoy-3€)':'cruce vs EFECTIVO (mediana, tier alto)');
+    document.getElementById('d-listalab').textContent=zl;
+    document.getElementById('d-efeclab').textContent=ze;
+    var r=document.getElementById('d-read'); r.className='dialread '+d.cls; r.innerHTML=d.read;
+  }
+  var dial=document.getElementById('dial');
+  if(dial){dial.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    [].forEach.call(dial.children,function(x){x.classList.remove('on');}); b.classList.add('on');
+    render(b.dataset.k);
+  });}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Charming rules · Plans</title>
+<style>
+:root{--green:#16a06a;--green-d:#0f7a50;--ink:#16242f;--muted:#6b7c8a;--line:#e7edf1;--bg:#f7f9fb;--card:#fff;--blue:#1c3d5a;--red:#e15241;--amb:#8a5a00}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:40;background:rgba(247,249,251,.88);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+.nav .in{max-width:min(1600px,94vw);margin:0 auto;padding:11px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--green)}
+.navtag{font-size:12.5px;color:var(--muted);font-weight:600;border-left:1px solid var(--line);padding-left:16px}
+.spacer{flex:1}
+.fresh{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);padding:7px 13px;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:.12s;letter-spacing:.4px}
+.seg button.on{background:var(--ink);color:#fff}
+.wrap{max-width:min(1600px,94vw);margin:0 auto;padding:26px 22px 70px}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:-.02em}
+.tagline{color:var(--muted);font-size:15px;margin:0 0 20px;max-width:76ch}
+.prose{max-width:82ch}
+.inftitular{font-size:17px;font-weight:700;line-height:1.5;color:#16242f;background:#f7fafc;border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:15px 18px;margin:0 0 16px;max-width:110ch}
+.eurq{background:#fff4e5;border:1px solid #f0d3a8;color:#7a4b00;border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:13.5px;line-height:1.6;max-width:110ch}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 18px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 16px;flex:1;min-width:170px}
+.kpi b{display:block;font-size:23px;font-weight:800;line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi span{font-size:11.5px;color:var(--muted);font-weight:600;line-height:1.35;display:block;margin-top:2px}
+.infh{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5a6b78;margin:30px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.chips button{border:1px solid var(--line);background:var(--card);color:var(--muted);font:700 12.5px/1 inherit;letter-spacing:.03em;padding:8px 11px;border-radius:9px;cursor:pointer;transition:.12s;position:relative;font-variant-numeric:tabular-nums}
+.chips button:hover{color:var(--ink);background:#eef3f6}
+.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chips button.big:after{content:"";position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:#e8a317}
+.chips button.on.big:after{background:#ffc451}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:0 0 12px}
+.infcard{background:var(--card);border:1px solid #e2e9ee;border-radius:12px;box-shadow:0 1px 3px rgba(20,40,60,.05);overflow:hidden}
+.infcard>h3{margin:0;background:#f7fafc;border-bottom:1px solid #e2e9ee;padding:11px 15px;font-size:14px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.infcard>h3 em{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:#fff4e5;color:var(--amb);border:1px solid #f0d3a8;padding:2px 7px;border-radius:9px;white-space:nowrap}
+.row{padding:11px 15px;border-bottom:1px solid #eef2f5;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.row:last-child{border-bottom:none}
+.row .d{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:74px}
+.row .v{font-variant-numeric:tabular-nums;font-size:15px;flex:1;white-space:nowrap}
+.row .old{color:var(--muted)}.row .arw{color:#b9c4cd;margin:0 6px}.row .new{font-weight:800}
+.pct{font-size:11px;font-weight:800;border-radius:7px;padding:3px 7px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.up{background:#fdeceb;color:var(--red)}.dn{background:#e6f6ee;color:var(--green-d)}.eq{background:#f0f2f4;color:var(--muted)}
+.warn{font-size:13px;border-radius:10px;padding:10px 14px;margin:0 0 6px;line-height:1.55;max-width:110ch}
+.warn.hi{background:#fff4e5;border:1px solid #f0d3a8;color:#7a4b00}
+.warn.lo{background:#f2f6f9;border:1px solid #e0e8ee;color:#5a6b78}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:0 0 12px}
+.two .infcard{padding:0}
+.two .bd{padding:13px 15px;font-size:13.5px;line-height:1.65;color:#3d4b56}
+p{margin:0 0 10px;font-size:14.5px}
+ul{margin:6px 0 10px;padding-left:20px;max-width:100ch}li{margin-bottom:5px;font-size:14px}
+.inline{list-style:none;padding:0;margin:4px 0 10px;font-size:13.5px;color:var(--muted)}
+.inline li{display:inline;margin:0;font-size:13.5px}.inline li:not(:last-child):after{content:" · "}
+.note{font-size:12.5px;color:var(--muted);max-width:100ch}
+a{color:var(--green-d)}
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);max-width:120ch}
+@media print{body{background:#fff}.nav{position:static}.seg,.chips{display:none}}
+@media(max-width:640px){.nav .in{padding:9px 14px}.navtag{border:0;padding:0}.wrap{padding:20px 14px 50px}}
+</style></head><body>
+
+<div class="nav"><div class="in">
+<div class="brand">Holafly <span>·</span> Pricing</div>
+<div class="navtag" data-en="Charming rules · Plans" data-es="Charming rules · Plans"></div>
+<div class="spacer"></div>
+<div class="fresh" data-en="10 Sep 2026" data-es="10 sep 2026"></div>
+<div class="seg" id="lang"><button data-l="en" class="on">EN</button><button data-l="es">ES</button></div>
+</div></div>
+
+<div class="wrap">
+<h1 data-en="Charming rules in Plans" data-es="Charming rules en Plans"></h1>
+<p class="tagline" data-en="A proposal from Pricing to the Plans team · Guido Mautino" data-es="Una propuesta de Pricing para el equipo de Plans · Guido Mautino"></p>
+
+<div class="inftitular" data-en="<b>Why you are getting this.</b> While loading the Ultra plan into PIM we found that Plans and the eSIM catalogue round their prices with two different rules, so the same customer can see two different price conventions depending on which product they look at. Pricing wants to unify them. Before we ask IT to build anything, we need to know from you whether any live campaign or published material quotes these prices."
+data-es="<b>Por qué les llega esto.</b> Cargando el plan Ultra en PIM encontramos que Plans y el catálogo de eSIM redondean sus precios con dos reglas distintas, así que el mismo cliente puede ver dos convenciones de precio según qué producto mire. Desde Pricing queremos unificarlas. Antes de pedirle a IT que construya nada, necesitamos saber de ustedes si alguna campaña viva o material publicado cita estos precios."></div>
+
+<p class="prose" data-en="<b>The proposal.</b> Plans adopts the same rounding table the eSIM catalogue already uses. Base prices and the pricing mechanism stay exactly as they are: only the price ending per currency changes. The same criterion would then cover Plans, B2B and any future business unit that displays prices. Joan is aligned on this."
+data-es="<b>La propuesta.</b> Que Plans use la misma tabla de redondeo que ya usa el catálogo de eSIM. El precio base y el mecanismo quedan igual: solo cambia la terminación de cada moneda. El mismo criterio pasaría a cubrir Plans, B2B y cualquier unidad de negocio futura que muestre precios. Joan está alineado."></p>
+
+<div class="kpis">
+<div class="kpi"><b>143 / 150</b><span data-en="prices would move" data-es="precios se moverían"></span></div>
+<div class="kpi"><b>0.27%</b><span data-en="average move" data-es="movimiento promedio"></span></div>
+<div class="kpi"><b>+2.70%</b><span data-en="largest, Light in GBP" data-es="el mayor, Light en GBP"></span></div>
+<div class="kpi"><b>+0.14%</b><span data-en="net revenue effect" data-es="efecto neto en revenue"></span></div>
+<div class="kpi"><b>5 / 25</b><span data-en="currencies moving over 1%" data-es="monedas que se mueven más de 1%"></span></div>
+</div>
+
+<div class="eurq" data-en="<b>What we need from you.</b> Confirm that no campaign, landing, creative, email or partner material quotes these prices, especially in <b>GBP, SAR, PLN, AED and QAR</b>. If something does, tell us what and when it can be updated so we coordinate the date. With that OK we go to IT. Nothing changes before then."
+data-es="<b>Qué necesitamos de ustedes.</b> Confirmar que ninguna campaña, landing, creativo, email o material de partners cite estos precios, sobre todo en <b>GBP, SAR, PLN, AED y QAR</b>. Si hay algo, decirnos qué y cuándo se puede actualizar para coordinar la fecha. Con ese OK vamos a IT. Antes no se toca nada."></div>
+
+<h2 class="infh" data-en="1 · Every price, in every currency" data-es="1 · Cada precio, en cada moneda"></h2>
+<p class="note" data-en="Pick a currency. Each card shows today's published price and what it would become. An amber dot marks the currencies where some price moves more than 1%." data-es="Elegí una moneda. Cada tarjeta muestra el precio publicado hoy y en qué quedaría. El punto ámbar marca las monedas donde algún precio se mueve más de 1%."></p>
+<div class="chips" id="chips"></div>
+<div class="cards">
+<div class="infcard"><h3><span>Light</span></h3><div id="light"></div></div>
+<div class="infcard"><h3><span>Unlimited</span></h3><div id="unlimited"></div></div>
+<div class="infcard"><h3><span>Ultra</span><em data-en="NOT LIVE YET" data-es="AÚN NO PUBLICADO"></em></h3><div id="ultra"></div></div>
+</div>
+<div class="warn" id="warn"></div>
+<p class="note" data-en="Ultra is not published yet, so it would launch already aligned and with no price change for anyone. Its euro price is identical under both rules." data-es="Ultra todavía no está publicado, así que saldría ya alineado y sin cambio de precio para nadie. Su precio en euros es idéntico con las dos reglas."></p>
+
+<h2 class="infh" data-en="2 · What this means for comms" data-es="2 · Qué implica para comms"></h2>
+<p class="prose" data-en="Only 5 of 25 currencies have any price moving more than 1%: <b>GBP, SAR, PLN, AED and QAR</b>. In the other 20 it is a matter of cents, but the figure still changes, so any creative quoting a price literally needs updating too."
+data-es="Solo 5 monedas de 25 tienen algún precio que se mueva más de 1%: <b>GBP, SAR, PLN, AED y QAR</b>. En las otras 20 son céntimos, pero el número igual cambia, así que si un creativo cita un precio literal también hay que tocarlo."></p>
+<p data-en="<b>Where to check:</b>" data-es="<b>Dónde mirar:</b>"></p>
+<ul class="inline">
+<li data-en="paid creatives" data-es="creativos de paid"></li><li data-en="landings" data-es="landings"></li>
+<li data-en="lifecycle emails" data-es="emails de lifecycle"></li><li data-en="partner and affiliate material" data-es="material de partners y afiliados"></li>
+<li data-en="help center" data-es="help center"></li><li data-en="app store listings" data-es="fichas de app store"></li>
+</ul>
+
+<h2 class="infh" data-en="3 · The rule, today and proposed" data-es="3 · La regla, hoy y propuesta"></h2>
+<div class="two">
+<div class="infcard"><h3 data-en="Today in Plans" data-es="Hoy en Plans"></h3><div class="bd" data-en="One euro-shaped rule for all 25 currencies. Under 10 it ends in .49, between 10 and 999 it drops to the integer minus .05, above 1,000 it drops to the ten plus 9.90. The same ending everywhere, regardless of the market. That is how a plan ends up at £38.95 while the eSIM catalogue works in whole pounds in 98.7% of its prices."
+data-es="Una sola regla con forma de euro para las 25 monedas. Por debajo de 10 termina en .49, entre 10 y 999 baja al entero y resta .05, sobre 1.000 baja a la decena y suma 9,90. La misma terminación en todos lados, sin mirar el mercado. Así es como un plan termina en £38,95 mientras el catálogo de eSIM trabaja en libras enteras en el 98,7% de sus precios."></div></div>
+<div class="infcard"><h3 data-en="Proposed" data-es="Propuesta"></h3><div class="bd" data-en="One ending per currency, built on each market's convention. Euro and dollar end in .90 or .50, pound and Pacific dollars go to whole units, Gulf plus Poland and Israel to integers ending in 4, 7 or 9, Chile, Colombia and Korea to X999 and X900. It is the table already running across the eSIM catalogue, validated price by price against production."
+data-es="Una terminación por moneda, sobre la convención de cada mercado. Euro y dólar terminan en .90 o .50, libra y dólares del Pacífico van a entero, Golfo más Polonia e Israel a entero en 4, 7 o 9, Chile, Colombia y Corea a X999 y X900. Es la tabla que ya corre en todo el catálogo de eSIM, validada precio por precio contra producción."></div></div>
+</div>
+
+<h2 class="infh" data-en="4 · Already checked" data-es="4 · Ya verificado"></h2>
+<ul>
+<li data-en="<b>The current rule works.</b> We audited the 150 published prices against it and it reproduces all 150. The question is not whether it works, it is which rule it should be." data-es="<b>La regla de hoy funciona.</b> Auditamos los 150 precios publicados y los reproduce los 150. La pregunta no es si funciona, es cuál debería ser."></li>
+<li data-en="<b>Base prices stay.</b> We tested moving them to soften the change: the ones loaded today already move prices the least." data-es="<b>El precio base no se toca.</b> Probamos moverlo para amortiguar el cambio: el de hoy es el que menos mueve los precios."></li>
+<li data-en="<b>The duration discount holds.</b> Price per month still drops from 1 to 3 to 12 months in all 25 currencies." data-es="<b>El escalón de duración se mantiene.</b> El precio por mes sigue bajando de 1 a 3 a 12 meses en las 25 monedas."></li>
+</ul>
+
+<h2 class="infh" data-en="5 · Next step" data-es="5 · Próximo paso"></h2>
+<p class="prose" data-en="Your confirmation, plus a date that works for you. Then we ask IT (ticket JSMIT-15204, already open) whether this is a code or a configuration change." data-es="Su confirmación, más una fecha que les sirva. Después le preguntamos a IT (ticket JSMIT-15204, ya abierto) si el cambio es de código o de configuración."></p>
+
+<div class="foot"><span data-en="Full detail, currency by currency:" data-es="El detalle completo, moneda por moneda:"></span>
+<a href="https://docs.google.com/spreadsheets/d/1isBdARmy-6790iltP6JwMFAK7bTIS3XsxUvT7TwIJso/edit?usp=sharing" data-en="the 25-currency grid" data-es="la grilla de las 25 monedas"></a>.
+<span data-en="Published prices captured from esim.holafly.com on 9 Sep 2026. FX rates as configured in PIM." data-es="Precios publicados capturados de esim.holafly.com el 9 sep 2026. Tipos de cambio: los configurados en PIM."></span></div>
+</div>
+
+<script>
+var PRICES={"EUR":{"light":{"1":[45.95,45.9],"3":[124.9,124.9],"12":[446.95,446.9]},"unlimited":{"1":[59.95,59.9],"3":[162.9,162.9],"12":[581.95,582.5]},"ultra":{"1":[84.9,84.9],"3":[229.9,229.9],"12":[815.9,815.9]}},"USD":{"light":{"1":[49.9,49.5],"3":[134.9,134.9],"12":[482.9,482.5]},"unlimited":{"1":[64.9,64.5],"3":[175.95,175.9],"12":[628.95,628.9]},"ultra":{"1":[90.95,91.5],"3":[247.95,247.9],"12":[880.95,880.9]}},"GBP":{"light":{"1":[38.95,40.0],"3":[106.95,108.0],"12":[383.95,385.0]},"unlimited":{"1":[50.95,52.0],"3":[139.95,141.0],"12":[500.95,502.0]},"ultra":{"1":[72.95,74.0],"3":[196.95,198.0],"12":[700.95,702.0]}},"MXN":{"light":{"1":[1039.9,1049.0],"3":[2819.9,2819.0],"12":[10069.9,10069.0]},"unlimited":{"1":[1359.9,1359.0],"3":[3669.9,3669.0],"12":[13119.9,13119.0]},"ultra":{"1":[1919.9,1919.0],"3":[5179.9,5179.0],"12":[18359.9,18359.0]}},"JPY":{"light":{"1":[8089.9,8090.0],"3":[21879.9,21890.0],"12":[78249.9,78290.0]},"unlimited":{"1":[10519.9,10490.0],"3":[28529.9,28490.0],"12":[101979.9,101990.0]},"ultra":{"1":[14859.9,14890.0],"3":[40239.9,40190.0],"12":[142789.9,142790.0]}},"AUD":{"light":{"1":[77.95,78.0],"3":[211.95,212.0],"12":[759.95,760.0]},"unlimited":{"1":[101.95,102.0],"3":[276.95,277.0],"12":[989.95,990.0]},"ultra":{"1":[143.95,144.0],"3":[390.9,390.0],"12":[1389.9,1387.0]}},"CAD":{"light":{"1":[68.95,69.0],"3":[186.95,187.0],"12":[669.95,670.0]},"unlimited":{"1":[89.95,90.0],"3":[243.95,244.0],"12":[873.95,874.0]},"ultra":{"1":[126.95,127.0],"3":[344.9,344.0],"12":[1229.9,1223.0]}},"BRL":{"light":{"1":[289.95,290.5],"3":[785.95,785.9],"12":[2819.9,2811.9]},"unlimited":{"1":[377.9,377.9],"3":[1029.9,1024.9],"12":[3669.9,3664.9]},"ultra":{"1":[533.95,533.9],"3":[1449.9,1445.9],"12":[5139.9,5131.9]}},"CLP":{"light":{"1":[47179.9,46999.0],"3":[127619.9,127999.0],"12":[456499.0,456999.0]},"unlimited":{"1":[61359.9,60999.0],"3":[166419.9,165999.0],"12":[594949.9,594999.0]},"ultra":{"1":[86689.9,86999.0],"3":[234729.9,234999.0],"12":[833039.9,832999.0]}},"COP":{"light":{"1":[207899.0,207999.0],"3":[562459.9,562999.0],"12":[2012049.9,2012999.0]},"unlimited":{"1":[270399.0,270999.0],"3":[733459.9,733999.0],"12":[2622199.9,2622999.0]},"ultra":{"1":[382059.9,382999.0],"3":[1034559.9,1034999.0],"12":[3671559.9,3671999.0]}},"SAR":{"light":{"1":[188.95,194.0],"3":[511.95,514.0],"12":[1839.9,1834.0]},"unlimited":{"1":[245.95,247.0],"3":[667.95,669.0],"12":[2389.9,2394.0]},"ultra":{"1":[347.95,349.0],"3":[941.95,944.0],"12":[3349.9,3347.0]}},"CHF":{"light":{"1":[42.95,42.9],"3":[116.95,116.9],"12":[419.95,419.9]},"unlimited":{"1":[55.95,55.9],"3":[152.95,152.9],"12":[546.95,547.5]},"ultra":{"1":[79.9,79.5],"3":[215.95,215.9],"12":[766.9,766.9]}},"PEN":{"light":{"1":[184.9,184.5],"3":[499.9,499.9],"12":[1789.9,1787.9]},"unlimited":{"1":[239.95,239.9],"3":[651.9,651.9],"12":[2339.9,2330.5]},"ultra":{"1":[338.95,339.5],"3":[918.95,919.5],"12":[3269.9,3263.5]}},"PLN":{"light":{"1":[199.95,204.0],"3":[541.95,544.0],"12":[1949.9,1944.0]},"unlimited":{"1":[260.9,264.0],"3":[706.95,709.0],"12":[2529.9,2529.0]},"ultra":{"1":[367.95,369.0],"3":[997.9,999.0],"12":[3549.9,3544.0]}},"SGD":{"light":{"1":[66.95,67.0],"3":[181.95,182.0],"12":[652.9,652.0]},"unlimited":{"1":[86.95,87.0],"3":[237.9,237.0],"12":[850.9,850.0]},"ultra":{"1":[123.9,123.0],"3":[334.95,335.0],"12":[1199.9,1191.0]}},"NOK":{"light":{"1":[538.95,539.5],"3":[1459.9,1459.5],"12":[5229.9,5221.9]},"unlimited":{"1":[701.9,701.5],"3":[1899.0,1903.5],"12":[6799.0,6805.9]},"ultra":{"1":[990.95,991.5],"3":[2689.9,2684.9],"12":[9529.9,9529.5]}},"SEK":{"light":{"1":[516.95,516.9],"3":[1399.9,1399.5],"12":[4999.0,5007.5]},"unlimited":{"1":[672.95,672.9],"3":[1829.9,1824.9],"12":[6529.9,6525.9]},"ultra":{"1":[950.9,950.5],"3":[2579.9,2574.5],"12":[9139.9,9137.9]}},"DKK":{"light":{"1":[345.95,346.5],"3":[936.95,936.9],"12":[3359.9,3352.9]},"unlimited":{"1":[449.95,450.5],"3":[1229.9,1221.9],"12":[4379.9,4369.9]},"ultra":{"1":[635.95,636.5],"3":[1729.9,1723.9],"12":[6119.9,6118.9]}},"AED":{"light":{"1":[184.9,187.0],"3":[499.9,504.0],"12":[1789.9,1789.0]},"unlimited":{"1":[239.95,244.0],"3":[651.9,654.0],"12":[2339.9,2334.0]},"ultra":{"1":[338.95,344.0],"3":[918.95,924.0],"12":[3269.9,3264.0]}},"KRW":{"light":{"1":[73459.9,73900.0],"3":[198739.9,198900.0],"12":[710929.9,711900.0]},"unlimited":{"1":[95549.9,95900.0],"3":[259159.9,259900.0],"12":[926499.0,926900.0]},"ultra":{"1":[134999.9,135900.0],"3":[365549.9,365900.0],"12":[1297289.9,1297900.0]}},"TWD":{"light":{"1":[1669.9,1670.0],"3":[4499.9,4500.0],"12":[16099.9,16100.0]},"unlimited":{"1":[2169.9,2170.0],"3":[5869.9,5870.0],"12":[20979.9,20980.0]},"ultra":{"1":[3059.9,3060.0],"3":[8279.9,8280.0],"12":[29379.9,29380.0]}},"TRY":{"light":{"1":[2319.9,2319.0],"3":[6249.9,6259.0],"12":[22359.9,22359.0]},"unlimited":{"1":[2999.0,3009.0],"3":[8149.9,8159.0],"12":[29139.9,29139.0]},"ultra":{"1":[4249.9,4249.0],"3":[11499.9,11499.0],"12":[40799.9,40799.0]}},"ILS":{"light":{"1":[185.95,187.0],"3":[504.9,507.0],"12":[1799.0,1807.0]},"unlimited":{"1":[242.9,244.0],"3":[657.95,659.0],"12":[2359.9,2357.0]},"ultra":{"1":[342.9,344.0],"3":[928.9,929.0],"12":[3299.9,3297.0]}},"CNY":{"light":{"1":[387.95,387.9],"3":[1049.9,1049.9],"12":[3759.9,3755.5]},"unlimited":{"1":[504.9,504.5],"3":[1369.9,1368.9],"12":[4899.9,4894.5]},"ultra":{"1":[712.95,712.9],"3":[1939.9,1930.9],"12":[6859.9,6853.5]}},"QAR":{"light":{"1":[184.9,187.0],"3":[499.9,504.0],"12":[1789.9,1789.0]},"unlimited":{"1":[239.95,244.0],"3":[651.9,654.0],"12":[2339.9,2334.0]},"ultra":{"1":[338.95,344.0],"3":[918.95,924.0],"12":[3269.9,3264.0]}}};
+var ORDER=["EUR", "USD", "GBP", "JPY", "AUD", "MXN", "CAD", "CLP", "COP", "BRL", "CHF", "PEN", "SGD", "SEK", "DKK", "NOK", "KRW", "TWD", "CNY", "TRY", "SAR", "AED", "QAR", "PLN", "ILS"];
+var LANG='en',CUR='EUR';
+var DUR={en:{'1':'1 month','3':'3 months','12':'12 months'},es:{'1':'1 mes','3':'3 meses','12':'12 meses'}};
+function maxd(c){var m=0;['light','unlimited','ultra'].forEach(function(p){['1','3','12'].forEach(function(d){
+  var a=PRICES[c][p][d][0],b=PRICES[c][p][d][1],x=(b-a)/a*100;if(Math.abs(x)>Math.abs(m))m=x;});});return m;}
+function fmt(v,c){var dec=(Math.round(v*100)%100===0)?0:2;
+  try{return v.toLocaleString(LANG==='en'?'en-US':'es-ES',{minimumFractionDigits:dec,maximumFractionDigits:dec})+' '+c;}
+  catch(e){return v.toFixed(dec)+' '+c;}}
+function chips(){var h='';ORDER.forEach(function(c){
+  h+='<button data-c="'+c+'" class="'+(c===CUR?'on ':'')+(Math.abs(maxd(c))>1?'big':'')+'">'+c+'</button>';});
+  var e=document.getElementById('chips');e.innerHTML=h;
+  e.querySelectorAll('button').forEach(function(b){b.onclick=function(){CUR=b.dataset.c;chips();render();};});}
+function render(){var d=PRICES[CUR];
+  ['light','unlimited','ultra'].forEach(function(pl){var h='';
+    ['1','3','12'].forEach(function(du){
+      var a=d[pl][du][0],b=d[pl][du][1],p=(b-a)/a*100,
+          cls=Math.abs(p)<0.005?'eq':(p>0?'up':'dn'),
+          t=Math.abs(p)<0.005?(LANG==='en'?'same':'igual'):(p>0?'+':'')+p.toFixed(2)+'%';
+      h+='<div class="row"><span class="d">'+DUR[LANG][du]+'</span><span class="v"><span class="old">'+fmt(a,CUR)+
+         '</span><span class="arw">&rarr;</span><span class="new">'+fmt(b,CUR)+'</span></span><span class="pct '+cls+'">'+t+'</span></div>';});
+    document.getElementById(pl).innerHTML=h;});
+  var m=maxd(CUR),w=document.getElementById('warn'),s=(m>0?'+':'')+m.toFixed(2)+'%';
+  if(Math.abs(m)>1){w.className='warn hi';
+    w.innerHTML=LANG==='en'?'<b>Visible change in '+CUR+'.</b> The largest move is '+s+'. Worth checking published material in this market before we set a date.'
+                           :'<b>Cambio visible en '+CUR+'.</b> El mayor movimiento es '+s+'. Conviene revisar el material publicado en ese mercado antes de fijar fecha.';}
+  else{w.className='warn lo';
+    w.innerHTML=LANG==='en'?'Changes in '+CUR+' are a matter of cents: the largest is '+s+'.':'Los cambios en '+CUR+' son céntimos: el mayor es '+s+'.';}}
+function setLang(l){LANG=l;document.documentElement.lang=l;
+  document.querySelectorAll('[data-en]').forEach(function(n){n.innerHTML=n.getAttribute('data-'+l);});
+  document.querySelectorAll('#lang button').forEach(function(b){b.className=(b.dataset.l===l?'on':'');});
+  render();}
+document.querySelectorAll('#lang button').forEach(function(b){b.onclick=function(){setLang(b.dataset.l);};});
+chips();setLang('en');
+</script></body></html>
